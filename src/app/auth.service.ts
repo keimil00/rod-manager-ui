@@ -8,7 +8,7 @@ import {Observable} from "rxjs";
 @Injectable()
 export class AuthService {
 
-  private baseURL = "http://localhost:7116/konto/logowanie";
+  private baseURL = "/konto/logowanie";
 
   constructor(private httpClient: HttpClient) { }
 
