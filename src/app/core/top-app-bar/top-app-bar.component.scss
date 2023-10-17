@@ -1,0 +1,54 @@
+.mat-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #000; // Set the background color to black
+  color: #fff; // Set the text color to white
+
+  .spacer {
+    margin: 0 10px; // Adjust the margin as per your preference
+  }
+
+  .options {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    span {
+      color: gray; // Set the text color to gray
+    }
+
+    button {
+      color: gray; // Set the text color to gray
+      font-size: 16px;
+    }
+
+    button:hover {
+      color: lightgray; // Set the text color to gray
+    }
+
+  }
+
+  .title {
+    font-size: 1.5em; // Adjust the font size for the title
+    margin-right: 20px; // Add some space between title and options
+  }
+
+  div {
+    display: flex;
+    align-items: center;
+  }
+
+  .auth-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .app-text-button {
+    margin: 0 10px; /* Adjust the horizontal spacing between buttons as needed */
+  }
+
+}

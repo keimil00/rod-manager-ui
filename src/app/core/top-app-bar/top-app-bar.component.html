@@ -1,0 +1,26 @@
+<mat-toolbar color="primary">
+  <div class="title">
+    <span>ROD we Wrocławiu</span>
+  </div>
+  <div class="options">
+    <button mat-button (click)="navigate('home')">Strona główna</button>
+    <span>/</span>
+    <button mat-button>Dostępne działki</button>
+    <span>/</span>
+    <button mat-button>Kalendarz</button>
+    <span>/</span>
+    <button mat-button [matMenuTriggerFor]="menu">O Ogrodzie</button>
+
+    <!-- Define the menu -->
+    <mat-menu #menu="matMenu" class="mat-menu">
+      <button mat-menu-item >Item 1</button>
+      <button mat-menu-item >Item 2</button>
+      <!-- Add more menu items as needed -->
+    </mat-menu>
+  </div>
+  <div class="auth-buttons">
+    <app-text-button text="Login" color="primary" (click)="navigate('login')"></app-text-button>
+    <app-text-button text="Register" color="accent" (click)="navigate('register')"></app-text-button>
+  </div>
+</mat-toolbar>
+
