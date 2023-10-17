@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "rod-management-ui": {
+    "rod-manager-ui": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/rod-management-ui",
+            "outputPath": "dist/rod-manager-ui",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -65,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "rod-management-ui:build:production"
+              "browserTarget": "rod-manager-ui:build:production"
             },
             "development": {
-              "browserTarget": "rod-management-ui:build:development"
+              "browserTarget": "rod-manager-ui:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -76,7 +76,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "rod-management-ui:build"
+            "browserTarget": "rod-manager-ui:build"
           }
         },
         "test": {
