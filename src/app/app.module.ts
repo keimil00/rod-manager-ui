@@ -13,6 +13,9 @@ import {MatButtonModule} from "@angular/material/button";
 import { TextButtonComponent } from './shared/text-button/text-button.component';
 import { HomeComponent } from './features/home/home.component';
 import {MatMenuModule} from "@angular/material/menu";
+import {MatCardModule} from "@angular/material/card";
+import {MatInputModule} from "@angular/material/input";
+import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -30,7 +33,10 @@ import {MatMenuModule} from "@angular/material/menu";
     BrowserAnimationsModule,
     MatToolbarModule,
     MatButtonModule,
-    MatMenuModule
+    MatMenuModule,
+    MatCardModule,
+    MatInputModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

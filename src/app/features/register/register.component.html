@@ -1,2 +1,68 @@
-<h2>Register comp</h2>
-<button (click)="registerUser()">Register</button>
+<div class="page-container">
+  <mat-card class="large-card large-card-size row-container">
+    <mat-card-header class="row-item">
+      <div class="row-item">
+        <h2 class="title">Rejestracja</h2>
+      </div>
+    </mat-card-header>
+    <mat-card-content class="row-item card-content-spacing">
+      <form class="form-container" [formGroup]="registerFrom">
+        <div class="row-container">
+          <div class="row-item">
+            <mat-form-field class="full-width">
+              <input matInput formControlName="firstName" placeholder="First Name" required>
+              <mat-error *ngFor="let error of errorMessages['firstName']">
+                {{ error.message }}
+              </mat-error>
+            </mat-form-field>
+
+          </div>
+          <div class="row-item">
+            <mat-form-field class="full-width">
+              <input matInput formControlName="lastName" placeholder="Last Name" required>
+              <mat-error *ngFor="let error of errorMessages['lastName']">
+                {{ error.message }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row-item">
+            <mat-form-field class="full-width">
+              <input matInput type="email" formControlName="email" placeholder="Email" required>
+              <mat-error *ngFor="let error of errorMessages['email']">
+                {{ error.message }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row-item">
+            <mat-form-field class="full-width">
+              <input matInput type="tel" formControlName="phoneNumber" placeholder="phoneNumber" required>
+            </mat-form-field>
+            <mat-error *ngFor="let error of errorMessages['phoneNumber']">
+              {{ error.message }}
+            </mat-error>
+          </div>
+          <div class="row-item">
+            <mat-form-field class="full-width">
+              <input matInput type="password" formControlName="password" placeholder="Password" required>
+              <mat-error *ngFor="let error of errorMessages['password']">
+                {{ error.message }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row-item">
+            <mat-form-field class="full-width">
+              <input matInput type="password" formControlName="confirmPassword" placeholder="confirmPassword" required>
+              <mat-error *ngFor="let error of errorMessages['confirmPassword']">
+                {{ error.message }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row-item register-section">
+            <button mat-raised-button class="register-button" color="primary" type="submit">Register</button>
+          </div>
+        </div>
+      </form>
+
+    </mat-card-content>
+  </mat-card>
+</div>
