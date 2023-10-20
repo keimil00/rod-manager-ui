@@ -12,9 +12,14 @@
     <button mat-button [matMenuTriggerFor]="menu">O Ogrodzie</button>
 
     <!-- Define the menu -->
-    <mat-menu #menu="matMenu" class="mat-menu">
-      <button mat-menu-item >Item 1</button>
-      <button mat-menu-item >Item 2</button>
+    <mat-menu #menu="matMenu" class="my-custom-style">
+      <button mat-menu-item class="button-menu">Item 1</button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item class="button-menu">Item 2</button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item class="button-menu">Item 3</button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item class="button-menu">Item 4</button>
       <!-- Add more menu items as needed -->
     </mat-menu>
   </div>

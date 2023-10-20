@@ -16,6 +16,7 @@ import {MatMenuModule} from "@angular/material/menu";
 import {MatCardModule} from "@angular/material/card";
 import {MatInputModule} from "@angular/material/input";
 import {ReactiveFormsModule} from "@angular/forms";
+import {MatListModule} from "@angular/material/list";
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import {ReactiveFormsModule} from "@angular/forms";
     MatMenuModule,
     MatCardModule,
     MatInputModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: [AppComponent]
