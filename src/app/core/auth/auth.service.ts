@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
+import {LoginUser, User} from "../../features/register/user.model";
+import {AuthResponse} from "./auth-response.model";
 
 @Injectable({
   providedIn: 'root'
@@ -8,12 +10,16 @@ import {Observable} from "rxjs";
 @Injectable()
 export class AuthService {
 
-  private baseURL = "/konto/logowanie";
+  baseUrl = '/api/';
 
   constructor(private httpClient: HttpClient) { }
 
-  register(): Observable<void>{
-    return this.httpClient.get<void>(`${this.baseURL}`);
+  register(user: User): Observable<any>{
+    return this.httpClient.post<any>(`${this.baseUrl}register`, user);
+  }
+
+  login(user: LoginUser): Observable<AuthResponse>{
+    return this.httpClient.post<AuthResponse>(`${this.baseUrl}login/`, user);
   }
 
 }
