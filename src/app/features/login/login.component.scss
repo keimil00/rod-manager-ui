@@ -85,6 +85,9 @@
   margin-right: 100px;
   text-align: right;
   width: 100%; /* Dodaj szerokość 100%, aby zapewnić, że element wypełnia całą dostępną szerokość. */
+  color: blue; /* Ustaw kolor niebieski */
+  text-decoration: underline; /* Podkreślenie linku */
+  cursor: pointer; /* Zmień kursor na ikonę ręki, aby wyglądało to jak link */
 }
 
 .SSO-text{
@@ -111,3 +114,12 @@
   align-items: center; /* Wyrównanie tekstu w pionie do środka */
   justify-content: center; /* Wyrównanie tekstu w poziomie do środka (dodatkowe wyrównanie) */
 }
+
+
+
+
+.forgot-password-link:hover {
+  /* Styl przy najechaniu kursorem */
+  color: darkblue; /* Zmiana koloru na ciemniejszy niebieski po najechaniu */
+}
+
