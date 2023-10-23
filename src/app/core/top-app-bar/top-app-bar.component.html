@@ -13,23 +13,40 @@
 
     <!-- Define the menu -->
     <mat-menu #menu="matMenu" class="mat-menu-custom-style">
-      <button mat-menu-item class="button-menu">O ogrodzie</button>
-      <mat-divider></mat-divider>
-      <button mat-menu-item class="button-menu">Dokumenty</button>
-      <mat-divider></mat-divider>
-      <button mat-menu-item class="button-menu">Lista działek</button>
-      <mat-divider></mat-divider>
-      <button mat-menu-item class="button-menu">Opłaty</button>
-      <mat-divider></mat-divider>
-      <button mat-menu-item class="button-menu">Liczniki</button>
-      <mat-divider></mat-divider>
-      <button mat-menu-item class="button-menu">Lista użytkowników</button>
+      <div>
+        <button mat-menu-item class="button-menu">O ogrodzie</button>
+        <mat-divider></mat-divider>
+      </div>
+      <div *appHasRole="[Role.ROLE_MANAGER]">
+        <button mat-menu-item class="button-menu">Dokumenty</button>
+        <mat-divider></mat-divider>
+      </div>
+      <div *appHasRole="[Role.ROLE_MANAGER]">
+        <button mat-menu-item class="button-menu">Lista działek</button>
+        <mat-divider></mat-divider>
+      </div>
+      <div *appHasRole="[Role.ROLE_GARDENER]">
+        <button mat-menu-item class="button-menu">Opłaty</button>
+        <mat-divider></mat-divider>
+      </div>
+      <div *appHasRole="[Role.ROLE_EMPLOYEE, Role.ROLE_MANAGER]">
+        <button mat-menu-item class="button-menu">Liczniki</button>
+      </div>
+      <div *appHasRole="[Role.ROLE_MANAGER, Role.ROLE_ADMIN]">
+        <mat-divider></mat-divider>
+        <button mat-menu-item class="button-menu">Lista użytkowników</button>
+      </div>
       <!-- Add more menu items as needed -->
     </mat-menu>
   </div>
   <div class="auth-buttons">
-    <app-text-button text="Zaloguj się" color="primary" (click)="navigate('login')"></app-text-button>
-    <app-text-button text="Zarejestruj się" color="accent" (click)="navigate('register')"></app-text-button>
+    <div *ngIf="isLoggedIn(); else loggedOut">
+      <app-text-button text="Wyloguj" color="accent" (click)="logout()"></app-text-button>
+    </div>
+    <ng-template #loggedOut>
+      <app-text-button text="Zaloguj się" color="primary" (click)="navigate('login')"></app-text-button>
+      <app-text-button text="Zarejestruj się" color="accent" (click)="navigate('register')"></app-text-button>
+    </ng-template>
   </div>
 </mat-toolbar>
 

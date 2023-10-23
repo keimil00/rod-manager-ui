@@ -25,6 +25,7 @@ import {
   SocialLoginModule
 } from "@abacritt/angularx-social-login";
 import {AuthInterceptor} from "./core/interceptors/auth.interceptor";
+import { HasRoleDirective } from './core/has-role/has-role.directive';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import {AuthInterceptor} from "./core/interceptors/auth.interceptor";
     RegisterComponent,
     TopAppBarComponent,
     TextButtonComponent,
-    HomeComponent
+    HomeComponent,
+    HasRoleDirective
   ],
   imports: [
     BrowserModule,

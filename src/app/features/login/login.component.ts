@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../../core/auth/auth.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {LoginUser} from "../register/user.model";
@@ -11,7 +11,7 @@ import {Router} from "@angular/router";
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
   loginForm: FormGroup;
 
   errorMessages = {
@@ -41,7 +41,7 @@ export class LoginComponent {
 
   ngOnInit(): void {
     this.socialAuthService.authState.subscribe((user: SocialUser) => {
-      console.log('User: ' + JSON.stringify(user));
+      console.log('Login User: ' + JSON.stringify(user));
     });
   }
 

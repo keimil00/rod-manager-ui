@@ -65,7 +65,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.socialAuthService.authState.subscribe((user: SocialUser) => {
-      console.log('User: ' + JSON.stringify(user));
+      console.log('Register User: ' + JSON.stringify(user));
     });
   }
 
