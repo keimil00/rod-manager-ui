@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
 import {AsYouType, parsePhoneNumber, getCountries, getCountryCallingCode, getPhoneCode} from "libphonenumber-js";
-import {GoogleLoginProvider, SocialAuthService, SocialUser} from "@abacritt/angularx-social-login";
-import {parseJson} from "@angular/cli/src/utilities/json-file";
+import {SocialAuthService, SocialUser} from "@abacritt/angularx-social-login";
 import {AuthService} from "../../core/auth/auth.service";
 import {LoginUser, User} from "./user.model";
 import {StorageService} from "../../core/storage/storage.service";
@@ -21,28 +20,27 @@ export class RegisterComponent implements OnInit {
 
   errorMessages = {
     firstName: [
-      { type: 'required', message: 'Imię jest wymagane' }
+      {type: 'required', message: 'Imię jest wymagane'}
     ],
     lastName: [
-      { type: 'required', message: 'Nazwisko jest wymagane' }
+      {type: 'required', message: 'Nazwisko jest wymagane'}
     ],
     email: [
-      { type: 'required', message: 'Adres e-mail jest wymagany' },
-      { type: 'email', message: 'Proszę podać prawidłowy adres e-mail' }
+      {type: 'required', message: 'Adres e-mail jest wymagany'},
+      {type: 'email', message: 'Proszę podać prawidłowy adres e-mail'}
     ],
     phoneNumber: [
-      { type: 'pattern', message: 'Proszę podać prawidłowy numer telefonu (9 cyfr)' }
+      {type: 'pattern', message: 'Proszę podać prawidłowy numer telefonu (9 cyfr)'}
     ],
     password: [
-      { type: 'required', message: 'Hasło jest wymagane' },
-      { type: 'minlength', message: 'Hasło musi mieć co najmniej 8 znaków' }
+      {type: 'required', message: 'Hasło jest wymagane'},
+      {type: 'minlength', message: 'Hasło musi mieć co najmniej 8 znaków'}
     ],
     confirmPassword: [
-      { type: 'required', message: 'Potwierdzenie hasła jest wymagane' },
-      { type: 'passwordMismatch', message: 'Hasła nie są identyczne' }
+      {type: 'required', message: 'Potwierdzenie hasła jest wymagane'},
+      {type: 'passwordMismatch', message: 'Hasła nie są identyczne'}
     ]
   };
-
 
 
   constructor(private socialAuthService: SocialAuthService,
@@ -109,8 +107,8 @@ export class RegisterComponent implements OnInit {
   validationErrors(controlName: string): any[] {
     let errors = []
     // @ts-ignore
-    for(let error of this.errorMessages[controlName]) {
-      if(this.registerFrom.get(controlName)?.hasError(error.type)) {
+    for (let error of this.errorMessages[controlName]) {
+      if (this.registerFrom.get(controlName)?.hasError(error.type)) {
         errors.push(error);
       }
     }
@@ -179,18 +177,4 @@ export class RegisterComponent implements OnInit {
       return null;
     };
   }
-
-  signInWithGoogle(): void {
-    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
-      .then(user => {
-        console.log(user);
-        // Now you have access to user's information like name, email, etc.
-        // Send this information to your Django backend.
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }
-
-
 }

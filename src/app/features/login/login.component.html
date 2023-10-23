@@ -1,1 +1,45 @@
-<p>login works!</p>
+<div class="page-container">
+  <mat-card class="large-card large-card-size row-container">
+    <mat-card-header class="row-item">
+      <div class="row-item">
+        <h2 class="title">Logowanie</h2>
+      </div>
+    </mat-card-header>
+    <mat-card-content class="row-item card-content-spacing">
+      <form class="form-container" [formGroup]="loginForm">
+        <div class="row-container">
+          <div class="row-item">
+            <mat-form-field class="full-width">
+              <input matInput formControlName="email" placeholder="Email" required>
+              <mat-error *ngFor="let error of validationErrors('email')">
+                {{ error.message }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row-item">
+            <mat-form-field class="full-width">
+              <input matInput type="password" formControlName="password" placeholder="Hasło" required>
+              <mat-error *ngFor="let error of validationErrors('password')">
+                {{ error.message }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row-item forgot-password-link">
+            <a (click)="navigate('forgetPassword')">Zapomniałeś hasła?</a>
+          </div>
+          <div class="row-item login-section">
+            <button mat-raised-button class="login-button" color="primary" type="submit" (click)="login()">Zaloguj się</button>
+          </div>
+          <div class="row-item register-section">
+            <mat-divider></mat-divider>
+            <span class="or-label">lub</span>
+          </div>
+          <div class="custom-button">
+            <asl-google-signin-button type="standard" width="300" size="large" ></asl-google-signin-button>
+          </div>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
+
