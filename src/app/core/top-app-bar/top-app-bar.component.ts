@@ -1,6 +1,10 @@
 import {Component, ViewChild} from '@angular/core';
 import {Router} from "@angular/router";
 import {MatMenuTrigger} from "@angular/material/menu";
+import {AuthService} from "../auth/auth.service";
+import {Role} from "../../features/register/user.model";
+import {StorageService} from "../storage/storage.service";
+import {SocialAuthService} from "@abacritt/angularx-social-login";
 
 @Component({
   selector: 'app-top-app-bar',
@@ -10,19 +14,27 @@ import {MatMenuTrigger} from "@angular/material/menu";
 export class TopAppBarComponent {
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router,
+              private storageService: StorageService,
+              private authService: AuthService,
+              private socialAuthService: SocialAuthService) {
+    this.router = router;
+    this.authService = authService;
+    this.storageService = storageService;
+  }
 
   navigate(path: string){
     this.router.navigate([path]);
   }
 
-  openMenu() {
-    console.log('open menu')
-    this.trigger.openMenu();
+  isLoggedIn(): boolean {
+    return this.storageService.getLoggedIn();
   }
 
-  closeMenu() {
-    console.log('close menu')
-    this.trigger.closeMenu();
+  logout(): void {
+    this.socialAuthService.signOut();
+    this.authService.logout();
   }
+
+  protected readonly Role = Role;
 }
