@@ -19,7 +19,6 @@
   align-items: center;
 }
 
-
 .large-card-size {
   width: 60%;
   max-width: 600px;
@@ -71,7 +70,6 @@
   padding-bottom: 10px;
 }
 
-
 .title {
   text-align: center;
 }
@@ -90,36 +88,18 @@
   cursor: pointer; /* Zmień kursor na ikonę ręki, aby wyglądało to jak link */
 }
 
-.SSO-text{
-  margin-top: 10px;
-  font-size: 12px;
-}
-.SSO{
-  margin-top: 20px;
-}
-
-.custom-button{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin:5px;
-  text-decoration: none;
-  color: black;
-}
-
-.custom-button-label{
-  margin: 3px;
-  text-align: center; /* Wyrównanie tekstu w poziomie do środka */
-  display: flex;
-  align-items: center; /* Wyrównanie tekstu w pionie do środka */
-  justify-content: center; /* Wyrównanie tekstu w poziomie do środka (dodatkowe wyrównanie) */
-}
-
-
-
-
 .forgot-password-link:hover {
   /* Styl przy najechaniu kursorem */
   color: darkblue; /* Zmiana koloru na ciemniejszy niebieski po najechaniu */
 }
 
+.register-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1; /* Allow items to grow and take equal space */
+  margin-right: 10px; /* Adjust as needed for spacing between items */
+  width: 80%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}

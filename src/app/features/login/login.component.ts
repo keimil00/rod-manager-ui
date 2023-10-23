@@ -1,11 +1,10 @@
-import {Component, Inject} from '@angular/core';
+import {Component} from '@angular/core';
 import {AuthService} from "../../core/auth/auth.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {LoginUser, User} from "../register/user.model";
-import {GoogleLoginProvider, SocialAuthService, SocialUser} from "@abacritt/angularx-social-login";
+import {LoginUser} from "../register/user.model";
+import {SocialAuthService, SocialUser} from "@abacritt/angularx-social-login";
 import {StorageService} from "../../core/storage/storage.service";
 import {Router} from "@angular/router";
-
 
 @Component({
   selector: 'app-login',
@@ -13,9 +12,6 @@ import {Router} from "@angular/router";
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  forgotPasswordLink: string = '/forgot-password'; // Ustaw link w zależności od potrzeb.
-  GoogleLink: string = '/google'; // Ustaw link w zależności od potrzeb.
-
   loginForm: FormGroup;
 
   errorMessages = {
@@ -39,7 +35,7 @@ export class LoginComponent {
     this.router = router;
     this.loginForm = formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]]
+      password: ['', [Validators.required]]
     });
   }
 
@@ -48,7 +44,6 @@ export class LoginComponent {
       console.log('User: ' + JSON.stringify(user));
     });
   }
-
 
   login(): void {
     console.log('Login');
@@ -68,7 +63,7 @@ export class LoginComponent {
     });
   }
 
-  navigate(path: string){
+  navigate(path: string) {
     this.router.navigate([path]);
   }
 
@@ -81,17 +76,5 @@ export class LoginComponent {
       }
     }
     return errors;
-  }
-
-  signInWithGoogle(): void {
-    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
-      .then(user => {
-        console.log(user);
-        // Now you have access to user's information like name, email, etc.
-        // Send this information to your Django backend.
-      })
-      .catch(error => {
-        console.error(error);
-      });
   }
 }
