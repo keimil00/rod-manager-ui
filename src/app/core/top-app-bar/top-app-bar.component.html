@@ -20,24 +20,17 @@
       <span>/</span>
       <button mat-button>Skargi</button>
     </div>
-    <span>/</span>
-<!--    tu trzeba zrobic zeby uzytkownik niezalogowany albo zwykly dzialkowiec mial zwykly przycisk a nie rozwijane-->
-<!--    <div *appHasRole="[Role.ROLE_MANAGER, Role.ROLE_EMPLOYEE, Role.ROLE_ADMIN]; else regularButton">-->
-<!--      <button mat-button [matMenuTriggerFor]="menu">O Ogrodzie</button>-->
-<!--    </div>-->
-<!--    <ng-template #regularButton>-->
-<!--      <button mat-button>O Ogrodzie</button>-->
-<!--    </ng-template>-->
-
-
-    <button mat-button [matMenuTriggerFor]="menu">O Ogrodzie</button>
+    <div>
+      <span>/</span>
+      <button mat-button>O Ogrodzie</button>
+    </div>
+    <div *appHasRole="[Role.ROLE_MANAGER, Role.ROLE_EMPLOYEE, Role.ROLE_ADMIN]">
+      <span>/</span>
+      <button mat-button [matMenuTriggerFor]="menu">Więcej</button>
+    </div>
 
     <!-- Define the menu -->
     <mat-menu #menu="matMenu" class="mat-menu-custom-style">
-      <div>
-        <button mat-menu-item class="button-menu">O ogrodzie</button>
-        <mat-divider></mat-divider>
-      </div>
       <div *appHasRole="[Role.ROLE_MANAGER]">
         <button mat-menu-item class="button-menu">Dokumenty</button>
         <mat-divider></mat-divider>
