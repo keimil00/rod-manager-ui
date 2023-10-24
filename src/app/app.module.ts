@@ -26,6 +26,7 @@ import {
 } from "@abacritt/angularx-social-login";
 import {AuthInterceptor} from "./core/interceptors/auth.interceptor";
 import { HasRoleDirective } from './core/has-role/has-role.directive';
+import { PageNotFoundComponent } from './features/page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { HasRoleDirective } from './core/has-role/has-role.directive';
     TopAppBarComponent,
     TextButtonComponent,
     HomeComponent,
-    HasRoleDirective
+    HasRoleDirective,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
