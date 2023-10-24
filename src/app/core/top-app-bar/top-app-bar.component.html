@@ -8,7 +8,28 @@
     <button mat-button>Dostępne działki</button>
     <span>/</span>
     <button mat-button>Kalendarz</button>
+    <div *appHasRole="[Role.ROLE_GARDENER]">
+      <span>/</span>
+      <button mat-button>Moja działka</button>
+    </div>
+    <div *ngIf="isLoggedIn()">
+      <span>/</span>
+      <button mat-button>Głosowania</button>
+    </div>
+    <div *ngIf="isLoggedIn()">
+      <span>/</span>
+      <button mat-button>Skargi</button>
+    </div>
     <span>/</span>
+<!--    tu trzeba zrobic zeby uzytkownik niezalogowany albo zwykly dzialkowiec mial zwykly przycisk a nie rozwijane-->
+<!--    <div *appHasRole="[Role.ROLE_MANAGER, Role.ROLE_EMPLOYEE, Role.ROLE_ADMIN]; else regularButton">-->
+<!--      <button mat-button [matMenuTriggerFor]="menu">O Ogrodzie</button>-->
+<!--    </div>-->
+<!--    <ng-template #regularButton>-->
+<!--      <button mat-button>O Ogrodzie</button>-->
+<!--    </ng-template>-->
+
+
     <button mat-button [matMenuTriggerFor]="menu">O Ogrodzie</button>
 
     <!-- Define the menu -->
