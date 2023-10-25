@@ -27,6 +27,10 @@ import {
 import {AuthInterceptor} from "./core/interceptors/auth.interceptor";
 import { HasRoleDirective } from './core/has-role/has-role.directive';
 import { PageNotFoundComponent } from './features/page-not-found/page-not-found.component';
+import { GardenInfoComponent } from './features/garden-info/garden-info.component';
+import { PersonCardGardenComponent } from './features/garden-info/person-card-garden/person-card-garden.component';
+import {MatIconModule} from "@angular/material/icon";
+import {MatGridListModule} from "@angular/material/grid-list";
 
 @NgModule({
   declarations: [
@@ -37,7 +41,9 @@ import { PageNotFoundComponent } from './features/page-not-found/page-not-found.
     TextButtonComponent,
     HomeComponent,
     HasRoleDirective,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    GardenInfoComponent,
+    PersonCardGardenComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +59,9 @@ import { PageNotFoundComponent } from './features/page-not-found/page-not-found.
     MatSelectModule,
     MatDividerModule,
     SocialLoginModule,
-    GoogleSigninButtonModule
+    GoogleSigninButtonModule,
+    MatIconModule,
+    MatGridListModule
   ],
   providers: [
     {

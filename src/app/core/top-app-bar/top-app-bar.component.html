@@ -1,6 +1,6 @@
 <mat-toolbar color="primary">
   <div class="title">
-    <span>ROD we Wrocławiu</span>
+    <span (click)="navigate('home')">ROD we Wrocławiu</span>
   </div>
   <div class="options">
     <button mat-button (click)="navigate('home')">Strona główna</button>
@@ -22,7 +22,7 @@
     </div>
     <div>
       <span>/</span>
-      <button mat-button>O Ogrodzie</button>
+      <button mat-button (click)="navigate('garden-info')">O Ogrodzie</button>
     </div>
     <div *appHasRole="[Role.ROLE_MANAGER, Role.ROLE_EMPLOYEE, Role.ROLE_ADMIN]">
       <span>/</span>
