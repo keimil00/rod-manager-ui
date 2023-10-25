@@ -15,7 +15,7 @@ import { HomeComponent } from './features/home/home.component';
 import {MatMenuModule} from "@angular/material/menu";
 import {MatCardModule} from "@angular/material/card";
 import {MatInputModule} from "@angular/material/input";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatSelectModule} from "@angular/material/select";
 import {MatDividerModule} from "@angular/material/divider";
 import {
@@ -31,6 +31,8 @@ import { GardenInfoComponent } from './features/garden-info/garden-info.componen
 import { PersonCardGardenComponent } from './features/garden-info/person-card-garden/person-card-garden.component';
 import {MatIconModule} from "@angular/material/icon";
 import {MatGridListModule} from "@angular/material/grid-list";
+import { DocumentsComponent } from './features/documents/documents.component';
+import {MatExpansionModule} from "@angular/material/expansion";
 
 @NgModule({
   declarations: [
@@ -43,7 +45,8 @@ import {MatGridListModule} from "@angular/material/grid-list";
     HasRoleDirective,
     PageNotFoundComponent,
     GardenInfoComponent,
-    PersonCardGardenComponent
+    PersonCardGardenComponent,
+    DocumentsComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +64,9 @@ import {MatGridListModule} from "@angular/material/grid-list";
     SocialLoginModule,
     GoogleSigninButtonModule,
     MatIconModule,
-    MatGridListModule
+    MatGridListModule,
+    MatExpansionModule,
+    FormsModule
   ],
   providers: [
     {

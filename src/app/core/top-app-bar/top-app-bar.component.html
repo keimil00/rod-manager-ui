@@ -33,7 +33,7 @@
     <!-- Define the menu -->
     <mat-menu #menu="matMenu" class="mat-menu-custom-style">
       <div *appHasRole="[Role.ROLE_MANAGER]">
-        <button mat-menu-item class="button-menu">Dokumenty</button>
+        <button mat-menu-item class="button-menu" (click)="navigate('documents')">Dokumenty</button>
         <mat-divider></mat-divider>
       </div>
       <div *appHasRole="[Role.ROLE_MANAGER]">

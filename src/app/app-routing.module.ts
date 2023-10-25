@@ -7,6 +7,7 @@ import {AuthService} from "./core/auth/auth.service";
 import {HttpClient} from "@angular/common/http";
 import {PageNotFoundComponent} from "./features/page-not-found/page-not-found.component";
 import {GardenInfoComponent} from "./features/garden-info/garden-info.component";
+import {DocumentsComponent} from "./features/documents/documents.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent },
   { path: 'garden-info', component: GardenInfoComponent },
+  { path: 'documents', component: DocumentsComponent},
   { path: '404', component: PageNotFoundComponent },
   { path: '**', redirectTo: '/404' }
 ];
