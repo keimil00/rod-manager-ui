@@ -1,1 +1,63 @@
-test
+<div class="page-container">
+  <mat-card class="large-card-size">
+    <mat-card-header>
+      <div class="center-item">
+        <h2 class="title">Lista działek</h2>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="sector">
+          <th mat-header-cell *matHeaderCellDef>Sektor</th>
+          <td mat-cell *matCellDef="let gardenPlot">{{ gardenPlot.sector }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="avenue">
+          <th mat-header-cell *matHeaderCellDef>Aleja</th>
+          <td mat-cell *matCellDef="let gardenPlot">{{ gardenPlot.avenue }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="number">
+          <th mat-header-cell *matHeaderCellDef>Numer</th>
+          <td mat-cell *matCellDef="let gardenPlot">{{ gardenPlot.number }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="area">
+          <th mat-header-cell *matHeaderCellDef>Powierzchnia</th>
+          <td mat-cell *matCellDef="let gardenPlot">{{ gardenPlot.area }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="leaseholder">
+          <th mat-header-cell *matHeaderCellDef>Dzierżawca</th>
+          <td mat-cell *matCellDef="let gardenPlot">{{ gardenPlot.leaseholder }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="add">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let gardenPlot" class="icon-size">
+            <button mat-icon-button class="icon-button">
+              <mat-icon>add</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let gardenPlot">{{ gardenPlot.status }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="info">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let gardenPlot" class="icon-size">
+            <button mat-icon-button class="icon-button">
+              <mat-icon>info</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let gardenPlot; columns: displayedColumns"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>

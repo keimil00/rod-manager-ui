@@ -34,6 +34,7 @@ import {MatGridListModule} from "@angular/material/grid-list";
 import { DocumentsComponent } from './features/documents/documents.component';
 import {MatExpansionModule} from "@angular/material/expansion";
 import { ListOfGardenPlotComponent } from './features/list-of-garden-plot/list-of-garden-plot.component';
+import {MatTableModule} from "@angular/material/table";
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { ListOfGardenPlotComponent } from './features/list-of-garden-plot/list-o
     MatIconModule,
     MatGridListModule,
     MatExpansionModule,
-    FormsModule
+    FormsModule,
+    MatTableModule
   ],
   providers: [
     {
