@@ -33,6 +33,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatGridListModule} from "@angular/material/grid-list";
 import { DocumentsComponent } from './features/documents/documents.component';
 import {MatExpansionModule} from "@angular/material/expansion";
+import { ListOfGardenPlotComponent } from './features/list-of-garden-plot/list-of-garden-plot.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import {MatExpansionModule} from "@angular/material/expansion";
     PageNotFoundComponent,
     GardenInfoComponent,
     PersonCardGardenComponent,
-    DocumentsComponent
+    DocumentsComponent,
+    ListOfGardenPlotComponent
   ],
   imports: [
     BrowserModule,

@@ -37,7 +37,7 @@
         <mat-divider></mat-divider>
       </div>
       <div *appHasRole="[Role.ROLE_MANAGER]">
-        <button mat-menu-item class="button-menu">Lista działek</button>
+        <button mat-menu-item class="button-menu" (click)="navigate('list-of-garden-plot')">Lista działek</button>
         <mat-divider></mat-divider>
       </div>
       <div *appHasRole="[Role.ROLE_GARDENER]">

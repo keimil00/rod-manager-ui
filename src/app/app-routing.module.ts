@@ -8,6 +8,7 @@ import {HttpClient} from "@angular/common/http";
 import {PageNotFoundComponent} from "./features/page-not-found/page-not-found.component";
 import {GardenInfoComponent} from "./features/garden-info/garden-info.component";
 import {DocumentsComponent} from "./features/documents/documents.component";
+import {ListOfGardenPlotComponent} from "./features/list-of-garden-plot/list-of-garden-plot.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'garden-info', component: GardenInfoComponent },
   { path: 'documents', component: DocumentsComponent},
+  { path: 'list-of-garden-plot', component: ListOfGardenPlotComponent},
   { path: '404', component: PageNotFoundComponent },
   { path: '**', redirectTo: '/404' }
 ];
