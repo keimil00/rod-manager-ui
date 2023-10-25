@@ -20,10 +20,11 @@
       <span>/</span>
       <button mat-button>Skargi</button>
     </div>
-    <div>
-      <span>/</span>
-      <button mat-button (click)="navigate('garden-info')">O Ogrodzie</button>
-    </div>
+    <span>/</span>
+    <button mat-button (click)="navigate('garden-info')" [ngClass]="{'is-in-view': isInGardenInfoComponent}">
+<!--    <button mat-button (click)="navigate('garden-info')" class="garden-info-text">-->
+      O Ogrodzie
+    </button>
     <div *appHasRole="[Role.ROLE_MANAGER, Role.ROLE_EMPLOYEE, Role.ROLE_ADMIN]">
       <span>/</span>
       <button mat-button [matMenuTriggerFor]="menu">Więcej</button>
