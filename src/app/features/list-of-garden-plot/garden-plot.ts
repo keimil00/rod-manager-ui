@@ -4,7 +4,7 @@ export interface GardenPlot {
   avenue: string| null;
   number: number;
   area: number| null;
-  leaseholder: string| null;
+  leaseholderID: string| null;
   status: PlotStatus;
 }
 

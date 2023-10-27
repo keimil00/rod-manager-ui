@@ -1,0 +1,67 @@
+<mat-card *ngIf="gardenPlot" class="details-card">
+  <mat-card-header>
+    <div class="center-item">
+      <h2 class="title">Dane działki</h2>
+    </div>
+    <button mat-icon-button class="close-button" (click)="closeDetails.emit()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-card-header>
+
+  <mat-card-content>
+    <mat-card class="tabel-card">
+      <mat-card-content>
+        <table class="property-table">
+          <tr>
+            <td>Dzierżawca</td>
+            <td>{{ leaseholder?.firstName }} {{ leaseholder?.lastName }}</td>
+          </tr>
+          <tr>
+            <td>Email</td>
+            <td>{{ leaseholder?.email }}</td>
+          </tr>
+          <tr>
+            <td>Numer telefonu</td>
+            <td>{{ leaseholder?.phoneNumber }}</td>
+          </tr>
+          <tr>
+            <td>Sektor</td>
+            <td>{{ gardenPlot.sector }}</td>
+          </tr>
+          <tr>
+            <td>Aleja</td>
+            <td>{{ gardenPlot.avenue }}</td>
+          </tr>
+          <tr>
+            <td>Numer</td>
+            <td>{{ gardenPlot.number }}</td>
+          </tr>
+          <tr>
+            <td>Powierzchnia</td>
+            <td>{{ gardenPlot.area }}</td>
+          </tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="tabel-card">
+      <mat-card-content>
+        <table class="payment-table">
+          <tr>
+            <td>Kwota do zapłaty</td>
+            <td>{{ leaseholder?.paymentAmount }}</td>
+          </tr>
+          <tr>
+            <td>Termin płatności</td>
+            <td>{{ leaseholder?.paymentDueDate }}</td>
+          </tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="center-button">
+      <button mat-raised-button class="payment-history-button">Historia płatności</button>
+    </div>
+
+  </mat-card-content>
+</mat-card>

@@ -1,4 +1,4 @@
-<div class="page-container">
+<div class="page-container" [ngClass]="{'blurred-background': showDetails}">
   <mat-card class="large-card-size">
     <mat-card-header>
       <div class="center-item">
@@ -29,8 +29,11 @@
 
         <ng-container matColumnDef="leaseholder">
           <th mat-header-cell *matHeaderCellDef>Dzierżawca</th>
-          <td mat-cell *matCellDef="let gardenPlot">{{ gardenPlot.leaseholder }}</td>
+          <td mat-cell *matCellDef="let gardenPlot">
+            {{ getLeaseholderName(gardenPlot.leaseholderID) }}
+          </td>
         </ng-container>
+
 
         <ng-container matColumnDef="add">
           <th mat-header-cell *matHeaderCellDef></th>
@@ -49,7 +52,7 @@
         <ng-container matColumnDef="info">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let gardenPlot" class="icon-size">
-            <button mat-icon-button class="icon-button">
+            <button mat-icon-button class="icon-button" (click)="selectDetails(gardenPlot)">
               <mat-icon>info</mat-icon>
             </button>
           </td>
@@ -61,3 +64,11 @@
     </mat-card-content>
   </mat-card>
 </div>
+
+
+<app-garden-plot-details
+  *ngIf="showDetails"
+  [gardenPlot]="selectedGardenPlot"
+  [leaseholder]="selectedLeaseholder"
+  (closeDetails)="closeDetails()"
+></app-garden-plot-details>

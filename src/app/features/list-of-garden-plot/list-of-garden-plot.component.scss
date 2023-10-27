@@ -42,4 +42,10 @@
   display: flex;
 }
 
+.blurred-background {
+  filter: blur(5px); /* Tutaj ustaw, jakie rozmazanie chcesz */
+  pointer-events: none; /* Ta właściwość wyłączy interakcje z rozmazanym tłem */
+}
+
+
 
