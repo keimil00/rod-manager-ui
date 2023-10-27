@@ -36,6 +36,8 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import { ListOfGardenPlotComponent } from './features/list-of-garden-plot/list-of-garden-plot.component';
 import {MatTableModule} from "@angular/material/table";
 import { GardenPlotDetailsComponent } from './features/list-of-garden-plot/garden-plot-details/garden-plot-details.component';
+import { GardenPlotDetailsPaymentHistoryComponent } from './features/list-of-garden-plot/garden-plot-details/garden-plot-details-payment-history/garden-plot-details-payment-history.component';
+import {MatSortModule} from "@angular/material/sort";
 
 @NgModule({
   declarations: [
@@ -51,7 +53,8 @@ import { GardenPlotDetailsComponent } from './features/list-of-garden-plot/garde
     PersonCardGardenComponent,
     DocumentsComponent,
     ListOfGardenPlotComponent,
-    GardenPlotDetailsComponent
+    GardenPlotDetailsComponent,
+    GardenPlotDetailsPaymentHistoryComponent
   ],
   imports: [
     BrowserModule,
@@ -72,7 +75,8 @@ import { GardenPlotDetailsComponent } from './features/list-of-garden-plot/garde
     MatGridListModule,
     MatExpansionModule,
     FormsModule,
-    MatTableModule
+    MatTableModule,
+    MatSortModule
   ],
   providers: [
     {

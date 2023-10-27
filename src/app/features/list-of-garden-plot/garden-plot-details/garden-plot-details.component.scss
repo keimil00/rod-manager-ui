@@ -13,8 +13,10 @@
   padding-left: 2%;
   padding-right: 2%;
   padding-bottom: 1%;
-  background-color: map-get($rod-manager-ui-primary, 500);
+  background-color: #BFB
 }
+
+$background: #EEE;
 
 .tabel-card {
   width: 100%;
@@ -26,7 +28,7 @@
   margin-top: 4%;
   margin-bottom: 4%;
   padding: 2%;
-  background-color: lightgray;
+  background-color: $background;
 }
 
 .center-item {
@@ -67,7 +69,7 @@
   margin-top: 16px;
 }
 
-.payment-history-button{
-  background-color: lightgray;
+.payment-button{
+  background-color: $background;
 }
 

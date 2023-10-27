@@ -1,14 +1,14 @@
 <mat-card *ngIf="gardenPlot" class="details-card">
   <mat-card-header>
     <div class="center-item">
-      <h2 class="title">Dane działki</h2>
+      <h2 class="title">{{ showPaymentHistory ? 'Historia płatności' : 'Dane działki' }}</h2>
     </div>
     <button mat-icon-button class="close-button" (click)="closeDetails.emit()">
       <mat-icon>close</mat-icon>
     </button>
   </mat-card-header>
 
-  <mat-card-content>
+  <mat-card-content *ngIf="!showPaymentHistory; else paymentHistory">
     <mat-card class="tabel-card">
       <mat-card-content>
         <table class="property-table">
@@ -60,8 +60,23 @@
     </mat-card>
 
     <div class="center-button">
-      <button mat-raised-button class="payment-history-button">Historia płatności</button>
+      <button mat-raised-button class="payment-button" (click)="showPaymentHistory = true">Historia płatności
+      </button>
     </div>
 
   </mat-card-content>
+  <ng-template #paymentHistory>
+    <mat-card class="tabel-card">
+      <mat-card-content>
+        <app-garden-plot-details-payment-history
+          [userPaymentList]="getUserPaymentList()"
+          class="payment-history">
+        </app-garden-plot-details-payment-history>
+      </mat-card-content>
+    </mat-card>
+    <div class="center-button">
+      <button mat-raised-button class="payment-button" >Wprowadź nową płatność
+      </button>
+    </div>
+  </ng-template>
 </mat-card>
