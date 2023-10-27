@@ -73,3 +73,32 @@ $background: #EEE;
   background-color: $background;
 }
 
+//.form-container {
+//  display: flex;
+//  flex-direction: row;
+//  flex-wrap: wrap;
+//  justify-content: space-between;
+//  align-items: center;
+//}
+
+.row-container {
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Arrange items in a row */
+  justify-content: space-between; /* Distribute items evenly along the row */
+  width: 100%;
+  align-items: center;
+}
+
+.row-item {
+  flex: 1; /* Allow items to grow and take equal space */
+  margin-right: 10px; /* Adjust as needed for spacing between items */
+  width: 100%;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.full-width {
+  flex: 1;
+  margin-right: 10px; /* Adjust as needed for spacing */
+  width: 100%;
+}

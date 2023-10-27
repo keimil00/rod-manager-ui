@@ -60,23 +60,62 @@
     </mat-card>
 
     <div class="center-button">
-      <button mat-raised-button class="payment-button" (click)="showPaymentHistory = true">Historia płatności
+      <button mat-raised-button class="payment-button" (click)="showPaymentHistory = true" *ngIf="leaseholder">Historia
+        płatności
       </button>
     </div>
 
   </mat-card-content>
   <ng-template #paymentHistory>
-    <mat-card class="tabel-card">
-      <mat-card-content>
-        <app-garden-plot-details-payment-history
-          [userPaymentList]="getUserPaymentList()"
-          class="payment-history">
-        </app-garden-plot-details-payment-history>
-      </mat-card-content>
-    </mat-card>
-    <div class="center-button">
-      <button mat-raised-button class="payment-button" >Wprowadź nową płatność
-      </button>
+    <div *ngIf="!showNewPaymentForm;">
+      <mat-card class="tabel-card">
+        <mat-card-content>
+          <app-garden-plot-details-payment-history
+            [userPaymentList]="getUserPaymentList()"
+            class="payment-history">
+          </app-garden-plot-details-payment-history>
+        </mat-card-content>
+      </mat-card>
+      <div class="center-button">
+        <button mat-raised-button class="payment-button" (click)="showNewPaymentForm=true">Wprowadź nową płatność
+        </button>
+      </div>
+    </div>
+    <div *ngIf="showNewPaymentForm;">
+      <mat-card>
+        <mat-card-content>
+          <form class="form-container" [formGroup]="paymentForm">
+            <div class="row-container">
+              <div class="row-item">
+                <mat-form-field class="full-width">
+                  <input matInput type="text" placeholder="Kwota" formControlName="value" required
+                         pattern="[0-9]+(\.[0-9]+)?">
+                  <mat-error *ngFor="let error of validationErrors('value')">
+                    {{ error.message }}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="row-item">
+                <mat-form-field class="full-width">
+                  <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="date" required>
+                  <mat-hint>MM/DD/YYYY</mat-hint>
+                  <mat-error *ngFor="let error of validationErrors('date')">
+                    {{ error.message }}
+                  </mat-error>
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+          <mat-error *ngIf="showEmptyFieldsError">Pola nie mogą być puste</mat-error>
+        </mat-card-content>
+      </mat-card>
+      <div class="center-button">
+        <button mat-raised-button class="add-payment-button" type="submit" (click)="addNewPayment()">Dodaj płatność
+        </button>
+      </div>
     </div>
   </ng-template>
 </mat-card>
+
