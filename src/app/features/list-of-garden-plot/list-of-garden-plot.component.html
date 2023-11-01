@@ -1,4 +1,4 @@
-<div class="page-container" [ngClass]="{'blurred-background': showDetails}">
+<div class="page-container" [ngClass]="{'blurred-background': showDetails || showAddingLeaseHolder}">
   <mat-card class="large-card-size">
     <mat-card-header>
       <div class="center-item">
@@ -38,7 +38,7 @@
         <ng-container matColumnDef="add">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let gardenPlot" class="icon-size">
-            <button mat-icon-button class="icon-button">
+            <button mat-icon-button class="icon-button" (click)="selectAddingLeaseHolder(gardenPlot)">
               <mat-icon>add</mat-icon>
             </button>
           </td>
@@ -72,3 +72,9 @@
   [leaseholder]="selectedLeaseholder"
   (closeDetails)="closeDetails()"
 ></app-garden-plot-details>
+
+<app-garden-plot-add-leaseholder
+  *ngIf="showAddingLeaseHolder"
+  [gardenPlot]="selectedGardenPlot"
+  (closeAddingLeaseHolder)="closeAddingLeaseHolder()"
+></app-garden-plot-add-leaseholder>

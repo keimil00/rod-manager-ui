@@ -45,6 +45,9 @@ import {MatSortModule} from "@angular/material/sort";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatNativeDateModule} from "@angular/material/core";
+import { GardenPlotAddLeaseholderComponent } from './features/list-of-garden-plot/garden-plot-add-leaseholder/garden-plot-add-leaseholder.component';
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -61,7 +64,8 @@ import {MatNativeDateModule} from "@angular/material/core";
     DocumentsComponent,
     ListOfGardenPlotComponent,
     GardenPlotDetailsComponent,
-    GardenPlotDetailsPaymentHistoryComponent
+    GardenPlotDetailsPaymentHistoryComponent,
+    GardenPlotAddLeaseholderComponent
   ],
   imports: [
     BrowserModule,
@@ -85,7 +89,7 @@ import {MatNativeDateModule} from "@angular/material/core";
     MatTableModule,
     MatSortModule,
     MatDatepickerModule,
-    MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule,
+    MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule, MatCheckboxModule,
   ],
   providers: [
     {
