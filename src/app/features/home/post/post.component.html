@@ -1,0 +1,17 @@
+<mat-card appearance="outlined" class="card">
+  <mat-card-header class="mat-header col-container">
+    <mat-card-title class="col-item title">
+      <div class="col-item">{{ post.title }}</div>
+    </mat-card-title>
+    <div class="col-item tag-container">
+      <div *ngFor="let tag of post.tags" class="chip">
+        <span class="chip-text">#{{ tag }}</span>
+      </div>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <div [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(post.content)"></div>
+  </mat-card-content>
+</mat-card>
+
+
