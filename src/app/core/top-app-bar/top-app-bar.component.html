@@ -17,22 +17,22 @@
         <button mat-menu-item class="button-menu">O ogrodzie</button>
         <mat-divider></mat-divider>
       </div>
-      <div *appHasRole="[Role.ROLE_MANAGER]">
+      <div *appHasRole="[Role.MANAGER]">
         <button mat-menu-item class="button-menu">Dokumenty</button>
         <mat-divider></mat-divider>
       </div>
-      <div *appHasRole="[Role.ROLE_MANAGER]">
+      <div *appHasRole="[Role.MANAGER]">
         <button mat-menu-item class="button-menu">Lista działek</button>
         <mat-divider></mat-divider>
       </div>
-      <div *appHasRole="[Role.ROLE_GARDENER]">
+      <div *appHasRole="[Role.GARDENER]">
         <button mat-menu-item class="button-menu">Opłaty</button>
         <mat-divider></mat-divider>
       </div>
-      <div *appHasRole="[Role.ROLE_EMPLOYEE, Role.ROLE_MANAGER]">
+      <div *appHasRole="[Role.TECHNICAL_EMPLOYEE, Role.MANAGER]">
         <button mat-menu-item class="button-menu">Liczniki</button>
       </div>
-      <div *appHasRole="[Role.ROLE_MANAGER, Role.ROLE_ADMIN]">
+      <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
         <mat-divider></mat-divider>
         <button mat-menu-item class="button-menu">Lista użytkowników</button>
       </div>

@@ -1,0 +1,28 @@
+<div mat-dialog-content>
+  <form>
+    <mat-form-field class="example-chip-list">
+      <mat-label>Tagi</mat-label>
+      <mat-chip-grid #chipGrid aria-label="Tag selection">
+        <mat-chip-row *ngFor="let tag of tags" (removed)="remove(tag)">
+          {{tag}}
+          <button matChipRemove [attr.aria-label]="'remove ' + tag">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+      </mat-chip-grid>
+      <input placeholder="Wpisz tag..." #tagInput [formControl]="tagCtrl"
+             [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
+             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             (matChipInputTokenEnd)="add($event)"/>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+        <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+          {{tag}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+  <mat-dialog-actions align="center" class="mat-actions col-container">
+    <app-text-button mat-dialog-close class="col-item cancel-button" className="action-button" [text]="'Anuluj'" [color]="'accent'" ></app-text-button>
+    <app-text-button [mat-dialog-close]="true" class="col-item submit-button" className="action-button" [text]="'Zapisz'" [color]="'primary'" ></app-text-button>
+  </mat-dialog-actions>
+</div>

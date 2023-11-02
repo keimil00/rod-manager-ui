@@ -1,0 +1,54 @@
+.page-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.title {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.tag-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1; /* Allow items to grow and take equal space */
+  margin-right: 10px; /* Adjust as needed for spacing between items */
+  width: 100%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.row-item {
+  flex: 1; /* Allow items to grow and take equal space */
+  margin-right: 10px; /* Adjust as needed for spacing between items */
+  width: 80%;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.row-container {
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Arrange items in a row */
+  justify-content: space-between; /* Distribute items evenly along the row */
+  width: 60%;
+  align-items: center;
+}
+
+.example-chip-list {
+  width: 100%;
+}
+
+.chip-section {
+  width: auto !important;
+}
+
+.floating-button {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 100;
+}

@@ -15,7 +15,7 @@ import { HomeComponent } from './features/home/home.component';
 import {MatMenuModule} from "@angular/material/menu";
 import {MatCardModule} from "@angular/material/card";
 import {MatInputModule} from "@angular/material/input";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatSelectModule} from "@angular/material/select";
 import {MatDividerModule} from "@angular/material/divider";
 import {
@@ -26,6 +26,17 @@ import {
 } from "@abacritt/angularx-social-login";
 import {AuthInterceptor} from "./core/interceptors/auth.interceptor";
 import { HasRoleDirective } from './core/has-role/has-role.directive';
+import {MatIconModule} from "@angular/material/icon";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {FlexModule} from "@angular/flex-layout";
+import {MatPaginatorIntl, MatPaginatorModule} from "@angular/material/paginator";
+import { PaginatorComponent } from './shared/paginator/paginator/paginator.component';
+import { PostComponent } from './features/home/post/post.component';
+import {MatChipsModule} from "@angular/material/chips";
+import {QuillModule} from "ngx-quill";
+import { PostEditComponent } from './features/home/post/post-edit/post-edit.component';
+import { TagDialogComponent } from './features/home/post/post-edit/tag-dialog/tag-dialog.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
@@ -35,7 +46,12 @@ import { HasRoleDirective } from './core/has-role/has-role.directive';
     TopAppBarComponent,
     TextButtonComponent,
     HomeComponent,
-    HasRoleDirective
+    HasRoleDirective,
+    PaginatorComponent,
+    PaginatorComponent,
+    PostComponent,
+    PostEditComponent,
+    TagDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +67,16 @@ import { HasRoleDirective } from './core/has-role/has-role.directive';
     MatSelectModule,
     MatDividerModule,
     SocialLoginModule,
-    GoogleSigninButtonModule
+    GoogleSigninButtonModule,
+    MatChipsModule,
+    MatIconModule,
+    MatAutocompleteModule,
+    FlexModule,
+    MatPaginatorModule,
+    MatChipsModule,
+    FormsModule,
+    QuillModule.forRoot(),
+    MatDialogModule
   ],
   providers: [
     {
@@ -70,6 +95,10 @@ import { HasRoleDirective } from './core/has-role/has-role.directive';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
+    },
+    {
+      provide: MatPaginatorIntl,
+      useClass: PaginatorComponent
     }
   ],
   bootstrap: [AppComponent]
