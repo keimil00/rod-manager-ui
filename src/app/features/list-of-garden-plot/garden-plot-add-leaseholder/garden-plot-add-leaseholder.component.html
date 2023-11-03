@@ -14,20 +14,22 @@
 
         <mat-checkbox class="margin" [(ngModel)]="removeLeaseholder">Usuń dzierżawcę</mat-checkbox>
 
-        <form #leaseHolderForm="ngForm" *ngIf="!removeLeaseholder">
+<!--        <form #leaseHolderForm="ngForm" *ngIf="!removeLeaseholder">-->
+        <form [formGroup]="addLeaseHolderForm" *ngIf="!removeLeaseholder">
           <mat-form-field class="full-width">
             <ng-container>
-              <input matInput placeholder="Imię i nazwisko dzierżawcy" [formControl]="leaseHolderControl" [matAutocomplete]="auto">
+              <input matInput placeholder="Imię i nazwisko dzierżawcy" formControlName="leaseholderEmail" [matAutocomplete]="auto">
               <mat-autocomplete #auto="matAutocomplete">
                 <mat-option *ngFor="let option of leaseHolderOptions" [value]="option.email">
                   {{ option.fullName }} (Email: {{ option.email }})
                 </mat-option>
               </mat-autocomplete>
             </ng-container>
-
+            <mat-error *ngFor="let error of validationErrors('leaseholderEmail')">
+              {{ error.message }}
+            </mat-error>
           </mat-form-field>
           <mat-error *ngIf="showError" class="error-message">Błąd: Proszę wybrać dzierżawcę z listy.</mat-error>
-
         </form>
         <div class="center-button">
           <button mat-button type="submit" class="button-color" (click)="accept()">Akceptuj</button>

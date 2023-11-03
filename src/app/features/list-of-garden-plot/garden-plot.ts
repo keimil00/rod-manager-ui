@@ -1,5 +1,5 @@
 export interface GardenPlot {
-  id: number;
+  id: string;
   sector: string| null;
   avenue: string| null;
   number: number;

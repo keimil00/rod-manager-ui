@@ -48,6 +48,7 @@ import {MatNativeDateModule} from "@angular/material/core";
 import { GardenPlotAddLeaseholderComponent } from './features/list-of-garden-plot/garden-plot-add-leaseholder/garden-plot-add-leaseholder.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import { GardenPlotListAddGardenComponent } from './features/list-of-garden-plot/garden-plot-list-add-garden/garden-plot-list-add-garden.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     ListOfGardenPlotComponent,
     GardenPlotDetailsComponent,
     GardenPlotDetailsPaymentHistoryComponent,
-    GardenPlotAddLeaseholderComponent
+    GardenPlotAddLeaseholderComponent,
+    GardenPlotListAddGardenComponent
   ],
   imports: [
     BrowserModule,
