@@ -48,7 +48,6 @@ export class GardenPlotDetailsComponent {
     });
   }
 
-
   paymentLists: PaymentList[] = [
     {
       id: '1',
@@ -275,7 +274,8 @@ export class GardenPlotDetailsComponent {
     }
     return errors;
   }
-  closeEditingingGardenPlot(){
+
+  closeEditingingGardenPlot() {
     this.closeDetails.emit()
   }
 }

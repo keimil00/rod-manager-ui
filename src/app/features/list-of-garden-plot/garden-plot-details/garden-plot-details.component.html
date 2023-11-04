@@ -1,7 +1,8 @@
 <mat-card *ngIf="gardenPlot" class="details-card">
   <mat-card-header>
     <div class="center-item">
-      <h2 class="title">{{ showPaymentHistory ? 'Historia płatności' : (showEditGardenPlotForm ? 'Edytuj działkę' : 'Dane działki') }}</h2>
+      <h2
+        class="title">{{ showPaymentHistory ? 'Historia płatności' : (showEditGardenPlotForm ? 'Edytuj działkę' : 'Dane działki') }}</h2>
     </div>
     <button mat-icon-button class="close-button" (click)="closeDetails.emit()">
       <mat-icon>close</mat-icon>
@@ -123,13 +124,14 @@
     </div>
     <div *ngSwitchCase="showEditGardenPlotForm">
       <app-garden-plot-edit-garden
-      [gardenPlot]="gardenPlot"
-      (closeEditingingGardenPlot)="closeEditingingGardenPlot()">
+        [gardenPlot]="gardenPlot"
+        (closeEditingingGardenPlot)="closeEditingingGardenPlot()">
       </app-garden-plot-edit-garden>
     </div>
   </div>
 </mat-card>
 
-<button mat-fab color="primary" class="floating-button" *ngIf="!showPaymentHistory&&!showEditGardenPlotForm" (click)="showEditGardenPlotForm=true">
+<button mat-fab color="primary" class="floating-button" *ngIf="!showPaymentHistory&&!showEditGardenPlotForm"
+        (click)="showEditGardenPlotForm=true">
   <mat-icon>edit</mat-icon>
 </button>

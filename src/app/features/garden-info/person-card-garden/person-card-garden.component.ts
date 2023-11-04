@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'app-person-card-garden',
@@ -12,7 +12,6 @@ export class PersonCardGardenComponent {
   @Input() email: string;
 
   constructor() {
-    // Inicjalizacja w konstruktorze (opcjonalnie)
     this.position = '';
     this.name = '';
     this.phoneNumber = '';

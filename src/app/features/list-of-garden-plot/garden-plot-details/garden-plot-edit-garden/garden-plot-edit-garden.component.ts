@@ -64,7 +64,6 @@ export class GardenPlotEditGardenComponent {
       ]],
       leaseholderEmail: ['', [
         profileEmailValidator(profiles),
-        // uniqueLeaseholderIDValidator(gardenPlots, profiles,true,this.gardenPlot)
       ]],
       status: ['',
         Validators.required]
@@ -77,7 +76,7 @@ export class GardenPlotEditGardenComponent {
       avenue: gardenPlot.avenue,
       number: gardenPlot.number,
       area: gardenPlot.area,
-      leaseholderEmail: findProfileEmailByID(gardenPlot.leaseholderID, profiles), // Zakładając, że gardenPlot ma email dzierżawcy
+      leaseholderEmail: findProfileEmailByID(gardenPlot.leaseholderID, profiles),
       status: gardenPlot.status,
     });
   }

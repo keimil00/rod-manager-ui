@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Component, EventEmitter, Output} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {GardenPlot, PlotStatus} from "../garden-plot";
 import {Profile, Role} from "../../Profile";
 import {AbstractControl, ValidatorFn} from '@angular/forms';
@@ -58,7 +58,7 @@ export class GardenPlotListAddGardenComponent {
       ]],
       leaseholderEmail: ['', [
         profileEmailValidator(profiles),
-        uniqueLeaseholderIDValidator(gardenPlots, profiles,false)
+        uniqueLeaseholderIDValidator(gardenPlots, profiles, false)
       ]],
       status: ['',
         Validators.required]
@@ -139,7 +139,6 @@ export class GardenPlotListAddGardenComponent {
 
   protected readonly PlotStatus = PlotStatus;
   protected readonly Object = Object;
-
 }
 
 function findProfileIdByEmail(emailToFind: string, profiles: Profile[]): string | null {
@@ -165,7 +164,7 @@ export function profileEmailValidator(profiles: Profile[]): ValidatorFn {
   };
 }
 
-export function uniqueLeaseholderIDValidator(gardenPlots: GardenPlot[], profiles: Profile[],showCurrentLeaseHolder: boolean, CurrentGardenPlot?: GardenPlot): ValidatorFn {
+export function uniqueLeaseholderIDValidator(gardenPlots: GardenPlot[], profiles: Profile[], showCurrentLeaseHolder: boolean, CurrentGardenPlot?: GardenPlot): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     const leaseholderEmail = control.value;
 

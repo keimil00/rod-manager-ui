@@ -1,11 +1,11 @@
-/* garden-plot-details.component.css */
 @import '../../../../styles';
+
 .details-card {
-  margin: 0 auto; /* Wyśrodkowanie karty */
+  margin: 0 auto;
   position: fixed;
-  top: 50%; /* Wyśrodkowanie w pionie */
-  left: 50%; /* Wyśrodkowanie w poziomie */
-  transform: translate(-50%, -50%); /* Wyśrodkowanie w poziomie i pionie */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 60%;
   -webkit-box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
   -moz-box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
@@ -69,40 +69,32 @@ $background: #EEE;
   margin-top: 16px;
 }
 
-.payment-button{
+.payment-button {
   background-color: $background;
 }
 
-//.form-container {
-//  display: flex;
-//  flex-direction: row;
-//  flex-wrap: wrap;
-//  justify-content: space-between;
-//  align-items: center;
-//}
-
 .row-container {
-  display: flex; /* Use flexbox for layout */
-  flex-direction: column; /* Arrange items in a row */
-  justify-content: space-between; /* Distribute items evenly along the row */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   width: 100%;
   align-items: center;
 }
 
 .row-item {
-  flex: 1; /* Allow items to grow and take equal space */
-  margin-right: 10px; /* Adjust as needed for spacing between items */
+  flex: 1;
+  margin-right: 10px;
   width: 100%;
   align-items: center;
   padding-top: 10px;
   padding-bottom: 10px;
 }
+
 .full-width {
   flex: 1;
-  margin-right: 10px; /* Adjust as needed for spacing */
+  margin-right: 10px;
   width: 100%;
 }
-
 
 .floating-button {
   position: fixed;

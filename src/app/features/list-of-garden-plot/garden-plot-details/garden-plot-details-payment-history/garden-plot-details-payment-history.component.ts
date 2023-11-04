@@ -22,7 +22,6 @@ export class GardenPlotDetailsPaymentHistoryComponent implements OnInit, AfterVi
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource<Payment>(this.userPaymentList);
-    // this.dataSource.sort = this.sort;
   }
 
   ngAfterViewInit() {
