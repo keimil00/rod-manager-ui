@@ -1,0 +1,82 @@
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Dokumenty publiczne
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Mapa
+        </mat-panel-title>
+        <mat-panel-description>
+          Tutaj dodaj mape ogrodu
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <a [href]="linkUrlMap" target="_blank">Twoja mapa</a>
+      <div>
+        <app-text-button class="add-button" [text]="'Dodaj dokument'" [color]="'accent'"
+                         (click)="toggleAddMapDocumentForm()"></app-text-button>
+      </div>
+
+      <div *ngIf="showAddMapDocumentForm">
+        <input type="file" (change)="onMapFileSelected($event)">
+        <app-text-button class="add-button" [text]="'Dodaj'" [color]="'accent'"
+                         (click)="addMapDocument()"></app-text-button>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Regulamin
+        </mat-panel-title>
+        <mat-panel-description>
+          Tutaj dodaj regulamin ogrodu
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <a [href]="linkUrlStatute" target="_blank">Twój regulamin</a>
+      <div>
+        <app-text-button class="add-button" [text]="'Dodaj dokument'" [color]="'accent'"
+                         (click)="toggleAddStatuteDocumentForm()"></app-text-button>
+      </div>
+
+      <div *ngIf="showAddStatuteDocumentForm">
+        <input type="file" (change)="onStatuteFileSelected($event)">
+
+        <app-text-button class="add-button" [text]="'Dodaj'" [color]="'accent'"
+                         (click)="addStatuteDocument()"></app-text-button>
+      </div>
+    </mat-expansion-panel>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Dokumenty prywatne
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div>
+      <mat-expansion-panel *ngFor="let document of documents">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ document.title }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <a [href]="document.link" target="_blank">Otwórz dokument</a>
+      </mat-expansion-panel>
+
+      <div>
+        <app-text-button class="add-button" [text]="'Dodaj dokument'" [color]="'accent'"
+                         (click)="toggleAddDocumentForm()"></app-text-button>
+      </div>
+
+      <div *ngIf="showAddDocumentForm">
+        <input type="text" [(ngModel)]="newDocumentTitle" placeholder="Tytuł dokumentu">
+        <input type="file" (change)="onFileSelected($event)">
+        <app-text-button class="add-button" [text]="'Dodaj'" [color]="'accent'"
+                         (click)="addDocument()"></app-text-button>
+      </div>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

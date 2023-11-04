@@ -1,0 +1,48 @@
+<div class="page-container">
+  <mat-card class="large-card-size">
+    <mat-card-header>
+      <div class="center-item">
+        <h2 class="title">O ogrodzie</h2>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="page-container">
+        <mat-card class="inter-card-size">
+          <mat-card-header>
+            <div class="center-item column">
+              <a mat-button color="primary" class="document">Mapa</a>
+              <a mat-button color="primary" class="document">Regulamin</a>
+            </div>
+          </mat-card-header>
+        </mat-card>
+      </div>
+
+      <div class="page-container">
+        <mat-card class="employers-card-size">
+          <mat-card-content>
+            <mat-card-header>
+              <div class="center-item column title-managment">
+                Zarząd
+              </div>
+            </mat-card-header>
+            <mat-grid-list [cols]="2" rowHeight="2:1">
+              <ng-container *ngFor="let employer of employers">
+                <mat-grid-tile>
+                  <app-person-card-garden class="full-width"
+                                          [position]="employer.position"
+                                          [name]="employer.name"
+                                          [phoneNumber]="employer.phoneNumber"
+                                          [email]="employer.email"
+                  ></app-person-card-garden>
+                </mat-grid-tile>
+              </ng-container>
+            </mat-grid-list>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+
+<!--TODO dodać floating button do edycji listy pracowników-->

@@ -1,17 +1,17 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { LoginComponent } from './features/login/login.component';
-import { RegisterComponent } from './features/register/register.component';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
+import {LoginComponent} from './features/login/login.component';
+import {RegisterComponent} from './features/register/register.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
-import { TopAppBarComponent } from './core/top-app-bar/top-app-bar.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {TopAppBarComponent} from './core/top-app-bar/top-app-bar.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatButtonModule} from "@angular/material/button";
-import { TextButtonComponent } from './shared/text-button/text-button.component';
-import { HomeComponent } from './features/home/home.component';
+import {TextButtonComponent} from './shared/text-button/text-button.component';
+import {HomeComponent} from './features/home/home.component';
 import {MatMenuModule} from "@angular/material/menu";
 import {MatCardModule} from "@angular/material/card";
 import {MatInputModule} from "@angular/material/input";
@@ -25,9 +25,33 @@ import {
   SocialLoginModule
 } from "@abacritt/angularx-social-login";
 import {AuthInterceptor} from "./core/interceptors/auth.interceptor";
-import { HasRoleDirective } from './core/has-role/has-role.directive';
+import {HasRoleDirective} from './core/has-role/has-role.directive';
+import {PageNotFoundComponent} from './features/page-not-found/page-not-found.component';
+import {GardenInfoComponent} from './features/garden-info/garden-info.component';
+import {PersonCardGardenComponent} from './features/garden-info/person-card-garden/person-card-garden.component';
 import {MatIconModule} from "@angular/material/icon";
+import {MatGridListModule} from "@angular/material/grid-list";
+import {DocumentsComponent} from './features/documents/documents.component';
+import {MatExpansionModule} from "@angular/material/expansion";
+import {ListOfGardenPlotComponent} from './features/list-of-garden-plot/list-of-garden-plot.component';
+import {MatTableModule} from "@angular/material/table";
+import {
+  GardenPlotDetailsComponent
+} from './features/list-of-garden-plot/garden-plot-details/garden-plot-details.component';
+import {
+  GardenPlotDetailsPaymentHistoryComponent
+} from './features/list-of-garden-plot/garden-plot-details/garden-plot-details-payment-history/garden-plot-details-payment-history.component';
+import {MatSortModule} from "@angular/material/sort";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatNativeDateModule} from "@angular/material/core";
+import { GardenPlotAddLeaseholderComponent } from './features/list-of-garden-plot/garden-plot-add-leaseholder/garden-plot-add-leaseholder.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import { GardenPlotListAddGardenComponent } from './features/list-of-garden-plot/garden-plot-list-add-garden/garden-plot-list-add-garden.component';
+import { GardenPlotEditGardenComponent } from './features/list-of-garden-plot/garden-plot-details/garden-plot-edit-garden/garden-plot-edit-garden.component';
+// import {MatIconModule} from "@angular/material/icon";
+// import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {FlexModule} from "@angular/flex-layout";
 import {MatPaginatorIntl, MatPaginatorModule} from "@angular/material/paginator";
 import { PaginatorComponent } from './shared/paginator/paginator/paginator.component';
@@ -46,6 +70,17 @@ import {MatDialogModule} from "@angular/material/dialog";
     TopAppBarComponent,
     TextButtonComponent,
     HomeComponent,
+    HasRoleDirective,
+    PageNotFoundComponent,
+    GardenInfoComponent,
+    PersonCardGardenComponent,
+    DocumentsComponent,
+    ListOfGardenPlotComponent,
+    GardenPlotDetailsComponent,
+    GardenPlotDetailsPaymentHistoryComponent,
+    GardenPlotAddLeaseholderComponent,
+    GardenPlotListAddGardenComponent,
+    GardenPlotEditGardenComponent,
     HasRoleDirective,
     PaginatorComponent,
     PaginatorComponent,
@@ -67,6 +102,16 @@ import {MatDialogModule} from "@angular/material/dialog";
     MatSelectModule,
     MatDividerModule,
     SocialLoginModule,
+    GoogleSigninButtonModule,
+    MatIconModule,
+    MatGridListModule,
+    MatExpansionModule,
+    FormsModule,
+    MatTableModule,
+    MatSortModule,
+    MatDatepickerModule,
+    MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule, MatCheckboxModule,
+
     GoogleSigninButtonModule,
     MatChipsModule,
     MatIconModule,
@@ -103,4 +148,5 @@ import {MatDialogModule} from "@angular/material/dialog";
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

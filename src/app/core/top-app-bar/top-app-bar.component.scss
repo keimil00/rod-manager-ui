@@ -33,6 +33,7 @@
   .title {
     font-size: 1.5em; // Adjust the font size for the title
     margin-right: 20px; // Add some space between title and options
+    cursor: pointer;
   }
 
   div {
@@ -64,4 +65,9 @@
 .mat-divider {
   background-color: gray;
   height: 0.1px;
+}
+
+.mat-toolbar .options button.is-in-view {
+  color: #FFF;
+  text-decoration: underline;
 }
