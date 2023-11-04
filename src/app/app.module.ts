@@ -50,6 +50,17 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { GardenPlotListAddGardenComponent } from './features/list-of-garden-plot/garden-plot-list-add-garden/garden-plot-list-add-garden.component';
 import { GardenPlotEditGardenComponent } from './features/list-of-garden-plot/garden-plot-details/garden-plot-edit-garden/garden-plot-edit-garden.component';
+// import {MatIconModule} from "@angular/material/icon";
+// import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {FlexModule} from "@angular/flex-layout";
+import {MatPaginatorIntl, MatPaginatorModule} from "@angular/material/paginator";
+import { PaginatorComponent } from './shared/paginator/paginator/paginator.component';
+import { PostComponent } from './features/home/post/post.component';
+import {MatChipsModule} from "@angular/material/chips";
+import {QuillModule} from "ngx-quill";
+import { PostEditComponent } from './features/home/post/post-edit/post-edit.component';
+import { TagDialogComponent } from './features/home/post/post-edit/tag-dialog/tag-dialog.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
@@ -69,7 +80,13 @@ import { GardenPlotEditGardenComponent } from './features/list-of-garden-plot/ga
     GardenPlotDetailsPaymentHistoryComponent,
     GardenPlotAddLeaseholderComponent,
     GardenPlotListAddGardenComponent,
-    GardenPlotEditGardenComponent
+    GardenPlotEditGardenComponent,
+    HasRoleDirective,
+    PaginatorComponent,
+    PaginatorComponent,
+    PostComponent,
+    PostEditComponent,
+    TagDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -94,6 +111,17 @@ import { GardenPlotEditGardenComponent } from './features/list-of-garden-plot/ga
     MatSortModule,
     MatDatepickerModule,
     MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule, MatCheckboxModule,
+
+    GoogleSigninButtonModule,
+    MatChipsModule,
+    MatIconModule,
+    MatAutocompleteModule,
+    FlexModule,
+    MatPaginatorModule,
+    MatChipsModule,
+    FormsModule,
+    QuillModule.forRoot(),
+    MatDialogModule
   ],
   providers: [
     {
@@ -112,6 +140,10 @@ import { GardenPlotEditGardenComponent } from './features/list-of-garden-plot/ga
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
+    },
+    {
+      provide: MatPaginatorIntl,
+      useClass: PaginatorComponent
     }
   ],
   bootstrap: [AppComponent]

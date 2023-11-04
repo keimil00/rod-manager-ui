@@ -9,7 +9,7 @@ import {ThemePalette} from "@angular/material/core";
 export class TextButtonComponent {
   @Input() text: string = '';
   @Input() color: ThemePalette;
-  @Input() class: string = '';
+  @Input() className: string = '';
   @Input() type: string = '';
 
 

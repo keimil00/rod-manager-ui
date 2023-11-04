@@ -1,8 +1,8 @@
-
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
 // Plus imports for other components in your app.
+@import 'node_modules/quill/dist/quill.bubble.css';
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
@@ -37,6 +37,7 @@ $rod-manager-ui-theme: mat.define-light-theme((
 /* You can add global styles to this file, and also import other style files */
 
 
+/* TODO(mdc-migration): The following rule targets internal classes of menu that may no longer apply for the MDC version.*/
 .mat-menu-custom-style {
   --mat-menu-container-color: black;
 }
@@ -45,7 +46,7 @@ html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 /* Importing Bootstrap SCSS file. */
-@import "./node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/bootstrap";
 
 /* Importing Datepicker SCSS file. */
 @import "node_modules/ngx-bootstrap/datepicker/bs-datepicker";

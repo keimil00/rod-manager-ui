@@ -1,1 +1,45 @@
-<p>home works!</p>
+<div class="page-container">
+  <mat-card-header class="row-container">
+    <div class="row-item">
+      <h2 class="title">Ogłoszenia</h2>
+    </div>
+  </mat-card-header>
+  <div class="tag-section row-container">
+
+    <div class="row-item chip-section">
+      <mat-chip-listbox multiple  aria-label="Tag selection">
+        <mat-chip-option *ngFor="let tag of defaultTags"
+                         [selected]="tag.selected"
+                         (click)="filterPostsByTags(tag)">{{ tag.name }}</mat-chip-option>
+      </mat-chip-listbox>
+
+    </div>
+    <div class="row-item">
+      <form (submit)="$event.preventDefault()">
+        <mat-form-field class="example-chip-list">
+          <mat-label>Szukaj...</mat-label>
+          <input matInput #tagInput [formControl]="tagControl" [matAutocomplete]="auto" (input)="updateTagControl($event)">
+          <mat-autocomplete #auto="matAutocomplete" requireSelection (optionSelected)="selected($event)">
+            <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+              {{tag}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
+    </div>
+    <div class="row-item">
+      <app-post-edit *ngIf="isCreatingPost" (cancel)="onPostCreatingCancelled()" (save)="onPostCreated($event)"></app-post-edit>
+      <app-post *ngFor="let post of this.postsLoaded" [post]="post"></app-post>
+      <app-paginator
+        #paginator
+        [loadDataFunction]="fetchData.bind(this)"
+        (dataLoaded)="onNewDataLoaded($event)"
+        [totalItemsCount]="this.totalPostsCount"
+        [pageSize]="this.pageSize"
+      ></app-paginator>
+    </div>
+  </div>
+  <button mat-fab color="primary" class="floating-button" (click)="createPost()" [disabled]="isCreatingPost">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>

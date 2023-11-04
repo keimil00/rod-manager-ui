@@ -1,0 +1,24 @@
+.example-chip-list {
+  width: 100%;
+}
+
+.col-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.col-item {
+  flex: 1;
+}
+
+.submit-button {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 15px;
+}
+
+.cancel-button {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 15px;
+}

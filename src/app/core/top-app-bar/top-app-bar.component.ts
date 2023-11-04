@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
+import {NavigationEnd, Router} from "@angular/router";
 import {MatMenuTrigger} from "@angular/material/menu";
 import {AuthService} from "../auth/auth.service";
 import {Role} from "../../features/register/user.model";
@@ -44,6 +44,4 @@ export class TopAppBarComponent {
   }
 
   protected readonly Role = Role;
-
-
 }

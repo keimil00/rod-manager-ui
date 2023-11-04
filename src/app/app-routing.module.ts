@@ -20,6 +20,7 @@ const routes: Routes = [
   { path: 'list-of-garden-plot', component: ListOfGardenPlotComponent},
   { path: '404', component: PageNotFoundComponent },
   { path: '**', redirectTo: '/404' }
+  // { path: 'admin', component: AdminComponent, canActivate: [authGuard([Role.ADMIN] TODO: gdy będą role trzeba to pododawać
 ];
 
 @NgModule({
