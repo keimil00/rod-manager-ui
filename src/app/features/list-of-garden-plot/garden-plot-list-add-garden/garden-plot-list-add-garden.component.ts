@@ -11,7 +11,6 @@ import {gardenPlots} from "../list-of-garden-plot.component";
   styleUrls: ['./garden-plot-list-add-garden.component.scss']
 })
 export class GardenPlotListAddGardenComponent {
-  // leaseHolderControl = new FormControl();
   leaseHolderOptions: { email: string; fullName: string }[] = [];
 
   @Output() closeAddingGardenPlot = new EventEmitter<void>();
@@ -59,7 +58,7 @@ export class GardenPlotListAddGardenComponent {
       ]],
       leaseholderEmail: ['', [
         profileEmailValidator(profiles),
-        uniqueLeaseholderIDValidator(gardenPlots,profiles)
+        uniqueLeaseholderIDValidator(gardenPlots, profiles,false)
       ]],
       status: ['',
         Validators.required]
@@ -68,7 +67,7 @@ export class GardenPlotListAddGardenComponent {
 
   ngOnInit() {
     this.addGardenForm.get('leaseholderEmail')?.valueChanges.subscribe((value) => {
-      this.leaseHolderOptions = getMatchingProfiles(value,profiles,gardenPlots);
+      this.leaseHolderOptions = getMatchingProfiles(value, profiles, gardenPlots, false);
     });
     profiles.sort((a, b) => {
 
@@ -166,38 +165,42 @@ export function profileEmailValidator(profiles: Profile[]): ValidatorFn {
   };
 }
 
-export function uniqueLeaseholderIDValidator(gardenPlots: GardenPlot[], profiles: Profile[]): ValidatorFn {
+export function uniqueLeaseholderIDValidator(gardenPlots: GardenPlot[], profiles: Profile[],showCurrentLeaseHolder: boolean, CurrentGardenPlot?: GardenPlot): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     const leaseholderEmail = control.value;
 
     if (!leaseholderEmail) {
-      return null; // Jeśli wartość jest pusta, to walidacja zostaje pominięta
+      return null;
     }
 
-    // Znajdź profil o podanym adresie email
     const selectedProfile = profiles.find((profile) => profile.email === leaseholderEmail);
 
     if (!selectedProfile) {
-      return null; // Jeśli nie znaleziono profilu, walidacja zostaje pominięta
+      return null;
     }
 
     const isUsed = gardenPlots.some((plot) => plot.leaseholderID === selectedProfile.id);
+    const isCurrent = (showCurrentLeaseHolder && CurrentGardenPlot?.leaseholderID === selectedProfile.id)
 
-    if (isUsed) {
-      return { nonUniqueLeaseholderID: true };
+    if (isUsed && !isCurrent) {
+      return {nonUniqueLeaseholderID: true};
     }
 
     return null;
   };
 }
 
-export function getMatchingProfiles(value: string, profiles: Profile[], gardenPlots: GardenPlot[]): { email: string, fullName: string }[] {
+export function getMatchingProfiles(value: string, profiles: Profile[], gardenPlots: GardenPlot[], showCurrentLeaseHolder: boolean, currentGardernPlot?: GardenPlot): {
+  email: string,
+  fullName: string
+}[] {
   const lowerCaseValue = value.toLowerCase();
 
   const availableProfiles = profiles.filter((profile) => {
+    const fullName = profile.firstName + ' ' + profile.lastName
     return (
-      profile.email.toLowerCase().includes(lowerCaseValue) &&
-      !gardenPlots.some((plot) => plot.leaseholderID === profile.id)
+      fullName.toLowerCase().includes(lowerCaseValue) && (
+        !gardenPlots.some((plot) => plot.leaseholderID === profile.id) || (showCurrentLeaseHolder && currentGardernPlot?.leaseholderID === profile.id))
     );
   });
 
@@ -206,7 +209,6 @@ export function getMatchingProfiles(value: string, profiles: Profile[], gardenPl
     fullName: `${profile.firstName} ${profile.lastName}`
   }));
 }
-
 
 export let profiles: Profile[] = [
   {

@@ -18,6 +18,7 @@ export class GardenPlotDetailsComponent {
 
   showPaymentHistory = false;
   showNewPaymentForm = false;
+  showEditGardenPlotForm = false;
 
   paymentForm: FormGroup;
 
@@ -273,5 +274,8 @@ export class GardenPlotDetailsComponent {
       }
     }
     return errors;
+  }
+  closeEditingingGardenPlot(){
+    this.closeDetails.emit()
   }
 }

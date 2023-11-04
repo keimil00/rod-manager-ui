@@ -28,14 +28,14 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
     this.addLeaseHolderForm = formBuilder.group({
       leaseholderEmail: ['', [
         profileEmailValidator(profiles),
-        uniqueLeaseholderIDValidator(gardenPlots,profiles)
+        uniqueLeaseholderIDValidator(gardenPlots,profiles,false)
       ]],
     });
   }
 
   ngOnInit() {
     this.addLeaseHolderForm.get('leaseholderEmail')?.valueChanges.subscribe((value) => {
-      this.leaseHolderOptions = getMatchingProfiles(value,profiles,gardenPlots);
+      this.leaseHolderOptions = getMatchingProfiles(value,profiles,gardenPlots,false);
     });
     profiles.sort((a, b) => {
 
