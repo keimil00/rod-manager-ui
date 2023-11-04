@@ -16,12 +16,14 @@
       </mat-expansion-panel-header>
       <a [href]="linkUrlMap" target="_blank">Twoja mapa</a>
       <div>
-        <button (click)="toggleAddMapDocumentForm()">Dodaj dokument</button>
+        <app-text-button class="add-button" [text]="'Dodaj dokument'" [color]="'accent'"
+                         (click)="toggleAddMapDocumentForm()"></app-text-button>
       </div>
 
       <div *ngIf="showAddMapDocumentForm">
         <input type="file" (change)="onMapFileSelected($event)">
-        <button (click)="addMapDocument()">Dodaj</button>
+        <app-text-button class="add-button" [text]="'Dodaj'" [color]="'accent'"
+                         (click)="addMapDocument()"></app-text-button>
       </div>
     </mat-expansion-panel>
     <mat-expansion-panel>
@@ -35,12 +37,15 @@
       </mat-expansion-panel-header>
       <a [href]="linkUrlStatute" target="_blank">Twój regulamin</a>
       <div>
-        <button (click)="toggleAddStatuteDocumentForm()">Dodaj dokument</button>
+        <app-text-button class="add-button" [text]="'Dodaj dokument'" [color]="'accent'"
+                         (click)="toggleAddStatuteDocumentForm()"></app-text-button>
       </div>
 
       <div *ngIf="showAddStatuteDocumentForm">
         <input type="file" (change)="onStatuteFileSelected($event)">
-        <button (click)="addStatuteDocument()">Dodaj</button>
+
+        <app-text-button class="add-button" [text]="'Dodaj'" [color]="'accent'"
+                         (click)="addStatuteDocument()"></app-text-button>
       </div>
     </mat-expansion-panel>
   </mat-expansion-panel>
@@ -62,13 +67,15 @@
       </mat-expansion-panel>
 
       <div>
-        <button (click)="toggleAddDocumentForm()">Dodaj dokument</button>
+        <app-text-button class="add-button" [text]="'Dodaj dokument'" [color]="'accent'"
+                         (click)="toggleAddDocumentForm()"></app-text-button>
       </div>
 
       <div *ngIf="showAddDocumentForm">
         <input type="text" [(ngModel)]="newDocumentTitle" placeholder="Tytuł dokumentu">
         <input type="file" (change)="onFileSelected($event)">
-        <button (click)="addDocument()">Dodaj</button>
+        <app-text-button class="add-button" [text]="'Dodaj'" [color]="'accent'"
+                         (click)="addDocument()"></app-text-button>
       </div>
     </div>
   </mat-expansion-panel>

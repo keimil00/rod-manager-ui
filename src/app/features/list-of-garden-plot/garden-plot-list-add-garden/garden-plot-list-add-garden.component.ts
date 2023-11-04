@@ -66,8 +66,16 @@ export class GardenPlotListAddGardenComponent {
   }
 
   ngOnInit() {
+    this.leaseHolderOptions = [{
+      fullName: 'brak',
+      email: 'brak'
+    }, ...getMatchingProfiles(this.addGardenForm.get('leaseholderEmail')?.value, profiles, gardenPlots, false)];
+
     this.addGardenForm.get('leaseholderEmail')?.valueChanges.subscribe((value) => {
-      this.leaseHolderOptions = getMatchingProfiles(value, profiles, gardenPlots, false);
+      this.leaseHolderOptions = [{
+        fullName: 'brak',
+        email: 'brak'
+      }, ...getMatchingProfiles(value, profiles, gardenPlots, false)];
     });
     profiles.sort((a, b) => {
 
@@ -110,7 +118,7 @@ export class GardenPlotListAddGardenComponent {
 
       const uniqueId = 'garden-' + new Date().getTime() + '-' + Math.floor(Math.random() * 1000);
 
-      if (newLeaseholderEmail === '' || newLeaseholderEmail === null) {
+      if (newLeaseholderEmail === '' || newLeaseholderEmail === 'brak' || newLeaseholderEmail === null) {
         newLeaseholderID = null
       } else
         newLeaseholderID = findProfileIdByEmail(newLeaseholderEmail, profiles)
@@ -154,6 +162,10 @@ export function profileEmailValidator(profiles: Profile[]): ValidatorFn {
       return null;
     }
 
+    if(leaseHolder === 'brak'){
+      return null;
+    }
+
     const selectedProfile = profiles.find((profile) => profile.email === leaseHolder);
 
     if (!selectedProfile) {
@@ -169,6 +181,10 @@ export function uniqueLeaseholderIDValidator(gardenPlots: GardenPlot[], profiles
     const leaseholderEmail = control.value;
 
     if (!leaseholderEmail) {
+      return null;
+    }
+
+    if(leaseholderEmail === 'brak'){
       return null;
     }
 
@@ -198,7 +214,7 @@ export function getMatchingProfiles(value: string, profiles: Profile[], gardenPl
   const availableProfiles = profiles.filter((profile) => {
     const fullName = profile.firstName + ' ' + profile.lastName
     return (
-      fullName.toLowerCase().includes(lowerCaseValue) && (
+      (fullName.toLowerCase().includes(lowerCaseValue)||profile.email.toLowerCase().includes(lowerCaseValue)) && (
         !gardenPlots.some((plot) => plot.leaseholderID === profile.id) || (showCurrentLeaseHolder && currentGardernPlot?.leaseholderID === profile.id))
     );
   });

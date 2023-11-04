@@ -11,11 +11,7 @@
   <mat-card-content>
     <mat-card class="form-card">
       <mat-card-content>
-
-        <mat-checkbox class="margin" [(ngModel)]="removeLeaseholder">Usuń dzierżawcę</mat-checkbox>
-
-<!--        <form #leaseHolderForm="ngForm" *ngIf="!removeLeaseholder">-->
-        <form [formGroup]="addLeaseHolderForm" *ngIf="!removeLeaseholder">
+        <form [formGroup]="addLeaseHolderForm">
           <mat-form-field class="full-width">
             <ng-container>
               <input matInput placeholder="Imię i nazwisko dzierżawcy" formControlName="leaseholderEmail" [matAutocomplete]="auto">

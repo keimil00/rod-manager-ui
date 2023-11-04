@@ -64,6 +64,7 @@ export class GardenPlotEditGardenComponent {
       ]],
       leaseholderEmail: ['', [
         profileEmailValidator(profiles),
+        uniqueLeaseholderIDValidator(gardenPlots, profiles,true,this.gardenPlot)
       ]],
       status: ['',
         Validators.required]
@@ -76,7 +77,7 @@ export class GardenPlotEditGardenComponent {
       avenue: gardenPlot.avenue,
       number: gardenPlot.number,
       area: gardenPlot.area,
-      leaseholderEmail: findProfileEmailByID(gardenPlot.leaseholderID, profiles),
+      leaseholderEmail: gardenPlot.leaseholderID!==null ? findProfileEmailByID(gardenPlot.leaseholderID, profiles):'brak',
       status: gardenPlot.status,
     });
   }
@@ -85,8 +86,17 @@ export class GardenPlotEditGardenComponent {
     // @ts-ignore
     const gardenPlot: GardenPlot = this.gardenPlot
     this.populateFormFromGardenPlot(gardenPlot);
+
+    this.leaseHolderOptions = [{
+      fullName: 'brak',
+      email: 'brak'
+    }, ...getMatchingProfiles(this.editGardenForm.get('leaseholderEmail')?.value, profiles, gardenPlots, true,gardenPlot)];
+
     this.editGardenForm.get('leaseholderEmail')?.valueChanges.subscribe((value) => {
-      this.leaseHolderOptions = getMatchingProfiles(value, profiles, gardenPlots, true, gardenPlot);
+      this.leaseHolderOptions = [{
+        fullName: 'brak',
+        email: 'brak'
+      }, ...getMatchingProfiles(value, profiles, gardenPlots, true,gardenPlot)];
     });
     profiles.sort((a, b) => {
 
