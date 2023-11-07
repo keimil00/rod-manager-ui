@@ -66,6 +66,16 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     this.socialAuthService.authState.subscribe((user: SocialUser) => {
       console.log('Register User: ' + JSON.stringify(user));
+      this.authService.loginGoogle(user.idToken).pipe().subscribe({
+        next: data => {
+          console.log(data);
+          this.storageService.setTokens(data);
+          this.router.navigate(['home'])
+        },
+        error: error => {
+          console.error(error);
+        }
+      });
     });
   }
 
