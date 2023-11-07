@@ -1,6 +1,6 @@
 <mat-toolbar color="primary">
   <div class="title">
-    <span>ROD we Wrocławiu</span>
+    <span (click)="navigate('home')">ROD we Wrocławiu</span>
   </div>
   <div class="options">
     <button mat-button (click)="navigate('home')">Strona główna</button>
@@ -8,31 +8,46 @@
     <button mat-button>Dostępne działki</button>
     <span>/</span>
     <button mat-button>Kalendarz</button>
+    <div *appHasRole="[Role.GARDENER]">
+      <span>/</span>
+      <button mat-button>Moja działka</button>
+    </div>
+    <div *ngIf="isLoggedIn()">
+      <span>/</span>
+      <button mat-button>Głosowania</button>
+    </div>
+    <div *ngIf="isLoggedIn()">
+      <span>/</span>
+      <button mat-button>Skargi</button>
+    </div>
     <span>/</span>
-    <button mat-button [matMenuTriggerFor]="menu">O Ogrodzie</button>
+    <button mat-button (click)="navigate('garden-info')" [ngClass]="{'is-in-view': isInGardenInfoComponent}">
+<!--    <button mat-button (click)="navigate('garden-info')" class="garden-info-text">-->
+      O Ogrodzie
+    </button>
+    <div *appHasRole="[Role.MANAGER, Role.TECHNICAL_EMPLOYEE, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]">
+      <span>/</span>
+      <button mat-button [matMenuTriggerFor]="menu">Więcej</button>
+    </div>
 
     <!-- Define the menu -->
     <mat-menu #menu="matMenu" class="mat-menu-custom-style">
-      <div>
-        <button mat-menu-item class="button-menu">O ogrodzie</button>
+      <div *appHasRole="[Role.MANAGER]">
+        <button mat-menu-item class="button-menu" (click)="navigate('documents')">Dokumenty</button>
         <mat-divider></mat-divider>
       </div>
-      <div *appHasRole="[Role.ROLE_MANAGER]">
-        <button mat-menu-item class="button-menu">Dokumenty</button>
+      <div *appHasRole="[Role.MANAGER]">
+        <button mat-menu-item class="button-menu" (click)="navigate('list-of-garden-plot')">Lista działek</button>
         <mat-divider></mat-divider>
       </div>
-      <div *appHasRole="[Role.ROLE_MANAGER]">
-        <button mat-menu-item class="button-menu">Lista działek</button>
-        <mat-divider></mat-divider>
-      </div>
-      <div *appHasRole="[Role.ROLE_GARDENER]">
+      <div *appHasRole="[Role.GARDENER]">
         <button mat-menu-item class="button-menu">Opłaty</button>
         <mat-divider></mat-divider>
       </div>
-      <div *appHasRole="[Role.ROLE_EMPLOYEE, Role.ROLE_MANAGER]">
+      <div *appHasRole="[Role.TECHNICAL_EMPLOYEE, Role.MANAGER]">
         <button mat-menu-item class="button-menu">Liczniki</button>
       </div>
-      <div *appHasRole="[Role.ROLE_MANAGER, Role.ROLE_ADMIN]">
+      <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
         <mat-divider></mat-divider>
         <button mat-menu-item class="button-menu">Lista użytkowników</button>
       </div>

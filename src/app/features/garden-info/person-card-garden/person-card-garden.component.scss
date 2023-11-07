@@ -1,0 +1,23 @@
+.person-card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  min-height: 90%;
+}
+
+.position {
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.text {
+  font-size: 14px;
+}
+
+mat-grid-tile {
+  border: 0.01px solid #eee;
+}
