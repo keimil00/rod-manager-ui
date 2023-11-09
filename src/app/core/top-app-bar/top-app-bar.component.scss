@@ -4,6 +4,8 @@
   align-items: center;
   background-color: #000; // Set the background color to black
   color: #fff; // Set the text color to white
+  position: fixed;
+  z-index: 2000;
 
   .spacer {
     margin: 0 10px; // Adjust the margin as per your preference

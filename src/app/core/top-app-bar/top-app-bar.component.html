@@ -40,12 +40,12 @@
         <button mat-menu-item class="button-menu" (click)="navigate('list-of-garden-plot')">Lista działek</button>
         <mat-divider></mat-divider>
       </div>
-      <div *appHasRole="[Role.GARDENER]">
+      <div *appHasRole="[Role.MANAGER]">
         <button mat-menu-item class="button-menu">Opłaty</button>
         <mat-divider></mat-divider>
       </div>
       <div *appHasRole="[Role.TECHNICAL_EMPLOYEE, Role.MANAGER]">
-        <button mat-menu-item class="button-menu">Liczniki</button>
+        <button mat-menu-item class="button-menu" (click)="navigate('counters')">Liczniki</button>
       </div>
       <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
         <mat-divider></mat-divider>

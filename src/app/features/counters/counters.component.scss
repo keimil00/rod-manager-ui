@@ -43,12 +43,6 @@
   display: flex;
 }
 
-.blurred-background {
-  filter: blur(5px);
-  pointer-events: none;
-  user-select: none;
-}
-
 .floating-button {
   position: fixed;
   bottom: 40px;
@@ -66,4 +60,29 @@
 
 .floating-button mat-icon {
   color: #ffffff;
+}
+
+.row-item {
+  flex: 1; /* Allow items to grow and take equal space */
+  margin-right: 10px; /* Adjust as needed for spacing between items */
+  width: 80%;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.row-container {
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Arrange items in a row */
+  justify-content: space-between; /* Distribute items evenly along the row */
+  width: 100%;
+  align-items: center;
+}
+
+.mainTable{
+  margin-top: 20px;
+}
+
+.edit-icon{
+  scale: 0.6;
 }

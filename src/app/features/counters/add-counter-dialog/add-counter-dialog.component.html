@@ -1,0 +1,106 @@
+<mat-dialog-content>
+  <h1 mat-dialog-title class="title">Dodaj Licznik</h1>
+  <div mat-dialog-content>
+    <form class [formGroup]="addCounterForm">
+      <div>
+        <mat-tab-group mat-align-tabs="center" class="row-item counter-type" (selectedIndexChange)="changeType()">
+          <mat-tab label="Woda" [ngClass]="{'active-tab': isWaterType}"></mat-tab>
+          <mat-tab label="Prąd" [ngClass]="{'active-tab': !isWaterType}"></mat-tab>
+        </mat-tab-group>
+      </div>
+
+      <div class="row-item">
+        <mat-form-field class="full-width">
+          <mat-label>Początkowa wartość licznika</mat-label>
+          <input matInput type="number" placeholder="Początkowa wartość licznika" formControlName="measurement">
+          <mat-error *ngFor="let error of validationErrors('measurement')">
+            {{ error.message }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="row-item">
+        <mat-form-field class="full-width">
+          <mat-label>Id licznika</mat-label>
+          <input matInput type="text" placeholder="Id licznika" formControlName="id">
+          <mat-error *ngFor="let error of validationErrors('id')">
+            {{ error.message }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="row-item check">
+        <mat-checkbox formControlName="showGardenAddress" (change)="showGardenAddress = !showGardenAddress">Licznik prywatnej działki</mat-checkbox>
+      </div>
+
+
+      <div class="row-item" *ngIf="!showGardenAddress">
+        <mat-form-field class="full-width">
+          <mat-label>Adres licznika</mat-label>
+          <input matInput type="text" placeholder="Adres licznika" formControlName="address">
+          <mat-error *ngFor="let error of validationErrors('address')">
+            {{ error.message }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+
+      <div *ngIf="showGardenAddress">
+        <div class="row-item">
+          <mat-form-field class="full-width">
+            <mat-label>Sektor</mat-label>
+              <ng-container>
+                <mat-select formControlName="sector">
+                  <mat-option *ngFor="let option of sectorsOptions" [value]="option">
+                    {{ option}}
+                  </mat-option>
+                </mat-select>
+              </ng-container>
+            <mat-error *ngFor="let error of validationErrors('sector')">
+              {{ error.message }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="row-item">
+          <mat-form-field class="full-width">
+            <mat-label>Aleja</mat-label>
+            <ng-container>
+              <mat-select formControlName="avenue">
+                <mat-option *ngFor="let option of avenuesOptions" [value]="option">
+                  {{ option}}
+                </mat-option>
+              </mat-select>
+            </ng-container>
+            <mat-error *ngFor="let error of validationErrors('avenue')">
+              {{ error.message }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="row-item">
+          <mat-form-field class="full-width">
+            <mat-label>Numer</mat-label>
+            <ng-container>
+              <mat-select formControlName="number">
+                <mat-option *ngFor="let option of numbersOptions" [value]="option">
+                  {{ option}}
+                </mat-option>
+              </mat-select>
+            </ng-container>
+            <mat-error *ngFor="let error of validationErrors('number')">
+              {{ error.message }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+    <mat-error *ngIf="showEmptyError">Proszę podać odpowiednie dane</mat-error>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="center" class="mat-actions col-container">
+  <app-text-button mat-dialog-close class="col-item cancel-button" className="action-button" [text]="'Anuluj'"
+                   [color]="'accent'" ></app-text-button>
+  <app-text-button class="col-item submit-button" className="action-button"
+                   [text]="'Zapisz'" [color]="'primary'" (click)="processDataAndClose()"></app-text-button>
+</mat-dialog-actions>
+
