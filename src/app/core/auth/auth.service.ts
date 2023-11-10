@@ -18,6 +18,10 @@ export class AuthService {
     return this.httpClient.post<any>(`${this.baseUrl}register`, user);
   }
 
+  loginGoogle(token: string): Observable<any>{
+    return this.httpClient.post<any>(`${this.baseUrl}login/google/`, {token: token});
+  }
+
   login(user: LoginUser): Observable<AuthResponse>{
     return this.httpClient.post<AuthResponse>(`${this.baseUrl}login/`, user).pipe(
       tap( value => {
