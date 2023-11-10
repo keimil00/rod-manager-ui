@@ -1,15 +1,14 @@
-
 export interface Profile {
-  id:string;
-  userID:string;
+  id: string;
+  userID: string;
   firstName: string;
   lastName: string;
   phoneNumber: string;
   email: string;
-  plotID: string;
-  accountStatus: Role;
-  paymentAmount : number;
-  paymentDueDate : Date;
+  plotID: string | null;
+  accountStatus: Role[];
+  paymentAmount: number | null;
+  paymentDueDate: Date;
 }
 
 export enum Role {

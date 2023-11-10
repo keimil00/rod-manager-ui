@@ -10,6 +10,7 @@ import {GardenInfoComponent} from "./features/garden-info/garden-info.component"
 import {DocumentsComponent} from "./features/documents/documents.component";
 import {ListOfGardenPlotComponent} from "./features/list-of-garden-plot/list-of-garden-plot.component";
 import {CountersComponent} from "./features/counters/counters.component";
+import {ListOfUsersComponent} from "./features/list-of-users/list-of-users.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'garden-info', component: GardenInfoComponent },
   { path: 'documents', component: DocumentsComponent},
   { path: 'list-of-garden-plot', component: ListOfGardenPlotComponent},
+  { path: 'list-of-users', component: ListOfUsersComponent},
   { path: 'counters', component: CountersComponent},
   { path: '404', component: PageNotFoundComponent },
   { path: '**', redirectTo: '/404' }

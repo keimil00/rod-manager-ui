@@ -1,8 +1,7 @@
 import {Component, EventEmitter, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 import {GardenPlot, PlotStatus} from "../garden-plot";
 import {Profile, Role} from "../../Profile";
-import {AbstractControl, ValidatorFn} from '@angular/forms';
 import {gardenPlots} from "../list-of-garden-plot.component";
 
 @Component({
@@ -162,7 +161,7 @@ export function profileEmailValidator(profiles: Profile[]): ValidatorFn {
       return null;
     }
 
-    if(leaseHolder === 'brak'){
+    if (leaseHolder === 'brak') {
       return null;
     }
 
@@ -184,7 +183,7 @@ export function uniqueLeaseholderIDValidator(gardenPlots: GardenPlot[], profiles
       return null;
     }
 
-    if(leaseholderEmail === 'brak'){
+    if (leaseholderEmail === 'brak') {
       return null;
     }
 
@@ -214,7 +213,7 @@ export function getMatchingProfiles(value: string, profiles: Profile[], gardenPl
   const availableProfiles = profiles.filter((profile) => {
     const fullName = profile.firstName + ' ' + profile.lastName
     return (
-      (fullName.toLowerCase().includes(lowerCaseValue)||profile.email.toLowerCase().includes(lowerCaseValue)) && (
+      (fullName.toLowerCase().includes(lowerCaseValue) || profile.email.toLowerCase().includes(lowerCaseValue)) && (
         !gardenPlots.some((plot) => plot.leaseholderID === profile.id) || (showCurrentLeaseHolder && currentGardernPlot?.leaseholderID === profile.id))
     );
   });
@@ -234,7 +233,7 @@ export let profiles: Profile[] = [
     phoneNumber: '123-456-7890',
     email: 'johndoe@example.com',
     plotID: '101',
-    accountStatus: Role.GARDENER,
+    accountStatus: [Role.GARDENER],
     paymentAmount: 567,
     paymentDueDate: new Date(2023, 10, 31),
   },
@@ -246,7 +245,7 @@ export let profiles: Profile[] = [
     phoneNumber: '987-654-3210',
     email: 'janesmith@example.com',
     plotID: '102',
-    accountStatus: Role.GARDENER,
+    accountStatus: [Role.GARDENER],
     paymentAmount: 756,
     paymentDueDate: new Date(2023, 10, 31),
   },
@@ -258,7 +257,7 @@ export let profiles: Profile[] = [
     phoneNumber: '555-555-5555',
     email: 'davidjohnson@example.com',
     plotID: '103',
-    accountStatus: Role.GARDENER,
+    accountStatus: [Role.GARDENER],
     paymentAmount: 657,
     paymentDueDate: new Date(2023, 10, 31),
   },
@@ -270,7 +269,7 @@ export let profiles: Profile[] = [
     phoneNumber: '777-777-7777',
     email: 'marywilliams@example.com',
     plotID: '104',
-    accountStatus: Role.GARDENER,
+    accountStatus: [Role.GARDENER],
     paymentAmount: 675,
     paymentDueDate: new Date(2023, 10, 31),
   },
@@ -282,7 +281,7 @@ export let profiles: Profile[] = [
     phoneNumber: '111-111-1111',
     email: 'robertbrown@example.com',
     plotID: '105',
-    accountStatus: Role.GARDENER,
+    accountStatus: [Role.GARDENER],
     paymentAmount: 6765,
     paymentDueDate: new Date(2023, 10, 31),
   },
@@ -294,7 +293,7 @@ export let profiles: Profile[] = [
     phoneNumber: '222-222-2222',
     email: 'lindajones@example.com',
     plotID: '106',
-    accountStatus: Role.GARDENER,
+    accountStatus: [Role.GARDENER],
     paymentAmount: 576,
     paymentDueDate: new Date(2023, 10, 31),
   },
@@ -306,7 +305,7 @@ export let profiles: Profile[] = [
     phoneNumber: '333-333-3333',
     email: 'michaeldavis@example.com',
     plotID: '107',
-    accountStatus: Role.GARDENER,
+    accountStatus: [Role.GARDENER],
     paymentAmount: 57,
     paymentDueDate: new Date(2023, 10, 31),
   },
@@ -318,7 +317,7 @@ export let profiles: Profile[] = [
     phoneNumber: '444-444-4444',
     email: 'susanwilson@example.com',
     plotID: '108',
-    accountStatus: Role.GARDENER,
+    accountStatus: [Role.GARDENER],
     paymentAmount: 576,
     paymentDueDate: new Date(2023, 10, 31),
   },
@@ -330,7 +329,7 @@ export let profiles: Profile[] = [
     phoneNumber: '666-666-6666',
     email: 'williamevans@example.com',
     plotID: '109',
-    accountStatus: Role.GARDENER,
+    accountStatus: [Role.GARDENER],
     paymentAmount: 6757,
     paymentDueDate: new Date(2023, 10, 31),
   },
@@ -342,7 +341,7 @@ export let profiles: Profile[] = [
     phoneNumber: '999-999-9999',
     email: 'karentaylor@example.com',
     plotID: '110',
-    accountStatus: Role.GARDENER,
+    accountStatus: [Role.GARDENER],
     paymentAmount: 876,
     paymentDueDate: new Date(2023, 10, 31),
   },
@@ -354,7 +353,7 @@ export let profiles: Profile[] = [
     phoneNumber: '222-222-2222',
     email: 'richardanderson@example.com',
     plotID: '111',
-    accountStatus: Role.GARDENER,
+    accountStatus: [Role.GARDENER],
     paymentAmount: 1654,
     paymentDueDate: new Date(2023, 10, 31),
   },
@@ -366,7 +365,7 @@ export let profiles: Profile[] = [
     phoneNumber: '333-333-3333',
     email: 'patriciawhite@example.com',
     plotID: '112',
-    accountStatus: Role.GARDENER,
+    accountStatus: [Role.GARDENER],
     paymentAmount: 6785,
     paymentDueDate: new Date(2023, 10, 31),
   },
@@ -378,7 +377,7 @@ export let profiles: Profile[] = [
     phoneNumber: '777-777-7777',
     email: 'davidthomas@example.com',
     plotID: '113',
-    accountStatus: Role.GARDENER,
+    accountStatus: [Role.GARDENER],
     paymentAmount: 456,
     paymentDueDate: new Date(2023, 10, 31),
   },
@@ -390,7 +389,7 @@ export let profiles: Profile[] = [
     phoneNumber: '123-123-1234',
     email: 'susanjackson@example.com',
     plotID: '114',
-    accountStatus: Role.GARDENER,
+    accountStatus: [Role.GARDENER],
     paymentAmount: 8658,
     paymentDueDate: new Date(2023, 10, 31),
   },
@@ -402,7 +401,7 @@ export let profiles: Profile[] = [
     phoneNumber: '456-456-4567',
     email: 'michaelharris@example.com',
     plotID: '115',
-    accountStatus: Role.GARDENER,
+    accountStatus: [Role.GARDENER],
     paymentAmount: 654,
     paymentDueDate: new Date(2023, 10, 31),
   },
@@ -414,7 +413,7 @@ export let profiles: Profile[] = [
     phoneNumber: '111-111-1111',
     email: 'karenmartin@example.com',
     plotID: '116',
-    accountStatus: Role.GARDENER,
+    accountStatus: [Role.GARDENER],
     paymentAmount: 6546,
     paymentDueDate: new Date(2023, 10, 31),
   },
@@ -426,7 +425,7 @@ export let profiles: Profile[] = [
     phoneNumber: '555-555-5555',
     email: 'williamgarcia@example.com',
     plotID: '117',
-    accountStatus: Role.GARDENER,
+    accountStatus: [Role.GARDENER],
     paymentAmount: 453,
     paymentDueDate: new Date(2023, 10, 31),
   },
@@ -438,7 +437,7 @@ export let profiles: Profile[] = [
     phoneNumber: '333-333-3333',
     email: 'lindabrown@example.com',
     plotID: '118',
-    accountStatus: Role.GARDENER,
+    accountStatus: [Role.GARDENER],
     paymentAmount: 5345,
     paymentDueDate: new Date(2024, 10, 31),
   },
@@ -450,7 +449,7 @@ export let profiles: Profile[] = [
     phoneNumber: '777-777-7777',
     email: 'michaellewis@example.com',
     plotID: '119',
-    accountStatus: Role.GARDENER,
+    accountStatus: [Role.GARDENER],
     paymentAmount: 7680,
     paymentDueDate: new Date(2023, 12, 31),
   },
@@ -462,8 +461,92 @@ export let profiles: Profile[] = [
     phoneNumber: '123-123-1234',
     email: 'susanclark@example.com',
     plotID: '120',
-    accountStatus: Role.GARDENER,
+    accountStatus: [Role.GARDENER],
     paymentAmount: 340,
     paymentDueDate: new Date(2023, 10, 31),
+  },
+  {
+    id: '21',
+    userID: 'user21',
+    firstName: 'John',
+    lastName: 'Doe',
+    phoneNumber: '456-456-4567',
+    email: 'johndoe@example.com',
+    plotID: null,
+    accountStatus: [Role.USER],
+    paymentAmount: null,
+    paymentDueDate: new Date(2023, 9, 15),
+  },
+  {
+    id: '22',
+    userID: 'user22',
+    firstName: 'Alice',
+    lastName: 'Johnson',
+    phoneNumber: '789-789-7890',
+    email: 'alicejohnson@example.com',
+    plotID: null,
+    accountStatus: [Role.MANAGER],
+    paymentAmount: 420,
+    paymentDueDate: new Date(2023, 8, 28),
+  },
+  {
+    id: '23',
+    userID: 'user23',
+    firstName: 'Bob',
+    lastName: 'Smith',
+    phoneNumber: '234-234-2345',
+    email: 'bobsmith@example.com',
+    plotID: null,
+    accountStatus: [Role.ADMIN],
+    paymentAmount: null,
+    paymentDueDate: new Date(2023, 11, 15),
+  },
+  {
+    id: '24',
+    userID: 'user24',
+    firstName: 'Eva',
+    lastName: 'Brown',
+    phoneNumber: '567-567-5678',
+    email: 'evabrown@example.com',
+    plotID: null,
+    accountStatus: [Role.EMPLOYEE],
+    paymentAmount: null,
+    paymentDueDate: new Date(2023, 7, 22),
+  },
+  {
+    id: '25',
+    userID: 'user25',
+    firstName: 'Michael',
+    lastName: 'Miller',
+    phoneNumber: '890-890-8901',
+    email: 'michaelmiller@example.com',
+    plotID: null,
+    accountStatus: [Role.USER],
+    paymentAmount: null,
+    paymentDueDate: new Date(2023, 6, 10),
+  },
+  {
+    id: '26',
+    userID: 'user26',
+    firstName: 'Sophia',
+    lastName: 'Wilson',
+    phoneNumber: '123-456-7890',
+    email: 'sophiawilson@example.com',
+    plotID: null,
+    accountStatus: [Role.ADMIN],
+    paymentAmount: null,
+    paymentDueDate: new Date(2023, 5, 18),
+  },
+  {
+    id: '27',
+    userID: 'user27',
+    firstName: 'David',
+    lastName: 'Jones',
+    phoneNumber: '456-789-0123',
+    email: 'davidjones@example.com',
+    plotID: null,
+    accountStatus: [Role.MANAGER,Role.EMPLOYEE],
+    paymentAmount: null,
+    paymentDueDate: new Date(2023, 4, 27),
   },
 ];

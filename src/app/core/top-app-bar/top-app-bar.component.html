@@ -49,7 +49,7 @@
       </div>
       <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
         <mat-divider></mat-divider>
-        <button mat-menu-item class="button-menu">Lista użytkowników</button>
+        <button mat-menu-item class="button-menu"(click)="navigate('list-of-users')">Lista użytkowników</button>
       </div>
       <!-- Add more menu items as needed -->
     </mat-menu>

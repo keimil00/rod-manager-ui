@@ -1,0 +1,32 @@
+import { Component } from '@angular/core';
+import {MatTableDataSource} from "@angular/material/table";
+import {Profile} from "../Profile";
+import {profiles} from "../list-of-garden-plot/garden-plot-list-add-garden/garden-plot-list-add-garden.component";
+
+@Component({
+  selector: 'app-list-of-users',
+  templateUrl: './list-of-users.component.html',
+  styleUrls: ['./list-of-users.component.scss']
+})
+export class ListOfUsersComponent {
+  displayedColumns: string[] = ['firstName','lastName','phoneNumber','email','accountStatus','add'];
+
+  dataProfiles: MatTableDataSource<Profile>;
+  constructor() {
+    this.dataProfiles=new MatTableDataSource(profiles);
+      profiles.sort((a, b) => {
+
+        const lastNameComparison = a.lastName.localeCompare(b.lastName);
+        if (lastNameComparison !== 0) {
+          return lastNameComparison;
+        }
+
+        const firstNameComparison = a.firstName.localeCompare(b.firstName);
+        if (firstNameComparison !== 0) {
+          return firstNameComparison;
+        }
+
+        return a.email.localeCompare(b.email);
+      });
+  }
+}
