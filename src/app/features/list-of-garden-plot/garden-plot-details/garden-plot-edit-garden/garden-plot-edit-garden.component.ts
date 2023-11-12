@@ -1,14 +1,11 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {GardenPlot, PlotStatus} from "../../garden-plot";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {gardenPlots} from "../../list-of-garden-plot.component";
+
 import {Profile} from "../../../Profile";
-import {
-  getMatchingProfiles,
-  profileEmailValidator,
-  profiles,
-  uniqueLeaseholderIDValidator
-} from "../../garden-plot-list-add-garden/garden-plot-list-add-garden.component";
+import {gardenPlots, uniqueLeaseholderIDValidator} from "../../GardenService";
+
+import {getMatchingProfiles, profileEmailValidator, profiles} from "../../../list-of-users/ProfilesService";
 
 @Component({
   selector: 'app-garden-plot-edit-garden',

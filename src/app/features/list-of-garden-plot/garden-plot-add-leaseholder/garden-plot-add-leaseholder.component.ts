@@ -1,13 +1,10 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {GardenPlot} from "../garden-plot";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {
-  getMatchingProfiles,
-  profileEmailValidator,
-  profiles, uniqueLeaseholderIDValidator
-} from "../garden-plot-list-add-garden/garden-plot-list-add-garden.component";
-import {gardenPlots} from "../list-of-garden-plot.component";
+import {FormBuilder, FormGroup} from "@angular/forms";
 import {Profile} from "../../Profile";
+import {gardenPlots, uniqueLeaseholderIDValidator} from "../GardenService";
+import {getMatchingProfiles, profileEmailValidator, profiles} from "../../list-of-users/ProfilesService";
+
 
 @Component({
   selector: 'app-garden-plot-add-leaseholder',
@@ -27,7 +24,7 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
   populateFormFromGardenPlot(gardenPlot: GardenPlot | undefined) {
     this.addLeaseHolderForm.patchValue({
       // @ts-ignore
-      leaseholderEmail: gardenPlot.leaseholderID!==null ? findProfileEmailByID(gardenPlot.leaseholderID, profiles):'brak',
+      leaseholderEmail: gardenPlot.leaseholderID !== null ? findProfileEmailByID(gardenPlot.leaseholderID, profiles) : 'brak',
     });
   }
 
@@ -35,7 +32,7 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
     this.addLeaseHolderForm = formBuilder.group({
       leaseholderEmail: ['', [
         profileEmailValidator(profiles),
-        uniqueLeaseholderIDValidator(gardenPlots, profiles,true,this.gardenPlot)
+        uniqueLeaseholderIDValidator(gardenPlots, profiles, true, this.gardenPlot)
       ]],
     });
   }
@@ -44,13 +41,13 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
     this.leaseHolderOptions = [{
       fullName: 'brak',
       email: 'brak'
-    }, ...getMatchingProfiles(this.addLeaseHolderForm.get('leaseholderEmail')?.value, profiles, gardenPlots, true,this.gardenPlot)];
+    }, ...getMatchingProfiles(this.addLeaseHolderForm.get('leaseholderEmail')?.value, profiles, gardenPlots, true, this.gardenPlot)];
 
     this.addLeaseHolderForm.get('leaseholderEmail')?.valueChanges.subscribe((value) => {
       this.leaseHolderOptions = [{
         fullName: 'brak',
         email: 'brak'
-      }, ...getMatchingProfiles(value, profiles, gardenPlots, true,this.gardenPlot)];
+      }, ...getMatchingProfiles(value, profiles, gardenPlots, true, this.gardenPlot)];
     });
 
     this.populateFormFromGardenPlot(this.gardenPlot);

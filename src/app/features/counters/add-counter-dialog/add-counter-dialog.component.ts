@@ -2,14 +2,14 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {Counter, CounterType} from "../counter";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
-import {
-  getMatchingProfiles,
-  profiles
-} from "../../list-of-garden-plot/garden-plot-list-add-garden/garden-plot-list-add-garden.component";
-import {gardenPlots} from "../../list-of-garden-plot/list-of-garden-plot.component";
-import {Profile} from "../../Profile";
-import {GardenPlot} from "../../list-of-garden-plot/garden-plot";
 import {counters} from "../counters.component";
+import {
+  findGardenPlotIdByAddress,
+  gardenPlots,
+  getMatchingAvenues,
+  getMatchingNumbers,
+  getMatchingSectors
+} from "../../list-of-garden-plot/GardenService";
 
 @Component({
   selector: 'app-add-counter-dialog',
@@ -147,48 +147,7 @@ export class AddCounterDialogComponent implements OnInit {
   }
 }
 
-export function findGardenPlotIdByAddress(sector: string | null, avenue: string | null, number: number | null, gardenPlots: GardenPlot[]): string | null {
-  const matchingGardenPlot = gardenPlots.find((gardenPlot) =>
-    gardenPlot.sector === sector && gardenPlot.avenue === avenue && gardenPlot.number === number
-  );
-  return matchingGardenPlot ? matchingGardenPlot.id : null;
-}
 
-export function getMatchingSectors(counters: Counter[], gardenPlots: GardenPlot[]):
-  ((string | null)[]) {
-  const availableGardenPlots = gardenPlots.filter((gardenPlot) => {
-    return (
-      !counters.some((counter) => counter.gardenPlotID === gardenPlot.id));
-  });
-
-  const sectors = availableGardenPlots.map((gardenPlot) => gardenPlot.sector);
-  sectors.sort();
-  return (sectors);
-}
-
-export function getMatchingAvenues(counters: Counter[], gardenPlots: GardenPlot[], sector: string | null):
-  ((string | null)[]) {
-  const availableGardenPlots = gardenPlots.filter((gardenPlot) => {
-    return (
-      !counters.some((counter) => counter.gardenPlotID === gardenPlot.id) && (gardenPlot.sector === sector));
-  });
-
-  const sectors = availableGardenPlots.map((gardenPlot) => gardenPlot.avenue);
-  sectors.sort();
-  return (sectors);
-}
-
-export function getMatchingNumbers(counters: Counter[], gardenPlots: GardenPlot[], sector: string | null, avenue: string | null, ):
-  ((number | null)[]) {
-  const availableGardenPlots = gardenPlots.filter((gardenPlot) => {
-    return (
-      !counters.some((counter) => counter.gardenPlotID === gardenPlot.id) && (gardenPlot.sector === sector) && (gardenPlot.avenue === avenue));
-  });
-
-  const sectors = availableGardenPlots.map((gardenPlot) => gardenPlot.number);
-  sectors.sort();
-  return (sectors);
-}
 
 export function uniqueCounterIdValidator(counters: Counter[]): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {

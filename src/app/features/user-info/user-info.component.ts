@@ -1,20 +1,18 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {Profile, Role_temp} from "../Profile";
 import {GardenPlot} from "../list-of-garden-plot/garden-plot";
-import {
-  profiles
-} from "../list-of-garden-plot/garden-plot-list-add-garden/garden-plot-list-add-garden.component";
-import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
-import {gardenPlots} from "../list-of-garden-plot/list-of-garden-plot.component";
-import {counters} from "../counters/counters.component";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Role} from "../register/user.model";
 import {
+  findGardenByUserID,
   findGardenPlotIdByAddress,
-  getMatchingAvenues,
-  getMatchingSectors,
-} from "../counters/add-counter-dialog/add-counter-dialog.component";
+  gardenPlots,
+  updateLeaseholderID
+} from "../list-of-garden-plot/GardenService";
+import {profiles} from "../list-of-users/ProfilesService";
 
+//TODO naprawic sytuacje jak uzytkownik ma nie miec dzialki
 @Component({
   selector: 'app-user-info',
   templateUrl: './user-info.component.html',
@@ -28,6 +26,9 @@ export class UserInfoComponent implements OnInit {
   showUserEdit: boolean = true;
   showEditStatus: boolean = true;
   showEditFullStatus: boolean = true;
+
+  isAdmin = false
+  isManager = false
 
   sectorsOptions: (string | null)[] = [];
   avenuesOptions: (string | null)[] = [];
@@ -149,6 +150,13 @@ export class UserInfoComponent implements OnInit {
       this.showEditFullStatus = true
     } else this.showEditFullStatus = false
 
+    if (this.profile?.accountStatus.some((status) => status === Role_temp.ADMIN)) {
+      this.isAdmin = true
+    }
+    if (this.profile?.accountStatus.some((status) => status === Role_temp.MANAGER)) {
+      this.isManager = true
+    }
+
     Object.keys(this.userInfoForm.controls).forEach(controlName => {
       const control = this.userInfoForm.get(controlName);
       if (control) {
@@ -159,41 +167,46 @@ export class UserInfoComponent implements OnInit {
     });
 
     // Przekazywanie wartości pól, nie wywoływanie funkcji
-    const sector = this.userInfoForm.get('plotSector')?.value;
-    const avenue = this.userInfoForm.get('plotAvenue')?.value;
-
-    this.userInfoForm.get('plotNumber')?.setValidators([
-      Validators.required,
-      this.goodAdressValidator(sector, avenue, gardenPlots)
-    ]);
+    this.userInfoForm.get('plotSector')?.setValidators([])
+    this.userInfoForm.get('plotAvenue')?.setValidators([])
+    this.userInfoForm.get('plotNumber')?.setValidators([])
 
     this.userInfoForm.get('email')?.disable();
     this.userInfoForm.updateValueAndValidity();
     this.showUserEdit = false
   }
 
-
   editProfile() {
     const newSector: string = this.userInfoForm.get('plotSector')?.value;
     const newAvenue: string = this.userInfoForm.get('plotAvenue')?.value;
     const newNumber: number = this.userInfoForm.get('plotNumber')?.value;
-    let uniqueAdress: boolean = false
+    let goodAdress: boolean = false
 
     let gardenID = findGardenPlotIdByAddress(newSector, newAvenue, newNumber, gardenPlots)
     let garden;
     if (gardenID) {
-      garden = findGardenByUserID(this.id, gardenPlots)
+      garden = findGardenByUserID(gardenID, gardenPlots)
       if (garden) {
-        uniqueAdress = true
+        goodAdress = true
       }
     }
 
-    if (this.userInfoForm.valid && uniqueAdress) {
+    if (newSector === null)
+      goodAdress = true
+
+    if (this.userInfoForm.valid && goodAdress) {
       const newFirstName: number = this.userInfoForm.get('firstName')?.value;
       const newLastName: number = this.userInfoForm.get('lastName')?.value;
       const newPhoneNumber: number = this.userInfoForm.get('phoneNumber')?.value;
 
-      const newStatus: Role_temp = this.userInfoForm.get('status')?.value;
+      let newStatus: Role_temp[] = this.userInfoForm.get('accountStatus')?.value;
+
+      if (this.isManager && !newStatus.includes(Role_temp.MANAGER)) {
+        newStatus.push(Role_temp.MANAGER);
+      }
+      if (this.isAdmin && !newStatus.includes(Role_temp.ADMIN)) {
+        newStatus.push(Role_temp.ADMIN);
+      }
 
       const newUser: Profile = {
         // @ts-ignore
@@ -216,12 +229,13 @@ export class UserInfoComponent implements OnInit {
         paymentDueDate: this.profile?.paymentDueDate
       };
 
-      let gardenId;
-      gardenId = findGardenPlotIdByAddress(newSector, newAvenue, newNumber, gardenPlots);
-
       //TODO push do backendu
       //ustawic w dla profilu gardenID leasholderId na gardenID
-      updateLeaseholderID(gardenId, this.id)
+      if (newSector !== null) {
+        updateLeaseholderID(gardenID, this.id,gardenPlots)
+        let idToNull = findGardenByUserID(this.id,gardenPlots)?.id
+        updateLeaseholderID(idToNull, null,gardenPlots)
+      }
       this.profile = newUser;
       this.refresh1()
     }
@@ -267,28 +281,28 @@ export class UserInfoComponent implements OnInit {
     return (sectors);
   }
 
-  goodAdressValidator(sector: string, avenue: string, gardenPlots: GardenPlot[]): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      const value = control.value;
-
-      if (!value) {
-        return null;
-      }
-
-      let gardenID = findGardenPlotIdByAddress(sector, avenue, value, gardenPlots)
-      let garden;
-      if (gardenID) {
-        garden = findGardenByUserID(this.id, gardenPlots)
-        if (garden) {
-          if (garden.id === gardenID) {
-            return null
-          }
-        }
-        return {goodAdress: true};
-      }
-      return null;
-    };
-  }
+  // goodAdressValidator(sector: string, avenue: string, gardenPlots: GardenPlot[]): ValidatorFn {
+  //   return (control: AbstractControl): { [key: string]: any } | null => {
+  //     const value = control.value;
+  //
+  //     if (!value) {
+  //       return null;
+  //     }
+  //
+  //     let gardenID = findGardenPlotIdByAddress(sector, avenue, value, gardenPlots)
+  //     let garden;
+  //     if (gardenID) {
+  //       garden = findGardenByUserID(this.id, gardenPlots)
+  //       if (garden) {
+  //         if (garden.id === gardenID) {
+  //           return null
+  //         }
+  //       }
+  //       return {goodAdress: true};
+  //     }
+  //     return null;
+  //   };
+  // }
 
   protected readonly Object = Object;
   protected readonly Role_temp = Role_temp;
@@ -300,25 +314,5 @@ enum Role_temp2 {
   USER = 'UŻYTKOWNIK',
   GARDENER = 'Działkowiec',
   EMPLOYEE = 'PRACOWNIK',
-}
-
-export function updateLeaseholderID(targetID: string | null, newLeaseholderID: string | null) {
-  //to zastapi push
-  let garden;
-  for (garden of gardenPlots) {
-    if (garden.id === targetID) {
-      garden.leaseholderID = newLeaseholderID
-    }
-  }
-}
-
-export function findGardenByUserID(id: string | null, gardenPlots: GardenPlot[]): GardenPlot | null {
-  let garden: GardenPlot;
-  for (garden of gardenPlots) {
-    if (garden.leaseholderID === id) {
-      return garden
-    }
-  }
-  return null
 }
 

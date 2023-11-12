@@ -1,8 +1,9 @@
 import {Component} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {Profile} from "../Profile";
-import {profiles} from "../list-of-garden-plot/garden-plot-list-add-garden/garden-plot-list-add-garden.component";
+
 import {Router} from "@angular/router";
+import {profiles} from "./ProfilesService";
 
 @Component({
   selector: 'app-list-of-users',

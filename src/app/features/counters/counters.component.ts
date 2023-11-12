@@ -1,8 +1,6 @@
 import {Component} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {Counter, CounterType} from "./counter";
-import {gardenPlots} from "../list-of-garden-plot/list-of-garden-plot.component";
-import {GardenPlot, PlotStatus} from "../list-of-garden-plot/garden-plot";
 import {MeasurementDialogComponent} from "./measurement-dialog/measurement-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {AddCounterDialogComponent} from "./add-counter-dialog/add-counter-dialog.component";
