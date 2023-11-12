@@ -174,13 +174,25 @@ export class UserInfoComponent implements OnInit {
 
 
   editProfile() {
-    if (this.userInfoForm.valid) {
+    const newSector: string = this.userInfoForm.get('plotSector')?.value;
+    const newAvenue: string = this.userInfoForm.get('plotAvenue')?.value;
+    const newNumber: number = this.userInfoForm.get('plotNumber')?.value;
+    let uniqueAdress: boolean = false
+
+    let gardenID = findGardenPlotIdByAddress(newSector, newAvenue, newNumber, gardenPlots)
+    let garden;
+    if (gardenID) {
+      garden = findGardenByUserID(this.id, gardenPlots)
+      if (garden) {
+        uniqueAdress = true
+      }
+    }
+
+    if (this.userInfoForm.valid && uniqueAdress) {
       const newFirstName: number = this.userInfoForm.get('firstName')?.value;
       const newLastName: number = this.userInfoForm.get('lastName')?.value;
       const newPhoneNumber: number = this.userInfoForm.get('phoneNumber')?.value;
-      const newSector: string = this.userInfoForm.get('plotSector')?.value;
-      const newAvenue: string = this.userInfoForm.get('plotAvenue')?.value;
-      const newNumber: number = this.userInfoForm.get('plotNumber')?.value;
+
       const newStatus: Role_temp = this.userInfoForm.get('status')?.value;
 
       const newUser: Profile = {
