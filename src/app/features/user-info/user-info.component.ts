@@ -12,10 +12,8 @@ import {Role} from "../register/user.model";
 import {
   findGardenPlotIdByAddress,
   getMatchingAvenues,
-  getMatchingNumbers,
   getMatchingSectors,
 } from "../counters/add-counter-dialog/add-counter-dialog.component";
-import {Counter} from "../counters/counter";
 
 @Component({
   selector: 'app-user-info',
@@ -58,10 +56,10 @@ export class UserInfoComponent implements OnInit {
       this.showGardenAddress = true
     }
 
-    this.sectorsOptions = getMatchingSectors(counters, gardenPlots);
+    this.sectorsOptions = this.getMatchingSectors(profiles, gardenPlots);
 
     this.userInfoForm.get('plotSector')?.valueChanges.subscribe((value) => {
-      this.avenuesOptions = getMatchingAvenues(counters, gardenPlots, this.userInfoForm.get('plotSector')?.value)
+      this.avenuesOptions = this.getMatchingAvenues(profiles, gardenPlots, this.userInfoForm.get('plotSector')?.value)
       this.numbersOptions = []
     });
 
@@ -221,6 +219,30 @@ export class UserInfoComponent implements OnInit {
     window.location.reload();
   }
 
+  getMatchingSectors(profiles: Profile[], gardenPlots: GardenPlot[]):
+    ((string | null)[]) {
+    const availableGardenPlots = gardenPlots.filter((gardenPlot) => {
+      return (
+        !profiles.some((profile) => profile.id === gardenPlot.leaseholderID) || (this.id === gardenPlot.leaseholderID));
+    });
+
+    const sectors = availableGardenPlots.map((gardenPlot) => gardenPlot.sector);
+    sectors.sort();
+    return (sectors);
+  }
+
+  getMatchingAvenues(profiles: Profile[], gardenPlots: GardenPlot[], sector: string | null):
+    ((string | null)[]) {
+    const availableGardenPlots = gardenPlots.filter((gardenPlot) => {
+      return (
+        (!profiles.some((profile) => profile.id === gardenPlot.leaseholderID) || (this.id === gardenPlot.leaseholderID)) && (gardenPlot.sector === sector));
+    });
+
+    const sectors = availableGardenPlots.map((gardenPlot) => gardenPlot.avenue);
+    sectors.sort();
+    return (sectors);
+  }
+
   getMatchingNumbers(profiles: Profile[], gardenPlots: GardenPlot[], sector: string | null, avenue: string | null,):
     ((number | null)[]) {
     const availableGardenPlots = gardenPlots.filter((gardenPlot) => {
@@ -255,7 +277,6 @@ export class UserInfoComponent implements OnInit {
       return null;
     };
   }
-
 
   protected readonly Object = Object;
   protected readonly Role_temp = Role_temp;
