@@ -5,13 +5,12 @@ export interface Profile {
   lastName: string;
   phoneNumber: string;
   email: string;
-  plotID: string | null;
-  accountStatus: Role[];
+  accountStatus: Role_temp[];
   paymentAmount: number | null;
   paymentDueDate: Date;
 }
 
-export enum Role {
+export enum Role_temp {
   USER = 'UŻYTKOWNIK',
   ADMIN = 'ADMINISTRATOR',
   MANAGER = 'Zarządca ogrodu',

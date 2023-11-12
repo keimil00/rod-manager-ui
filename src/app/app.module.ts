@@ -66,6 +66,7 @@ import {MatTabsModule} from "@angular/material/tabs";
 import { MeasurementDialogComponent } from './features/counters/measurement-dialog/measurement-dialog.component';
 import { AddCounterDialogComponent } from './features/counters/add-counter-dialog/add-counter-dialog.component';
 import { ListOfUsersComponent } from './features/list-of-users/list-of-users.component';
+import { UserInfoComponent } from './features/user-info/user-info.component';
 
 @NgModule({
   declarations: [
@@ -95,7 +96,8 @@ import { ListOfUsersComponent } from './features/list-of-users/list-of-users.com
     CountersComponent,
     MeasurementDialogComponent,
     AddCounterDialogComponent,
-    ListOfUsersComponent
+    ListOfUsersComponent,
+    UserInfoComponent
   ],
   imports: [
     BrowserModule,

@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit{
     console.log('Login');
     console.log(this.loginForm.value);
     let user = new LoginUser();
-    user.username = this.loginForm.get('email')?.value;
+    user.email = this.loginForm.get('email')?.value;
     user.password = this.loginForm.get('password')?.value;
     this.authService.login(user).subscribe({
       next: data => {

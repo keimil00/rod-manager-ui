@@ -55,9 +55,12 @@
     </mat-menu>
   </div>
   <div class="auth-buttons">
-    <div *ngIf="isLoggedIn(); else loggedOut">
-      <app-text-button text="Wyloguj" color="accent" (click)="logout()"></app-text-button>
+    <div class="login-buttons" *ngIf="isLoggedIn(); else loggedOut">
+      <app-text-button text="Wyloguj" color="primary" (click)="logout()"></app-text-button>
+        <!--      TODO-->
+      <app-text-button text="Profil" color="accent" (click)="navigateToProfileComponent('1')"></app-text-button>
     </div>
+
     <ng-template #loggedOut>
       <app-text-button text="Zaloguj się" color="primary" (click)="navigate('login')"></app-text-button>
       <app-text-button text="Zarejestruj się" color="accent" (click)="navigate('register')"></app-text-button>

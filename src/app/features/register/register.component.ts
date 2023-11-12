@@ -100,7 +100,7 @@ export class RegisterComponent implements OnInit {
 
   login(user: User): void {
     let loginUser = new LoginUser();
-    loginUser.username = user.username;
+    loginUser.email = user.username;
     loginUser.password = user.password;
     this.authService.login(loginUser).subscribe({
       next: data => {

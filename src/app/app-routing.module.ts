@@ -11,6 +11,7 @@ import {DocumentsComponent} from "./features/documents/documents.component";
 import {ListOfGardenPlotComponent} from "./features/list-of-garden-plot/list-of-garden-plot.component";
 import {CountersComponent} from "./features/counters/counters.component";
 import {ListOfUsersComponent} from "./features/list-of-users/list-of-users.component";
+import {UserInfoComponent} from "./features/user-info/user-info.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'list-of-garden-plot', component: ListOfGardenPlotComponent},
   { path: 'list-of-users', component: ListOfUsersComponent},
   { path: 'counters', component: CountersComponent},
+  { path: 'user-info/:id', component: UserInfoComponent},
   { path: '404', component: PageNotFoundComponent },
   { path: '**', redirectTo: '/404' }
   // { path: 'admin', component: AdminComponent, canActivate: [authGuard([Role.ADMIN] TODO: gdy będą role trzeba to pododawać

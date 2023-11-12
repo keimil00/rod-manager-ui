@@ -64,6 +64,7 @@ export class AddCounterDialogComponent implements OnInit {
 
     this.addCounterForm.get('sector')?.valueChanges.subscribe((value) => {
       this.avenuesOptions = getMatchingAvenues(counters, gardenPlots, this.addCounterForm.get('sector')?.value)
+      this.numbersOptions = []
     });
 
     this.addCounterForm.get('avenue')?.valueChanges.subscribe((value) => {
@@ -177,7 +178,7 @@ export function getMatchingAvenues(counters: Counter[], gardenPlots: GardenPlot[
   return (sectors);
 }
 
-export function getMatchingNumbers(counters: Counter[], gardenPlots: GardenPlot[], sector: string | null, avenue: string | null):
+export function getMatchingNumbers(counters: Counter[], gardenPlots: GardenPlot[], sector: string | null, avenue: string | null, ):
   ((number | null)[]) {
   const availableGardenPlots = gardenPlots.filter((gardenPlot) => {
     return (

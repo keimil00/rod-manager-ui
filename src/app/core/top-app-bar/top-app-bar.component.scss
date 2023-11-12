@@ -50,6 +50,13 @@
     gap: 10px;
   }
 
+  .login-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+
   .app-text-button {
     margin: 0 10px; /* Adjust the horizontal spacing between buttons as needed */
   }

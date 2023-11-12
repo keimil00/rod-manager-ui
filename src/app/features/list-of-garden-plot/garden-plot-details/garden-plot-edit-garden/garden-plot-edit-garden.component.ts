@@ -82,7 +82,7 @@ export class GardenPlotEditGardenComponent {
     });
   }
 
-  ngOnInit(formBuilder: FormBuilder) {
+  ngOnInit() {
     // @ts-ignore
     const gardenPlot: GardenPlot = this.gardenPlot
     this.populateFormFromGardenPlot(gardenPlot);

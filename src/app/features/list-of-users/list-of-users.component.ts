@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {Profile} from "../Profile";
 import {profiles} from "../list-of-garden-plot/garden-plot-list-add-garden/garden-plot-list-add-garden.component";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-list-of-users',
@@ -9,24 +10,28 @@ import {profiles} from "../list-of-garden-plot/garden-plot-list-add-garden/garde
   styleUrls: ['./list-of-users.component.scss']
 })
 export class ListOfUsersComponent {
-  displayedColumns: string[] = ['firstName','lastName','phoneNumber','email','accountStatus','add'];
+  displayedColumns: string[] = ['firstName', 'lastName', 'phoneNumber', 'email', 'accountStatus', 'add'];
 
   dataProfiles: MatTableDataSource<Profile>;
-  constructor() {
-    this.dataProfiles=new MatTableDataSource(profiles);
-      profiles.sort((a, b) => {
 
-        const lastNameComparison = a.lastName.localeCompare(b.lastName);
-        if (lastNameComparison !== 0) {
-          return lastNameComparison;
-        }
+  constructor(private router: Router) {
+    this.dataProfiles = new MatTableDataSource(profiles);
+    profiles.sort((a, b) => {
 
-        const firstNameComparison = a.firstName.localeCompare(b.firstName);
-        if (firstNameComparison !== 0) {
-          return firstNameComparison;
-        }
+      const lastNameComparison = a.lastName.localeCompare(b.lastName);
+      if (lastNameComparison !== 0) {
+        return lastNameComparison;
+      }
 
-        return a.email.localeCompare(b.email);
-      });
+      const firstNameComparison = a.firstName.localeCompare(b.firstName);
+      if (firstNameComparison !== 0) {
+        return firstNameComparison;
+      }
+
+      return a.email.localeCompare(b.email);
+    });
+  }
+  navigateToProfileComponent(id: string) {
+    this.router.navigate(['/user-info', id]);
   }
 }
