@@ -11,7 +11,7 @@ import {DocumentsComponent} from "./features/documents/documents.component";
 import {ListOfGardenPlotComponent} from "./features/list-of-garden-plot/list-of-garden-plot.component";
 
 const routes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent },

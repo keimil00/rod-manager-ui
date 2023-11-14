@@ -81,7 +81,7 @@ export class HomeComponent {
   filterPostsByTags(tag: Tag) {
     tag.selected = !tag.selected;
     const selectedTags = this.defaultTags.filter(tag => tag.selected);
-    if (selectedTags.length === 0) this.postsLoaded = this.postDataService.getPosts(0, this.pageSize);
+    if (selectedTags.length === 0) this.postsLoaded = this.postDataService.getPosts(0, this.paginatorComponent.pageSize);
     this.postDataService.filterPostsByTags(selectedTags.map(tag => tag.name));
     this.paginatorComponent.reset();
     this.initData();
@@ -92,6 +92,7 @@ export class HomeComponent {
   }
 
   onPostCreated(post: Post) {
+    console.log(post);
     this.isCreatingPost = false;
     this.postDataService.savePost(post);
     this.refresh();
