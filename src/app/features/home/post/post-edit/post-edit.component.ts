@@ -21,24 +21,32 @@ export class PostEditComponent {
 
   postForm: FormGroup;
   modules = {}
+  addEvent = false;
   constructor(private fb: FormBuilder, public dialog: MatDialog) {
     this.modules = {
       blotFormatter: {
         // empty object for default behaviour.
-      },
+      }
     }
+
     this.postForm = this.fb.group({
       title: ['', Validators.required],
-      content: ['', Validators.required],
-      tags: this.fb.array([])
+      content: [''],
+      tags: this.fb.array([]),
+      event: this.fb.group({
+        title: [''],
+        date: [''],
+      }),
     });
   }
 
   onSubmit() {
+    console.log(this.postForm.value)
     this.save.emit(this.postForm.value);
   }
 
   onCancel() {
+    console.log('cancel')
     this.cancel.emit();
   }
 
@@ -49,5 +57,17 @@ export class PostEditComponent {
       height: 'auto',
       minWidth: '600px',
     });
+  }
+
+  toggleAddEvent() {
+    console.log(!this.addEvent);
+    this.addEvent = !this.addEvent;
+    if (this.addEvent) {
+      this.postForm.get('event')?.get('title')?.setValidators([Validators.required]);
+      this.postForm.get('event')?.get('date')?.setValidators([Validators.required]);
+    } else {
+      this.postForm.get('event')?.get('title')?.clearValidators();
+      this.postForm.get('event')?.get('date')?.clearValidators();
+    }
   }
 }

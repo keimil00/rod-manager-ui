@@ -7,12 +7,12 @@ export interface Profile {
   phoneNumber: string;
   email: string;
   plotID: string;
-  accountStatus: Role;
+  accountStatus: Role_TEMP;
   paymentAmount : number;
   paymentDueDate : Date;
 }
 
-export enum Role {
+export enum Role_TEMP { // TODO: DELETE!!!!!!!!!!!!!!!!!!!
   USER = 'UŻYTKOWNIK',
   ADMIN = 'ADMINISTRATOR',
   MANAGER = 'Zarządca ogrodu',

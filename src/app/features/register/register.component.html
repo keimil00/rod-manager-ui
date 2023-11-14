@@ -44,7 +44,8 @@
             </mat-form-field>
             <mat-form-field class="col-item">
               <mat-label>(Opcjonalnie)</mat-label>
-              <input matInput type="tel" formControlName="phoneNumber" placeholder="Numer telefonu" (input)="formatPhoneNumber($event)">
+              <input matInput type="tel" formControlName="phoneNumber" placeholder="Numer telefonu"
+                     (input)="formatPhoneNumber($event)">
               <mat-error *ngFor="let error of validationErrors('phoneNumber')">
                 {{ error.message }}
               </mat-error>
@@ -67,14 +68,17 @@
             </mat-form-field>
           </div>
           <div class="row-item register-section">
-            <button mat-raised-button class="register-button" color="primary" type="submit" (click)="register()">Zarejestruj</button>
+            <button mat-raised-button class="register-button" color="primary" type="submit" (click)="register()">
+              Zarejestruj
+            </button>
           </div>
           <div class="row-item register-section">
             <mat-divider></mat-divider>
             <span class="or-label">lub</span>
           </div>
           <div class="row-item register-section">
-            <asl-google-signin-button type="standard" width="300" size="large" text="signup_with" ></asl-google-signin-button>
+            <asl-google-signin-button type="standard" width="300" size="large"
+                                      text="signup_with"></asl-google-signin-button>
           </div>
         </div>
       </form>

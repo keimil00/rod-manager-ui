@@ -9,9 +9,15 @@ export class StorageService {
 
   constructor() { }
 
-  setTokens(tokens: AuthResponse): void {
-    localStorage.setItem('access', tokens.access);
-    localStorage.setItem('refresh', tokens.refresh);
+  setTokens(access: string, refresh: string): void {
+    localStorage.setItem('access', access);
+    localStorage.setItem('refresh', refresh);
+    const expirationTime = new Date().getTime() + 300000;
+    localStorage.setItem('timestamp', expirationTime.toString());
+  }
+
+  getTimestamp(): number {
+    return Number(localStorage.getItem('timestamp'));
   }
 
   setRoles(roles: Role[]): void {

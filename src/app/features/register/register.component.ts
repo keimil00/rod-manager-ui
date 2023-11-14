@@ -69,7 +69,8 @@ export class RegisterComponent implements OnInit {
       this.authService.loginGoogle(user.idToken).pipe().subscribe({
         next: data => {
           console.log(data);
-          this.storageService.setTokens(data);
+          this.storageService.setTokens(data.access, data.refresh);
+          this.storageService.setRoles(data.roles);
           this.router.navigate(['home'])
         },
         error: error => {
@@ -83,10 +84,10 @@ export class RegisterComponent implements OnInit {
     console.log('Register');
     console.log(this.registerFrom.value);
     let user = new User();
-    user.username = this.registerFrom.get('email')?.value;
+    user.email = this.registerFrom.get('email')?.value;
     user.password = this.registerFrom.get('password')?.value;
-    user.name = this.registerFrom.get('firstName')?.value;
-    user.surname = this.registerFrom.get('lastName')?.value;
+    user.first_name = this.registerFrom.get('firstName')?.value;
+    user.last_name = this.registerFrom.get('lastName')?.value;
     this.authService.register(user).subscribe({
       next: data => {
         console.log(data);
@@ -100,12 +101,13 @@ export class RegisterComponent implements OnInit {
 
   login(user: User): void {
     let loginUser = new LoginUser();
-    loginUser.username = user.username;
+    loginUser.email = user.email;
     loginUser.password = user.password;
     this.authService.login(loginUser).subscribe({
       next: data => {
         console.log(data);
-        this.storageService.setTokens(data);
+        this.storageService.setTokens(data.access, data.refresh);
+        this.storageService.setRoles(data.roles);
         this.router.navigate(['home'])
       },
       error: error => {

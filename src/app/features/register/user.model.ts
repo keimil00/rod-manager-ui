@@ -1,12 +1,12 @@
 export class User {
-  username!: string;
+  email!: string;
   password!: string;
-  name!: string;
-  surname!: string;
+  first_name!: string;
+  last_name!: string;
 }
 
 export class LoginUser {
-  username!: string;
+  email!: string;
   password!: string;
 }
 

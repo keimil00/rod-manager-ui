@@ -18,11 +18,32 @@
       </div>
     </mat-card-header>
     <mat-card-content>
-      <quill-editor class="content-editor" [modules]="modules" formControlName="content" [placeholder]="''" > </quill-editor>
+      <quill-editor class="content-editor" formControlName="content"
+                    [modules]="modules"
+                    [placeholder]="''"></quill-editor>
+      <mat-checkbox [color]="'primary'"
+                    (change)="toggleAddEvent()">
+        Dodaj wydarzenie
+      </mat-checkbox>
+      <div class="add-event" *ngIf="addEvent" formGroupName="event">
+        <mat-form-field class="event-field">
+          <mat-label>Dodaj wydarzenie</mat-label>
+          <input matInput formControlName="title" placeholder="Nazwa wydarzenia...">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Wybierz datę</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="date">
+          <mat-hint>DD/MM/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
     </mat-card-content>
     <mat-card-actions class="mat-actions col-container">
-      <app-text-button class="col-item cancel-button" className="action-button" [text]="'Anuluj'" [color]="'accent'" (click)="onCancel()"></app-text-button>
-      <app-text-button class="col-item submit-button" className="action-button" [text]="'Zapisz'" [color]="'primary'" (click)="onSubmit()"></app-text-button>
+      <app-text-button class="cancel-button" className="action-button" [text]="'Anuluj'"
+                       [color]="'accent'" (click)="onCancel()"></app-text-button>
+      <app-text-button class="submit-button" className="action-button" [text]="'Zapisz'"
+                       [color]="'primary'" (click)="onSubmit()"></app-text-button>
     </mat-card-actions>
   </form>
 </mat-card>
