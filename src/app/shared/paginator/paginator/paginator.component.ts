@@ -32,6 +32,7 @@ export class PaginatorComponent extends MatPaginatorIntl {
   };
 
   onPageChange(event: any) {
+    this.pageSize = event.pageSize;
     const data = this.loadDataFunction(event.pageIndex, event.pageSize);
     this.dataLoaded.emit(data);
   }

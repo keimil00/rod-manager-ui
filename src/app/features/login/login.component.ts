@@ -42,6 +42,16 @@ export class LoginComponent implements OnInit{
   ngOnInit(): void {
     this.socialAuthService.authState.subscribe((user: SocialUser) => {
       console.log('Login User: ' + JSON.stringify(user));
+      this.authService.loginGoogle(user.idToken).pipe().subscribe({
+        next: data => {
+          console.log(data);
+          this.storageService.setTokens(data.access, data.refresh);
+          this.router.navigate(['home'])
+        },
+        error: error => {
+          console.error(error);
+        }
+      });
     });
   }
 
@@ -54,7 +64,8 @@ export class LoginComponent implements OnInit{
     this.authService.login(user).subscribe({
       next: data => {
         console.log(data);
-        this.storageService.setTokens(data);
+        this.storageService.setTokens(data.access, data.refresh);
+        this.storageService.setRoles(data.roles);
         this.router.navigate(['home'])
       },
       error: error => {

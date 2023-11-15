@@ -8,3 +8,8 @@ export class Tag {
   name!: string;
   selected!: boolean;
 }
+
+export class TagDto {
+    name!: string;
+    times_used!: number;
+}

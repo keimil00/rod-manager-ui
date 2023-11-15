@@ -99,6 +99,7 @@ export class ListOfGardenPlotComponent {
     });
     dialogRef.afterClosed().subscribe(() => {
       this.closeAddingGardenPlot()
+      this.sortData()
     });
   }
 
