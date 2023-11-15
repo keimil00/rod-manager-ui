@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {GardenPlot, PlotStatus} from "../garden-plot";
 
@@ -8,9 +8,16 @@ import {
   profileEmailValidator,
   profiles
 } from "../../list-of-users/ProfilesService";
-import {gardenPlots, uniqueLeaseholderIDValidator} from "../GardenService";
+import {
+  gardenPlots,
+  getAvenues,
+  getSectors,
+  uniqueGardenValidator,
+  uniqueLeaseholderIDValidator
+} from "../GardenService";
+import {MatDialogRef} from "@angular/material/dialog";
 
-// TODO walidacja adresu plus autocomplite na sektorach i alejach
+
 @Component({
   selector: 'app-garden-plot-list-add-garden',
   templateUrl: './garden-plot-list-add-garden.component.html',
@@ -18,8 +25,12 @@ import {gardenPlots, uniqueLeaseholderIDValidator} from "../GardenService";
 })
 export class GardenPlotListAddGardenComponent {
   leaseHolderOptions: { email: string; fullName: string }[] = [];
+  sectorsOptions: (string | null)[] = [];
+  avenuesOptions: (string | null)[] = [];
 
-  @Output() closeAddingGardenPlot = new EventEmitter<void>();
+  closeAddingGardenPlot() {
+    this.dialogRef.close();
+  }
 
   addGardenForm: FormGroup;
   showEmptyError: boolean = false;
@@ -32,7 +43,8 @@ export class GardenPlotListAddGardenComponent {
       {type: 'required', message: 'Proszę podać poprawną aleje'}
     ],
     number: [
-      {type: 'required', message: 'Proszę podać poprawny numer'}
+      {type: 'required', message: 'Proszę podać poprawny numer'},
+      {type: 'nonUniqueGarden', message: 'Istnieje już działka z tym adresem'}
     ],
     area: [
       {type: 'required', message: 'Proszę podać obszar'},
@@ -47,7 +59,7 @@ export class GardenPlotListAddGardenComponent {
     ]
   };
 
-  constructor(formBuilder: FormBuilder) {
+  constructor(formBuilder: FormBuilder, public dialogRef: MatDialogRef<GardenPlotListAddGardenComponent>) {
     this.addGardenForm = formBuilder.group({
       sector: ['', [
         Validators.required,
@@ -69,6 +81,7 @@ export class GardenPlotListAddGardenComponent {
       status: ['',
         Validators.required]
     });
+    this.addGardenForm.updateValueAndValidity();
   }
 
   ngOnInit() {
@@ -83,20 +96,34 @@ export class GardenPlotListAddGardenComponent {
         email: 'brak'
       }, ...getMatchingProfiles(value, profiles, gardenPlots, false)];
     });
-    profiles.sort((a, b) => {
 
+    this.sectorsOptions = getSectors(this.addGardenForm.get('sector')?.value, gardenPlots);
+    this.addGardenForm.get('sector')?.valueChanges.subscribe((value) => {
+      this.sectorsOptions = getSectors(this.addGardenForm.get('sector')?.value, gardenPlots);
+      this.updateAvenousAndNumberValidator()
+    });
+
+    this.avenuesOptions = getAvenues(this.addGardenForm.get('avenue')?.value, this.addGardenForm.get('sector')?.value, gardenPlots);
+    this.addGardenForm.get('avenue')?.valueChanges.subscribe((value) => {
+      this.updateAvenousAndNumberValidator()
+    });
+
+    profiles.sort((a, b) => {
       const lastNameComparison = a.lastName.localeCompare(b.lastName);
       if (lastNameComparison !== 0) {
         return lastNameComparison;
       }
-
       const firstNameComparison = a.firstName.localeCompare(b.firstName);
       if (firstNameComparison !== 0) {
         return firstNameComparison;
       }
-
       return a.email.localeCompare(b.email);
     });
+  }
+
+  updateAvenousAndNumberValidator() {
+    this.avenuesOptions = getAvenues(this.addGardenForm.get('avenue')?.value, this.addGardenForm.get('sector')?.value, gardenPlots);
+    this.addGardenForm.get('number')?.setValidators([Validators.required, uniqueGardenValidator(this.addGardenForm.get('sector')?.value, this.addGardenForm.get('avenue')?.value, gardenPlots,false)])
   }
 
   validationErrors(controlName: string): any[] {
@@ -141,10 +168,11 @@ export class GardenPlotListAddGardenComponent {
 
       //TODO push do backendu
       // this.gardenPlots?.push(newGardenPlot)
+      gardenPlots.push(newGardenPlot)
 
       this.showEmptyError = false
       this.addGardenForm.reset();
-      this.closeAddingGardenPlot.emit()
+      this.closeAddingGardenPlot()
 
     } else {
       this.showEmptyError = true;

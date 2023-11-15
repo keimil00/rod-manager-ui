@@ -3,10 +3,9 @@ import {Counter} from "../counters/counter";
 import {Profile} from "../Profile";
 import {AbstractControl, ValidatorFn} from "@angular/forms";
 
-export function updateLeaseholderID(targetID: string | null | undefined, newLeaseholderID: string | null, gardenPlots: GardenPlot[]) {
+export function updateLeaseholderID(targetID: string | null | undefined, newLeaseholderID: string | null) {
   //to zastapi push
-  let garden;
-  for (garden of gardenPlots) {
+  for (let garden of gardenPlots) {
     if (garden.id === targetID) {
       garden.leaseholderID = newLeaseholderID
     }
@@ -22,6 +21,7 @@ export function findGardenByUserID(id: string | null, gardenPlots: GardenPlot[])
   }
   return null
 }
+
 export function findGardenByID(id: string | null, gardenPlots: GardenPlot[]): GardenPlot | null {
   let garden: GardenPlot;
   for (garden of gardenPlots) {
@@ -32,41 +32,121 @@ export function findGardenByID(id: string | null, gardenPlots: GardenPlot[]): Ga
   return null
 }
 
-export function getMatchingSectors(counters: Counter[], gardenPlots: GardenPlot[]):
-  ((string | null)[]) {
+export function getMatchingSectors(counters: Counter[], gardenPlots: GardenPlot[]): string[] {
+  // @ts-ignore
+  const gardenPlotIdsWithCounters = new Set<string>(counters.map((counter) => counter.gardenPlotID));
+
   const availableGardenPlots = gardenPlots.filter((gardenPlot) => {
-    return (
-      !counters.some((counter) => counter.gardenPlotID === gardenPlot.id));
+    return !gardenPlotIdsWithCounters.has(gardenPlot.id);
   });
 
   const sectors = availableGardenPlots.map((gardenPlot) => gardenPlot.sector);
-  sectors.sort();
-  return (sectors);
+  // @ts-ignore
+  const uniqueSectorsSet = new Set<string>(sectors);
+  const uniqueSectorsArray = Array.from(uniqueSectorsSet);
+  uniqueSectorsArray.sort();
+
+  return uniqueSectorsArray;
 }
 
-export function getMatchingAvenues(counters: Counter[], gardenPlots: GardenPlot[], sector: string | null):
-  ((string | null)[]) {
+export function getMatchingAvenues(counters: Counter[], gardenPlots: GardenPlot[], sector: string | null): string[] {
+  // @ts-ignore
+  const gardenPlotIdsWithCounters = new Set<string>(counters.map((counter) => counter.gardenPlotID));
+
   const availableGardenPlots = gardenPlots.filter((gardenPlot) => {
     return (
-      !counters.some((counter) => counter.gardenPlotID === gardenPlot.id) && (gardenPlot.sector === sector));
+      !gardenPlotIdsWithCounters.has(gardenPlot.id) &&
+      (sector ? gardenPlot.sector === sector : true)
+    );
   });
 
-  const sectors = availableGardenPlots.map((gardenPlot) => gardenPlot.avenue);
-  sectors.sort();
-  return (sectors);
+  const avenues = availableGardenPlots.map((gardenPlot) => gardenPlot.avenue);
+  // @ts-ignore
+  const uniqueAvenuesSet = new Set<string>(avenues);
+  const uniqueAvenuesArray = Array.from(uniqueAvenuesSet);
+  uniqueAvenuesArray.sort();
+
+  return uniqueAvenuesArray;
 }
 
-export function getMatchingNumbers(counters: Counter[], gardenPlots: GardenPlot[], sector: string | null, avenue: string | null, ):
-  ((number | null)[]) {
+
+export function getMatchingNumbers(counters: Counter[], gardenPlots: GardenPlot[], sector: string | null, avenue: string | null): number[] {
+  // @ts-ignore
+  const gardenPlotIdsWithCounters = new Set<string>(counters.map((counter) => counter.gardenPlotID));
+
   const availableGardenPlots = gardenPlots.filter((gardenPlot) => {
     return (
-      !counters.some((counter) => counter.gardenPlotID === gardenPlot.id) && (gardenPlot.sector === sector) && (gardenPlot.avenue === avenue));
+      !gardenPlotIdsWithCounters.has(gardenPlot.id) &&
+      (sector ? gardenPlot.sector === sector : true) &&
+      (avenue ? gardenPlot.avenue === avenue : true)
+    );
   });
 
-  const sectors = availableGardenPlots.map((gardenPlot) => gardenPlot.number);
-  sectors.sort();
-  return (sectors);
+  const numbers = availableGardenPlots.map((gardenPlot) => gardenPlot.number);
+  const uniqueNumbersSet = new Set<number>(numbers);
+  const uniqueNumbersArray = Array.from(uniqueNumbersSet);
+  uniqueNumbersArray.sort((a, b) => a - b);
+
+  return uniqueNumbersArray;
 }
+
+export function getSectors(value: string, gardenPlots: GardenPlot[]): string[] {
+  const lowerCaseValue = value.toLowerCase();
+
+  const uniqueSectorsSet = new Set<string>();
+  const seenSectors = new Set<string>();
+
+  gardenPlots.forEach((gardenPlot) => {
+    const sector = gardenPlot.sector;
+
+    // @ts-ignore
+    if (!seenSectors.has(<string>sector) && sector.toLowerCase().includes(lowerCaseValue)) {
+      if (sector != null) {
+        uniqueSectorsSet.add(sector);
+      }
+      if (sector != null) {
+        seenSectors.add(sector);
+      }
+    }
+  });
+
+  const uniqueSectorsArray = Array.from(uniqueSectorsSet);
+  uniqueSectorsArray.sort();
+
+  return uniqueSectorsArray;
+}
+
+export function getAvenues(value: string, sector: string | null, gardenPlots: GardenPlot[]): string[] {
+  const lowerCaseValue = value.toLowerCase();
+
+  const uniqueAvenuesSet = new Set<string>();
+  const seenAvenues = new Set<string>();
+
+  gardenPlots.forEach((gardenPlot) => {
+    const avenue = gardenPlot.avenue;
+
+    if (
+      sector &&
+      gardenPlot.sector === sector &&
+      !seenAvenues.has(<string>avenue) &&
+      // @ts-ignore
+      avenue.toLowerCase().includes(lowerCaseValue)
+    ) {
+      if (avenue != null) {
+        uniqueAvenuesSet.add(avenue);
+      }
+      if (avenue != null) {
+        seenAvenues.add(avenue);
+      }
+    }
+  });
+
+  const uniqueAvenuesArray = Array.from(uniqueAvenuesSet);
+  uniqueAvenuesArray.sort();
+
+  return uniqueAvenuesArray;
+}
+
 
 export function findGardenPlotIdByAddress(sector: string | null, avenue: string | null, number: number | null, gardenPlots: GardenPlot[]): string | null {
   const matchingGardenPlot = gardenPlots.find((gardenPlot) =>
@@ -99,6 +179,27 @@ export function uniqueLeaseholderIDValidator(gardenPlots: GardenPlot[], profiles
     if (isUsed && !isCurrent) {
       return {nonUniqueLeaseholderID: true};
     }
+    return null;
+  };
+}
+
+export function uniqueGardenValidator(sector: string, avenue: string, gardenPlots: GardenPlot[], showCurrenGardenPlot: boolean, CurrentGardenPlot?: GardenPlot): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    const gardenPlotNumber = control.value;
+
+    if (!gardenPlotNumber) {
+      return null;
+    }
+
+    const selectedGardenPlotId = findGardenPlotIdByAddress(sector, avenue, gardenPlotNumber, gardenPlots)
+    if (!selectedGardenPlotId) {
+      return null
+    }
+
+    const isCurrent = (showCurrenGardenPlot && CurrentGardenPlot?.id === selectedGardenPlotId)
+
+    if (!isCurrent)
+      return {nonUniqueGarden: true};
     return null;
   };
 }
@@ -234,6 +335,15 @@ export let gardenPlots: GardenPlot[] = [
     number: 2001,
     area: 600,
     leaseholderID: '4',
+    status: PlotStatus.Unavailable
+  },
+  {
+    id: '21',
+    sector: 'A',
+    avenue: 'Avenue 1',
+    number: 102,
+    area: 600,
+    leaseholderID: '30',
     status: PlotStatus.Unavailable
   },
 ];

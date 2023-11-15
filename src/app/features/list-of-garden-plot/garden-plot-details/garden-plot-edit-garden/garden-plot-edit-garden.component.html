@@ -2,40 +2,55 @@
   <mat-card class="form-card">
     <mat-card-content>
       <form class [formGroup]="editGardenForm">
-        <div class="row-item">
+        <div>
           <mat-form-field class="full-width">
-            <input matInput type="text" placeholder="Sektor" formControlName="sector">
+            <mat-label>Sektor</mat-label>
+            <input matInput type="text" placeholder="Sektor" formControlName="sector" [matAutocomplete]="auto1">
+            <mat-autocomplete #auto1="matAutocomplete">
+              <mat-option *ngFor="let option of sectorsOptions" [value]="option">
+                {{ option}}
+              </mat-option>
+            </mat-autocomplete>
             <mat-error *ngFor="let error of validationErrors('sector')">
               {{ error.message }}
             </mat-error>
           </mat-form-field>
         </div>
-        <div class="row-item">
+        <div>
           <mat-form-field class="full-width">
-            <input matInput type="text" placeholder="Aleja" formControlName="avenue">
+            <mat-label>Aleja</mat-label>
+            <input matInput type="text" placeholder="Aleja" formControlName="avenue" [matAutocomplete]="auto2">
+            <mat-autocomplete #auto2="matAutocomplete">
+              <mat-option *ngFor="let option of avenuesOptions" [value]="option">
+                {{ option}}
+              </mat-option>
+            </mat-autocomplete>
             <mat-error *ngFor="let error of validationErrors('avenue')">
               {{ error.message }}
             </mat-error>
           </mat-form-field>
         </div>
-        <div class="row-item">
+        <div>
           <mat-form-field class="full-width">
+            <mat-label>Numer</mat-label>
             <input matInput type="number" placeholder="Numer" formControlName="number">
             <mat-error *ngFor="let error of validationErrors('number')">
               {{ error.message }}
             </mat-error>
           </mat-form-field>
         </div>
-        <div class="row-item">
+        <div>
           <mat-form-field class="full-width">
+            <mat-label>Powierzchnia m²</mat-label>
             <input matInput type="number" placeholder="Powierzchnia m²" formControlName="area">
             <mat-error *ngFor="let error of validationErrors('area')">
               {{ error.message }}
             </mat-error>
           </mat-form-field>
         </div>
-        <div class="row-item">
+        <div>
           <mat-form-field class="full-width">
+            <mat-label>Dzierżawca</mat-label>
             <input matInput placeholder="Dzierżawca" formControlName="leaseholderEmail" [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete">
               <mat-option *ngFor="let option of leaseHolderOptions" [value]="option.email">
@@ -47,7 +62,7 @@
             </mat-error>
           </mat-form-field>
         </div>
-        <div class="row-item">
+        <div>
           <mat-form-field class="full-width">
             <mat-label>Status</mat-label>
             <mat-select formControlName="status">
@@ -63,7 +78,7 @@
     </mat-card-content>
   </mat-card>
   <div class="center-button">
-    <button mat-raised-button class="button-color" type="submit" (click)="editGardenPlot()">Edytuj działkę
-    </button>
+    <app-text-button type="submit" [text]="'Edytuj działkę'" [color]="'accent'"
+                     (click)="editGardenPlot()"></app-text-button>
   </div>
 </mat-card-content>

@@ -1,9 +1,10 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, Output} from '@angular/core';
 
 import {Profile} from "../../Profile";
 import {GardenPlot} from "../garden-plot";
 import {Payment, PaymentList} from "./PaymentList";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 
 @Component({
@@ -12,9 +13,8 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
   styleUrls: ['./garden-plot-details.component.scss']
 })
 export class GardenPlotDetailsComponent {
-  @Input() gardenPlot: GardenPlot | undefined;
-  @Input() leaseholder: Profile | undefined;
-  @Output() closeDetails = new EventEmitter<void>();
+  gardenPlot: GardenPlot | undefined;
+  leaseholder: Profile | undefined;
 
   showPaymentHistory = false;
   showNewPaymentForm = false;
@@ -33,9 +33,12 @@ export class GardenPlotDetailsComponent {
     ]
   };
 
-  constructor(formBuilder: FormBuilder) {
-    this.gardenPlot = undefined;
-    this.leaseholder = undefined;
+  constructor(formBuilder: FormBuilder,
+              public dialogRef: MatDialogRef<GardenPlotDetailsComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: { gardenPlot: GardenPlot; leaseholder: Profile }
+  ) {
+    this.gardenPlot = data.gardenPlot;
+    this.leaseholder = data.leaseholder;
     this.paymentForm = formBuilder.group({
       value: ['', [
         Validators.required,
@@ -46,6 +49,10 @@ export class GardenPlotDetailsComponent {
         Validators.required,
       ]]
     });
+  }
+
+  closeEditingingGardenPlot() {
+    this.dialogRef.close();
   }
 
   paymentLists: PaymentList[] = [
@@ -275,7 +282,7 @@ export class GardenPlotDetailsComponent {
     return errors;
   }
 
-  closeEditingingGardenPlot() {
-    this.closeDetails.emit()
-  }
+  // closeEditingingGardenPlot() {
+  //   this.closeDetails.emit()
+  // }
 }

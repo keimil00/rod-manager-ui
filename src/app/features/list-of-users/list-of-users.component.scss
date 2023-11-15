@@ -60,6 +60,89 @@
   align-items: center;
 }
 
-.mainTable{
+.mainTable {
   margin-top: 20px;
 }
+
+@media only screen and (max-width: 600px) {
+  .large-card-size {
+    width: 95%;
+  }
+  .mainTable {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 8px;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .icon-size {
+    text-align: center;
+  }
+
+  .icon-button {
+    margin: 5px;
+  }
+  tr {
+    position: relative;
+  }
+
+  tr::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px; /* Wysokość paska */
+    background-color: #ccc; /* Kolor paska */
+  }
+}
+
+@media only screen and (min-width: 600px) and (max-width: 1100px) {
+  .large-card-size {
+    width: 90%;
+  }
+  .mainTable {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 8px;
+    display: inline-block;
+    width: calc(100% / 3); /* Rozmieszczenie kolumn w równych częściach */
+    box-sizing: border-box;
+  }
+
+  .icon-size {
+    text-align: center;
+  }
+
+  .icon-button {
+    margin: 5px;
+  }
+
+  tr {
+    position: relative;
+  }
+
+  tr::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px; /* Wysokość paska */
+    background-color: #ccc; /* Kolor paska */
+  }
+}
+
+

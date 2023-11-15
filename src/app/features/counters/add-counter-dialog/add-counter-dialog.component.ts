@@ -147,8 +147,6 @@ export class AddCounterDialogComponent implements OnInit {
   }
 }
 
-
-
 export function uniqueCounterIdValidator(counters: Counter[]): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     const value = control.value;

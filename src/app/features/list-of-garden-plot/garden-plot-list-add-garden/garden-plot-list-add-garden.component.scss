@@ -1,19 +1,27 @@
 @import '../../../../styles';
 
 .details-card {
-  margin: 0 auto;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 60%;
+  max-height: 90vh;
+  overflow-y: auto;
   -webkit-box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
   -moz-box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
   box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
   padding-left: 2%;
   padding-right: 2%;
   padding-bottom: 1%;
+  margin-top: 30px;
   background-color: map-get($rod-manager-ui-primary, 50);
+}
+
+@media only screen and (max-width: 750px) {
+  .details-card {
+    width: 100%;
+  }
 }
 
 $background: #EEE;
@@ -54,10 +62,6 @@ $background: #EEE;
   justify-content: center;
   align-items: center;
   margin-top: 16px;
-}
-
-.button-color {
-  background-color: $background;
 }
 
 .center-item {

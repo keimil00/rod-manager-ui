@@ -11,17 +11,25 @@ import {AddCounterDialogComponent} from "./add-counter-dialog/add-counter-dialog
   styleUrls: ['./counters.component.scss']
 })
 export class CountersComponent {
-  displayedColumns: string[] = ['addressC', 'id','gardenPlotID', 'measurement', 'add'];
+  displayedColumns: string[] = ['addressC', 'id', 'gardenPlotID', 'measurement', 'add'];
   showWater: boolean = true;
 
-  dataSourceElectric: MatTableDataSource<Counter>;
-  dataSourceWater: MatTableDataSource<Counter>;
+  // @ts-ignore
+  dataSourceElectric: MatTableDataSource<Counter>
+  // @ts-ignore
+  dataSourceWater: MatTableDataSource<Counter>
 
   constructor(private dialog: MatDialog) {
+    this.setData()
+  }
+
+  setData() {
     // @ts-ignore
     const dataSourceWater: MatTableDataSource<Counter> = new MatTableDataSource([]);
     // @ts-ignore
     const dataSourceElectric: MatTableDataSource<Counter> = new MatTableDataSource([]);
+
+    this.sortCounters()
 
     counters.forEach((counter) => {
       if (counter.type === CounterType.Water) {
@@ -30,24 +38,53 @@ export class CountersComponent {
         dataSourceElectric.data.push(counter);
       }
     });
-
     this.dataSourceWater = dataSourceWater;
     this.dataSourceElectric = dataSourceElectric;
   }
 
-  changeWater(){
+  sortCounters() {
+    counters.sort((a, b) => {
+      if (a.gardenPlotID === null && b.gardenPlotID !== null) {
+        return -1;
+      }
+      if (a.gardenPlotID !== null && b.gardenPlotID === null) {
+        return 1;
+      }
+
+      if (a.gardenPlotID !== null && b.gardenPlotID !== null) {
+        // @ts-ignore
+        const aParts = a.addressC.split(', ');
+        // @ts-ignore
+        const bParts = b.addressC.split(', ');
+
+        for (let i = 0; i < Math.min(aParts.length, bParts.length); i++) {
+          const comparison = aParts[i].localeCompare(bParts[i]);
+          if (comparison !== 0) {
+            return comparison;
+          }
+        }
+
+        return 0;
+      } else {
+        // @ts-ignore
+        return a.addressC.localeCompare(b.addressC);
+      }
+    });
+  }
+
+  changeWater() {
     this.showWater = !this.showWater
   }
 
   openMeasurementDialog(counter: Counter) {
     const dialogRef = this.dialog.open(MeasurementDialogComponent, {
       width: '400px',
-      data: { measurement: counter.measurement }
+      data: {measurement: counter.measurement}
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
-        //TODO
+        //TODO zmienić stan konta użytkownika
         counter.measurement = result;
       }
     });
@@ -60,18 +97,11 @@ export class CountersComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        //TODO
-        if (result.type === CounterType.Water) {
-          this.dataSourceWater.data.push(result);
-          this.dataSourceWater = new MatTableDataSource([...this.dataSourceWater.data]);
-        } else if (result.type === CounterType.Electric) {
-          this.dataSourceElectric.data.push(result);
-          this.dataSourceElectric = new MatTableDataSource([...this.dataSourceElectric.data]);
-        }
+        counters.push(result)
+        this.setData()
       }
     });
   }
-
 }
 
 export let counters: Counter[] = [

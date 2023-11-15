@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {Profile, Role_temp} from "../Profile";
+import {Profile, Role_TEMP} from "../Profile";
 import {GardenPlot} from "../list-of-garden-plot/garden-plot";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Role} from "../register/user.model";
 import {
+  findGardenByID,
   findGardenByUserID,
   findGardenPlotIdByAddress,
   gardenPlots,
@@ -12,7 +13,6 @@ import {
 } from "../list-of-garden-plot/GardenService";
 import {profiles} from "../list-of-users/ProfilesService";
 
-//TODO naprawic sytuacje jak uzytkownik ma nie miec dzialki
 @Component({
   selector: 'app-user-info',
   templateUrl: './user-info.component.html',
@@ -26,9 +26,6 @@ export class UserInfoComponent implements OnInit {
   showUserEdit: boolean = true;
   showEditStatus: boolean = true;
   showEditFullStatus: boolean = true;
-
-  isAdmin = false
-  isManager = false
 
   sectorsOptions: (string | null)[] = [];
   avenuesOptions: (string | null)[] = [];
@@ -115,13 +112,13 @@ export class UserInfoComponent implements OnInit {
 
   errorMessages = {
     firstName: [
-      {type: 'required', message: 'Proszę podać sektor'},
+      {type: 'required', message: 'Proszę podać imię'},
     ],
     lastName: [
-      {type: 'required', message: 'Proszę podać sektor'},
+      {type: 'required', message: 'Proszę podać nazwisko'},
     ],
     phoneNumber: [
-      {type: 'required', message: 'Proszę podać sektor'},
+      {type: 'required', message: 'Proszę podać numer telefonu'},
     ],
     plotSector: [
       {type: 'required', message: 'Proszę podać sektor'},
@@ -134,7 +131,7 @@ export class UserInfoComponent implements OnInit {
       {type: 'goodAdress', message: 'Proszę podać poprawny numer'}
     ],
     accountStatus: [
-      {type: 'required', message: 'Proszę podać poprawny numer'}
+      {type: 'required', message: 'Proszę podać status'}
     ]
   };
   protected readonly Role = Role;
@@ -144,29 +141,21 @@ export class UserInfoComponent implements OnInit {
 
     this.showEditStatus = false
     if (
-      (this.profile?.accountStatus.some((status) => status === Role_temp.ADMIN)) ||
-      (this.profile?.accountStatus.some((status) => status === Role_temp.MANAGER))
+      (this.profile?.accountStatus.some((status) => status === Role_TEMP.ADMIN)) ||
+      (this.profile?.accountStatus.some((status) => status === Role_TEMP.MANAGER))
     ) {
       this.showEditFullStatus = true
     } else this.showEditFullStatus = false
-
-    if (this.profile?.accountStatus.some((status) => status === Role_temp.ADMIN)) {
-      this.isAdmin = true
-    }
-    if (this.profile?.accountStatus.some((status) => status === Role_temp.MANAGER)) {
-      this.isManager = true
-    }
 
     Object.keys(this.userInfoForm.controls).forEach(controlName => {
       const control = this.userInfoForm.get(controlName);
       if (control) {
         control.enable();
-        control.setValidators([Validators.required]); // Ustawienie walidatora Validators.required
-        control.updateValueAndValidity(); // Aktualizacja walidatora
+        control.setValidators([Validators.required]);
+        control.updateValueAndValidity();
       }
     });
 
-    // Przekazywanie wartości pól, nie wywoływanie funkcji
     this.userInfoForm.get('plotSector')?.setValidators([])
     this.userInfoForm.get('plotAvenue')?.setValidators([])
     this.userInfoForm.get('plotNumber')?.setValidators([])
@@ -175,6 +164,25 @@ export class UserInfoComponent implements OnInit {
     this.userInfoForm.updateValueAndValidity();
     this.showUserEdit = false
   }
+
+  disableFormFields() {
+    if (findGardenByUserID(this.id, gardenPlots)) {
+      this.showGardenAddress = true
+    } else {
+      this.showGardenAddress = false
+    }
+    this.showEditStatus = false;
+    this.showUserEdit = true
+    Object.keys(this.userInfoForm.controls).forEach(controlName => {
+      const control = this.userInfoForm.get(controlName);
+      if (control) {
+        control.disable()
+        control.setValidators([]);
+        control.updateValueAndValidity();
+      }
+    });
+  }
+
 
   editProfile() {
     const newSector: string = this.userInfoForm.get('plotSector')?.value;
@@ -185,13 +193,13 @@ export class UserInfoComponent implements OnInit {
     let gardenID = findGardenPlotIdByAddress(newSector, newAvenue, newNumber, gardenPlots)
     let garden;
     if (gardenID) {
-      garden = findGardenByUserID(gardenID, gardenPlots)
+      garden = findGardenByID(gardenID, gardenPlots)
       if (garden) {
         goodAdress = true
       }
     }
 
-    if (newSector === null)
+    if (newSector === null || newSector === undefined)
       goodAdress = true
 
     if (this.userInfoForm.valid && goodAdress) {
@@ -199,14 +207,8 @@ export class UserInfoComponent implements OnInit {
       const newLastName: number = this.userInfoForm.get('lastName')?.value;
       const newPhoneNumber: number = this.userInfoForm.get('phoneNumber')?.value;
 
-      let newStatus: Role_temp[] = this.userInfoForm.get('accountStatus')?.value;
+      let newStatus: Role_TEMP[] = this.userInfoForm.get('accountStatus')?.value;
 
-      if (this.isManager && !newStatus.includes(Role_temp.MANAGER)) {
-        newStatus.push(Role_temp.MANAGER);
-      }
-      if (this.isAdmin && !newStatus.includes(Role_temp.ADMIN)) {
-        newStatus.push(Role_temp.ADMIN);
-      }
 
       const newUser: Profile = {
         // @ts-ignore
@@ -230,19 +232,19 @@ export class UserInfoComponent implements OnInit {
       };
 
       //TODO push do backendu
-      //ustawic w dla profilu gardenID leasholderId na gardenID
+      // this.profile = newUser;
+      // let idToNull = findGardenByUserID(this.id, gardenPlots)?.id
+      // updateLeaseholderID(idToNull, null)
+      // updateLeaseholderID(gardenID, this.id)
+
       if (newSector !== null) {
-        updateLeaseholderID(gardenID, this.id,gardenPlots)
-        let idToNull = findGardenByUserID(this.id,gardenPlots)?.id
-        updateLeaseholderID(idToNull, null,gardenPlots)
+        let idToNull = findGardenByUserID(this.id, gardenPlots)?.id
+        updateLeaseholderID(idToNull, null)
+        updateLeaseholderID(gardenID, this.id)
       }
       this.profile = newUser;
-      this.refresh1()
+      this.disableFormFields()
     }
-  }
-
-  refresh1() {
-    window.location.reload();
   }
 
   getMatchingSectors(profiles: Profile[], gardenPlots: GardenPlot[]):
@@ -281,31 +283,8 @@ export class UserInfoComponent implements OnInit {
     return (sectors);
   }
 
-  // goodAdressValidator(sector: string, avenue: string, gardenPlots: GardenPlot[]): ValidatorFn {
-  //   return (control: AbstractControl): { [key: string]: any } | null => {
-  //     const value = control.value;
-  //
-  //     if (!value) {
-  //       return null;
-  //     }
-  //
-  //     let gardenID = findGardenPlotIdByAddress(sector, avenue, value, gardenPlots)
-  //     let garden;
-  //     if (gardenID) {
-  //       garden = findGardenByUserID(this.id, gardenPlots)
-  //       if (garden) {
-  //         if (garden.id === gardenID) {
-  //           return null
-  //         }
-  //       }
-  //       return {goodAdress: true};
-  //     }
-  //     return null;
-  //   };
-  // }
-
   protected readonly Object = Object;
-  protected readonly Role_temp = Role_temp;
+  protected readonly Role_temp = Role_TEMP;
   protected readonly Role_temp2 = Role_temp2;
 }
 
@@ -315,4 +294,3 @@ enum Role_temp2 {
   GARDENER = 'Działkowiec',
   EMPLOYEE = 'PRACOWNIK',
 }
-

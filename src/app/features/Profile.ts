@@ -5,12 +5,12 @@ export interface Profile {
   lastName: string;
   phoneNumber: string;
   email: string;
-  accountStatus: Role_temp[];
+  accountStatus: Role_TEMP[];
   paymentAmount: number | null;
   paymentDueDate: Date;
 }
 
-export enum Role_temp {
+export enum Role_TEMP { // TODO: DELETE!!!!!!!!!!!!!!!!!!!
   USER = 'UŻYTKOWNIK',
   ADMIN = 'ADMINISTRATOR',
   MANAGER = 'Zarządca ogrodu',

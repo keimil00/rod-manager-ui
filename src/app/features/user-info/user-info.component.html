@@ -126,7 +126,7 @@
                   <mat-label>Status konta</mat-label>
                   <ng-container>
                     <mat-select multiple formControlName="accountStatus" *ngIf="showEditFullStatus">
-                      <mat-option *ngFor="let option of Object.values(Role_temp)" [value]="option">
+                      <mat-option *ngFor="let option of Object.values(Role_temp)" [value]="option" [disabled]="option === Role_temp.ADMIN || option === Role_temp.MANAGER">
                         {{ option}}
                       </mat-option>
                     </mat-select>

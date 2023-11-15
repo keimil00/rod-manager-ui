@@ -42,6 +42,7 @@ export class TopAppBarComponent {
     this.socialAuthService.signOut();
     this.authService.logout();
   }
+
   navigateToProfileComponent(id: string) {
     this.router.navigate(['/user-info', id]);
   }

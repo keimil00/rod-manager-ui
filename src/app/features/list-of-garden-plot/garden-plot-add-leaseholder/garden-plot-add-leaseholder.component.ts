@@ -1,9 +1,10 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
 import {GardenPlot} from "../garden-plot";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {Profile} from "../../Profile";
 import {gardenPlots, uniqueLeaseholderIDValidator} from "../GardenService";
 import {getMatchingProfiles, profileEmailValidator, profiles} from "../../list-of-users/ProfilesService";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 
 @Component({
@@ -13,14 +14,12 @@ import {getMatchingProfiles, profileEmailValidator, profiles} from "../../list-o
 })
 export class GardenPlotAddLeaseholderComponent implements OnInit {
   leaseHolderOptions: { email: string; fullName: string }[] = [];
-
   showError: boolean = false;
-
-  @Input() gardenPlot: GardenPlot | undefined;
-  @Output() closeAddingLeaseHolder = new EventEmitter<void>();
-
+  gardenPlot: GardenPlot | undefined;
   addLeaseHolderForm: FormGroup;
-
+  closeAddingLeaseHolder() {
+    this.dialogRef.close();
+  }
   populateFormFromGardenPlot(gardenPlot: GardenPlot | undefined) {
     this.addLeaseHolderForm.patchValue({
       // @ts-ignore
@@ -28,7 +27,11 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
     });
   }
 
-  constructor(formBuilder: FormBuilder) {
+  constructor(formBuilder: FormBuilder,
+              public dialogRef: MatDialogRef<GardenPlotAddLeaseholderComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: { gardenPlot: GardenPlot }
+  ) {
+    this.gardenPlot = data.gardenPlot
     this.addLeaseHolderForm = formBuilder.group({
       leaseholderEmail: ['', [
         profileEmailValidator(profiles),
@@ -73,7 +76,7 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
       if (this.addLeaseHolderForm.get('leaseholderEmail')?.value === 'brak') {
         // @ts-ignore
         this.gardenPlot.leaseholderID = null;
-        this.closeAddingLeaseHolder.emit();
+        this.closeAddingLeaseHolder();
       } else {
         const selectedProfile = profiles.find((profile) => {
           return profile.email === this.addLeaseHolderForm.get('leaseholderEmail')?.value;
@@ -82,7 +85,7 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
         if (selectedProfile) {
           // @ts-ignore
           this.gardenPlot.leaseholderID = selectedProfile.id;
-          this.closeAddingLeaseHolder.emit();
+          this.closeAddingLeaseHolder();
         }
       }
     } else {

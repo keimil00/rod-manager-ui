@@ -1,16 +1,16 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Counter, CounterType} from "../counter";
 
 @Component({
   selector: 'app-measurement-dialog',
   templateUrl: './measurement-dialog.component.html',
   styleUrls: ['./measurement-dialog.component.scss']
 })
-export class MeasurementDialogComponent {
+export class MeasurementDialogComponent implements OnInit {
   addCounterForm: FormGroup;
   showEmptyError: boolean = false;
+  measurement: number;
 
   constructor(
     formBuilder: FormBuilder,
@@ -19,6 +19,18 @@ export class MeasurementDialogComponent {
   ) {
     this.addCounterForm = formBuilder.group({
       measurement: [0, [Validators.required, Validators.min(0)]],
+    });
+    this.measurement = data.measurement
+  }
+
+  ngOnInit(): void {
+    this.populateForm()
+  }
+
+  populateForm() {
+    this.addCounterForm.patchValue({
+      // @ts-ignore
+      measurement: this.measurement,
     });
   }
 
