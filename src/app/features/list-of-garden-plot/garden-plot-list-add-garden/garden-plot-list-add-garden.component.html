@@ -29,7 +29,7 @@
             <mat-form-field class="full-width">
               <mat-label>Aleja</mat-label>
               <input matInput type="text" placeholder="Aleja" formControlName="avenue"
-              [matAutocomplete]="auto2">
+                     [matAutocomplete]="auto2">
               <mat-autocomplete #auto2="matAutocomplete">
                 <mat-option *ngFor="let option of avenuesOptions" [value]="option">
                   {{ option}}
@@ -83,13 +83,12 @@
               </mat-error>
             </mat-form-field>
           </div>
+          <div class="center-button">
+            <app-text-button type="submit" class="add-button" [text]="'Dodaj działkę'" [color]="'accent'"
+                             (click)="addNewGardenPlot()"></app-text-button>
+          </div>
         </form>
-        <mat-error *ngIf="showEmptyError">Proszę podać odpowiednie dane</mat-error>
       </mat-card-content>
     </mat-card>
   </mat-card-content>
-  <div class="center-button">
-    <app-text-button type="submit" class="add-button" [text]="'Dodaj działkę'" [color]="'accent'"
-                     (click)="addNewGardenPlot()"></app-text-button>
-  </div>
 </mat-card>

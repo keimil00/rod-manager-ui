@@ -1,4 +1,4 @@
-@import '../../../../styles';
+@import '../../../../../styles';
 
 .details-card {
   position: fixed;
@@ -16,21 +16,6 @@
   padding-bottom: 1%;
   margin-top: 30px;
   background-color: map-get($rod-manager-ui-primary, 50);
-}
-
-$background: #EEE;
-
-.tabel-card {
-  width: 100%;
-  align-self: center;
-  -webkit-box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
-  -moz-box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
-  box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
-  align-content: center;
-  margin-top: 4%;
-  margin-bottom: 4%;
-  padding: 2%;
-  background-color: $background;
 }
 
 .center-item {
@@ -51,28 +36,11 @@ $background: #EEE;
   right: 8px;
 }
 
-.property-table,
-.payment-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.property-table td,
-.payment-table td {
-  padding: 8px;
-  border: 1px solid #ccc;
-  text-align: left;
-}
-
 .center-button {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 16px;
-}
-
-.payment-button {
-  background-color: $background;
 }
 
 .row-container {

@@ -25,7 +25,7 @@
                 Zarząd
               </div>
             </mat-card-header>
-            <mat-grid-list [cols]="2" rowHeight="2:1">
+            <mat-grid-list [cols]="isMobile ? 1 : 2" rowHeight="2:1">
               <ng-container *ngFor="let employer of employers">
                 <mat-grid-tile>
                   <app-person-card-garden class="full-width"
@@ -44,5 +44,7 @@
   </mat-card>
 </div>
 
+<button mat-fab color="primary" class="floating-button" *appHasRole="[Role.MANAGER, Role.ADMIN]" (click)="openWorkersList()">
+  <mat-icon>edit</mat-icon>
+</button>
 
-<!--TODO dodać floating button do edycji listy pracowników-->

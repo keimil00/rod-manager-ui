@@ -72,13 +72,12 @@
               {{ error.message }}
             </mat-error>
           </mat-form-field>
-        </div>
+        </div>  <div class="center-button">
+        <app-text-button type="submit" [text]="'Edytuj działkę'" [color]="'accent'"
+                         (click)="editGardenPlot()"></app-text-button>
+      </div>
       </form>
-      <mat-error *ngIf="showEmptyError">Proszę podać odpowiednie dane</mat-error>
     </mat-card-content>
   </mat-card>
-  <div class="center-button">
-    <app-text-button type="submit" [text]="'Edytuj działkę'" [color]="'accent'"
-                     (click)="editGardenPlot()"></app-text-button>
-  </div>
+
 </mat-card-content>

@@ -142,11 +142,10 @@
                 </mat-form-field>
               </div>
             </div>
-
+            <div class="center-button" *ngIf="!showUserEdit">
+              <app-text-button type="submit" text="Zatwierdź" color="primary" (click)="editProfile()"></app-text-button>
+            </div>
           </form>
-          <div class="center-button" *ngIf="!showUserEdit">
-            <app-text-button text="Zatwierdź" color="primary" (click)="editProfile()"></app-text-button>
-          </div>
         </mat-card-content>
       </mat-card>
     </mat-card-content>

@@ -26,13 +26,11 @@
               {{ error.message }}
             </mat-error>
           </mat-form-field>
-          <mat-error *ngIf="showError" class="error-message">Błąd: Proszę wybrać dzierżawcę z listy.</mat-error>
+          <div class="center-button">
+            <app-text-button type="submit" class="add-button" [text]="'Akceptuj'" [color]="'accent'"
+                             (click)="accept()"></app-text-button>
+          </div>
         </form>
-        <div class="center-button">
-          <app-text-button type="submit" class="add-button" [text]="'Akceptuj'" [color]="'accent'"
-                           (click)="accept()"></app-text-button>
-        </div>
-
       </mat-card-content>
     </mat-card>
   </mat-card-content>

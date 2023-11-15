@@ -55,6 +55,42 @@ export class GardenPlotDetailsComponent {
     this.dialogRef.close();
   }
 
+  getUserPaymentList(): Payment[] {
+    const userPaymentList = this.paymentLists.find((user) => user.idUser === this.leaseholder?.id)?.userPaymentList || [];
+    return userPaymentList;
+  }
+
+  addNewPayment() {
+    if (this.paymentForm.valid) {
+      const newPaymentAmount: number = this.paymentForm.get('value')?.value;
+      const newPaymentDate: Date = this.paymentForm.get('date')?.value;
+
+      if (newPaymentAmount !== null && newPaymentDate !== null) {
+        const newPayment: Payment = {
+          value: newPaymentAmount,
+          date: newPaymentDate,
+        };
+
+        //TODO push do backendu dodac do listy i obnizyc kwote do zaplaty
+        this.getUserPaymentList().push(newPayment);
+
+        this.showNewPaymentForm = false;
+        this.paymentForm.reset();
+      }
+    } else {
+    }
+  }
+
+  validationErrors(controlName: string): any[] {
+    let errors = []
+    // @ts-ignore
+    for (let error of this.errorMessages[controlName]) {
+      if (this.paymentForm.get(controlName)?.hasError(error.type)) {
+        errors.push(error);
+      }
+    }
+    return errors;
+  }
   paymentLists: PaymentList[] = [
     {
       id: '1',
@@ -240,49 +276,4 @@ export class GardenPlotDetailsComponent {
         {value: 200, date: new Date(2024, 10, 20)}
       ]
     }];
-
-  getUserPaymentList(): Payment[] {
-    const userPaymentList = this.paymentLists.find((user) => user.idUser === this.leaseholder?.id)?.userPaymentList || [];
-    return userPaymentList;
-  }
-
-  showEmptyFieldsError: boolean = false;
-
-  addNewPayment() {
-    if (this.paymentForm.valid) {
-      const newPaymentAmount: number = this.paymentForm.get('value')?.value;
-      const newPaymentDate: Date = this.paymentForm.get('date')?.value;
-
-      if (newPaymentAmount !== null && newPaymentDate !== null) {
-        const newPayment: Payment = {
-          value: newPaymentAmount,
-          date: newPaymentDate,
-        };
-
-        //TODO push do backendu dodac do listy i obnizyc kwote do zaplaty
-        this.getUserPaymentList().push(newPayment);
-
-        this.showNewPaymentForm = false;
-        this.showEmptyFieldsError = false;
-        this.paymentForm.reset();
-      }
-    } else {
-      this.showEmptyFieldsError = true;
-    }
-  }
-
-  validationErrors(controlName: string): any[] {
-    let errors = []
-    // @ts-ignore
-    for (let error of this.errorMessages[controlName]) {
-      if (this.paymentForm.get(controlName)?.hasError(error.type)) {
-        errors.push(error);
-      }
-    }
-    return errors;
-  }
-
-  // closeEditingingGardenPlot() {
-  //   this.closeDetails.emit()
-  // }
 }

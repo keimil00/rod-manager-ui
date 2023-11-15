@@ -25,7 +25,6 @@ export class GardenPlotEditGardenComponent implements OnInit{
   leaseHolderOptions: { email: string; fullName: string }[] = [];
 
   editGardenForm: FormGroup;
-  showEmptyError: boolean = false;
 
   sectorsOptions: (string | null)[] = [];
   avenuesOptions: (string | null)[] = [];
@@ -162,8 +161,6 @@ export class GardenPlotEditGardenComponent implements OnInit{
       } else
         newLeaseholderID = findProfileIdByEmail(newLeaseholderEmail, profiles)
 
-
-
       // @ts-ignore
       this.gardenPlot.sector = newSector,
         // @ts-ignore
@@ -180,13 +177,10 @@ export class GardenPlotEditGardenComponent implements OnInit{
       let newGarden = this.gardenPlot
       //TODO push do backendu newGarden
 
-      this.showEmptyError = false
       this.editGardenForm.reset();
       this.closeEditingingGardenPlot.emit()
-
-    } else this.showEmptyError = true
+    }
   }
-
   protected readonly Object = Object;
   protected readonly PlotStatus = PlotStatus;
 }

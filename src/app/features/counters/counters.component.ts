@@ -63,7 +63,6 @@ export class CountersComponent {
             return comparison;
           }
         }
-
         return 0;
       } else {
         // @ts-ignore

@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
 import {GardenPlot} from "../garden-plot";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Profile} from "../../Profile";
 import {gardenPlots, uniqueLeaseholderIDValidator} from "../GardenService";
 import {getMatchingProfiles, profileEmailValidator, profiles} from "../../list-of-users/ProfilesService";
@@ -14,7 +14,6 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 })
 export class GardenPlotAddLeaseholderComponent implements OnInit {
   leaseHolderOptions: { email: string; fullName: string }[] = [];
-  showError: boolean = false;
   gardenPlot: GardenPlot | undefined;
   addLeaseHolderForm: FormGroup;
   closeAddingLeaseHolder() {
@@ -34,6 +33,7 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
     this.gardenPlot = data.gardenPlot
     this.addLeaseHolderForm = formBuilder.group({
       leaseholderEmail: ['', [
+        Validators.required,
         profileEmailValidator(profiles),
         uniqueLeaseholderIDValidator(gardenPlots, profiles, true, this.gardenPlot)
       ]],
@@ -89,13 +89,12 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
         }
       }
     } else {
-      this.showError = true;
     }
   }
 
-
   errorMessages = {
     leaseholderEmail: [
+      {type: 'required', message: 'Proszę wybrać dzierżawcę z listy'},
       {type: 'invalidProfileEmail', message: 'Proszę wybrać poprawny profil'},
       {type: 'nonUniqueLeaseholderID', message: 'Profil jest już przypisany do innej działki'},
     ],

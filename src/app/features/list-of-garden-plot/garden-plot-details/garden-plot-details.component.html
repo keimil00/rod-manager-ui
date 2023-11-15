@@ -113,14 +113,13 @@
                     </mat-form-field>
                   </div>
                 </div>
+                <div class="center-button">
+                  <app-text-button type="submit" class="add-button" [text]="'Dodaj płatność'" [color]="'accent'"
+                                   (click)="addNewPayment()"></app-text-button>
+                </div>
               </form>
-              <mat-error *ngIf="showEmptyFieldsError">Pola nie mogą być puste</mat-error>
             </mat-card-content>
           </mat-card>
-          <div class="center-button">
-            <app-text-button type="submit" class="add-button" [text]="'Dodaj płatność'" [color]="'accent'"
-                             (click)="addNewPayment()"></app-text-button>
-          </div>
         </div>
       </div>
       <div *ngSwitchCase="showEditGardenPlotForm">

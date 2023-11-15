@@ -343,7 +343,7 @@ export let gardenPlots: GardenPlot[] = [
     avenue: 'Avenue 1',
     number: 102,
     area: 600,
-    leaseholderID: '30',
+    leaseholderID: null,
     status: PlotStatus.Unavailable
   },
 ];

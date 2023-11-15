@@ -33,7 +33,6 @@ export class GardenPlotListAddGardenComponent {
   }
 
   addGardenForm: FormGroup;
-  showEmptyError: boolean = false;
 
   errorMessages = {
     sector: [
@@ -123,7 +122,7 @@ export class GardenPlotListAddGardenComponent {
 
   updateAvenousAndNumberValidator() {
     this.avenuesOptions = getAvenues(this.addGardenForm.get('avenue')?.value, this.addGardenForm.get('sector')?.value, gardenPlots);
-    this.addGardenForm.get('number')?.setValidators([Validators.required, uniqueGardenValidator(this.addGardenForm.get('sector')?.value, this.addGardenForm.get('avenue')?.value, gardenPlots,false)])
+    this.addGardenForm.get('number')?.setValidators([Validators.required, uniqueGardenValidator(this.addGardenForm.get('sector')?.value, this.addGardenForm.get('avenue')?.value, gardenPlots, false)])
   }
 
   validationErrors(controlName: string): any[] {
@@ -170,12 +169,10 @@ export class GardenPlotListAddGardenComponent {
       // this.gardenPlots?.push(newGardenPlot)
       gardenPlots.push(newGardenPlot)
 
-      this.showEmptyError = false
       this.addGardenForm.reset();
       this.closeAddingGardenPlot()
 
     } else {
-      this.showEmptyError = true;
     }
   }
 

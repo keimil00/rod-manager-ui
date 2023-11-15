@@ -36,19 +36,19 @@
 
     <!-- Define the menu -->
     <mat-menu #menu="matMenu" class="mat-menu-custom-style">
-      <div *appHasRole="[Role.MANAGER]">
+      <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
         <button mat-menu-item class="button-menu" (click)="navigate('documents')">Dokumenty</button>
         <mat-divider></mat-divider>
       </div>
-      <div *appHasRole="[Role.MANAGER]">
+      <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
         <button mat-menu-item class="button-menu" (click)="navigate('list-of-garden-plot')">Lista działek</button>
         <mat-divider></mat-divider>
       </div>
-      <div *appHasRole="[Role.MANAGER]">
+      <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
         <button mat-menu-item class="button-menu">Opłaty</button>
         <mat-divider></mat-divider>
       </div>
-      <div *appHasRole="[Role.TECHNICAL_EMPLOYEE, Role.MANAGER]">
+      <div *appHasRole="[Role.TECHNICAL_EMPLOYEE, Role.MANAGER, Role.ADMIN]">
         <button mat-menu-item class="button-menu" (click)="navigate('counters')">Liczniki</button>
       </div>
       <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
@@ -59,6 +59,7 @@
     </mat-menu>
   </div>
 
+<!--  TODO mozna poprawic bo cos na iphone SE nie miesci sie a nie umialem zmniejszyc menu-item-->
   <mat-menu #menu1="matMenu" class="mat-menu-custom-style">
     <button mat-menu-item class="button-menu" (click)="navigate('home')">Strona główna</button>
     <mat-divider></mat-divider>
@@ -91,15 +92,15 @@
         <button mat-menu-item class="button-menu" (click)="navigate('documents')">Dokumenty</button>
         <mat-divider></mat-divider>
       </div>
-      <div *appHasRole="[Role.MANAGER]">
+      <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
         <button mat-menu-item class="button-menu" (click)="navigate('list-of-garden-plot')">Lista działek</button>
         <mat-divider></mat-divider>
       </div>
-      <div *appHasRole="[Role.MANAGER]">
+      <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
         <button mat-menu-item class="button-menu">Opłaty</button>
         <mat-divider></mat-divider>
       </div>
-      <div *appHasRole="[Role.TECHNICAL_EMPLOYEE, Role.MANAGER]">
+      <div *appHasRole="[Role.TECHNICAL_EMPLOYEE, Role.MANAGER, Role.ADMIN]">
         <button mat-menu-item class="button-menu" (click)="navigate('counters')">Liczniki</button>
       </div>
       <div *appHasRole="[Role.MANAGER, Role.ADMIN]">

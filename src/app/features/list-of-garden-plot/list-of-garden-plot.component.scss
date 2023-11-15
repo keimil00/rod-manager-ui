@@ -106,6 +106,10 @@
     height: 1px; /* Wysokość paska */
     background-color: #ccc; /* Kolor paska */
   }
+  .floating-button {
+    bottom: 20px;
+    right: 20px;
+  }
 }
 @media only screen and (min-width: 400px) and (max-width: 1000px) {
   .large-card-size {
@@ -146,6 +150,10 @@
     bottom: 0;
     height: 1px; /* Wysokość paska */
     background-color: #ccc; /* Kolor paska */
+  }
+  .floating-button {
+    bottom: 20px;
+    right: 20px;
   }
 }
 

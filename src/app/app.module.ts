@@ -67,6 +67,8 @@ import { MeasurementDialogComponent } from './features/counters/measurement-dial
 import { AddCounterDialogComponent } from './features/counters/add-counter-dialog/add-counter-dialog.component';
 import { ListOfUsersComponent } from './features/list-of-users/list-of-users.component';
 import { UserInfoComponent } from './features/user-info/user-info.component';
+import { WorkersListComponent } from './features/garden-info/workers-list/workers-list.component';
+import { EditWorkerComponent } from './features/garden-info/workers-list/editOrAdd-worker/edit-worker.component';
 
 @NgModule({
   declarations: [
@@ -97,7 +99,9 @@ import { UserInfoComponent } from './features/user-info/user-info.component';
     MeasurementDialogComponent,
     AddCounterDialogComponent,
     ListOfUsersComponent,
-    UserInfoComponent
+    UserInfoComponent,
+    WorkersListComponent,
+    EditWorkerComponent
   ],
   imports: [
     BrowserModule,

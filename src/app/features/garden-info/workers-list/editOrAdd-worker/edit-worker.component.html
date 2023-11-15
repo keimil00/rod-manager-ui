@@ -1,0 +1,63 @@
+<div class="page-container">
+  <mat-card class="details-card">
+    <mat-card-header>
+      <div class="center-item">
+        <h2
+          class="title">Edycja pracownika</h2>
+      </div>
+      <button mat-icon-button class="close-button" (click)="closeEditingingEmployer()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-header>
+    <div>
+      <mat-card>
+        <mat-card-content>
+          <form class="form-container" [formGroup]="workerForm">
+            <div class="row-container">
+              <div class="row-item">
+                <mat-form-field class="full-width">
+                  <mat-label>Posada</mat-label>
+                  <input matInput type="text" placeholder="Posada" formControlName="position" required>
+                  <mat-error *ngFor="let error of validationErrors('position')">
+                    {{ error.message }}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="row-item">
+                <mat-form-field class="full-width">
+                  <mat-label>Imie i nazwisko</mat-label>
+                  <input matInput type="text" placeholder="Imie i nazwisko" formControlName="name" required>
+                  <mat-error *ngFor="let error of validationErrors('name')">
+                    {{ error.message }}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="row-item">
+                <mat-form-field class="full-width">
+                  <mat-label>Numer telefonu</mat-label>
+                  <input matInput type="text" placeholder="Numer telefonu" formControlName="phoneNumber" required>
+                  <mat-error *ngFor="let error of validationErrors('phoneNumber')">
+                    {{ error.message }}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="row-item">
+                <mat-form-field class="full-width">
+                  <mat-label>Email</mat-label>
+                  <input matInput type="email" placeholder="Email" formControlName="email" required>
+                  <mat-error *ngFor="let error of validationErrors('email')">
+                    {{ error.message }}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="center-button">
+              <app-text-button type="submit" class="add-button" [text]="'Potwierdź'" [color]="'accent'"
+                               (click)="editWorker()"></app-text-button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-card>
+</div>
