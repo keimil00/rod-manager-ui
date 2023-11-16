@@ -3,7 +3,7 @@
     <div class="center-item">
       <h2 class="title">Dodaj Działkę</h2>
     </div>
-    <button mat-icon-button class="close-button" (click)="closeAddingGardenPlot.emit()">
+    <button mat-icon-button class="close-button" (click)="closeAddingGardenPlot()">
       <mat-icon>close</mat-icon>
     </button>
   </mat-card-header>
@@ -13,7 +13,13 @@
         <form class [formGroup]="addGardenForm">
           <div class="row-item">
             <mat-form-field class="full-width">
-              <input matInput type="text" placeholder="Sektor" formControlName="sector">
+              <mat-label>Sektor</mat-label>
+              <input matInput type="text" placeholder="Sektor" formControlName="sector" [matAutocomplete]="auto">
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let option of sectorsOptions" [value]="option">
+                  {{ option}}
+                </mat-option>
+              </mat-autocomplete>
               <mat-error *ngFor="let error of validationErrors('sector')">
                 {{ error.message }}
               </mat-error>
@@ -21,7 +27,14 @@
           </div>
           <div class="row-item">
             <mat-form-field class="full-width">
-              <input matInput type="text" placeholder="Aleja" formControlName="avenue">
+              <mat-label>Aleja</mat-label>
+              <input matInput type="text" placeholder="Aleja" formControlName="avenue"
+                     [matAutocomplete]="auto2">
+              <mat-autocomplete #auto2="matAutocomplete">
+                <mat-option *ngFor="let option of avenuesOptions" [value]="option">
+                  {{ option}}
+                </mat-option>
+              </mat-autocomplete>
               <mat-error *ngFor="let error of validationErrors('avenue')">
                 {{ error.message }}
               </mat-error>
@@ -29,6 +42,7 @@
           </div>
           <div class="row-item">
             <mat-form-field class="full-width">
+              <mat-label>Numer</mat-label>
               <input matInput type="number" placeholder="Numer" formControlName="number">
               <mat-error *ngFor="let error of validationErrors('number')">
                 {{ error.message }}
@@ -37,6 +51,7 @@
           </div>
           <div class="row-item">
             <mat-form-field class="full-width">
+              <mat-label>Powierzchnia m²</mat-label>
               <input matInput type="number" placeholder="Powierzchnia m²" formControlName="area">
               <mat-error *ngFor="let error of validationErrors('area')">
                 {{ error.message }}
@@ -45,8 +60,9 @@
           </div>
           <div class="row-item">
             <mat-form-field class="full-width">
-              <input matInput placeholder="Dzierżawca" formControlName="leaseholderEmail" [matAutocomplete]="auto">
-              <mat-autocomplete #auto="matAutocomplete">
+              <mat-label>Dzierżwca</mat-label>
+              <input matInput placeholder="Dzierżawca" formControlName="leaseholderEmail" [matAutocomplete]="auto3">
+              <mat-autocomplete #auto3="matAutocomplete">
                 <mat-option *ngFor="let option of leaseHolderOptions" [value]="option.email">
                   {{ option.fullName }} (Email: {{ option.email }})
                 </mat-option>
@@ -67,13 +83,12 @@
               </mat-error>
             </mat-form-field>
           </div>
+          <div class="center-button">
+            <app-text-button type="submit" class="add-button" [text]="'Dodaj działkę'" [color]="'accent'"
+                             (click)="addNewGardenPlot()"></app-text-button>
+          </div>
         </form>
-        <mat-error *ngIf="showEmptyError">Proszę podać odpowiednie dane</mat-error>
       </mat-card-content>
     </mat-card>
   </mat-card-content>
-  <div class="center-button">
-    <button mat-raised-button class="button-color" type="submit" (click)="addNewGardenPlot()">Dodaj działkę
-    </button>
-  </div>
 </mat-card>

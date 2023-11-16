@@ -1,28 +1,33 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {GardenPlot, PlotStatus} from "../../garden-plot";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {gardenPlots} from "../../list-of-garden-plot.component";
+
 import {Profile} from "../../../Profile";
 import {
-  getMatchingProfiles,
-  profileEmailValidator,
-  profiles,
+  gardenPlots,
+  getAvenues,
+  getSectors,
+  uniqueGardenValidator,
   uniqueLeaseholderIDValidator
-} from "../../garden-plot-list-add-garden/garden-plot-list-add-garden.component";
+} from "../../GardenService";
+
+import {getMatchingProfiles, profileEmailValidator, profiles} from "../../../list-of-users/ProfilesService";
 
 @Component({
   selector: 'app-garden-plot-edit-garden',
   templateUrl: './garden-plot-edit-garden.component.html',
   styleUrls: ['./garden-plot-edit-garden.component.scss']
 })
-export class GardenPlotEditGardenComponent {
+export class GardenPlotEditGardenComponent implements OnInit{
   @Input() gardenPlot: GardenPlot | undefined;
   @Output() closeEditingingGardenPlot = new EventEmitter<void>();
 
   leaseHolderOptions: { email: string; fullName: string }[] = [];
 
   editGardenForm: FormGroup;
-  showEmptyError: boolean = false;
+
+  sectorsOptions: (string | null)[] = [];
+  avenuesOptions: (string | null)[] = [];
 
   errorMessages = {
     sector: [
@@ -32,7 +37,8 @@ export class GardenPlotEditGardenComponent {
       {type: 'required', message: 'Proszę podać poprawną aleje'}
     ],
     number: [
-      {type: 'required', message: 'Proszę podać poprawny numer'}
+      {type: 'required', message: 'Proszę podać poprawny numer'},
+      {type: 'nonUniqueGarden', message: 'Istnieje już działka z tym adresem'}
     ],
     area: [
       {type: 'required', message: 'Proszę podać obszar'},
@@ -64,7 +70,7 @@ export class GardenPlotEditGardenComponent {
       ]],
       leaseholderEmail: ['', [
         profileEmailValidator(profiles),
-        uniqueLeaseholderIDValidator(gardenPlots, profiles,true,this.gardenPlot)
+        // uniqueLeaseholderIDValidator(gardenPlots, profiles,true,this.gardenPlot)
       ]],
       status: ['',
         Validators.required]
@@ -82,7 +88,7 @@ export class GardenPlotEditGardenComponent {
     });
   }
 
-  ngOnInit(formBuilder: FormBuilder) {
+  ngOnInit() {
     // @ts-ignore
     const gardenPlot: GardenPlot = this.gardenPlot
     this.populateFormFromGardenPlot(gardenPlot);
@@ -98,21 +104,34 @@ export class GardenPlotEditGardenComponent {
         email: 'brak'
       }, ...getMatchingProfiles(value, profiles, gardenPlots, true,gardenPlot)];
     });
-    profiles.sort((a, b) => {
 
+    this.sectorsOptions = getSectors(this.editGardenForm.get('sector')?.value, gardenPlots);
+    this.editGardenForm.get('sector')?.valueChanges.subscribe((value) => {
+      this.sectorsOptions = getSectors(this.editGardenForm.get('sector')?.value, gardenPlots);
+      this.updateAvenousAndNumberValidator()
+    });
+
+    this.avenuesOptions = getAvenues(this.editGardenForm.get('avenue')?.value, this.editGardenForm.get('sector')?.value, gardenPlots);
+    this.editGardenForm.get('avenue')?.valueChanges.subscribe((value) => {
+      this.updateAvenousAndNumberValidator()
+    });
+    profiles.sort((a, b) => {
       const lastNameComparison = a.lastName.localeCompare(b.lastName);
       if (lastNameComparison !== 0) {
         return lastNameComparison;
       }
-
       const firstNameComparison = a.firstName.localeCompare(b.firstName);
       if (firstNameComparison !== 0) {
         return firstNameComparison;
       }
-
       return a.email.localeCompare(b.email);
     });
-    this.editGardenForm.get('leaseholderEmail')?.addValidators(uniqueLeaseholderIDValidator(gardenPlots, profiles, true, gardenPlot));
+    this.editGardenForm.get('leaseholderEmail')?.setValidators(uniqueLeaseholderIDValidator(gardenPlots, profiles, true, gardenPlot));
+  }
+
+  updateAvenousAndNumberValidator() {
+    this.avenuesOptions = getAvenues(this.editGardenForm.get('avenue')?.value, this.editGardenForm.get('sector')?.value, gardenPlots);
+    this.editGardenForm.get('number')?.setValidators([Validators.required, uniqueGardenValidator(this.editGardenForm.get('sector')?.value, this.editGardenForm.get('avenue')?.value, gardenPlots,true,this.gardenPlot)])
   }
 
   validationErrors(controlName: string): any[] {
@@ -155,15 +174,13 @@ export class GardenPlotEditGardenComponent {
         // @ts-ignore
         this.gardenPlot.status = newStatus
 
-      //TODO push do backendu
+      let newGarden = this.gardenPlot
+      //TODO push do backendu newGarden
 
-      this.showEmptyError = false
       this.editGardenForm.reset();
       this.closeEditingingGardenPlot.emit()
-
-    } else this.showEmptyError = true
+    }
   }
-
   protected readonly Object = Object;
   protected readonly PlotStatus = PlotStatus;
 }

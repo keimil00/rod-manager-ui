@@ -1,15 +1,13 @@
-
 export interface Profile {
-  id:string;
-  userID:string;
+  id: string;
+  userID: string;
   firstName: string;
   lastName: string;
   phoneNumber: string;
   email: string;
-  plotID: string;
-  accountStatus: Role_TEMP;
-  paymentAmount : number;
-  paymentDueDate : Date;
+  accountStatus: Role_TEMP[];
+  paymentAmount: number | null;
+  paymentDueDate: Date;
 }
 
 export enum Role_TEMP { // TODO: DELETE!!!!!!!!!!!!!!!!!!!

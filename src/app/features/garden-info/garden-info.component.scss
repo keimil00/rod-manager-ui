@@ -36,7 +36,7 @@
   box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
   align-content: center;
   margin-top: 5%;
-  margin-bottom: 15%;
+  margin-bottom: 10%;
 }
 
 .center-item {
@@ -75,4 +75,114 @@
   font-size: 25px;
   text-align: center;
   margin-bottom: 10px;
+}
+
+.floating-button {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  z-index: 2;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  transition: background-color 0.3s, transform 0.2s;
+  cursor: pointer;
+}
+
+.floating-button.active {
+  transform: scale(1.1);
+}
+
+.floating-button mat-icon {
+  color: #ffffff;
+}
+
+
+@media only screen and (max-width: 500px){
+  .large-card-size {
+    width: 95%;
+
+  }
+  .inter-card-size {
+    min-width: 300px;
+    width: 30%;
+    max-width: 90%;
+    margin-bottom: 5%;
+  }
+  .employers-card-size {
+    width: 100%;
+  }
+  .floating-button {
+    bottom: 20px;
+    right: 20px;
+  }
+  .title {
+    font-size: 20px;
+  }
+
+  .title-managment, .document {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+
+  .mat-mdc-card-header {
+    padding: 0px 0px 0;
+  }
+}
+@media only screen and (min-width: 500px) and (max-width: 800px){
+  .large-card-size {
+    width: 95%;
+  }
+  .inter-card-size {
+    min-width: 300px;
+    width: 30%;
+    max-width: 90%;
+    margin-bottom: 5%;
+  }
+  .employers-card-size {
+    width: 100%;
+  }
+  .floating-button {
+    bottom: 20px;
+    right: 20px;
+  }
+  .title {
+    font-size: 22px;
+  }
+  .document {
+    font-size: 20px;
+  }
+  .title-managment {
+    font-size: 20px;
+    margin-bottom: 5px;
+  }
+
+  .mat-mdc-card-header {
+    padding: 0px 0px 0;
+  }
+}
+
+@media only screen and (min-width: 800px)  and (max-width: 1100px){
+  .large-card-size, .employers-card-size{
+    width: 90%;
+  }
+  .inter-card-size{
+    margin-bottom: 5%;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+  .document {
+    font-size: 22px;
+  }
+  .title-managment {
+    font-size: 20px;
+  }
+  .floating-button {
+    bottom: 20px;
+    right: 20px;
+  }
+  .mat-mdc-card-header {
+    padding-top:5px
+  }
 }

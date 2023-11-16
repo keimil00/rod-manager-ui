@@ -61,6 +61,14 @@ import {QuillModule} from "ngx-quill";
 import { PostEditComponent } from './features/home/post/post-edit/post-edit.component';
 import { TagDialogComponent } from './features/home/post/post-edit/tag-dialog/tag-dialog.component';
 import {MatDialogModule} from "@angular/material/dialog";
+import { CountersComponent } from './features/counters/counters.component';
+import {MatTabsModule} from "@angular/material/tabs";
+import { MeasurementDialogComponent } from './features/counters/measurement-dialog/measurement-dialog.component';
+import { AddCounterDialogComponent } from './features/counters/add-counter-dialog/add-counter-dialog.component';
+import { ListOfUsersComponent } from './features/list-of-users/list-of-users.component';
+import { UserInfoComponent } from './features/user-info/user-info.component';
+import { WorkersListComponent } from './features/garden-info/workers-list/workers-list.component';
+import { EditWorkerComponent } from './features/garden-info/workers-list/editOrAdd-worker/edit-worker.component';
 
 @NgModule({
   declarations: [
@@ -86,7 +94,14 @@ import {MatDialogModule} from "@angular/material/dialog";
     PaginatorComponent,
     PostComponent,
     PostEditComponent,
-    TagDialogComponent
+    TagDialogComponent,
+    CountersComponent,
+    MeasurementDialogComponent,
+    AddCounterDialogComponent,
+    ListOfUsersComponent,
+    UserInfoComponent,
+    WorkersListComponent,
+    EditWorkerComponent
   ],
   imports: [
     BrowserModule,
@@ -121,7 +136,7 @@ import {MatDialogModule} from "@angular/material/dialog";
     MatChipsModule,
     FormsModule,
     QuillModule.forRoot(),
-    MatDialogModule
+    MatDialogModule, MatTabsModule
   ],
   providers: [
     {

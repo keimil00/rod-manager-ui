@@ -1,0 +1,21 @@
+<mat-dialog-content>
+  <h2 mat-dialog-title>Edytuj Pomiar</h2>
+  <div mat-dialog-content>
+    <form class [formGroup]="addCounterForm">
+       <mat-form-field class="full-width">
+          <mat-label>Pomiar</mat-label>
+          <input matInput type="number" placeholder="Pomiar" formControlName="measurement">
+          <mat-error *ngFor="let error of validationErrors('measurement')">
+            {{ error.message }}
+          </mat-error>
+        </mat-form-field>
+    </form>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="center" class="mat-actions col-container">
+  <app-text-button mat-dialog-close class="cancel-button" className="action-button" [text]="'Anuluj'"
+                   [color]="'accent'" (click)="onCloseClick()"></app-text-button>
+  <app-text-button class="submit-button" className="action-button"
+                   [text]="'Zapisz'" [color]="'primary'" (click)="processDataAndClose()"></app-text-button>
+</mat-dialog-actions>

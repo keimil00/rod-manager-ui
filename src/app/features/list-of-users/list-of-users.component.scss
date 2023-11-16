@@ -1,0 +1,148 @@
+.page-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.large-card-size {
+  width: 70%;
+  align-self: center;
+  -webkit-box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
+  -moz-box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
+  box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
+  align-content: center;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  padding-left: 2%;
+  padding-right: 2%;
+  padding-bottom: 30px;
+}
+
+.title {
+  text-align: center;
+}
+
+.center-item {
+  flex: 1;
+  width: 80%;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+@import '../../../styles';
+
+.icon-size .icon-button {
+  background-color: map-get($rod-manager-ui-primary, 500);
+  color: white;
+  border-radius: 50%;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+}
+
+.row-item {
+  flex: 1; /* Allow items to grow and take equal space */
+  margin-right: 10px; /* Adjust as needed for spacing between items */
+  width: 80%;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.row-container {
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Arrange items in a row */
+  justify-content: space-between; /* Distribute items evenly along the row */
+  width: 100%;
+  align-items: center;
+}
+
+.mainTable {
+  margin-top: 20px;
+}
+
+@media only screen and (max-width: 600px) {
+  .large-card-size {
+    width: 95%;
+  }
+  .mainTable {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 8px;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .icon-size {
+    text-align: center;
+  }
+
+  .icon-button {
+    margin: 5px;
+  }
+  tr {
+    position: relative;
+  }
+
+  tr::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px; /* Wysokość paska */
+    background-color: #ccc; /* Kolor paska */
+  }
+}
+
+@media only screen and (min-width: 600px) and (max-width: 1100px) {
+  .large-card-size {
+    width: 90%;
+  }
+  .mainTable {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 8px;
+    display: inline-block;
+    width: calc(100% / 3); /* Rozmieszczenie kolumn w równych częściach */
+    box-sizing: border-box;
+  }
+
+  .icon-size {
+    text-align: center;
+  }
+
+  .icon-button {
+    margin: 5px;
+  }
+
+  tr {
+    position: relative;
+  }
+
+  tr::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px; /* Wysokość paska */
+    background-color: #ccc; /* Kolor paska */
+  }
+}
+
+

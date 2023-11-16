@@ -1,13 +1,11 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
 import {GardenPlot} from "../garden-plot";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {
-  getMatchingProfiles,
-  profileEmailValidator,
-  profiles, uniqueLeaseholderIDValidator
-} from "../garden-plot-list-add-garden/garden-plot-list-add-garden.component";
-import {gardenPlots} from "../list-of-garden-plot.component";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Profile} from "../../Profile";
+import {gardenPlots, uniqueLeaseholderIDValidator} from "../GardenService";
+import {getMatchingProfiles, profileEmailValidator, profiles} from "../../list-of-users/ProfilesService";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+
 
 @Component({
   selector: 'app-garden-plot-add-leaseholder',
@@ -16,26 +14,28 @@ import {Profile} from "../../Profile";
 })
 export class GardenPlotAddLeaseholderComponent implements OnInit {
   leaseHolderOptions: { email: string; fullName: string }[] = [];
-
-  showError: boolean = false;
-
-  @Input() gardenPlot: GardenPlot | undefined;
-  @Output() closeAddingLeaseHolder = new EventEmitter<void>();
-
+  gardenPlot: GardenPlot | undefined;
   addLeaseHolderForm: FormGroup;
-
+  closeAddingLeaseHolder() {
+    this.dialogRef.close();
+  }
   populateFormFromGardenPlot(gardenPlot: GardenPlot | undefined) {
     this.addLeaseHolderForm.patchValue({
       // @ts-ignore
-      leaseholderEmail: gardenPlot.leaseholderID!==null ? findProfileEmailByID(gardenPlot.leaseholderID, profiles):'brak',
+      leaseholderEmail: gardenPlot.leaseholderID !== null ? findProfileEmailByID(gardenPlot.leaseholderID, profiles) : 'brak',
     });
   }
 
-  constructor(formBuilder: FormBuilder) {
+  constructor(formBuilder: FormBuilder,
+              public dialogRef: MatDialogRef<GardenPlotAddLeaseholderComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: { gardenPlot: GardenPlot }
+  ) {
+    this.gardenPlot = data.gardenPlot
     this.addLeaseHolderForm = formBuilder.group({
       leaseholderEmail: ['', [
+        Validators.required,
         profileEmailValidator(profiles),
-        uniqueLeaseholderIDValidator(gardenPlots, profiles,true,this.gardenPlot)
+        uniqueLeaseholderIDValidator(gardenPlots, profiles, true, this.gardenPlot)
       ]],
     });
   }
@@ -44,13 +44,13 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
     this.leaseHolderOptions = [{
       fullName: 'brak',
       email: 'brak'
-    }, ...getMatchingProfiles(this.addLeaseHolderForm.get('leaseholderEmail')?.value, profiles, gardenPlots, true,this.gardenPlot)];
+    }, ...getMatchingProfiles(this.addLeaseHolderForm.get('leaseholderEmail')?.value, profiles, gardenPlots, true, this.gardenPlot)];
 
     this.addLeaseHolderForm.get('leaseholderEmail')?.valueChanges.subscribe((value) => {
       this.leaseHolderOptions = [{
         fullName: 'brak',
         email: 'brak'
-      }, ...getMatchingProfiles(value, profiles, gardenPlots, true,this.gardenPlot)];
+      }, ...getMatchingProfiles(value, profiles, gardenPlots, true, this.gardenPlot)];
     });
 
     this.populateFormFromGardenPlot(this.gardenPlot);
@@ -76,7 +76,7 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
       if (this.addLeaseHolderForm.get('leaseholderEmail')?.value === 'brak') {
         // @ts-ignore
         this.gardenPlot.leaseholderID = null;
-        this.closeAddingLeaseHolder.emit();
+        this.closeAddingLeaseHolder();
       } else {
         const selectedProfile = profiles.find((profile) => {
           return profile.email === this.addLeaseHolderForm.get('leaseholderEmail')?.value;
@@ -85,17 +85,16 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
         if (selectedProfile) {
           // @ts-ignore
           this.gardenPlot.leaseholderID = selectedProfile.id;
-          this.closeAddingLeaseHolder.emit();
+          this.closeAddingLeaseHolder();
         }
       }
     } else {
-      this.showError = true;
     }
   }
 
-
   errorMessages = {
     leaseholderEmail: [
+      {type: 'required', message: 'Proszę wybrać dzierżawcę z listy'},
       {type: 'invalidProfileEmail', message: 'Proszę wybrać poprawny profil'},
       {type: 'nonUniqueLeaseholderID', message: 'Profil jest już przypisany do innej działki'},
     ],

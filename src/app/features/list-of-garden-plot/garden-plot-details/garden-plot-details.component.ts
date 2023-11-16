@@ -1,9 +1,10 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, Output} from '@angular/core';
 
 import {Profile} from "../../Profile";
 import {GardenPlot} from "../garden-plot";
 import {Payment, PaymentList} from "./PaymentList";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 
 @Component({
@@ -12,9 +13,8 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
   styleUrls: ['./garden-plot-details.component.scss']
 })
 export class GardenPlotDetailsComponent {
-  @Input() gardenPlot: GardenPlot | undefined;
-  @Input() leaseholder: Profile | undefined;
-  @Output() closeDetails = new EventEmitter<void>();
+  gardenPlot: GardenPlot | undefined;
+  leaseholder: Profile | undefined;
 
   showPaymentHistory = false;
   showNewPaymentForm = false;
@@ -33,9 +33,12 @@ export class GardenPlotDetailsComponent {
     ]
   };
 
-  constructor(formBuilder: FormBuilder) {
-    this.gardenPlot = undefined;
-    this.leaseholder = undefined;
+  constructor(formBuilder: FormBuilder,
+              public dialogRef: MatDialogRef<GardenPlotDetailsComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: { gardenPlot: GardenPlot; leaseholder: Profile }
+  ) {
+    this.gardenPlot = data.gardenPlot;
+    this.leaseholder = data.leaseholder;
     this.paymentForm = formBuilder.group({
       value: ['', [
         Validators.required,
@@ -48,6 +51,46 @@ export class GardenPlotDetailsComponent {
     });
   }
 
+  closeEditingingGardenPlot() {
+    this.dialogRef.close();
+  }
+
+  getUserPaymentList(): Payment[] {
+    const userPaymentList = this.paymentLists.find((user) => user.idUser === this.leaseholder?.id)?.userPaymentList || [];
+    return userPaymentList;
+  }
+
+  addNewPayment() {
+    if (this.paymentForm.valid) {
+      const newPaymentAmount: number = this.paymentForm.get('value')?.value;
+      const newPaymentDate: Date = this.paymentForm.get('date')?.value;
+
+      if (newPaymentAmount !== null && newPaymentDate !== null) {
+        const newPayment: Payment = {
+          value: newPaymentAmount,
+          date: newPaymentDate,
+        };
+
+        //TODO push do backendu dodac do listy i obnizyc kwote do zaplaty
+        this.getUserPaymentList().push(newPayment);
+
+        this.showNewPaymentForm = false;
+        this.paymentForm.reset();
+      }
+    } else {
+    }
+  }
+
+  validationErrors(controlName: string): any[] {
+    let errors = []
+    // @ts-ignore
+    for (let error of this.errorMessages[controlName]) {
+      if (this.paymentForm.get(controlName)?.hasError(error.type)) {
+        errors.push(error);
+      }
+    }
+    return errors;
+  }
   paymentLists: PaymentList[] = [
     {
       id: '1',
@@ -233,49 +276,4 @@ export class GardenPlotDetailsComponent {
         {value: 200, date: new Date(2024, 10, 20)}
       ]
     }];
-
-  getUserPaymentList(): Payment[] {
-    const userPaymentList = this.paymentLists.find((user) => user.idUser === this.leaseholder?.id)?.userPaymentList || [];
-    return userPaymentList;
-  }
-
-  showEmptyFieldsError: boolean = false;
-
-  addNewPayment() {
-    if (this.paymentForm.valid) {
-      const newPaymentAmount: number = this.paymentForm.get('value')?.value;
-      const newPaymentDate: Date = this.paymentForm.get('date')?.value;
-
-      if (newPaymentAmount !== null && newPaymentDate !== null) {
-        const newPayment: Payment = {
-          value: newPaymentAmount,
-          date: newPaymentDate,
-        };
-
-        //TODO push do backendu dodac do listy i obnizyc kwote do zaplaty
-        this.getUserPaymentList().push(newPayment);
-
-        this.showNewPaymentForm = false;
-        this.showEmptyFieldsError = false;
-        this.paymentForm.reset();
-      }
-    } else {
-      this.showEmptyFieldsError = true;
-    }
-  }
-
-  validationErrors(controlName: string): any[] {
-    let errors = []
-    // @ts-ignore
-    for (let error of this.errorMessages[controlName]) {
-      if (this.paymentForm.get(controlName)?.hasError(error.type)) {
-        errors.push(error);
-      }
-    }
-    return errors;
-  }
-
-  closeEditingingGardenPlot() {
-    this.closeDetails.emit()
-  }
 }

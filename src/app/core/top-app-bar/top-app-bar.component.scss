@@ -4,6 +4,8 @@
   align-items: center;
   background-color: #000; // Set the background color to black
   color: #fff; // Set the text color to white
+  position: fixed;
+  z-index: 2000;
 
   .spacer {
     margin: 0 10px; // Adjust the margin as per your preference
@@ -48,20 +50,30 @@
     gap: 10px;
   }
 
+  .login-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+
   .app-text-button {
     margin: 0 10px; /* Adjust the horizontal spacing between buttons as needed */
   }
 
 }
-.button-menu{
+
+.button-menu {
   color: gray;
   background-color: #111;
   margin-top: 4px;
   margin-bottom: 2px;
 }
+
 .button-menu:hover {
   color: lightgray;
 }
+
 .mat-divider {
   background-color: gray;
   height: 0.1px;
@@ -71,3 +83,48 @@
   color: #FFF;
   text-decoration: underline;
 }
+
+.show-options-button {
+  display: none;
+}
+
+.mat-toolbar {
+  @media only screen and (max-width: 1150px) {
+    flex-direction: column;
+    text-align: center;
+    .title {
+      display: block;
+
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .options {
+      display: none;
+
+      button {
+        margin: 5px 0;
+      }
+    }
+    .auth-buttons {
+      display: none;
+    }
+
+    .show-options-button {
+      display: block;
+      cursor: pointer;
+      background: none;
+      color: white;
+      position: fixed;
+      right: 5px;
+      box-shadow: none;
+
+      .mat-icon {
+        scale: 1.4;
+      }
+    }
+  }
+}
+

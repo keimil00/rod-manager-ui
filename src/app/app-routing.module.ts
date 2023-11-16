@@ -9,6 +9,10 @@ import {PageNotFoundComponent} from "./features/page-not-found/page-not-found.co
 import {GardenInfoComponent} from "./features/garden-info/garden-info.component";
 import {DocumentsComponent} from "./features/documents/documents.component";
 import {ListOfGardenPlotComponent} from "./features/list-of-garden-plot/list-of-garden-plot.component";
+import {CountersComponent} from "./features/counters/counters.component";
+import {ListOfUsersComponent} from "./features/list-of-users/list-of-users.component";
+import {UserInfoComponent} from "./features/user-info/user-info.component";
+import {WorkersListComponent} from "./features/garden-info/workers-list/workers-list.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -18,6 +22,10 @@ const routes: Routes = [
   { path: 'garden-info', component: GardenInfoComponent },
   { path: 'documents', component: DocumentsComponent},
   { path: 'list-of-garden-plot', component: ListOfGardenPlotComponent},
+  { path: 'list-of-users', component: ListOfUsersComponent},
+  { path: 'counters', component: CountersComponent},
+  { path: 'user-info/:id', component: UserInfoComponent},
+  { path: 'workers-list', component: WorkersListComponent},
   { path: '404', component: PageNotFoundComponent },
   { path: '**', redirectTo: '/404' }
   // { path: 'admin', component: AdminComponent, canActivate: [authGuard([Role.ADMIN] TODO: gdy będą role trzeba to pododawać

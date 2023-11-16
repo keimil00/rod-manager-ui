@@ -43,5 +43,9 @@ export class TopAppBarComponent {
     this.authService.logout();
   }
 
+  navigateToProfileComponent(id: string) {
+    this.router.navigate(['/user-info', id]);
+  }
+
   protected readonly Role = Role;
 }

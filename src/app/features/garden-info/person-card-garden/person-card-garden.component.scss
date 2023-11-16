@@ -9,15 +9,67 @@
 
 .position {
   font-weight: bold;
-  font-size: 18px;
+  font-size: 20px;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .text {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 mat-grid-tile {
   border: 0.01px solid #eee;
+}
+@media only screen  and (max-width: 400px) {
+  .person-card {
+    padding: 5px;
+    margin: 5px;
+  }
+  .position {
+    font-size: 16px;
+    margin-bottom: 1px;
+  }
+  .text {
+    font-size: 12px;
+  }
+}
+@media only screen and (min-width: 400px) and (max-width: 551px) {
+  .person-card {
+    padding: 5px;
+    margin: 5px;
+  }
+  .position {
+    font-size: 18px;
+    margin-bottom: 1px;
+  }
+  .text {
+    font-size: 14px;
+  }
+}
+@media only screen and (min-width: 551px) and (max-width: 700px) {
+  .person-card {
+    padding: 5px;
+    margin: 5px;
+  }
+  .position {
+    font-size: 14px;
+    margin-bottom: 1px;
+  }
+  .text {
+    font-size: 10px;
+  }
+}
+@media only screen and (min-width: 700px) and (max-width: 850px) {
+  .person-card {
+    padding: 5px;
+    margin: 5px;
+  }
+  .position {
+    font-size: 16px;
+    margin-bottom: 1px;
+  }
+  .text {
+    font-size: 12px;
+  }
 }

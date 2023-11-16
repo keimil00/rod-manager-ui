@@ -1,0 +1,22 @@
+
+.col-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.submit-button {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 15px;
+}
+
+.cancel-button {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 15px;
+}
+.full-width {
+  flex: 1;
+  margin-right: 10px;
+  width: 100%;
+}

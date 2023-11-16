@@ -7,7 +7,7 @@
       </div>
     </mat-card-header>
     <mat-card-content>
-      <table mat-table [dataSource]="dataSource">
+      <table mat-table [dataSource]="dataSource" class="mainTable">
         <ng-container matColumnDef="sector">
           <th mat-header-cell *matHeaderCellDef>Sektor</th>
           <td mat-cell *matCellDef="let gardenPlot">{{ gardenPlot.sector }}</td>
@@ -71,22 +71,3 @@
         *ngIf="!(showDetails || showAddingLeaseHolder || showAddingGardenPlot)">
   <mat-icon>add</mat-icon>
 </button>
-
-
-<app-garden-plot-details
-  *ngIf="showDetails"
-  [gardenPlot]="selectedGardenPlot"
-  [leaseholder]="selectedLeaseholder"
-  (closeDetails)="closeDetails()"
-></app-garden-plot-details>
-
-<app-garden-plot-add-leaseholder
-  *ngIf="showAddingLeaseHolder"
-  [gardenPlot]="selectedGardenPlot"
-  (closeAddingLeaseHolder)="closeAddingLeaseHolder()"
-></app-garden-plot-add-leaseholder>
-
-<app-garden-plot-list-add-garden
-  *ngIf="showAddingGardenPlot"
-  (closeAddingGardenPlot)="closeAddingGardenPlot()"
-></app-garden-plot-list-add-garden>
