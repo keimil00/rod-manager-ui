@@ -68,7 +68,7 @@ export class UserInfoComponent implements OnInit {
   }
 
   populateFormFromGardenPlot(profile: Profile | undefined) {
-    const address = this.findPlotAddressTupleByUserId(gardenPlots, profile?.id);
+    const address = this.findPlotAddressTupleByUserId(gardenPlots, profile?.profileId);
     this.userInfoForm.patchValue({
       firstName: profile?.firstName,
       lastName: profile?.lastName,
@@ -82,7 +82,7 @@ export class UserInfoComponent implements OnInit {
   }
 
   getProfileById(id: string | null) {
-    return profiles.find(profile => profile.id === id);
+    return profiles.find(profile => profile.profileId === id);
   }
 
   findPlotAddressTupleByUserId(gardenPlots: GardenPlot[], id: string | undefined): {
@@ -212,7 +212,7 @@ export class UserInfoComponent implements OnInit {
 
       const newUser: Profile = {
         // @ts-ignore
-        id: this.id,
+        profileId: this.id,
         // @ts-ignore
         userID: this.profile?.userID,
         // @ts-ignore
@@ -238,7 +238,7 @@ export class UserInfoComponent implements OnInit {
       // updateLeaseholderID(gardenID, this.id)
 
       if (newSector !== null) {
-        let idToNull = findGardenByUserID(this.id, gardenPlots)?.id
+        let idToNull = findGardenByUserID(this.id, gardenPlots)?.gardenPlotID
         updateLeaseholderID(idToNull, null)
         updateLeaseholderID(gardenID, this.id)
       }
@@ -251,7 +251,7 @@ export class UserInfoComponent implements OnInit {
     ((string | null)[]) {
     const availableGardenPlots = gardenPlots.filter((gardenPlot) => {
       return (
-        !profiles.some((profile) => profile.id === gardenPlot.leaseholderID) || (this.id === gardenPlot.leaseholderID));
+        !profiles.some((profile) => profile.profileId === gardenPlot.leaseholderID) || (this.id === gardenPlot.leaseholderID));
     });
 
     const sectors = availableGardenPlots.map((gardenPlot) => gardenPlot.sector);
@@ -263,7 +263,7 @@ export class UserInfoComponent implements OnInit {
     ((string | null)[]) {
     const availableGardenPlots = gardenPlots.filter((gardenPlot) => {
       return (
-        (!profiles.some((profile) => profile.id === gardenPlot.leaseholderID) || (this.id === gardenPlot.leaseholderID)) && (gardenPlot.sector === sector));
+        (!profiles.some((profile) => profile.profileId === gardenPlot.leaseholderID) || (this.id === gardenPlot.leaseholderID)) && (gardenPlot.sector === sector));
     });
 
     const sectors = availableGardenPlots.map((gardenPlot) => gardenPlot.avenue);
@@ -275,7 +275,7 @@ export class UserInfoComponent implements OnInit {
     ((number | null)[]) {
     const availableGardenPlots = gardenPlots.filter((gardenPlot) => {
       return (
-        (!profiles.some((profile) => profile.id === gardenPlot.leaseholderID) || (this.id === gardenPlot.leaseholderID)) && (gardenPlot.sector === sector) && (gardenPlot.avenue === avenue));
+        (!profiles.some((profile) => profile.profileId === gardenPlot.leaseholderID) || (this.id === gardenPlot.leaseholderID)) && (gardenPlot.sector === sector) && (gardenPlot.avenue === avenue));
     });
 
     const sectors = availableGardenPlots.map((gardenPlot) => gardenPlot.number);

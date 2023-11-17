@@ -157,7 +157,7 @@ export class GardenPlotListAddGardenComponent {
         newLeaseholderID = findProfileIdByEmail(newLeaseholderEmail, profiles)
 
       const newGardenPlot: GardenPlot = {
-        id: uniqueId,
+        gardenPlotID: uniqueId,
         sector: newSector,
         avenue: newAvenue,
         number: newNumber,
@@ -169,7 +169,7 @@ export class GardenPlotListAddGardenComponent {
       //TODO push do backendu
       // this.gardenPlots?.push(newGardenPlot)
       const newGardenPlot2: GardenPlotBackend = {
-        id: uniqueId,
+        gardenPlotID: uniqueId,
         sector: newSector,
         avenue: newAvenue,
         number: newNumber,

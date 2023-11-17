@@ -117,7 +117,7 @@ export class ListOfGardenPlotComponent {
   }
 
   getLeaseholderName(leaseholderID: string): any {
-    const leaseholder = profiles.find(profile => profile.id === leaseholderID);
+    const leaseholder = profiles.find(profile => profile.profileId === leaseholderID);
     if (leaseholder) {
       return `${leaseholder.firstName} ${leaseholder.lastName}`;
     }
@@ -126,7 +126,7 @@ export class ListOfGardenPlotComponent {
 
   selectDetails(gardenPlot: GardenPlot) {
     // const leaseholder = this.findLeaseholderById(gardenPlot.leaseholderID) || undefined;
-    const leaseholder = this.gardenPlotsDataService.getLeaseholder(gardenPlot.id,gardenPlots)
+    const leaseholder = this.gardenPlotsDataService.getLeaseholder(gardenPlot.gardenPlotID,gardenPlots)
     this.showDetails = true;
     this.showDetailsDialog(gardenPlot, leaseholder)
   }
@@ -192,7 +192,7 @@ export class ListOfGardenPlotComponent {
   }
 
   findLeaseholderById(id: string | null): Profile | null {
-    return profiles.find(profile => profile.id === id) || null;
+    return profiles.find(profile => profile.profileId === id) || null;
   }
 
   closeDetails() {

@@ -58,7 +58,7 @@ export class GardenPlotDetailsComponent {
 
   getUserPaymentList(): Payment[] {
     // this.gardenPlotsDataService.getPayments(this.leaseholder?.id)
-    const userPaymentList = this.paymentLists.find((user) => user.idUser === this.leaseholder?.id)?.userPaymentList || [];
+    const userPaymentList = this.paymentLists.find((user) => user.idUser === this.leaseholder?.profileId)?.userPaymentList || [];
     return userPaymentList;
   }
 
@@ -84,7 +84,7 @@ export class GardenPlotDetailsComponent {
   }
 
   addPaymentBackend(leaseholderID: string | undefined, payment: Payment) {
-    this.gardenPlotsDataService.addPayment(leaseholderID, payment).subscribe(
+    this.gardenPlotsDataService.confirmPayment(leaseholderID, payment).subscribe(
       (response) => {
         console.log('Payment added successfully:', response);
       },

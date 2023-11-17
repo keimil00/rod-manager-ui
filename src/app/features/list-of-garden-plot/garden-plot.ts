@@ -1,5 +1,5 @@
 export interface GardenPlot {
-  id: string;
+  gardenPlotID: string;
   sector: string| null;
   avenue: string| null;
   number: number;
@@ -9,7 +9,7 @@ export interface GardenPlot {
 }
 
 export interface GardenPlotBackend {
-  id: string;
+  gardenPlotID: string;
   sector: string| null;
   avenue: string| null;
   number: number;

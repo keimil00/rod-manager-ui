@@ -95,9 +95,9 @@ export class GardenPlotEditGardenComponent implements OnInit{
   ngOnInit() {
     // @ts-ignore
     const gardenPlot: GardenPlotBackend = this.gardenPlot
-    const leasHolder = this.gardenPlotsDataService.getLeaseholder(this.gardenPlot?.id,gardenPlots)
-    if(leasHolder){
-      this.leasholderID=leasHolder.id
+    const leaseholder = this.gardenPlotsDataService.getLeaseholder(this.gardenPlot?.gardenPlotID,gardenPlots)
+    if(leaseholder){
+      this.leasholderID=leaseholder.profileId
     }
     else this.leasholderID = null
     this.populateFormFromGardenPlot(gardenPlot);
@@ -186,7 +186,7 @@ export class GardenPlotEditGardenComponent implements OnInit{
       let newGarden = this.gardenPlot
       let newGarden2 :GardenPlot ={
         // @ts-ignore
-        id:newGarden?.id,
+        gardenPlotID:newGarden?.gardenPlotID,
         // @ts-ignore
         leaseholderID:newLeaseholderID,
         // @ts-ignore
@@ -202,8 +202,8 @@ export class GardenPlotEditGardenComponent implements OnInit{
       }
       //TODO push do backendu newGarden
 
-      this.gardenPlotsDataService.editGarden(this.gardenPlot?.id,newGarden)
-      this.gardenPlotsDataService.editGarden2(this.gardenPlot?.id,newGarden2,gardenPlots)
+      this.gardenPlotsDataService.editGarden(this.gardenPlot?.gardenPlotID,newGarden)
+      this.gardenPlotsDataService.editGarden2(this.gardenPlot?.gardenPlotID,newGarden2,gardenPlots)
       // this.gardenPlotsDataService.editGarden3(this.gardenPlot?.id,newGarden2)
 
       this.editGardenForm.reset();
@@ -216,6 +216,6 @@ export class GardenPlotEditGardenComponent implements OnInit{
 
 function findProfileIdByEmail(emailToFind: string, profiles: Profile[]): string | null {
   const foundProfile = profiles.find((profile) => profile.email === emailToFind);
-  return foundProfile ? foundProfile.id : null;
+  return foundProfile ? foundProfile.profileId : null;
 }
 

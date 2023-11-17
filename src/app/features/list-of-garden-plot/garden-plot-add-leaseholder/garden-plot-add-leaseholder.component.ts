@@ -43,9 +43,9 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
   }
 
   ngOnInit() {
-    const leasHolder = this.gardenPlotsDataService.getLeaseholder(this.gardenPlot?.id, gardenPlots)
+    const leasHolder = this.gardenPlotsDataService.getLeaseholder(this.gardenPlot?.gardenPlotID, gardenPlots)
     if (leasHolder) {
-      this.leasholderID = leasHolder.id
+      this.leasholderID = leasHolder.profileId
     } else this.leasholderID = null
     this.addLeaseHolderForm.get('leaseholderEmail')?.setValidators([Validators.required, profileEmailValidator(profiles), uniqueLeaseholderIDValidator(gardenPlots, profiles, true, this.leasholderID)])
 
@@ -84,9 +84,9 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
       if (this.addLeaseHolderForm.get('leaseholderEmail')?.value === 'brak') {
         // @ts-ignore
         this.gardenPlot.leaseholderID = null;
-        this.gardenPlotsDataService.editLeaseholder(this.gardenPlot?.id, null)
-        this.gardenPlotsDataService.editLeaseholder2(this.gardenPlot?.id, null, gardenPlots)
-        // this.gardenPlotsDataService.editLeaseholder3(this.gardenPlot?.id, null)
+        this.gardenPlotsDataService.editLeaseholder(this.gardenPlot?.gardenPlotID, null)
+        this.gardenPlotsDataService.editLeaseholder2(this.gardenPlot?.gardenPlotID, null, gardenPlots)
+        // this.gardenPlotsDataService.editLeaseholder3(this.gardenPlot?.gardenPlotID, null)
 
         this.closeAddingLeaseHolder();
       } else {
@@ -96,10 +96,10 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
 
         if (selectedProfile) {
           // @ts-ignore
-          this.gardenPlot.leaseholderID = selectedProfile.id;
-          this.gardenPlotsDataService.editLeaseholder(this.gardenPlot?.id, selectedProfile.id)
-          this.gardenPlotsDataService.editLeaseholder2(this.gardenPlot?.id, selectedProfile.id, gardenPlots)
-          // this.gardenPlotsDataService.editLeaseholder3(this.gardenPlot?.id, null)
+          this.gardenPlot.leaseholderID = selectedProfile.profileId;
+          this.gardenPlotsDataService.editLeaseholder(this.gardenPlot?.gardenPlotID, selectedProfile.profileId)
+          this.gardenPlotsDataService.editLeaseholder2(this.gardenPlot?.gardenPlotID, selectedProfile.profileId, gardenPlots)
+          // this.gardenPlotsDataService.editLeaseholder3(this.gardenPlot?.gardenPlotID, selectedProfile.profileId)
 
           this.closeAddingLeaseHolder();
         }

@@ -12,7 +12,7 @@ export function getMatchingProfiles(value: string, profiles: Profile[], gardenPl
     const fullName = profile.firstName + ' ' + profile.lastName
     return (
       (fullName.toLowerCase().includes(lowerCaseValue) || profile.email.toLowerCase().includes(lowerCaseValue)) && (profile.accountStatus.some((role) => role === Role_TEMP.GARDENER)) && (
-        !gardenPlots.some((plot) => plot.leaseholderID === profile.id) || (showCurrentLeaseHolder && leaseHolderID === profile.id))
+        !gardenPlots.some((plot) => plot.leaseholderID === profile.profileId) || (showCurrentLeaseHolder && leaseHolderID === profile.profileId))
     );
   });
 
@@ -24,7 +24,7 @@ export function getMatchingProfiles(value: string, profiles: Profile[], gardenPl
 
 export function findProfileIdByEmail(emailToFind: string, profiles: Profile[]): string | null {
   const foundProfile = profiles.find((profile) => profile.email === emailToFind);
-  return foundProfile ? foundProfile.id : null;
+  return foundProfile ? foundProfile.profileId : null;
 }
 
 export function profileEmailValidator(profiles: Profile[]): ValidatorFn {
@@ -50,8 +50,7 @@ export function profileEmailValidator(profiles: Profile[]): ValidatorFn {
 
 export let profiles: Profile[] = [
   {
-    id: '1',
-    userID: 'user1',
+    profileId: '1',
     firstName: 'John',
     lastName: 'Doe',
     phoneNumber: '123-456-7890',
@@ -61,8 +60,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 10, 31),
   },
   {
-    id: '2',
-    userID: 'user2',
+    profileId: '2',
     firstName: 'Jane',
     lastName: 'Smith',
     phoneNumber: '987-654-3210',
@@ -72,8 +70,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 10, 31),
   },
   {
-    id: '3',
-    userID: 'user3',
+    profileId: '3',
     firstName: 'David',
     lastName: 'Johnson',
     phoneNumber: '555-555-5555',
@@ -83,8 +80,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 10, 31),
   },
   {
-    id: '4',
-    userID: 'user4',
+    profileId: '4',
     firstName: 'Mary',
     lastName: 'Williams',
     phoneNumber: '777-777-7777',
@@ -94,8 +90,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 10, 31),
   },
   {
-    id: '5',
-    userID: 'user5',
+    profileId: '5',
     firstName: 'Robert',
     lastName: 'Brown',
     phoneNumber: '111-111-1111',
@@ -105,8 +100,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 10, 31),
   },
   {
-    id: '6',
-    userID: 'user6',
+    profileId: '6',
     firstName: 'Linda',
     lastName: 'Jones',
     phoneNumber: '222-222-2222',
@@ -116,8 +110,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 10, 31),
   },
   {
-    id: '7',
-    userID: 'user7',
+    profileId: '7',
     firstName: 'Michael',
     lastName: 'Davis',
     phoneNumber: '333-333-3333',
@@ -127,8 +120,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 10, 31),
   },
   {
-    id: '8',
-    userID: 'user8',
+    profileId: '8',
     firstName: 'Susan',
     lastName: 'Wilson',
     phoneNumber: '444-444-4444',
@@ -138,8 +130,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 10, 31),
   },
   {
-    id: '9',
-    userID: 'user9',
+    profileId: '9',
     firstName: 'William',
     lastName: 'Evans',
     phoneNumber: '666-666-6666',
@@ -149,8 +140,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 10, 31),
   },
   {
-    id: '10',
-    userID: 'user10',
+    profileId: '10',
     firstName: 'Karen',
     lastName: 'Taylor',
     phoneNumber: '999-999-9999',
@@ -160,8 +150,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 10, 31),
   },
   {
-    id: '11',
-    userID: 'user11',
+    profileId: '11',
     firstName: 'Richard',
     lastName: 'Anderson',
     phoneNumber: '222-222-2222',
@@ -171,8 +160,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 10, 31),
   },
   {
-    id: '12',
-    userID: 'user12',
+    profileId: '12',
     firstName: 'Patricia',
     lastName: 'White',
     phoneNumber: '333-333-3333',
@@ -182,8 +170,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 10, 31),
   },
   {
-    id: '13',
-    userID: 'user13',
+    profileId: '13',
     firstName: 'David',
     lastName: 'Thomas',
     phoneNumber: '777-777-7777',
@@ -193,8 +180,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 10, 31),
   },
   {
-    id: '14',
-    userID: 'user14',
+    profileId: '14',
     firstName: 'Susan',
     lastName: 'Jackson',
     phoneNumber: '123-123-1234',
@@ -204,8 +190,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 10, 31),
   },
   {
-    id: '15',
-    userID: 'user15',
+    profileId: '15',
     firstName: 'Michael',
     lastName: 'Harris',
     phoneNumber: '456-456-4567',
@@ -215,8 +200,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 10, 31),
   },
   {
-    id: '16',
-    userID: 'user16',
+    profileId: '16',
     firstName: 'Karen',
     lastName: 'Martin',
     phoneNumber: '111-111-1111',
@@ -226,8 +210,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 10, 31),
   },
   {
-    id: '17',
-    userID: 'user17',
+    profileId: '17',
     firstName: 'William',
     lastName: 'Garcia',
     phoneNumber: '555-555-5555',
@@ -237,8 +220,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 10, 31),
   },
   {
-    id: '18',
-    userID: 'user18',
+    profileId: '18',
     firstName: 'Linda',
     lastName: 'Brown',
     phoneNumber: '333-333-3333',
@@ -248,8 +230,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2024, 10, 31),
   },
   {
-    id: '19',
-    userID: 'user19',
+    profileId: '19',
     firstName: 'Michael',
     lastName: 'Lewis',
     phoneNumber: '777-777-7777',
@@ -259,8 +240,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 12, 31),
   },
   {
-    id: '20',
-    userID: 'user20',
+    profileId: '20',
     firstName: 'Susan',
     lastName: 'Clark',
     phoneNumber: '123-123-1234',
@@ -270,8 +250,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 10, 31),
   },
   {
-    id: '21',
-    userID: 'user21',
+    profileId: '21',
     firstName: 'John',
     lastName: 'Doe',
     phoneNumber: '456-456-4567',
@@ -281,8 +260,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 9, 15),
   },
   {
-    id: '22',
-    userID: 'user22',
+    profileId: '22',
     firstName: 'Alice',
     lastName: 'Johnson',
     phoneNumber: '789-789-7890',
@@ -292,8 +270,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 8, 28),
   },
   {
-    id: '23',
-    userID: 'user23',
+    profileId: '23',
     firstName: 'Bob',
     lastName: 'Smith',
     phoneNumber: '234-234-2345',
@@ -303,8 +280,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 11, 15),
   },
   {
-    id: '24',
-    userID: 'user24',
+    profileId: '24',
     firstName: 'Eva',
     lastName: 'Brown',
     phoneNumber: '567-567-5678',
@@ -314,8 +290,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 7, 22),
   },
   {
-    id: '25',
-    userID: 'user25',
+    profileId: '25',
     firstName: 'Michael',
     lastName: 'Miller',
     phoneNumber: '890-890-8901',
@@ -325,8 +300,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 6, 10),
   },
   {
-    id: '26',
-    userID: 'user26',
+    profileId: '26',
     firstName: 'Sophia',
     lastName: 'Wilson',
     phoneNumber: '123-456-7890',
@@ -336,8 +310,7 @@ export let profiles: Profile[] = [
     paymentDueDate: new Date(2023, 5, 18),
   },
   {
-    id: '27',
-    userID: 'user27',
+    profileId: '27',
     firstName: 'David',
     lastName: 'Jones',
     phoneNumber: '456-789-0123',
