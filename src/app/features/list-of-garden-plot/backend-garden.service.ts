@@ -234,7 +234,7 @@ export class BackendGardenService {
 
   //TODO to endpoint
   getPayments(user_id: string | undefined): Observable<any>{
-      const url = `${'https://localhost:1337/api/garden/payments'}/${user_id}`;
+      const url = `https://localhost:1337/api/garden/payments/${user_id}`;
       return this.httpClient.get<Payment[]>(url);
   }
 
@@ -262,7 +262,7 @@ export class BackendGardenService {
 
   //TODO to endpoint
   // getLeaseholder(gardenPlotID: string): Observable<Profile> {
-  //   const url = `${'https://localhost:1337/api/get-profile-from-garden-plot-id'}/${gardenPlotID}`;
+  //   const url = `${'https://localhost:1337/api/profile-from-garden-id'}/${gardenPlotID}`;
   //   return this.httpClient.get<Profile>(url);
   // }
   getLeaseholder(gardenPlotID: string | undefined, gardenPlots: GardenPlot[]): Profile {
@@ -335,7 +335,7 @@ export class BackendGardenService {
   //TODO to endpoint
   editLeaseholder3(gardenId: string | undefined, newLeaseholderID: string | null): Observable<any> {
     const url = `${'https://localhost:1337/api/api/garden/leaseholder'}/${gardenId}`;
-    return this.httpClient.post<any>(url, {leaseholderID:newLeaseholderID});
+    return this.httpClient.patch<any>(url, {leaseholderID:newLeaseholderID});
   }
 }
 
@@ -397,7 +397,7 @@ export class BackendGardenService {
 
 
 // // ### GET request with parameter
-// GET https://localhost:1337/api/get-profile-from-garden-plot-id/:garden-plot-id
+// GET https://localhost:1337/api/profile-from-garden-id/:garden-id
 //   Accept: application/json
 //
 // Parameters:
@@ -456,7 +456,7 @@ export class BackendGardenService {
 // }
 
 
-// POST https://localhost:1337/api/garden/leaseholder:garden-plot-id
+// PATCH https://localhost:1337/api/garden/leaseholder:garden-plot-id
 //   Content-Type: application/json
 // Accept: application/json
 //
@@ -484,7 +484,7 @@ export class BackendGardenService {
 // }
 
 // ### GET request with parameter
-//   GET https://localhost:1337/api/garden/payments:user_id=1
+//   GET https://localhost:1337/api/garden/payments:user_id
 //     Accept: application/json
 //
 //   Response example:
