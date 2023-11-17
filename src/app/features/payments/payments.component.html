@@ -1,0 +1,177 @@
+<div class="page-container">
+  <mat-card class="large-card-size">
+    <mat-card-header>
+      <div class="center-item">
+        <h2 class="title">Opłaty</h2>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="page-container">
+        <mat-card class="small-card-size">
+          <mat-card-header>
+            <div class="center-item">
+              <h2 class="small-title">Opłata za dzierżawe</h2>
+            </div>
+          </mat-card-header>
+          <mat-card-content>
+            <table mat-table [dataSource]="dataLeaseFees" class="mainTable">
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let fee" class="setSize">{{ fee.name }}</td>
+              </ng-container>
+              <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef>Rodzaj opłaty</th>
+                <td mat-cell *matCellDef="let fee" class="setSize2">{{ fee.type }}</td>
+              </ng-container>
+              <ng-container matColumnDef="value">
+                <th mat-header-cell *matHeaderCellDef>Kwota</th>
+                <td mat-cell *matCellDef="let fee" class="setSize3">{{ fee.value }} zł</td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let gardenPlot; columns: displayedColumns"></tr>
+            </table>
+          </mat-card-content>
+          <button mat-fab color="primary" aria-label="Edytuj" class="editButton">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </mat-card>
+
+        <mat-card class="small-card-size">
+          <mat-card-header>
+            <div class="center-item">
+              <h2 class="small-title">Opłata za media</h2>
+              <h2 class="very-small-title">Opłaty za liczniki wspólne</h2>
+            </div>
+          </mat-card-header>
+          <mat-card-content>
+            <table mat-table [dataSource]="dataUtilityFees" class="mainTable">
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let fee" class="setSize">{{ fee.name }}</td>
+              </ng-container>
+              <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef>Rodzaj opłaty</th>
+                <td mat-cell *matCellDef="let fee" class="setSize2">{{ fee.type }}</td>
+              </ng-container>
+              <ng-container matColumnDef="value">
+                <th mat-header-cell *matHeaderCellDef>Kwota</th>
+                <td mat-cell *matCellDef="let fee" class="setSize3">{{ fee.value }} zł</td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let gardenPlot; columns: displayedColumns"></tr>
+            </table>
+          </mat-card-content>
+          <button mat-fab color="primary" aria-label="Edytuj" class="editButton">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </mat-card>
+
+        <mat-card class="small-card-size">
+          <mat-card-header>
+            <div class="center-item">
+              <h2 class="small-title">Dodatkowe opłaty</h2>
+            </div>
+          </mat-card-header>
+          <mat-card-content>
+            <table mat-table [dataSource]="dataAdditionalFees" class="mainTable">
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let fee" class="setSize">{{ fee.name }}</td>
+              </ng-container>
+              <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef>Rodzaj opłaty</th>
+                <td mat-cell *matCellDef="let fee" class="setSize2">{{ fee.type }}</td>
+              </ng-container>
+              <ng-container matColumnDef="value">
+                <th mat-header-cell *matHeaderCellDef>Kwota</th>
+                <td mat-cell *matCellDef="let fee" class="setSize3">{{ fee.value }} zł</td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let gardenPlot; columns: displayedColumns"></tr>
+            </table>
+          </mat-card-content>
+          <button mat-fab color="primary" aria-label="Edytuj" class="editButton">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </mat-card>
+        <mat-card class="payment-date-card">
+          <mat-card-header class="payments">
+            <div class="payments">
+              <mat-label [textContent]="'Termin płatności:'" class="date"></mat-label>
+              <mat-label
+                [textContent]="payment.date.getDay()+'.'+payment.date.getMonth() +'.'+payment.date.getFullYear()"
+                class="date"></mat-label>
+            </div>
+          </mat-card-header>
+          <button mat-fab color="primary" aria-label="Edytuj" class="editButton">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <div class="center-button" *appHasRole="[Role.MANAGER, Role.ADMIN]">
+            <app-text-button class="add-button" [text]="'Zatwierdź opłaty'" [color]="'primary'"
+            ></app-text-button>
+          </div>
+          <mat-label *appHasRole="[Role.MANAGER, Role.ADMIN]" class="small-text">* Po zatwierdzeniu zostaną naliczone
+            opłaty zgodnie z
+            wyżej wymienionymi danymi oraz na podstawie aktualnych stanów liczników, operacji nie można cofnąć
+          </mat-label>
+        </mat-card>
+        <mat-card>
+          <mat-card-header>
+
+          </mat-card-header>
+          <mat-card-content>
+            <form class [formGroup]="individualPaymentsForm">
+              <div>
+                <div class="row-item">
+                  <mat-form-field class="full-width">
+                    <mat-label>Sektor</mat-label>
+                    <ng-container>
+                      <mat-select formControlName="sector">
+                        <mat-option *ngFor="let option of sectorsOptions" [value]="option">
+                          {{ option}}
+                        </mat-option>
+                      </mat-select>
+                    </ng-container>
+                    <mat-error *ngFor="let error of validationErrors('sector')">
+                      {{ error.message }}
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="row-item">
+                  <mat-form-field class="full-width">
+                    <mat-label>Aleja</mat-label>
+                    <ng-container>
+                      <mat-select formControlName="avenue">
+                        <mat-option *ngFor="let option of avenuesOptions" [value]="option">
+                          {{ option}}
+                        </mat-option>
+                      </mat-select>
+                    </ng-container>
+                    <mat-error *ngFor="let error of validationErrors('avenue')">
+                      {{ error.message }}
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="row-item">
+                  <mat-form-field class="full-width">
+                    <mat-label>Numer</mat-label>
+                    <ng-container>
+                      <mat-select formControlName="number">
+                        <mat-option *ngFor="let option of numbersOptions" [value]="option">
+                          {{ option}}
+                        </mat-option>
+                      </mat-select>
+                    </ng-container>
+                    <mat-error *ngFor="let error of validationErrors('number')">
+                      {{ error.message }}
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

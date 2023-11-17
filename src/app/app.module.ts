@@ -69,6 +69,7 @@ import { ListOfUsersComponent } from './features/list-of-users/list-of-users.com
 import { UserInfoComponent } from './features/user-info/user-info.component';
 import { WorkersListComponent } from './features/garden-info/workers-list/workers-list.component';
 import { EditWorkerComponent } from './features/garden-info/workers-list/editOrAdd-worker/edit-worker.component';
+import { PaymentsComponent } from './features/payments/payments.component';
 
 @NgModule({
   declarations: [
@@ -101,7 +102,8 @@ import { EditWorkerComponent } from './features/garden-info/workers-list/editOrA
     ListOfUsersComponent,
     UserInfoComponent,
     WorkersListComponent,
-    EditWorkerComponent
+    EditWorkerComponent,
+    PaymentsComponent
   ],
   imports: [
     BrowserModule,

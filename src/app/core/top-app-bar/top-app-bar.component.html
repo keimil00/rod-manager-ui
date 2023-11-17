@@ -45,7 +45,7 @@
         <mat-divider></mat-divider>
       </div>
       <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
-        <button mat-menu-item class="button-menu">Opłaty</button>
+        <button mat-menu-item class="button-menu" (click)="navigate('payments')">Opłaty</button>
         <mat-divider></mat-divider>
       </div>
       <div *appHasRole="[Role.TECHNICAL_EMPLOYEE, Role.MANAGER, Role.ADMIN]">
@@ -97,7 +97,7 @@
         <mat-divider></mat-divider>
       </div>
       <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
-        <button mat-menu-item class="button-menu">Opłaty</button>
+        <button mat-menu-item class="button-menu" (click)="navigate('payments')">Opłaty</button>
         <mat-divider></mat-divider>
       </div>
       <div *appHasRole="[Role.TECHNICAL_EMPLOYEE, Role.MANAGER, Role.ADMIN]">
