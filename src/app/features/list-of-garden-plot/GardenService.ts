@@ -155,7 +155,7 @@ export function findGardenPlotIdByAddress(sector: string | null, avenue: string 
   return matchingGardenPlot ? matchingGardenPlot.id : null;
 }
 
-export function uniqueLeaseholderIDValidator(gardenPlots: GardenPlot[], profiles: Profile[], showCurrentLeaseHolder: boolean, CurrentGardenPlot?: GardenPlot): ValidatorFn {
+export function uniqueLeaseholderIDValidator(gardenPlots: GardenPlot[], profiles: Profile[], showCurrentLeaseHolder: boolean, currentLeaseHolderID?: string|null): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     const leaseholderEmail = control.value;
 
@@ -174,7 +174,7 @@ export function uniqueLeaseholderIDValidator(gardenPlots: GardenPlot[], profiles
     }
 
     const isUsed = gardenPlots.some((plot) => plot.leaseholderID === selectedProfile.id);
-    const isCurrent = (showCurrentLeaseHolder && CurrentGardenPlot?.leaseholderID === selectedProfile.id)
+    const isCurrent = (showCurrentLeaseHolder && currentLeaseHolderID=== selectedProfile.id)
 
     if (isUsed && !isCurrent) {
       return {nonUniqueLeaseholderID: true};
@@ -183,7 +183,7 @@ export function uniqueLeaseholderIDValidator(gardenPlots: GardenPlot[], profiles
   };
 }
 
-export function uniqueGardenValidator(sector: string, avenue: string, gardenPlots: GardenPlot[], showCurrenGardenPlot: boolean, CurrentGardenPlot?: GardenPlot): ValidatorFn {
+export function uniqueGardenValidator(sector: string, avenue: string, gardenPlots: GardenPlot[], showCurrenGardenPlot: boolean, currentLeaseHolderID?: string|null): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     const gardenPlotNumber = control.value;
 
@@ -196,7 +196,7 @@ export function uniqueGardenValidator(sector: string, avenue: string, gardenPlot
       return null
     }
 
-    const isCurrent = (showCurrenGardenPlot && CurrentGardenPlot?.id === selectedGardenPlotId)
+    const isCurrent = (showCurrenGardenPlot && currentLeaseHolderID === selectedGardenPlotId)
 
     if (!isCurrent)
       return {nonUniqueGarden: true};
@@ -204,11 +204,15 @@ export function uniqueGardenValidator(sector: string, avenue: string, gardenPlot
   };
 }
 
+export function findProfileEmailByID(IdToFind: string | null, profiles: Profile[]): string | null {
+  const foundProfile = profiles.find((profile) => profile.id === IdToFind);
+  return foundProfile ? foundProfile.email : null;
+}
 export let gardenPlots: GardenPlot[] = [
-  {id: '1', sector: 'A', avenue: 'Avenue 1', number: 101, area: 500, leaseholderID: null, status: PlotStatus.Available},
-  {id: '2', sector: 'B', avenue: 'Avenue 2', number: 201, area: 600, leaseholderID: null, status: PlotStatus.Available},
-  {id: '3', sector: 'C', avenue: 'Avenue 3', number: 301, area: 750, leaseholderID: '1', status: PlotStatus.Available},
-  {id: '4', sector: 'D', avenue: 'Avenue 4', number: 401, area: 550, leaseholderID: null, status: PlotStatus.Available},
+  {id: '1', sector: 'A', avenue: 'Avenue 1', number: 101, area: 500, leaseholderID: null, gardenStatus: PlotStatus.Available},
+  {id: '2', sector: 'B', avenue: 'Avenue 2', number: 201, area: 600, leaseholderID: null, gardenStatus: PlotStatus.Available},
+  {id: '3', sector: 'C', avenue: 'Avenue 3', number: 301, area: 750, leaseholderID: '1', gardenStatus: PlotStatus.Available},
+  {id: '4', sector: 'D', avenue: 'Avenue 4', number: 401, area: 550, leaseholderID: null, gardenStatus: PlotStatus.Available},
   {
     id: '5',
     sector: 'E',
@@ -216,7 +220,7 @@ export let gardenPlots: GardenPlot[] = [
     number: 501,
     area: 700,
     leaseholderID: '6',
-    status: PlotStatus.Unavailable
+    gardenStatus: PlotStatus.Unavailable
   },
   {
     id: '6',
@@ -225,9 +229,9 @@ export let gardenPlots: GardenPlot[] = [
     number: 601,
     area: 600,
     leaseholderID: '3',
-    status: PlotStatus.Unavailable
+    gardenStatus: PlotStatus.Unavailable
   },
-  {id: '7', sector: 'G', avenue: 'Avenue 7', number: 701, area: 800, leaseholderID: '8', status: PlotStatus.Available},
+  {id: '7', sector: 'G', avenue: 'Avenue 7', number: 701, area: 800, leaseholderID: '8', gardenStatus: PlotStatus.Available},
   {
     id: '8',
     sector: 'H',
@@ -235,9 +239,9 @@ export let gardenPlots: GardenPlot[] = [
     number: 801,
     area: 900,
     leaseholderID: '10',
-    status: PlotStatus.Unavailable
+    gardenStatus: PlotStatus.Unavailable
   },
-  {id: '9', sector: 'I', avenue: 'Avenue 9', number: 901, area: 450, leaseholderID: '11', status: PlotStatus.Available},
+  {id: '9', sector: 'I', avenue: 'Avenue 9', number: 901, area: 450, leaseholderID: '11', gardenStatus: PlotStatus.Available},
   {
     id: '10',
     sector: 'J',
@@ -245,7 +249,7 @@ export let gardenPlots: GardenPlot[] = [
     number: 1001,
     area: 600,
     leaseholderID: '16',
-    status: PlotStatus.Unavailable
+    gardenStatus: PlotStatus.Unavailable
   },
   {
     id: '11',
@@ -254,7 +258,7 @@ export let gardenPlots: GardenPlot[] = [
     number: 1101,
     area: 700,
     leaseholderID: '19',
-    status: PlotStatus.Unavailable
+    gardenStatus: PlotStatus.Unavailable
   },
   {
     id: '12',
@@ -263,7 +267,7 @@ export let gardenPlots: GardenPlot[] = [
     number: 1201,
     area: 800,
     leaseholderID: null,
-    status: PlotStatus.Available
+    gardenStatus: PlotStatus.Available
   },
   {
     id: '13',
@@ -272,7 +276,7 @@ export let gardenPlots: GardenPlot[] = [
     number: 1301,
     area: 750,
     leaseholderID: '20',
-    status: PlotStatus.Unavailable
+    gardenStatus: PlotStatus.Unavailable
   },
   {
     id: '14',
@@ -281,7 +285,7 @@ export let gardenPlots: GardenPlot[] = [
     number: 1401,
     area: 600,
     leaseholderID: '14',
-    status: PlotStatus.Available
+    gardenStatus: PlotStatus.Available
   },
   {
     id: '15',
@@ -290,7 +294,7 @@ export let gardenPlots: GardenPlot[] = [
     number: 1501,
     area: 850,
     leaseholderID: '17',
-    status: PlotStatus.Unavailable
+    gardenStatus: PlotStatus.Unavailable
   },
   {
     id: '16',
@@ -299,7 +303,7 @@ export let gardenPlots: GardenPlot[] = [
     number: 1601,
     area: 700,
     leaseholderID: null,
-    status: PlotStatus.Available
+    gardenStatus: PlotStatus.Available
   },
   {
     id: '17',
@@ -308,7 +312,7 @@ export let gardenPlots: GardenPlot[] = [
     number: 1701,
     area: 600,
     leaseholderID: '12',
-    status: PlotStatus.Unavailable
+    gardenStatus: PlotStatus.Unavailable
   },
   {
     id: '18',
@@ -317,7 +321,7 @@ export let gardenPlots: GardenPlot[] = [
     number: 1801,
     area: 750,
     leaseholderID: null,
-    status: PlotStatus.Available
+    gardenStatus: PlotStatus.Available
   },
   {
     id: '19',
@@ -326,7 +330,7 @@ export let gardenPlots: GardenPlot[] = [
     number: 1901,
     area: 500,
     leaseholderID: '2',
-    status: PlotStatus.Unavailable
+    gardenStatus: PlotStatus.Unavailable
   },
   {
     id: '20',
@@ -335,7 +339,7 @@ export let gardenPlots: GardenPlot[] = [
     number: 2001,
     area: 600,
     leaseholderID: '4',
-    status: PlotStatus.Unavailable
+    gardenStatus: PlotStatus.Unavailable
   },
   {
     id: '21',
@@ -344,7 +348,7 @@ export let gardenPlots: GardenPlot[] = [
     number: 102,
     area: 600,
     leaseholderID: null,
-    status: PlotStatus.Unavailable
+    gardenStatus: PlotStatus.Unavailable
   },
 ];
 

@@ -1,10 +1,11 @@
 import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
-import {GardenPlot} from "../garden-plot";
+import {GardenPlot, GardenPlotBackend} from "../garden-plot";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Profile} from "../../Profile";
-import {gardenPlots, uniqueLeaseholderIDValidator} from "../GardenService";
+import {findProfileEmailByID, gardenPlots, uniqueGardenValidator, uniqueLeaseholderIDValidator} from "../GardenService";
 import {getMatchingProfiles, profileEmailValidator, profiles} from "../../list-of-users/ProfilesService";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {BackendGardenService} from "../backend-garden.service";
 
 
 @Component({
@@ -14,43 +15,50 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 })
 export class GardenPlotAddLeaseholderComponent implements OnInit {
   leaseHolderOptions: { email: string; fullName: string }[] = [];
-  gardenPlot: GardenPlot | undefined;
+  gardenPlot: GardenPlotBackend | undefined;
   addLeaseHolderForm: FormGroup;
+
+  // @ts-ignore
+  leasholderID: string | null
+
   closeAddingLeaseHolder() {
     this.dialogRef.close();
   }
-  populateFormFromGardenPlot(gardenPlot: GardenPlot | undefined) {
+
+  populateFormFromGardenPlot(gardenPlot: GardenPlotBackend | undefined) {
     this.addLeaseHolderForm.patchValue({
       // @ts-ignore
-      leaseholderEmail: gardenPlot.leaseholderID !== null ? findProfileEmailByID(gardenPlot.leaseholderID, profiles) : 'brak',
+      leaseholderEmail: gardenPlot.leaseholder !== null ? findProfileEmailByID(this.leasholderID, profiles) : 'brak',
     });
   }
 
-  constructor(formBuilder: FormBuilder,
+  constructor(formBuilder: FormBuilder, private gardenPlotsDataService: BackendGardenService,
               public dialogRef: MatDialogRef<GardenPlotAddLeaseholderComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: { gardenPlot: GardenPlot }
+              @Inject(MAT_DIALOG_DATA) public data: { gardenPlot: GardenPlotBackend }
   ) {
     this.gardenPlot = data.gardenPlot
     this.addLeaseHolderForm = formBuilder.group({
-      leaseholderEmail: ['', [
-        Validators.required,
-        profileEmailValidator(profiles),
-        uniqueLeaseholderIDValidator(gardenPlots, profiles, true, this.gardenPlot)
-      ]],
+      leaseholderEmail: [''],
     });
   }
 
   ngOnInit() {
+    const leasHolder = this.gardenPlotsDataService.getLeaseholder(this.gardenPlot?.id, gardenPlots)
+    if (leasHolder) {
+      this.leasholderID = leasHolder.id
+    } else this.leasholderID = null
+    this.addLeaseHolderForm.get('leaseholderEmail')?.setValidators([Validators.required, profileEmailValidator(profiles), uniqueLeaseholderIDValidator(gardenPlots, profiles, true, this.leasholderID)])
+
     this.leaseHolderOptions = [{
       fullName: 'brak',
       email: 'brak'
-    }, ...getMatchingProfiles(this.addLeaseHolderForm.get('leaseholderEmail')?.value, profiles, gardenPlots, true, this.gardenPlot)];
+    }, ...getMatchingProfiles(this.addLeaseHolderForm.get('leaseholderEmail')?.value, profiles, gardenPlots, true, this.leasholderID)];
 
     this.addLeaseHolderForm.get('leaseholderEmail')?.valueChanges.subscribe((value) => {
       this.leaseHolderOptions = [{
         fullName: 'brak',
         email: 'brak'
-      }, ...getMatchingProfiles(value, profiles, gardenPlots, true, this.gardenPlot)];
+      }, ...getMatchingProfiles(value, profiles, gardenPlots, true, this.leasholderID)];
     });
 
     this.populateFormFromGardenPlot(this.gardenPlot);
@@ -76,6 +84,10 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
       if (this.addLeaseHolderForm.get('leaseholderEmail')?.value === 'brak') {
         // @ts-ignore
         this.gardenPlot.leaseholderID = null;
+        this.gardenPlotsDataService.editLeaseholder(this.gardenPlot?.id, null)
+        this.gardenPlotsDataService.editLeaseholder2(this.gardenPlot?.id, null, gardenPlots)
+        // this.gardenPlotsDataService.editLeaseholder3(this.gardenPlot?.id, null)
+
         this.closeAddingLeaseHolder();
       } else {
         const selectedProfile = profiles.find((profile) => {
@@ -85,10 +97,13 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
         if (selectedProfile) {
           // @ts-ignore
           this.gardenPlot.leaseholderID = selectedProfile.id;
+          this.gardenPlotsDataService.editLeaseholder(this.gardenPlot?.id, selectedProfile.id)
+          this.gardenPlotsDataService.editLeaseholder2(this.gardenPlot?.id, selectedProfile.id, gardenPlots)
+          // this.gardenPlotsDataService.editLeaseholder3(this.gardenPlot?.id, null)
+
           this.closeAddingLeaseHolder();
         }
       }
-    } else {
     }
   }
 
@@ -112,7 +127,4 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
   }
 }
 
-function findProfileEmailByID(IdToFind: string | null, profiles: Profile[]): string | null {
-  const foundProfile = profiles.find((profile) => profile.id === IdToFind);
-  return foundProfile ? foundProfile.email : null;
-}
+

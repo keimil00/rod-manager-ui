@@ -1,10 +1,11 @@
 import {Component, EventEmitter, Inject, Input, Output} from '@angular/core';
 
 import {Profile} from "../../Profile";
-import {GardenPlot} from "../garden-plot";
+import {GardenPlot, GardenPlotBackend} from "../garden-plot";
 import {Payment, PaymentList} from "./PaymentList";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {BackendGardenService} from "../backend-garden.service";
 
 
 @Component({
@@ -13,7 +14,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
   styleUrls: ['./garden-plot-details.component.scss']
 })
 export class GardenPlotDetailsComponent {
-  gardenPlot: GardenPlot | undefined;
+  gardenPlot: GardenPlotBackend | undefined;
   leaseholder: Profile | undefined;
 
   showPaymentHistory = false;
@@ -33,9 +34,9 @@ export class GardenPlotDetailsComponent {
     ]
   };
 
-  constructor(formBuilder: FormBuilder,
+  constructor(formBuilder: FormBuilder, private gardenPlotsDataService: BackendGardenService,
               public dialogRef: MatDialogRef<GardenPlotDetailsComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: { gardenPlot: GardenPlot; leaseholder: Profile }
+              @Inject(MAT_DIALOG_DATA) public data: { gardenPlot: GardenPlotBackend; leaseholder: Profile }
   ) {
     this.gardenPlot = data.gardenPlot;
     this.leaseholder = data.leaseholder;
@@ -56,6 +57,7 @@ export class GardenPlotDetailsComponent {
   }
 
   getUserPaymentList(): Payment[] {
+    // this.gardenPlotsDataService.getPayments(this.leaseholder?.id)
     const userPaymentList = this.paymentLists.find((user) => user.idUser === this.leaseholder?.id)?.userPaymentList || [];
     return userPaymentList;
   }
@@ -72,13 +74,24 @@ export class GardenPlotDetailsComponent {
         };
 
         //TODO push do backendu dodac do listy i obnizyc kwote do zaplaty
+        // this.addPaymentBackend(this.leaseholder?.id, newPayment)
+        //TODO do usuniecia jak bedzie backend
         this.getUserPaymentList().push(newPayment);
-
         this.showNewPaymentForm = false;
         this.paymentForm.reset();
       }
-    } else {
     }
+  }
+
+  addPaymentBackend(leaseholderID: string | undefined, payment: Payment) {
+    this.gardenPlotsDataService.addPayment(leaseholderID, payment).subscribe(
+      (response) => {
+        console.log('Payment added successfully:', response);
+      },
+      (error) => {
+        console.error('Error while adding payment:', error);
+      }
+    );
   }
 
   validationErrors(controlName: string): any[] {
@@ -91,6 +104,7 @@ export class GardenPlotDetailsComponent {
     }
     return errors;
   }
+
   paymentLists: PaymentList[] = [
     {
       id: '1',

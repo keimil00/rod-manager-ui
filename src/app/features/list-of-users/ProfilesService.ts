@@ -2,7 +2,7 @@ import {Profile, Role_TEMP} from "../Profile";
 import {GardenPlot} from "../list-of-garden-plot/garden-plot";
 import {AbstractControl, ValidatorFn} from "@angular/forms";
 
-export function getMatchingProfiles(value: string, profiles: Profile[], gardenPlots: GardenPlot[], showCurrentLeaseHolder: boolean, currentGardernPlot?: GardenPlot): {
+export function getMatchingProfiles(value: string, profiles: Profile[], gardenPlots: GardenPlot[], showCurrentLeaseHolder: boolean, leaseHolderID?: string|null): {
   email: string,
   fullName: string
 }[] {
@@ -12,7 +12,7 @@ export function getMatchingProfiles(value: string, profiles: Profile[], gardenPl
     const fullName = profile.firstName + ' ' + profile.lastName
     return (
       (fullName.toLowerCase().includes(lowerCaseValue) || profile.email.toLowerCase().includes(lowerCaseValue)) && (profile.accountStatus.some((role) => role === Role_TEMP.GARDENER)) && (
-        !gardenPlots.some((plot) => plot.leaseholderID === profile.id) || (showCurrentLeaseHolder && currentGardernPlot?.leaseholderID === profile.id))
+        !gardenPlots.some((plot) => plot.leaseholderID === profile.id) || (showCurrentLeaseHolder && leaseHolderID === profile.id))
     );
   });
 

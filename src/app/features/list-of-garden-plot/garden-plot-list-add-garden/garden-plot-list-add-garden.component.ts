@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {GardenPlot, PlotStatus} from "../garden-plot";
+import {GardenPlot, GardenPlotBackend, PlotStatus} from "../garden-plot";
 
 import {
   findProfileIdByEmail,
@@ -16,6 +16,7 @@ import {
   uniqueLeaseholderIDValidator
 } from "../GardenService";
 import {MatDialogRef} from "@angular/material/dialog";
+import {BackendGardenService} from "../backend-garden.service";
 
 
 @Component({
@@ -58,7 +59,7 @@ export class GardenPlotListAddGardenComponent {
     ]
   };
 
-  constructor(formBuilder: FormBuilder, public dialogRef: MatDialogRef<GardenPlotListAddGardenComponent>) {
+  constructor(formBuilder: FormBuilder, public dialogRef: MatDialogRef<GardenPlotListAddGardenComponent>,private gardenPlotsDataService: BackendGardenService) {
     this.addGardenForm = formBuilder.group({
       sector: ['', [
         Validators.required,
@@ -162,11 +163,24 @@ export class GardenPlotListAddGardenComponent {
         number: newNumber,
         area: newArea,
         leaseholderID: newLeaseholderID,
-        status: newStatus
+        gardenStatus: newStatus
       };
 
       //TODO push do backendu
       // this.gardenPlots?.push(newGardenPlot)
+      const newGardenPlot2: GardenPlotBackend = {
+        id: uniqueId,
+        sector: newSector,
+        avenue: newAvenue,
+        number: newNumber,
+        area: newArea,
+        leaseholder: newLeaseholderID,
+        gardenStatus: newStatus
+      };
+
+      this.gardenPlotsDataService.addGarden(newGardenPlot2)
+      this.gardenPlotsDataService.addGarden2(newGardenPlot)
+
       gardenPlots.push(newGardenPlot)
 
       this.addGardenForm.reset();

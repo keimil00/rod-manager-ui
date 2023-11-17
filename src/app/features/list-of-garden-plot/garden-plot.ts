@@ -5,7 +5,17 @@ export interface GardenPlot {
   number: number;
   area: number| null;
   leaseholderID: string| null;
-  status: PlotStatus;
+  gardenStatus: PlotStatus;
+}
+
+export interface GardenPlotBackend {
+  id: string;
+  sector: string| null;
+  avenue: string| null;
+  number: number;
+  area: number| null;
+  leaseholder: string| null;
+  gardenStatus: PlotStatus;
 }
 
 export enum PlotStatus {
