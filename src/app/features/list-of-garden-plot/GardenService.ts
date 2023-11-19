@@ -32,7 +32,7 @@ export function findGardenByID(id: string | null, gardenPlots: GardenPlot[]): Ga
   return null
 }
 
-export function getMatchingSectors(counters: Counter[], gardenPlots: GardenPlot[]): string[] {
+export function getMatchingSectorsWithCounter(counters: Counter[], gardenPlots: GardenPlot[]): string[] {
   // @ts-ignore
   const gardenPlotIdsWithCounters = new Set<string>(counters.map((counter) => counter.gardenPlotID));
 
@@ -49,7 +49,7 @@ export function getMatchingSectors(counters: Counter[], gardenPlots: GardenPlot[
   return uniqueSectorsArray;
 }
 
-export function getMatchingAvenues(counters: Counter[], gardenPlots: GardenPlot[], sector: string | null): string[] {
+export function getMatchingAvenuesWithCounter(counters: Counter[], gardenPlots: GardenPlot[], sector: string | null): string[] {
   // @ts-ignore
   const gardenPlotIdsWithCounters = new Set<string>(counters.map((counter) => counter.gardenPlotID));
 
@@ -70,7 +70,7 @@ export function getMatchingAvenues(counters: Counter[], gardenPlots: GardenPlot[
 }
 
 
-export function getMatchingNumbers(counters: Counter[], gardenPlots: GardenPlot[], sector: string | null, avenue: string | null): number[] {
+export function getMatchingNumbersWithCounter(counters: Counter[], gardenPlots: GardenPlot[], sector: string | null, avenue: string | null): number[] {
   // @ts-ignore
   const gardenPlotIdsWithCounters = new Set<string>(counters.map((counter) => counter.gardenPlotID));
 
@@ -90,7 +90,7 @@ export function getMatchingNumbers(counters: Counter[], gardenPlots: GardenPlot[
   return uniqueNumbersArray;
 }
 
-export function getSectors(value: string, gardenPlots: GardenPlot[]): string[] {
+export function getMatchingSectors(value: string, gardenPlots: GardenPlot[]): string[] {
   const lowerCaseValue = value.toLowerCase();
 
   const uniqueSectorsSet = new Set<string>();
@@ -116,7 +116,7 @@ export function getSectors(value: string, gardenPlots: GardenPlot[]): string[] {
   return uniqueSectorsArray;
 }
 
-export function getAvenues(value: string, sector: string | null, gardenPlots: GardenPlot[]): string[] {
+export function getMatchingAvenues(value: string, sector: string | null, gardenPlots: GardenPlot[]): string[] {
   const lowerCaseValue = value.toLowerCase();
 
   const uniqueAvenuesSet = new Set<string>();
@@ -147,6 +147,71 @@ export function getAvenues(value: string, sector: string | null, gardenPlots: Ga
   return uniqueAvenuesArray;
 }
 
+export function getSectors(gardenPlots: GardenPlot[]): string[] {
+  const uniqueSectorsSet = new Set<string>();
+  const seenSectors = new Set<string>();
+
+  gardenPlots.forEach((gardenPlot) => {
+    const sector = gardenPlot.sector;
+
+    // @ts-ignore
+    if (gardenPlot.leaseholderID && !seenSectors.has(<string>sector)) {
+      if (sector != null) {
+        uniqueSectorsSet.add(sector);
+      }
+      if (sector != null) {
+        seenSectors.add(sector);
+      }
+    }
+  });
+
+  const uniqueSectorsArray = Array.from(uniqueSectorsSet);
+  uniqueSectorsArray.sort();
+
+  return uniqueSectorsArray;
+}
+
+export function getAvenues(sector: string | null, gardenPlots: GardenPlot[]): string[] {
+  const uniqueAvenuesSet = new Set<string>();
+  const seenAvenues = new Set<string>();
+
+  gardenPlots.forEach((gardenPlot) => {
+    const avenue = gardenPlot.avenue;
+
+    if (
+      sector &&
+      gardenPlot.sector === sector && gardenPlot.leaseholderID &&
+      !seenAvenues.has(<string>avenue)
+    ) {
+      if (avenue != null) {
+        uniqueAvenuesSet.add(avenue);
+      }
+      if (avenue != null) {
+        seenAvenues.add(avenue);
+      }
+    }
+  });
+
+  const uniqueAvenuesArray = Array.from(uniqueAvenuesSet);
+  uniqueAvenuesArray.sort();
+
+  return uniqueAvenuesArray;
+}
+
+export function getNumbers(sector: string | null, avenue: string | null, gardenPlots: GardenPlot[]): number[] {
+
+  const availableGardenPlots = gardenPlots.filter((gardenPlot) => {
+    return (
+      (sector ? gardenPlot.sector === sector : true) && gardenPlot.leaseholderID &&
+      (avenue ? gardenPlot.avenue === avenue : true)
+    );
+  });
+  const numbers = availableGardenPlots.map((gardenPlot) => gardenPlot.number);
+  numbers.sort((a, b) => a - b);
+
+  return numbers;
+}
+
 
 export function findGardenPlotIdByAddress(sector: string | null, avenue: string | null, number: number | null, gardenPlots: GardenPlot[]): string | null {
   const matchingGardenPlot = gardenPlots.find((gardenPlot) =>
@@ -155,7 +220,7 @@ export function findGardenPlotIdByAddress(sector: string | null, avenue: string 
   return matchingGardenPlot ? matchingGardenPlot.gardenPlotID : null;
 }
 
-export function uniqueLeaseholderIDValidator(gardenPlots: GardenPlot[], profiles: Profile[], showCurrentLeaseHolder: boolean, currentLeaseHolderID?: string|null): ValidatorFn {
+export function uniqueLeaseholderIDValidator(gardenPlots: GardenPlot[], profiles: Profile[], showCurrentLeaseHolder: boolean, currentLeaseHolderID?: string | null): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     const leaseholderEmail = control.value;
 
@@ -174,7 +239,7 @@ export function uniqueLeaseholderIDValidator(gardenPlots: GardenPlot[], profiles
     }
 
     const isUsed = gardenPlots.some((plot) => plot.leaseholderID === selectedProfile.profileId);
-    const isCurrent = (showCurrentLeaseHolder && currentLeaseHolderID=== selectedProfile.profileId)
+    const isCurrent = (showCurrentLeaseHolder && currentLeaseHolderID === selectedProfile.profileId)
 
     if (isUsed && !isCurrent) {
       return {nonUniqueLeaseholderID: true};
@@ -183,7 +248,7 @@ export function uniqueLeaseholderIDValidator(gardenPlots: GardenPlot[], profiles
   };
 }
 
-export function uniqueGardenValidator(sector: string, avenue: string, gardenPlots: GardenPlot[], showCurrenGardenPlot: boolean, currentLeaseHolderID?: string|null): ValidatorFn {
+export function uniqueGardenValidator(sector: string, avenue: string, gardenPlots: GardenPlot[], showCurrenGardenPlot: boolean, currentLeaseHolderID?: string | null): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     const gardenPlotNumber = control.value;
 
@@ -210,10 +275,42 @@ export function findProfileEmailByID(IdToFind: string | null, profiles: Profile[
 }
 
 export let gardenPlots: GardenPlot[] = [
-  {gardenPlotID: '1', sector: 'A', avenue: 'Avenue 1', number: 101, area: 500, leaseholderID: null, gardenStatus: PlotStatus.Available},
-  {gardenPlotID: '2', sector: 'B', avenue: 'Avenue 2', number: 201, area: 600, leaseholderID: null, gardenStatus: PlotStatus.Available},
-  {gardenPlotID: '3', sector: 'C', avenue: 'Avenue 3', number: 301, area: 750, leaseholderID: '1', gardenStatus: PlotStatus.Available},
-  {gardenPlotID: '4', sector: 'D', avenue: 'Avenue 4', number: 401, area: 550, leaseholderID: null, gardenStatus: PlotStatus.Available},
+  {
+    gardenPlotID: '1',
+    sector: 'A',
+    avenue: 'Avenue 1',
+    number: 101,
+    area: 500,
+    leaseholderID: null,
+    gardenStatus: PlotStatus.Available
+  },
+  {
+    gardenPlotID: '2',
+    sector: 'B',
+    avenue: 'Avenue 2',
+    number: 201,
+    area: 600,
+    leaseholderID: null,
+    gardenStatus: PlotStatus.Available
+  },
+  {
+    gardenPlotID: '3',
+    sector: 'C',
+    avenue: 'Avenue 3',
+    number: 301,
+    area: 750,
+    leaseholderID: '1',
+    gardenStatus: PlotStatus.Available
+  },
+  {
+    gardenPlotID: '4',
+    sector: 'D',
+    avenue: 'Avenue 4',
+    number: 401,
+    area: 550,
+    leaseholderID: null,
+    gardenStatus: PlotStatus.Available
+  },
   {
     gardenPlotID: '5',
     sector: 'E',
@@ -232,7 +329,15 @@ export let gardenPlots: GardenPlot[] = [
     leaseholderID: '3',
     gardenStatus: PlotStatus.Unavailable
   },
-  {gardenPlotID: '7', sector: 'G', avenue: 'Avenue 7', number: 701, area: 800, leaseholderID: '8', gardenStatus: PlotStatus.Available},
+  {
+    gardenPlotID: '7',
+    sector: 'G',
+    avenue: 'Avenue 7',
+    number: 701,
+    area: 800,
+    leaseholderID: '8',
+    gardenStatus: PlotStatus.Available
+  },
   {
     gardenPlotID: '8',
     sector: 'H',
@@ -242,7 +347,15 @@ export let gardenPlots: GardenPlot[] = [
     leaseholderID: '10',
     gardenStatus: PlotStatus.Unavailable
   },
-  {gardenPlotID: '9', sector: 'I', avenue: 'Avenue 9', number: 901, area: 450, leaseholderID: '11', gardenStatus: PlotStatus.Available},
+  {
+    gardenPlotID: '9',
+    sector: 'I',
+    avenue: 'Avenue 9',
+    number: 901,
+    area: 450,
+    leaseholderID: '11',
+    gardenStatus: PlotStatus.Available
+  },
   {
     gardenPlotID: '10',
     sector: 'J',

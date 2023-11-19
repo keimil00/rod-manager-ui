@@ -70,6 +70,8 @@ import { UserInfoComponent } from './features/user-info/user-info.component';
 import { WorkersListComponent } from './features/garden-info/workers-list/workers-list.component';
 import { EditWorkerComponent } from './features/garden-info/workers-list/editOrAdd-worker/edit-worker.component';
 import { PaymentsComponent } from './features/payments/payments.component';
+import { IndividualPaymentsComponent } from './features/payments/individual-payments/individual-payments.component';
+import { AddIndividualPaymentComponent } from './features/payments/individual-payments/add-individual-payment/add-individual-payment.component';
 
 @NgModule({
   declarations: [
@@ -103,7 +105,9 @@ import { PaymentsComponent } from './features/payments/payments.component';
     UserInfoComponent,
     WorkersListComponent,
     EditWorkerComponent,
-    PaymentsComponent
+    PaymentsComponent,
+    IndividualPaymentsComponent,
+    AddIndividualPaymentComponent
   ],
   imports: [
     BrowserModule,

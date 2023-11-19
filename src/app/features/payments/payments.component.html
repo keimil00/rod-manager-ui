@@ -1,4 +1,4 @@
-<div class="page-container">
+<div class="page-container"      [ngClass]="{'blurred-background': showDetails}">>
   <mat-card class="large-card-size">
     <mat-card-header>
       <div class="center-item">
@@ -14,7 +14,7 @@
             </div>
           </mat-card-header>
           <mat-card-content>
-            <table mat-table [dataSource]="dataLeaseFees" class="mainTable">
+            <table mat-table [dataSource]="dataLeaseFees">
               <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let fee" class="setSize">{{ fee.name }}</td>
@@ -44,7 +44,7 @@
             </div>
           </mat-card-header>
           <mat-card-content>
-            <table mat-table [dataSource]="dataUtilityFees" class="mainTable">
+            <table mat-table [dataSource]="dataUtilityFees">
               <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let fee" class="setSize">{{ fee.name }}</td>
@@ -73,7 +73,7 @@
             </div>
           </mat-card-header>
           <mat-card-content>
-            <table mat-table [dataSource]="dataAdditionalFees" class="mainTable">
+            <table mat-table [dataSource]="dataAdditionalFees">
               <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let fee" class="setSize">{{ fee.name }}</td>
@@ -115,9 +115,12 @@
             wyżej wymienionymi danymi oraz na podstawie aktualnych stanów liczników, operacji nie można cofnąć
           </mat-label>
         </mat-card>
-        <mat-card>
+        <mat-card class="individual-payments-card">
           <mat-card-header>
-
+            <div class="center-item">
+              <h2 class="small-title">Działka</h2>
+              <hr class="separator">
+            </div>
           </mat-card-header>
           <mat-card-content>
             <form class [formGroup]="individualPaymentsForm">
@@ -167,6 +170,9 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
+              </div>
+              <div class="center-button">
+                <button mat-raised-button class="individual-payments-button" type="submit" color="primary" (click)="selectShowIndividualPayments()">Zobacz indywidualne opłaty</button>
               </div>
             </form>
           </mat-card-content>

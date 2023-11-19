@@ -5,6 +5,7 @@ import {Observable} from "rxjs";
 import {Profile} from "../Profile";
 import {profiles} from "../list-of-users/ProfilesService";
 import {Payment} from "./garden-plot-details/PaymentList";
+import {gardenPlots} from "./GardenService";
 
 @Injectable({
   providedIn: 'root'
@@ -337,6 +338,25 @@ export class BackendGardenService {
     const url = `${'https://localhost:1337/api/api/garden/leaseholder'}/${gardenId}`;
     return this.httpClient.patch<any>(url, {leaseholderID:newLeaseholderID});
   }
+
+//nowe
+//nowe
+//nowe
+//nowe
+//nowe
+//nowe
+//nowe
+//nowe
+//nowe
+  getAllGardenPlots(): GardenPlot[] {
+    return gardenPlots
+  }
+  //TODO to endpoint
+  // getAllGardenPlots(): Observable<GardenPlot[]> {
+  //   const params = new HttpParams()
+  //   return this.httpClient.get<GardenPlot[]>('https://localhost:1337/api/all-gardens');
+  // }
+
 }
 
 
@@ -493,4 +513,76 @@ export class BackendGardenService {
 //   {value: 230, date: new Date(2026, 10, 20)},
 //   {value: 280, date: new Date(2024, 10, 20)}
 // }
+
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// inny
+// ### GET request with parameter
+//   GET https://localhost:1337/api/all-gardens
+//     Accept: application/json
+//
+//   Response example:
+//     [
+//       {
+//         "gardenPlotID": "1",
+//         "sector": "A",
+//         "avenue": "1",
+//         "number": 1,
+//         "area": 100,
+//         "leaseholderID": 1,
+//         "GardenStatus": "Available"
+//       },
+//       {
+//         "gardenPlotID": "2",
+//         "sector": "A",
+//         "avenue": "1",
+//         "number": 2,
+//         "area": 100,
+//         "leaseholderID": 2,
+//         "GardenStatus": "Available"
+//       }
+//     ]
+//
+//   Response type:
+//
+//     [
+//       {
+//         gardenPlotID: string;
+//         sector: string;
+//         avenue: string;
+//         number: number;
+//         area: number;
+//         leaseholderID: string; // example: "1"
+//         GardenStatus: PlotStatus; // enum with values: "Available" or "Unavailable"
+//       }
+//     ]
 

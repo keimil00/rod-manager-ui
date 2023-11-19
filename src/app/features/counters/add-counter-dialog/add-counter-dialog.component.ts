@@ -6,9 +6,9 @@ import {counters} from "../counters.component";
 import {
   findGardenPlotIdByAddress,
   gardenPlots,
-  getMatchingAvenues,
-  getMatchingNumbers,
-  getMatchingSectors
+  getMatchingAvenuesWithCounter,
+  getMatchingNumbersWithCounter,
+  getMatchingSectorsWithCounter
 } from "../../list-of-garden-plot/GardenService";
 
 @Component({
@@ -60,15 +60,15 @@ export class AddCounterDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.sectorsOptions = getMatchingSectors(counters, gardenPlots);
+    this.sectorsOptions = getMatchingSectorsWithCounter(counters, gardenPlots);
 
     this.addCounterForm.get('sector')?.valueChanges.subscribe((value) => {
-      this.avenuesOptions = getMatchingAvenues(counters, gardenPlots, this.addCounterForm.get('sector')?.value)
+      this.avenuesOptions = getMatchingAvenuesWithCounter(counters, gardenPlots, this.addCounterForm.get('sector')?.value)
       this.numbersOptions = []
     });
 
     this.addCounterForm.get('avenue')?.valueChanges.subscribe((value) => {
-      this.numbersOptions = getMatchingNumbers(counters, gardenPlots, this.addCounterForm.get('sector')?.value, this.addCounterForm.get('avenue')?.value)
+      this.numbersOptions = getMatchingNumbersWithCounter(counters, gardenPlots, this.addCounterForm.get('sector')?.value, this.addCounterForm.get('avenue')?.value)
     });
   }
 
