@@ -12,9 +12,10 @@
     <button mat-button>Dostępne działki</button>
     <span>/</span>
     <button mat-button>Kalendarz</button>
-    <div *appHasRole="[Role.GARDENER]">
+<!--    TODO zmiana bo to do testu-->
+    <div *appHasRole="[Role.GARDENER, Role.ADMIN]">
       <span>/</span>
-      <button mat-button>Moja działka</button>
+      <button mat-button (click)="navigate('my-garden-plot-info')">Moja działka</button>
     </div>
     <div *ngIf="isLoggedIn()">
       <span>/</span>

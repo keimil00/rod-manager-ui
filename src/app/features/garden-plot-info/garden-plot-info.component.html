@@ -1,0 +1,209 @@
+<div class="page-container">
+    <mat-card class="large-card-size">
+        <mat-card-header>
+            <div class="center-item">
+                <h2 class="title">Moja działka</h2>
+            </div>
+        </mat-card-header>
+        <mat-card-content class="page-container">
+            <mat-card class="tabel-card">
+                <mat-card-header>
+                    <div class="left-item">
+                        <h2 class="small-title">Dane działki</h2>
+                    </div>
+                </mat-card-header>
+                <mat-card-content>
+                    <table class="property-table">
+                        <tr>
+                            <td>Właściciel</td>
+                            <td>{{ gardenPlotInfo.leaseholder }}</td>
+                        </tr>
+                        <tr>
+                            <td>Sektor</td>
+                            <td>{{ gardenPlotInfo.sector }}</td>
+                        </tr>
+                        <tr>
+                            <td>Aleja</td>
+                            <td>{{ gardenPlotInfo.avenue }}</td>
+                        </tr>
+                        <tr>
+                            <td>Numer</td>
+                            <td>{{ gardenPlotInfo.number }}</td>
+                        </tr>
+                        <tr>
+                            <td>Powierzchnia</td>
+                            <td>{{ gardenPlotInfo.area +' m²'}}</td>
+                        </tr>
+                    </table>
+                </mat-card-content>
+            </mat-card>
+            <mat-card class="payment-date-card">
+                <mat-card-header class="payments">
+                    <div class="payments">
+                        <mat-label [textContent]="'Do zapłaty:'" ></mat-label>
+                        <mat-label
+                                [textContent]="gardenPlotInfo.value +' zł'"
+                                class="date"></mat-label>
+                    </div>
+                    <div class="payments">
+                        <mat-label [textContent]="'Termin płatności:'" ></mat-label>
+                        <mat-label
+                                [textContent]="gardenPlotInfo.date | date:'dd.MM.yyyy'"
+                                class="date"></mat-label>
+                    </div>
+                </mat-card-header>
+            </mat-card>
+            <mat-card class="tabel-card">
+                <mat-card-header>
+                    <div class="left-item">
+                        <h2 class="small-title">Szczegóły opłat</h2>
+                    </div>
+                </mat-card-header>
+                <mat-card-content>
+                    <mat-card class="inter-tabel-card">
+                        <mat-card-header>
+                            <div class="left-item">
+                                <h2 class="small-title">Media</h2>
+                            </div>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <table mat-table [dataSource]="mediaIndividual">
+                                <ng-container matColumnDef="name">
+                                    <th mat-header-cell *matHeaderCellDef>Nazwa</th>
+                                    <td mat-cell *matCellDef="let fee" >{{ fee.name }}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="type">
+                                    <th mat-header-cell *matHeaderCellDef>Zużycie</th>
+                                    <td mat-cell *matCellDef="let fee">{{ fee.mediaConsumption }}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="value">
+                                    <th mat-header-cell *matHeaderCellDef>Kwota</th>
+                                    <td mat-cell *matCellDef="let fee" >{{ fee.value }} zł</td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                                <tr mat-row *matRowDef="let fee; columns: displayedColumns1"></tr>
+                            </table>
+                        </mat-card-content>
+                    </mat-card>
+                    <mat-card class="inter-tabel-card">
+                        <mat-card-header>
+                            <div class="left-item">
+                                <h2 class="small-title">Media ogólne</h2>
+                            </div>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <table mat-table [dataSource]="dataUtilityFees">
+                                <ng-container matColumnDef="name">
+                                    <th mat-header-cell *matHeaderCellDef></th>
+                                    <td mat-cell *matCellDef="let fee" class="setSize">{{ fee.name }}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="type">
+                                    <th mat-header-cell *matHeaderCellDef>Rodzaj opłaty</th>
+                                    <td mat-cell *matCellDef="let fee" class="setSize2">{{ fee.type }}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="value">
+                                    <th mat-header-cell *matHeaderCellDef>Kwota</th>
+                                    <td mat-cell *matCellDef="let fee" class="setSize3">
+                                        <span *ngIf="fee.value">{{ fee.value }} zł</span>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sum">
+                                    <th mat-header-cell *matHeaderCellDef>Razem</th>
+                                    <td mat-cell *matCellDef="let fee" class="setSize4">{{ fee.sum}} zł</td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+                                <tr mat-row *matRowDef="let fee; columns: displayedColumns2"></tr>
+                            </table>
+                        </mat-card-content>
+                    </mat-card>
+                    <mat-card class="inter-tabel-card">
+                        <mat-card-header>
+                            <div class="left-item">
+                                <h2 class="small-title">Opłata za dzierżawe</h2>
+                            </div>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <table mat-table [dataSource]="dataLeaseFees">
+                                <ng-container matColumnDef="name">
+                                    <th mat-header-cell *matHeaderCellDef></th>
+                                    <td mat-cell *matCellDef="let fee" class="setSize">{{ fee.name }}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="type">
+                                    <th mat-header-cell *matHeaderCellDef>Rodzaj opłaty</th>
+                                    <td mat-cell *matCellDef="let fee" class="setSize2">{{ fee.type }}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="value">
+                                    <th mat-header-cell *matHeaderCellDef>Kwota</th>
+                                    <td mat-cell *matCellDef="let fee" class="setSize3">
+                                        <span *ngIf="fee.value">{{ fee.value }} zł</span>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sum">
+                                    <th mat-header-cell *matHeaderCellDef>Razem</th>
+                                    <td mat-cell *matCellDef="let fee" class="setSize4">{{ fee.sum }} zł</td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+                                <tr mat-row *matRowDef="let fee; columns: displayedColumns2"></tr>
+                            </table>
+                        </mat-card-content>
+                    </mat-card>
+                    <mat-card class="inter-tabel-card">
+                        <mat-card-header>
+                            <div class="left-item">
+                                <h2 class="small-title">Dodatkowe opłaty</h2>
+                            </div>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <table mat-table [dataSource]="dataAdditionalFees">
+                                <ng-container matColumnDef="name">
+                                    <th mat-header-cell *matHeaderCellDef></th>
+                                    <td mat-cell *matCellDef="let fee" class="setSize">{{ fee.name }}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="type">
+                                    <th mat-header-cell *matHeaderCellDef>Rodzaj opłaty</th>
+                                    <td mat-cell *matCellDef="let fee" class="setSize2">{{ fee.type }}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="value">
+                                    <th mat-header-cell *matHeaderCellDef>Kwota</th>
+                                    <td mat-cell *matCellDef="let fee" class="setSize3">
+                                        <span *ngIf="fee.value">{{ fee.value }} zł</span>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sum">
+                                    <th mat-header-cell *matHeaderCellDef>Razem</th>
+                                    <td mat-cell *matCellDef="let fee" class="setSize4">{{ fee.sum}} zł</td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+                                <tr mat-row *matRowDef="let fee; columns: displayedColumns2"></tr>
+                            </table>
+                        </mat-card-content>
+                    </mat-card>
+                    <mat-card class="inter-tabel-card">
+                        <mat-card-header>
+                            <div class="left-item">
+                                <h2 class="small-title">Indywidualne opłaty</h2>
+                            </div>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <table mat-table [dataSource]="individualFees">
+                                <ng-container matColumnDef="name">
+                                    <th mat-header-cell *matHeaderCellDef></th>
+                                    <td mat-cell *matCellDef="let fee">{{ fee.name }}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="value">
+                                    <th mat-header-cell *matHeaderCellDef>Kwota</th>
+                                    <td mat-cell *matCellDef="let fee" >{{ fee.value }} zł</td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
+                                <tr mat-row *matRowDef="let fee; columns: displayedColumns3"></tr>
+                            </table>
+                        </mat-card-content>
+                    </mat-card>
+                </mat-card-content>
+            </mat-card>
+        </mat-card-content>
+    </mat-card>
+</div>

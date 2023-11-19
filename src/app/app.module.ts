@@ -91,6 +91,7 @@ import {
 } from './features/payments/editing-additional-fees/editing-single-additional-fee/editing-single-additional-fee.component';
 import {EditDateComponent} from './features/payments/edit-date/edit-date.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { GardenPlotInfoComponent } from './features/garden-plot-info/garden-plot-info.component';
 
 @NgModule({
     declarations: [
@@ -132,7 +133,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
         EditingAdditionalFeesComponent,
         AddAdditionalFeesComponent,
         EditingSingleAdditionalFeeComponent,
-        EditDateComponent
+        EditDateComponent,
+        GardenPlotInfoComponent
     ],
     imports: [
         BrowserModule,
