@@ -1,0 +1,19 @@
+<mat-dialog-content>
+    <h1 mat-dialog-title class="title">Zmień datę</h1>
+    <div mat-dialog-content>
+        <mat-form-field class="full-width">
+            <input matInput [matDatepicker]="picker" placeholder="Wybierz datę" [(ngModel)]="selectedDate">
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+    </div>
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="center" class="mat-actions col-container">
+    <app-text-button mat-dialog-close class="cancel-button" className="action-button" [text]="'Anuluj'"
+                     [color]="'accent'"></app-text-button>
+    <app-text-button class="submit-button" className="action-button"
+                     [text]="'Zapisz'" [color]="'primary'" (click)="onConfirm()"></app-text-button>
+</mat-dialog-actions>

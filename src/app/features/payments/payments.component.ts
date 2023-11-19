@@ -12,6 +12,8 @@ import {IndividualPaymentsComponent} from "./individual-payments/individual-paym
 import {EditingLeaseFeeComponent} from "./editing-lease-fee/editing-lease-fee.component";
 import {EditingUtilityFeeComponent} from "./editing-utility-fee/editing-utility-fee.component";
 import {EditingAdditionalFeesComponent} from "./editing-additional-fees/editing-additional-fees.component";
+import {EditDateComponent} from "./edit-date/edit-date.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 
 //TODO na tym ekranie od terminu płatności zrobic przysik zatwierdz z jakaś uwagą ze beda naliczone te koszty co wyzej i nie będzie mozna tego zmienić plus dane z obecnego stanu liczników
@@ -43,7 +45,7 @@ export class PaymentsComponent {
     avenuesOptions: (string | null)[] = [];
     numbersOptions: (number | null)[] = [];
 
-    constructor(private dialog: MatDialog, formBuilder: FormBuilder, private paymentsService: PaymentsService, private gardenPlotsDataService: BackendGardenService) {
+    constructor(private dialog: MatDialog, formBuilder: FormBuilder, private paymentsService: PaymentsService, private gardenPlotsDataService: BackendGardenService, private _snackBar: MatSnackBar) {
         this.initData()
         // @ts-ignore
         this.dataLeaseFees = new MatTableDataSource(this.payment.leaseFees);
@@ -93,7 +95,7 @@ export class PaymentsComponent {
     //   );
     // }
 
-     ngOnInit() {
+    ngOnInit() {
         this.sectorsOptions = getSectors(this.gardenPlots);
         this.individualPaymentsForm.get('sector')?.valueChanges.subscribe((value) => {
             this.updateAvenous()
@@ -176,6 +178,7 @@ export class PaymentsComponent {
             this.closeDetails()
         });
     }
+
     selectShowEditingUtilityPayments() {
         this.showDetails = true;
         this.showEditingUtilityPayments()
@@ -191,6 +194,7 @@ export class PaymentsComponent {
             this.closeDetails()
         });
     }
+
     selectShowAdditionalPayments() {
         this.showDetails = true;
         this.ShowAdditionalPayments()
@@ -206,6 +210,29 @@ export class PaymentsComponent {
             this.closeDetails()
             this.updateAdditionalPayments()
         });
+    }
+
+    openDateDialog(): void {
+        const dialogRef = this.dialog.open(EditDateComponent, {
+            width: '400px',
+            data: {currentDate: this.payment.date}
+        });
+
+        dialogRef.afterClosed().subscribe((selectedDate: Date) => {
+            if (selectedDate) {
+                this.payment.date = selectedDate;
+                this.paymentsService.updateDate(selectedDate)
+            }
+        });
+    }
+
+    addPayments() {
+        this.paymentsService.confirmALLPayments()
+        this.showSuccessMessage()
+    }
+
+    private showSuccessMessage(): void {
+        this._snackBar.open('Pomyślnie dodano opłaty! (tak naprawde to nie)', 'Zamknij',{duration:4000});
     }
 
     closeDetails() {

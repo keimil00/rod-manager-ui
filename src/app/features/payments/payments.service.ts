@@ -61,7 +61,7 @@ export class PaymentsService {
         leaseFees: this.leaseFees,
         utilityFees: this.utilityFees,
         additionalFees: this.additionalFees,
-        date: new Date(2023, 10, 31)
+        date: new Date(2024, 10, 30)
     }
 
     private individualPayments: IndividualPayments[] = [
@@ -475,6 +475,11 @@ export class PaymentsService {
     addAdditionalFee(payment: Fee) {
         this.payments.additionalFees.push(payment)
     }
+    updateDate(date: Date) {
+        this.payments.date = date
+    }
+
+    confirmALLPayments(){}
 
 }
 
