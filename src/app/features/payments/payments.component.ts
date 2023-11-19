@@ -9,6 +9,9 @@ import {PaymentsService} from "./payments.service";
 import {BackendGardenService} from "../list-of-garden-plot/backend-garden.service";
 import {GardenPlot} from "../list-of-garden-plot/garden-plot";
 import {IndividualPaymentsComponent} from "./individual-payments/individual-payments.component";
+import {EditingLeaseFeeComponent} from "./editing-lease-fee/editing-lease-fee.component";
+import {EditingUtilityFeeComponent} from "./editing-utility-fee/editing-utility-fee.component";
+import {EditingAdditionalFeesComponent} from "./editing-additional-fees/editing-additional-fees.component";
 
 
 //TODO na tym ekranie od terminu płatności zrobic przysik zatwierdz z jakaś uwagą ze beda naliczone te koszty co wyzej i nie będzie mozna tego zmienić plus dane z obecnego stanu liczników
@@ -32,7 +35,7 @@ export class PaymentsComponent {
     // @ts-ignore
     payment: Payments
     // @ts-ignore
-    gardenPlots: GardenPlot[]
+    private gardenPlots: GardenPlot[]
 
     individualPaymentsForm: FormGroup;
 
@@ -66,6 +69,10 @@ export class PaymentsComponent {
         this.gardenPlots = this.gardenPlotsDataService.getAllGardenPlots()
     }
 
+    private updateAdditionalPayments() {
+        this.dataAdditionalFees._updateChangeSubscription();
+    }
+
     // TODO backend
     // private initData() {
     //   this.gardenPlotsDataService.getAllGardenPlots().subscribe(
@@ -86,8 +93,7 @@ export class PaymentsComponent {
     //   );
     // }
 
-
-    ngOnInit() {
+     ngOnInit() {
         this.sectorsOptions = getSectors(this.gardenPlots);
         this.individualPaymentsForm.get('sector')?.valueChanges.subscribe((value) => {
             this.updateAvenous()
@@ -98,17 +104,17 @@ export class PaymentsComponent {
         });
     }
 
-    updateAvenous() {
+    private updateAvenous() {
         this.avenuesOptions = getAvenues(this.individualPaymentsForm.get('sector')?.value, this.gardenPlots);
         this.individualPaymentsForm.get('avenue')?.reset()
     }
 
-    updateNumbers() {
+    private updateNumbers() {
         this.numbersOptions = getNumbers(this.individualPaymentsForm.get('sector')?.value, this.individualPaymentsForm.get('avenue')?.value, this.gardenPlots);
         this.individualPaymentsForm.get('number')?.reset()
     }
 
-    errorMessages = {
+    private errorMessages = {
         sector: [
             {type: 'required', message: 'Proszę podać sektor'},
         ],
@@ -144,7 +150,7 @@ export class PaymentsComponent {
         }
     }
 
-    showDetailsDialog(individualPayments: IndividualPayments | null, address: string) {
+    private showDetailsDialog(individualPayments: IndividualPayments | null, address: string) {
         const dialogRef = this.dialog.open(IndividualPaymentsComponent, {
             width: '4000px',
             data: {payments: individualPayments, address: address},
@@ -152,6 +158,53 @@ export class PaymentsComponent {
 
         dialogRef.afterClosed().subscribe(() => {
             this.closeDetails()
+        });
+    }
+
+    selectShowEditingLeasePayments() {
+        this.showDetails = true;
+        this.showEditingLeasePayments()
+    }
+
+    private showEditingLeasePayments() {
+        const dialogRef = this.dialog.open(EditingLeaseFeeComponent, {
+            width: '4000px',
+            data: {leaseFees: this.payment.leaseFees},
+        });
+
+        dialogRef.afterClosed().subscribe(() => {
+            this.closeDetails()
+        });
+    }
+    selectShowEditingUtilityPayments() {
+        this.showDetails = true;
+        this.showEditingUtilityPayments()
+    }
+
+    private showEditingUtilityPayments() {
+        const dialogRef = this.dialog.open(EditingUtilityFeeComponent, {
+            width: '4000px',
+            data: {utilityFees: this.payment.utilityFees},
+        });
+
+        dialogRef.afterClosed().subscribe(() => {
+            this.closeDetails()
+        });
+    }
+    selectShowAdditionalPayments() {
+        this.showDetails = true;
+        this.ShowAdditionalPayments()
+    }
+
+    private ShowAdditionalPayments() {
+        const dialogRef = this.dialog.open(EditingAdditionalFeesComponent, {
+            width: '4000px',
+            data: {payments: this.payment.additionalFees},
+        });
+
+        dialogRef.afterClosed().subscribe(() => {
+            this.closeDetails()
+            this.updateAdditionalPayments()
         });
     }
 

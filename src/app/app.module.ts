@@ -72,6 +72,11 @@ import { EditWorkerComponent } from './features/garden-info/workers-list/editOrA
 import { PaymentsComponent } from './features/payments/payments.component';
 import { IndividualPaymentsComponent } from './features/payments/individual-payments/individual-payments.component';
 import { AddIndividualPaymentComponent } from './features/payments/individual-payments/add-individual-payment/add-individual-payment.component';
+import { EditingLeaseFeeComponent } from './features/payments/editing-lease-fee/editing-lease-fee.component';
+import { EditingUtilityFeeComponent } from './features/payments/editing-utility-fee/editing-utility-fee.component';
+import { EditingAdditionalFeesComponent } from './features/payments/editing-additional-fees/editing-additional-fees.component';
+import { AddAdditionalFeesComponent } from './features/payments/editing-additional-fees/add-additional-fees/add-additional-fees.component';
+import { EditingSingleAdditionalFeeComponent } from './features/payments/editing-additional-fees/editing-single-additional-fee/editing-single-additional-fee.component';
 
 @NgModule({
   declarations: [
@@ -107,7 +112,12 @@ import { AddIndividualPaymentComponent } from './features/payments/individual-pa
     EditWorkerComponent,
     PaymentsComponent,
     IndividualPaymentsComponent,
-    AddIndividualPaymentComponent
+    AddIndividualPaymentComponent,
+    EditingLeaseFeeComponent,
+    EditingUtilityFeeComponent,
+    EditingAdditionalFeesComponent,
+    AddAdditionalFeesComponent,
+    EditingSingleAdditionalFeeComponent
   ],
   imports: [
     BrowserModule,

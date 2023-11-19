@@ -13,11 +13,9 @@ export class AddIndividualPaymentComponent {
     @Input() address: string | undefined;
     @Output() closeDialog = new EventEmitter<void>();
 
-
     addIndividualPaymentForm: FormGroup;
 
-
-    errorMessages = {
+    private errorMessages = {
         name: [
             {type: 'required', message: 'Proszę nazwe'},
         ],
@@ -27,7 +25,7 @@ export class AddIndividualPaymentComponent {
         ],
     };
 
-    constructor(formBuilder: FormBuilder, private paymentsService: PaymentsService) {
+    constructor(private formBuilder: FormBuilder, private paymentsService: PaymentsService) {
         this.addIndividualPaymentForm = formBuilder.group({
             name: ['', [
                 Validators.required,

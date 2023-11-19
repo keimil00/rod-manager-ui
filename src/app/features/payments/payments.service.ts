@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Fee, IndividualPayment, IndividualPayments, Payments, TypeOfFee} from "./payments";
 import {HttpClient} from "@angular/common/http";
 import {GardenPlot} from "../list-of-garden-plot/garden-plot";
+import {EditingLeaseFeeComponent} from "./editing-lease-fee/editing-lease-fee.component";
 
 @Injectable({
     providedIn: 'root'
@@ -451,6 +452,28 @@ export class PaymentsService {
                 this.individualPayments[foundUserIndex].paymentsList.splice(foundPaymentIndex, 1);
             }
         }
+    }
+
+    editLeaseFee(payments: Fee[]) {
+        this.payments.leaseFees = payments;
+    }
+
+    editUtilityFee(payments: Fee[]) {
+        this.payments.utilityFees = payments;
+    }
+
+    editAdditionalFee(payment: Fee | undefined) {
+        // @ts-ignore
+        const foundIndex = this.payments.additionalFees.findIndex(curentPayment => curentPayment.feeID === payment.feeID);
+        if (foundIndex !== -1) {
+            if (payment) {
+                this.payments.additionalFees[foundIndex] = payment;
+            }
+        }
+    }
+
+    addAdditionalFee(payment: Fee) {
+        this.payments.additionalFees.push(payment)
     }
 
 }

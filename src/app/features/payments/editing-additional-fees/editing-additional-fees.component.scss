@@ -81,7 +81,7 @@ tr::after {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 0.5px;
+  height: 1px;
   background-color: #ddd;
 }
 
@@ -89,11 +89,20 @@ tr::after {
   .details-card {
     width: 100%;
   }
-
-  tr::after {
-    height: 1px; /* Wysokość paska */
-    background-color: #ccc; /* Kolor paska */
+  .tabel-card{
+    width: 98%;
   }
 }
-
+@media only screen and (max-width: 450px) {
+  .details-card {
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .tabel-card{
+    width: 99%;
+    margin: 0;
+    padding: 0;
+  }
+}
 

@@ -31,7 +31,7 @@
               <tr mat-row *matRowDef="let gardenPlot; columns: displayedColumns"></tr>
             </table>
           </mat-card-content>
-          <button mat-fab color="primary" aria-label="Edytuj" class="editButton">
+          <button mat-fab color="primary" aria-label="Edytuj" class="editButton" (click)="selectShowEditingLeasePayments()">
             <mat-icon>edit</mat-icon>
           </button>
         </mat-card>
@@ -61,7 +61,7 @@
               <tr mat-row *matRowDef="let gardenPlot; columns: displayedColumns"></tr>
             </table>
           </mat-card-content>
-          <button mat-fab color="primary" aria-label="Edytuj" class="editButton">
+          <button mat-fab color="primary" aria-label="Edytuj" class="editButton" (click)="selectShowEditingUtilityPayments()">
             <mat-icon>edit</mat-icon>
           </button>
         </mat-card>
@@ -90,7 +90,7 @@
               <tr mat-row *matRowDef="let gardenPlot; columns: displayedColumns"></tr>
             </table>
           </mat-card-content>
-          <button mat-fab color="primary" aria-label="Edytuj" class="editButton">
+          <button mat-fab color="primary" aria-label="Edytuj" class="editButton" (click)="selectShowAdditionalPayments()">
             <mat-icon>edit</mat-icon>
           </button>
         </mat-card>

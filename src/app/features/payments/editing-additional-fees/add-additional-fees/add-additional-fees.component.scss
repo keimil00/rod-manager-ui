@@ -1,4 +1,4 @@
-@import '../../../../styles';
+@import '../../../../../styles';
 
 .details-card {
   position: fixed;
@@ -20,7 +20,7 @@
 
 $background: #EEE;
 
-.tabel-card {
+.form-card {
   width: 100%;
   align-self: center;
   -webkit-box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
@@ -33,9 +33,6 @@ $background: #EEE;
   background-color: $background;
 }
 
-.mainTable {
-  background-color: $background;
-}
 
 .center-item {
   flex: 1;
@@ -67,33 +64,14 @@ $background: #EEE;
   margin-top: 16px;
 }
 
-.deleteButton {
-  scale: 0.5;
-}
-
-tr {
-  position: relative;
-}
-
-tr::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 0.5px;
-  background-color: #ddd;
+.full-width {
+  flex: 1;
+  margin-right: 10px;
+  width: 100%;
 }
 
 @media only screen and (max-width: 750px) {
   .details-card {
     width: 100%;
   }
-
-  tr::after {
-    height: 1px; /* Wysokość paska */
-    background-color: #ccc; /* Kolor paska */
-  }
 }
-
-

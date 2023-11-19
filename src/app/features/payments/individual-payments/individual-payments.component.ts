@@ -17,7 +17,7 @@ export class IndividualPaymentsComponent {
 
     isShowAddPayment = false
 
-    userID: string
+    readonly userID: string
 
     constructor(private paymentsService: PaymentsService,
                 public dialogRef: MatDialogRef<IndividualPaymentsComponent>,
