@@ -1,122 +1,152 @@
-import {Component, OnInit} from '@angular/core';
-import {GardenPlot} from './garden-plot';
+import {ChangeDetectorRef, Component, ViewChild} from '@angular/core';
+import {GardenPlot, GardenPlotBackend} from './garden-plot';
 import {MatTableDataSource} from "@angular/material/table";
 import {Profile} from "../Profile";
-import {gardenPlots} from "./GardenService";
-import {profiles} from "../list-of-users/ProfilesService";
 import {MatDialog} from "@angular/material/dialog";
 import {GardenPlotDetailsComponent} from "./garden-plot-details/garden-plot-details.component";
 import {GardenPlotAddLeaseholderComponent} from "./garden-plot-add-leaseholder/garden-plot-add-leaseholder.component";
 import {GardenPlotListAddGardenComponent} from "./garden-plot-list-add-garden/garden-plot-list-add-garden.component";
+import {MatPaginator} from "@angular/material/paginator";
+import {BackendGardenService} from "./backend-garden.service";
+import {Page} from "../../shared/paginator/page.model";
 
 @Component({
-  selector: 'app-list-of-garden-plot',
-  templateUrl: './list-of-garden-plot.component.html',
-  styleUrls: ['./list-of-garden-plot.component.scss']
+    selector: 'app-list-of-garden-plot',
+    templateUrl: './list-of-garden-plot.component.html',
+    styleUrls: ['./list-of-garden-plot.component.scss']
 })
 export class ListOfGardenPlotComponent {
-  displayedColumns: string[] = ['sector', 'avenue', 'number', 'area', 'leaseholder', 'add', 'status', 'info'];
-  dataSource: MatTableDataSource<GardenPlot>;
+    displayedColumns: string[] = ['sector', 'avenue', 'number', 'area', 'leaseholder', 'add', 'status', 'info'];
 
-  showDetails: boolean = false;
-  showAddingLeaseHolder: boolean = false;
-  showAddingGardenPlot: boolean = false;
+    dataSource = new MatTableDataSource<GardenPlotBackend>();
 
-  constructor(private dialog: MatDialog) {
-    this.dataSource = new MatTableDataSource(gardenPlots);
-    this.sortData()
-  }
+    showDetails: boolean = false;
+    showAddingLeaseHolder: boolean = false;
+    showAddingGardenPlot: boolean = false;
 
-  sortData() {
-    gardenPlots.sort((a, b) => {
-      // @ts-ignore
-      const sectorComparison = a.sector.localeCompare(b.sector);
-      if (sectorComparison !== 0) {
-        return sectorComparison;
-      }
+    totalGardenCount: number = 0;
+    defoultpageSize = 10;
+    currentPageIndex = 1;
+    currentPageSize = this.defoultpageSize;
 
-      // @ts-ignore
-      const avenueComparison = a.avenue.localeCompare(b.avenue);
-      if (avenueComparison !== 0) {
-        return avenueComparison;
-      }
-      return a.number - b.number;
-    });
-    this.dataSource.data = gardenPlots;
-  }
+    @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  getLeaseholderName(leaseholderID: string): any {
-    const leaseholder = profiles.find(profile => profile.id === leaseholderID);
-    if (leaseholder) {
-      return `${leaseholder.firstName} ${leaseholder.lastName}`;
+    constructor(private dialog: MatDialog, private gardenPlotsDataService: BackendGardenService, private changeDetectorRef: ChangeDetectorRef) {
+        this.sortData()
+
+        this.initData();
+        this.dataSource.paginator = this.paginator;
     }
-    return null;
-  }
 
-  selectDetails(gardenPlot: GardenPlot) {
-    const leaseholder = this.findLeaseholderById(gardenPlot.leaseholderID) || undefined;
-    this.showDetails = true;
-    this.showDetailsDialog(gardenPlot, leaseholder)
-  }
+    private initData() {
+        this.loadProfiles(this.currentPageIndex, this.defoultpageSize)
+    }
 
-  showDetailsDialog(gardenPlot: GardenPlot, leaseholder: Profile | undefined) {
-    const dialogRef = this.dialog.open(GardenPlotDetailsComponent, {
-      width: '4000px',
-      data: {gardenPlot, leaseholder},
-    });
+    loadProfiles(index: number, size: number): void {
+        this.gardenPlotsDataService.getGardenPlots2(this.currentPageIndex, size).subscribe((page: Page<GardenPlotBackend>) => {
+            this.totalGardenCount = page.count;
+            this.dataSource = new MatTableDataSource<GardenPlotBackend>(page.results);
+        });
+    }
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.closeDetails()
-      this.sortData()
-    });
-  }
+    fetchData(pageIndex: number, pageSize: number): void {
+        this.currentPageIndex = pageIndex;
+        this.currentPageSize = pageSize;
 
-  selectAddingLeaseHolder(gardenPlot: GardenPlot) {
-    this.showAddingLeaseHolder = true;
-    this.showAddingLeaseHolderDialog(gardenPlot)
-  }
+        this.gardenPlotsDataService.getGardenPlots2(pageIndex, pageSize).subscribe(
+            data => {
+                this.totalGardenCount = data.count;
+                this.dataSource = new MatTableDataSource<GardenPlotBackend>(data.results);
+            },
+            error => {
+                console.error(error);
+            },
+            () => {
+                this.changeDetectorRef.detectChanges();
+            }
+        );
+    }
 
-  showAddingLeaseHolderDialog(gardenPlot: GardenPlot) {
-    const dialogRef = this.dialog.open(GardenPlotAddLeaseholderComponent, {
-      width: '4000px',
-      data: {gardenPlot},
-    });
+    updateData() {//to backend
+        this.gardenPlotsDataService.sortData()
+        this.gardenPlotsDataService.getGardenPlots2(this.currentPageIndex, this.currentPageSize).subscribe(
+            data => {
+                this.totalGardenCount = data.count;
+                this.dataSource = new MatTableDataSource<GardenPlotBackend>(data.results);
+            },
+            error => {
+                console.error(error);
+            },
+            () => {
+                this.changeDetectorRef.detectChanges();
+            }
+        );
+    }
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.closeAddingLeaseHolder()
-      this.sortData()
-    });
-  }
+    sortData() {
+        this.gardenPlotsDataService.sortData()
+    }
 
-  selectAddingGardenPlot() {
-    this.showAddingGardenPlot = true;
-    this.showAddingGardenPlotDialog()
-  }
+    selectDetails(gardenPlot: GardenPlot) {
+        const leaseholder = this.gardenPlotsDataService.getLeaseholder(gardenPlot.gardenPlotID)
+        this.showDetails = true;
+        this.showDetailsDialog(gardenPlot, leaseholder)
+    }
 
-  showAddingGardenPlotDialog() {
-    const dialogRef = this.dialog.open(GardenPlotListAddGardenComponent, {
-      width: '4000px',
-    });
-    dialogRef.afterClosed().subscribe(() => {
-      this.closeAddingGardenPlot()
-      this.sortData()
-    });
-  }
+    showDetailsDialog(gardenPlot: GardenPlot, leaseholder: Profile | undefined) {
+        const dialogRef = this.dialog.open(GardenPlotDetailsComponent, {
+            width: '4000px',
+            data: {gardenPlot, leaseholder},
+        });
 
-  findLeaseholderById(id: string | null): Profile | null {
-    return profiles.find(profile => profile.id === id) || null;
-  }
+        dialogRef.afterClosed().subscribe(() => {
+            this.closeDetails()
+            this.updateData()
+        });
+    }
 
-  closeDetails() {
-    this.showDetails = false;
-  }
+    selectAddingLeaseHolder(gardenPlot: GardenPlotBackend) {
+        this.showAddingLeaseHolder = true;
+        this.showAddingLeaseHolderDialog(gardenPlot)
+    }
 
-  closeAddingLeaseHolder() {
-    this.showAddingLeaseHolder = false;
-  }
+    showAddingLeaseHolderDialog(gardenPlot: GardenPlotBackend) {
+        const dialogRef = this.dialog.open(GardenPlotAddLeaseholderComponent, {
+            width: '4000px',
+            data: {gardenPlot},
+        });
 
-  closeAddingGardenPlot() {
-    this.showAddingGardenPlot = false;
-  }
+        dialogRef.afterClosed().subscribe(() => {
+            this.closeAddingLeaseHolder()
+            this.updateData()
+        });
+    }
+
+    selectAddingGardenPlot() {
+        this.showAddingGardenPlot = true;
+        this.showAddingGardenPlotDialog()
+    }
+
+    showAddingGardenPlotDialog() {
+        const dialogRef = this.dialog.open(GardenPlotListAddGardenComponent, {
+            width: '4000px',
+        });
+        dialogRef.afterClosed().subscribe(() => {
+            this.closeAddingGardenPlot()
+            this.updateData()
+        });
+    }
+
+    closeDetails() {
+        this.showDetails = false;
+    }
+
+    closeAddingLeaseHolder() {
+        this.showAddingLeaseHolder = false;
+    }
+
+    closeAddingGardenPlot() {
+        this.showAddingGardenPlot = false;
+    }
 }
 

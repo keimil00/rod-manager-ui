@@ -57,7 +57,7 @@
                 </tr>
                 <tr>
                   <td>Termin płatności</td>
-                  <td>{{ leaseholder?.paymentDueDate }}</td>
+                  <td>{{ leaseholder?.paymentDueDate | date:'dd.MM.yyyy'}}</td>
                 </tr>
               </table>
             </mat-card-content>
@@ -104,7 +104,7 @@
                     <mat-form-field class="full-width">
                       <mat-label>Data</mat-label>
                       <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="date" required>
-                      <mat-hint>MM/DD/YYYY</mat-hint>
+                      <mat-hint>DD/MM/YYYY</mat-hint>
                       <mat-error *ngFor="let error of validationErrors('date')">
                         {{ error.message }}
                       </mat-error>

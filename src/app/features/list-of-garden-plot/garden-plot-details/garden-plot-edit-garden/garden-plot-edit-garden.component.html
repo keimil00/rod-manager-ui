@@ -1,83 +1,88 @@
 <mat-card-content>
-  <mat-card class="form-card">
-    <mat-card-content>
-      <form class [formGroup]="editGardenForm">
-        <div>
-          <mat-form-field class="full-width">
-            <mat-label>Sektor</mat-label>
-            <input matInput type="text" placeholder="Sektor" formControlName="sector" [matAutocomplete]="auto1">
-            <mat-autocomplete #auto1="matAutocomplete">
-              <mat-option *ngFor="let option of sectorsOptions" [value]="option">
-                {{ option}}
-              </mat-option>
-            </mat-autocomplete>
-            <mat-error *ngFor="let error of validationErrors('sector')">
-              {{ error.message }}
-            </mat-error>
-          </mat-form-field>
-        </div>
-        <div>
-          <mat-form-field class="full-width">
-            <mat-label>Aleja</mat-label>
-            <input matInput type="text" placeholder="Aleja" formControlName="avenue" [matAutocomplete]="auto2">
-            <mat-autocomplete #auto2="matAutocomplete">
-              <mat-option *ngFor="let option of avenuesOptions" [value]="option">
-                {{ option}}
-              </mat-option>
-            </mat-autocomplete>
-            <mat-error *ngFor="let error of validationErrors('avenue')">
-              {{ error.message }}
-            </mat-error>
-          </mat-form-field>
-        </div>
-        <div>
-          <mat-form-field class="full-width">
-            <mat-label>Numer</mat-label>
-            <input matInput type="number" placeholder="Numer" formControlName="number">
-            <mat-error *ngFor="let error of validationErrors('number')">
-              {{ error.message }}
-            </mat-error>
-          </mat-form-field>
-        </div>
-        <div>
-          <mat-form-field class="full-width">
-            <mat-label>Powierzchnia m²</mat-label>
-            <input matInput type="number" placeholder="Powierzchnia m²" formControlName="area">
-            <mat-error *ngFor="let error of validationErrors('area')">
-              {{ error.message }}
-            </mat-error>
-          </mat-form-field>
-        </div>
-        <div>
-          <mat-form-field class="full-width">
-            <mat-label>Dzierżawca</mat-label>
-            <input matInput placeholder="Dzierżawca" formControlName="leaseholderEmail" [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete">
-              <mat-option *ngFor="let option of leaseHolderOptions" [value]="option.email">
-                {{ option.fullName }} (Email: {{ option.email }})
-              </mat-option>
-            </mat-autocomplete>
-            <mat-error *ngFor="let error of validationErrors('leaseholderEmail')">
-              {{ error.message }}
-            </mat-error>
-          </mat-form-field>
-        </div>
-        <div>
-          <mat-form-field class="full-width">
-            <mat-label>Status</mat-label>
-            <mat-select formControlName="status">
-              <mat-option *ngFor="let status of Object.values(PlotStatus)" [value]="status">{{ status }}</mat-option>
-            </mat-select>
-            <mat-error *ngFor="let error of validationErrors('status')">
-              {{ error.message }}
-            </mat-error>
-          </mat-form-field>
-        </div>  <div class="center-button">
-        <app-text-button type="submit" [text]="'Edytuj działkę'" [color]="'accent'"
-                         (click)="editGardenPlot()"></app-text-button>
-      </div>
-      </form>
-    </mat-card-content>
-  </mat-card>
+    <mat-card class="form-card">
+        <mat-card-content>
+            <form class [formGroup]="editGardenForm">
+                <div>
+                    <mat-form-field class="full-width">
+                        <mat-label>Sektor</mat-label>
+                        <input matInput type="text" placeholder="Sektor" formControlName="sector"
+                               [matAutocomplete]="auto1">
+                        <mat-autocomplete #auto1="matAutocomplete">
+                            <mat-option *ngFor="let option of sectorsOptions" [value]="option">
+                                {{ option}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-error *ngFor="let error of validationErrors('sector')">
+                            {{ error.message }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field class="full-width">
+                        <mat-label>Aleja</mat-label>
+                        <input matInput type="text" placeholder="Aleja" formControlName="avenue"
+                               [matAutocomplete]="auto2">
+                        <mat-autocomplete #auto2="matAutocomplete">
+                            <mat-option *ngFor="let option of avenuesOptions" [value]="option">
+                                {{ option}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-error *ngFor="let error of validationErrors('avenue')">
+                            {{ error.message }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field class="full-width">
+                        <mat-label>Numer</mat-label>
+                        <input matInput type="number" placeholder="Numer" formControlName="number">
+                        <mat-error *ngFor="let error of validationErrors('number')">
+                            {{ error.message }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field class="full-width">
+                        <mat-label>Powierzchnia m²</mat-label>
+                        <input matInput type="number" placeholder="Powierzchnia m²" formControlName="area">
+                        <mat-error *ngFor="let error of validationErrors('area')">
+                            {{ error.message }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field class="full-width">
+                        <mat-label>Dzierżawca</mat-label>
+                        <input matInput placeholder="Dzierżawca" formControlName="leaseholderEmail"
+                               [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete">
+                            <mat-option *ngFor="let option of leaseHolderOptions" [value]="option.email">
+                                {{ option.fullName }} (Email: {{ option.email }})
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-error *ngFor="let error of validationErrors('leaseholderEmail')">
+                            {{ error.message }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field class="full-width">
+                        <mat-label>Status</mat-label>
+                        <mat-select formControlName="status">
+                            <mat-option *ngFor="let gardenStatus of Object.values(PlotStatus)"
+                                        [value]="gardenStatus">{{ gardenStatus }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngFor="let error of validationErrors('status')">
+                            {{ error.message }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="center-button">
+                    <app-text-button type="submit" [text]="'Edytuj działkę'" [color]="'accent'"
+                                     (click)="editGardenPlot()"></app-text-button>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
 
 </mat-card-content>

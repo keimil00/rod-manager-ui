@@ -1,0 +1,44 @@
+<mat-card class="details-card">
+    <mat-card-header>
+        <div class="center-item">
+            <h2 class="title">Dodawanie indywidualnej opłaty</h2>
+            <h2 class="smallTitle" [textContent]="'Adres działki: '+address"></h2>
+        </div>
+        <button mat-icon-button class="close-button" (click)="closeDialog.emit()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-card-header>
+    <mat-card-content>
+
+        <form class [formGroup]="addIndividualPaymentForm">
+            <mat-card class="form-card">
+                <mat-card-header>
+                </mat-card-header>
+                <mat-card-content>
+                    <div>
+                        <mat-form-field class="full-width">
+                            <mat-label>Nazwa</mat-label>
+                            <input matInput type="text" placeholder="Nazwa" formControlName="name">
+                            <mat-error *ngFor="let error of validationErrors('name')">
+                                {{ error.message }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field class="full-width">
+                            <mat-label>Kwota</mat-label>
+                            <input matInput type="number" placeholder="Kwota" formControlName="value">
+                            <mat-error *ngFor="let error of validationErrors('value')">
+                                {{ error.message }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <div class="center-button">
+                <app-text-button type="submit" aria-label="Dodaj" [text]="'Dodaj'" [color]="'primary'"
+                                 (click)="addPayment()"></app-text-button>
+            </div>
+        </form>
+    </mat-card-content>
+</mat-card>

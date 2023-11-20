@@ -12,9 +12,10 @@
     <button mat-button>Dostępne działki</button>
     <span>/</span>
     <button mat-button>Kalendarz</button>
-    <div *appHasRole="[Role.GARDENER]">
+<!--    TODO zmiana bo to do testu-->
+    <div *appHasRole="[Role.GARDENER, Role.ADMIN]">
       <span>/</span>
-      <button mat-button>Moja działka</button>
+      <button mat-button (click)="navigate('my-garden-plot-info')">Moja działka</button>
     </div>
     <div *ngIf="isLoggedIn()">
       <span>/</span>
@@ -45,7 +46,7 @@
         <mat-divider></mat-divider>
       </div>
       <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
-        <button mat-menu-item class="button-menu">Opłaty</button>
+        <button mat-menu-item class="button-menu" (click)="navigate('payments')">Opłaty</button>
         <mat-divider></mat-divider>
       </div>
       <div *appHasRole="[Role.TECHNICAL_EMPLOYEE, Role.MANAGER, Role.ADMIN]">
@@ -97,7 +98,7 @@
         <mat-divider></mat-divider>
       </div>
       <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
-        <button mat-menu-item class="button-menu">Opłaty</button>
+        <button mat-menu-item class="button-menu" (click)="navigate('payments')">Opłaty</button>
         <mat-divider></mat-divider>
       </div>
       <div *appHasRole="[Role.TECHNICAL_EMPLOYEE, Role.MANAGER, Role.ADMIN]">

@@ -1,13 +1,9 @@
 import {Component} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
-import {GardenPlotDetailsComponent} from "../../list-of-garden-plot/garden-plot-details/garden-plot-details.component";
-import {
-  GardenPlotListAddGardenComponent
-} from "../../list-of-garden-plot/garden-plot-list-add-garden/garden-plot-list-add-garden.component";
 import {Employer} from "../employer.model";
-import {employers} from "../garden-info.component";
 import {EditWorkerComponent} from "./editOrAdd-worker/edit-worker.component";
+import {GardenInfoService} from "../garden-info.service";
 
 @Component({
   selector: 'app-workers-list',
@@ -17,17 +13,21 @@ import {EditWorkerComponent} from "./editOrAdd-worker/edit-worker.component";
 export class WorkersListComponent {
   displayedColumns: string[] = ['position', 'name', 'phoneNumber', 'email', 'edit'];
 
+  // @ts-ignore
   dataSource: MatTableDataSource<Employer>;
   showEdit: boolean = false;
   showAddingWorker: boolean = false;
 
-  constructor(private dialog: MatDialog) {
-    this.dataSource = new MatTableDataSource(employers);
-    this.setData()
+  constructor(private dialog: MatDialog,private gardenInfoService: GardenInfoService) {
+    this.initData()
   }
 
-  setData() {
-    this.dataSource.data = employers;
+  initData(){
+    this.dataSource = new MatTableDataSource(this.gardenInfoService.getEmployers());
+  }
+
+  updateData() {
+    this.dataSource._updateChangeSubscription()
   }
 
   selectEdit(employer: Employer) {
@@ -43,7 +43,7 @@ export class WorkersListComponent {
     });
     dialogRef.afterClosed().subscribe(() => {
       this.closeEditWorker()
-      this.setData()
+      this.updateData()
     });
   }
 
@@ -59,7 +59,7 @@ export class WorkersListComponent {
     });
     dialogRef.afterClosed().subscribe(() => {
       this.closeAddingWorker()
-      this.setData()
+      this.updateData()
     });
   }
 

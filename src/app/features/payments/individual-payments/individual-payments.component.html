@@ -1,0 +1,49 @@
+<div class="page-container">
+  <mat-card class="details-card" *ngIf="!isShowAddPayment">
+    <mat-card-header>
+      <div class="center-item">
+        <h2 class="title">Opłaty indywidualne</h2>
+        <h2 class="smallTitle" [textContent]="'Adres działki: '+address"></h2>
+      </div>
+      <button mat-icon-button class="close-button" (click)="closeDialog()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-card class="tabel-card">
+        <mat-card-header>
+        </mat-card-header>
+        <mat-card-content>
+          <table mat-table [dataSource]="dataSource" class="mainTable">
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Nazwa</th>
+              <td mat-cell *matCellDef="let fee">{{ fee.name }}</td>
+            </ng-container>
+            <ng-container matColumnDef="value">
+              <th mat-header-cell *matHeaderCellDef>Kwota</th>
+              <td mat-cell *matCellDef="let fee" [textContent]="fee.value+' zł'"></td>
+            </ng-container>
+            <ng-container matColumnDef="delete">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let fee">
+                <button mat-fab color="primary" aria-label="Usuń" class="deleteButton" (click)="delete(fee)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let gardenPlot; columns: displayedColumns"></tr>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </mat-card-content>
+    <div class="center-button">
+      <app-text-button type="submit" class="add-button" aria-label="Dodaj indywidualną opłatę"
+                       [text]="'Dodaj indywidualną opłatę'" [color]="'primary'"
+                       (click)="showAddPayment()"></app-text-button>
+    </div>
+  </mat-card>
+  <div *ngIf="isShowAddPayment">
+    <app-add-individual-payment [userID]="userID" [address]="address" (closeDialog)="closeDialog()"></app-add-individual-payment>
+  </div>
+</div>

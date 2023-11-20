@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>Zgłoś problem techniczny</h1>
+<form class [formGroup]="addTechnicalIsueForm">
+<div mat-dialog-content>
+    <mat-form-field class="full-width">
+        <input matInput placeholder="Tytuł" formControlName="title">
+        <mat-error *ngFor="let error of validationErrors('title')">
+            {{ error.message }}
+        </mat-error>
+        <mat-label>Tytuł</mat-label>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+        <textarea matInput placeholder="Opis problemu" rows="5" formControlName="description"></textarea>
+        <mat-label>Opis problemu</mat-label>
+        <mat-error *ngFor="let error of validationErrors('description')">
+            {{ error.message }}
+        </mat-error>
+    </mat-form-field>
+</div>
+<mat-dialog-actions align="center" class="mat-actions col-container">
+    <app-text-button mat-dialog-close class="cancel-button" className="action-button" [text]="'Anuluj'"
+                     [color]="'accent'" ></app-text-button>
+    <app-text-button class="submit-button" type="submit" className="action-button"
+                     [text]="'Zapisz'" [color]="'primary'" (click)="addPayment()"></app-text-button>
+</mat-dialog-actions>
+</form>
