@@ -8,7 +8,7 @@
 
     <div class="row-item chip-section">
       <mat-chip-listbox multiple  aria-label="Tag selection">
-        <mat-chip-option *ngFor="let tag of defaultTags"
+        <mat-chip-option *ngFor="let tag of displayedTags"
                          [selected]="tag.selected"
                          (click)="filterPostsByTags(tag)">{{ tag.name }}</mat-chip-option>
       </mat-chip-listbox>
@@ -33,9 +33,8 @@
       <app-paginator
         #paginator
         [loadDataFunction]="fetchData.bind(this)"
-        (dataLoaded)="onNewDataLoaded($event)"
         [totalItemsCount]="this.totalPostsCount"
-        [pageSize]="this.pageSize"
+        [pageSize]="this.defaultPageSize"
       ></app-paginator>
     </div>
   </div>

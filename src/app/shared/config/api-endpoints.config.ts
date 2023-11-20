@@ -5,12 +5,18 @@ export const API_ENDPOINTS = {
     loginGoogle: '/api/login/google/',
     refreshToken: '/api/token/refresh/',
     register: '/api/register/',
+    getAnnouncements: '/api/announcements/',
+    getTags: '/api/announcements/tag/',
+  },
+
+  mixed: {
+    logout: '/api/logout/',
   },
 
   // Authenticated endpoints (require authentication)
   authenticated: {
-    logout: '/api/logout/',
-    tags: '/api/announcements/tag/', // TODO: think how to handle partly public endpoints
+    createTag: '/api/announcements/tag/', // TODO: think how to handle partly public endpoints
+    createAnnouncement: '/api/announcements/',
     // Add more authenticated endpoints as needed
   },
 };

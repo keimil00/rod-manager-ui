@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {MatPaginatorIntl} from "@angular/material/paginator";
+import {MatPaginator, MatPaginatorIntl} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-paginator',
@@ -11,12 +11,11 @@ export class PaginatorComponent extends MatPaginatorIntl {
   override nextPageLabel     = 'Następna strona';
   override previousPageLabel = 'Poprzednia strona';
   override firstPageLabel    = 'Pierwsza strona';
-  override lastPageLabel     = 'Osatnia strona';
+  override lastPageLabel     = 'Ostatnia strona';
 
-  @ViewChild('paginator') paginator!: any;
+  @ViewChild('paginator') paginator!: MatPaginator;
 
-  @Output() dataLoaded = new EventEmitter<any[]>();
-  @Input() loadDataFunction!: (pageIndex: number, pageSize: number) => any[];
+  @Input() loadDataFunction!: (pageIndex: number, pageSize: number) => void;
   @Input() totalItemsCount!: number;
   @Input() pageSize!: number;
   override getRangeLabel = (page: number, pageSize: number, length: number) => {
@@ -33,8 +32,7 @@ export class PaginatorComponent extends MatPaginatorIntl {
 
   onPageChange(event: any) {
     this.pageSize = event.pageSize;
-    const data = this.loadDataFunction(event.pageIndex, event.pageSize);
-    this.dataLoaded.emit(data);
+    this.loadDataFunction(event.pageIndex + 1, event.pageSize);
   }
 
   reset() {
