@@ -10,7 +10,7 @@
     </div>
   </mat-card-header>
   <mat-card-content>
-    <div [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(post.content)"></div>
+    <div [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(post.body)"></div>
   </mat-card-content>
 </mat-card>
 

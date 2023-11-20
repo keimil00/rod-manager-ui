@@ -1,83 +1,55 @@
 import {Injectable} from '@angular/core';
 import {Post, TagDto} from "./post/post.model";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {API_ENDPOINTS} from "../../shared/config/api-endpoints.config";
+import {Observable} from "rxjs";
+import {Page} from "../../shared/paginator/page.model";
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class PostDataService {
-    posts: Post[] = [
-        {title: 'Tytuł 1', content: 'Treść 1', tags: ['Ogłoszenia', 'Wydarzenia']},
-        {title: 'Tytuł 2', content: 'Treść 2', tags: ['Ogłoszenia', 'Wydarzenia']},
-        {title: 'Tytuł 3', content: 'Treść 3', tags: ['Ogłoszenia', 'Organizacja']},
-        {title: 'Tytuł 4', content: 'Treść 4', tags: ['Środowisko', 'Wydarzenia']},
-        {title: 'Tytuł 5', content: 'Treść 5', tags: ['Ogłoszenia', 'Wydarzenia']},
-        {title: 'Tytuł 6', content: 'Treść 6', tags: ['Środowisko', 'Ciekawostki']},
-        {title: 'Tytuł 7', content: 'Treść 7', tags: ['Ciekawostki', 'Wydarzenia']},
-        {title: 'Tytuł 8', content: 'Treść 8', tags: ['Ogłoszenia', 'Wydarzenia']},
-        {title: 'Tytuł 9', content: 'Treść 9', tags: ['Organizacja', 'Wydarzenia']},
-        {title: 'Tytuł 10', content: 'Treść 10', tags: ['Ogłoszenia', 'Środowisko']},
-    ];
+  constructor(private httpClient: HttpClient) {
+  }
 
-    tags: string[] = ['Ogłoszenia', 'Wydarzenia', 'Środowisko', 'Ciekawostki', 'Organizacja', 'Inne'];
-
-    loadedPosts: Post[] = this.posts;
-
-    constructor(private httpClient: HttpClient) {
+  fetchPosts(index: number, size: number, tags: string[]): Observable<Page<Post>> {
+    let params: HttpParams;
+    if (tags.length === 0) {
+      params = new HttpParams();
+    } else {
+      params = new HttpParams().set('tags', tags.concat().join(','));
     }
+    params = params.append('page_size', size.toString())
+    params = params.append('page', index.toString());
+    return this.httpClient.get<Page<Post>>(API_ENDPOINTS.authenticated.createAnnouncement, {params}); // TODO: resolve authenticated/public situation
+  }
 
-    getPosts(index: number, size: number): Post[] {
-        return this.loadedPosts.slice(index * size, index * size + size);
-    }
+  savePost(post: Post) {
+    this.httpClient.post<Post>(API_ENDPOINTS.authenticated.createAnnouncement, post).subscribe(
+      {
+        next: data => {
+          console.log(data);
+        },
+        error: error => {
+          console.error(error);
+        }
+      }
+    );
+  }
 
-    getTotalPostsCount(): number {
-        return this.loadedPosts.length;
-    }
+  getTags(): Observable<TagDto[]> {
+    return this.httpClient.get<TagDto[]>(API_ENDPOINTS.public.getTags);
+  }
 
-    filterPostsByTags(selectedTags: string[]) {
-        const postsContainingAllSelectedTags = this.getPostsContainingAllSelectedTags(selectedTags);
-        const postsContainingAnySelectedTags = this.getPostsContainingAnySelectedTags(selectedTags);
-        this.loadedPosts = postsContainingAllSelectedTags.concat(postsContainingAnySelectedTags);
-    }
-
-    private getPostsContainingAllSelectedTags(selectedTags: string[]) {
-        return this.posts.filter(post => selectedTags.every(tag => post.tags.includes(tag)))
-    }
-
-    private getPostsContainingAnySelectedTags(selectedTags: string[]) {
-        return this.posts.filter(post => selectedTags.some(tag => post.tags.includes(tag)))
-    }
-
-    savePost(post: Post) {
-      console.log(post);
-        this.loadedPosts.push(post);
-    }
-
-    getTags(): string[] {
-        this.httpClient.get<TagDto[]>(API_ENDPOINTS.authenticated.tags).subscribe(
-            {
-                next: data => {
-                    this.tags = data.map(tag => tag.name);
-                },
-                error: error => {
-                    console.error(error);
-                }
-            });
-
-        return this.tags;
-    }
-
-    createTag(tag: string) {
-        this.httpClient.post(API_ENDPOINTS.authenticated.tags, {name: tag}).subscribe(
-            {
-                next: data => {
-                    console.log(data);
-                },
-                error: error => {
-                    console.error(error);
-                }
-            });
-        this.tags.push(tag);
-    }
+  createTag(tag: string) {
+    this.httpClient.post(API_ENDPOINTS.authenticated.createTag, {name: tag}).subscribe(
+      {
+        next: data => {
+          console.log(data);
+        },
+        error: error => {
+          console.error(error);
+        }
+      });
+  }
 }

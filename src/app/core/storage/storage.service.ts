@@ -51,6 +51,7 @@ export class StorageService {
   }
 
   getRefreshToken(): string | null {
+    console.log('Getting refresh token' + localStorage.getItem('refresh'));
     return localStorage.getItem('refresh');
   }
 

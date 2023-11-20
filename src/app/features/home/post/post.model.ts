@@ -1,7 +1,9 @@
 export class Post {
+  id!: number;
   title!: string;
-  content!: string;
+  body!: string;
   tags!: string[];
+  date!: Date;
 }
 
 export class Tag {
