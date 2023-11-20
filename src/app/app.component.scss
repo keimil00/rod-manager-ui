@@ -1,3 +1,26 @@
 .rest {
   padding-top: 40px;
 }
+/* Resetowanie marginesów dla body i html */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+/* Stylowanie głównego kontenera (body) */
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Stylowanie głównej treści strony */
+main {
+  flex: 1; /* Główna treść zajmuje całą dostępną przestrzeń */
+}
+
+/* Stylowanie stopki (footer) */
+footer {
+  flex-shrink: 0; /* Zapobieganie zbytniemu kurczeniu stopki */
+}
