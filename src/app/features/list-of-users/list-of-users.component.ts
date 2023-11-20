@@ -1,9 +1,13 @@
-import {Component} from '@angular/core';
-import {MatTableDataSource} from "@angular/material/table";
+import {Component, ViewChild} from '@angular/core';
+import {MatTableDataSource, MatTableDataSourcePaginator} from "@angular/material/table";
 import {Profile} from "../Profile";
 
 import {Router} from "@angular/router";
 import {profiles} from "./ProfilesService";
+import {GardenPlotBackend} from "../list-of-garden-plot/garden-plot";
+import {MatPaginator} from "@angular/material/paginator";
+import {BackendGardenService} from "../list-of-garden-plot/backend-garden.service";
+import {ListOfUsersService} from "./list-of-users.service";
 
 @Component({
   selector: 'app-list-of-users',
@@ -15,8 +19,13 @@ export class ListOfUsersComponent {
 
   dataProfiles: MatTableDataSource<Profile>;
 
-  constructor(private router: Router) {
-    this.dataProfiles = new MatTableDataSource(profiles);
+  profilesLoaded: Profile[] = [];
+  totalGardenCount: number;
+  pageSize = 10;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  constructor(private router: Router, private listOfUsersService: ListOfUsersService) {
     profiles.sort((a, b) => {
 
       const lastNameComparison = a.lastName.localeCompare(b.lastName);
@@ -30,8 +39,31 @@ export class ListOfUsersComponent {
       }
 
       return a.email.localeCompare(b.email);
-    });
+    }
+    );
+    this.initData();
+    this.dataProfiles = new MatTableDataSource(this.profilesLoaded);
+    this.updateData()
+    this.totalGardenCount = this.listOfUsersService.getTotalProfiles();
+    this.dataProfiles.paginator = this.paginator;
   }
+
+  private initData() {
+    this.profilesLoaded = this.listOfUsersService.getProfiles(0, this.pageSize);
+  }
+  fetchData(pageIndex: number, pageSize: number): any[] {
+    return this.listOfUsersService.getProfiles(pageIndex, pageSize);
+  }
+
+  onNewDataLoaded(data: any[]) {
+    this.profilesLoaded = data;
+    this.updateData()
+  }
+
+  updateData() {
+    this.dataProfiles.data = this.profilesLoaded
+  }
+
   navigateToProfileComponent(id: string) {
     this.router.navigate(['/user-info', id]);
   }

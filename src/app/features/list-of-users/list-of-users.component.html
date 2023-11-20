@@ -48,6 +48,13 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let profile; columns: displayedColumns"></tr>
       </table>
+      <app-paginator
+        #paginator
+        [loadDataFunction]="fetchData.bind(this)"
+        (dataLoaded)="onNewDataLoaded($event)"
+        [totalItemsCount]="this.totalGardenCount"
+        [pageSize]="this.pageSize"
+      ></app-paginator>
     </mat-card-content>
   </mat-card>
 </div>
