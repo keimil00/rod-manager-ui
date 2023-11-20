@@ -1,56 +1,56 @@
 <div class="page-container">
-  <mat-card class="large-card-size">
-    <mat-card-header class="row-container">
-      <div class="center-item row-item">
-        <h2 class="title">Liczniki</h2>
-      </div>
-      <div>
-        <mat-tab-group mat-align-tabs="center" class="row-item" (selectedIndexChange)="changeWater()">
-          <mat-tab label="Woda" [ngClass]="{'active-tab': showWater}"></mat-tab>
-          <mat-tab label="Prąd" [ngClass]="{'active-tab': !showWater}"></mat-tab>
-        </mat-tab-group>
-      </div>
+    <mat-card class="large-card-size">
+        <mat-card-header class="row-container">
+            <div class="center-item row-item">
+                <h2 class="title">Liczniki</h2>
+            </div>
+            <div>
+                <mat-tab-group mat-align-tabs="center" class="row-item" (selectedIndexChange)="changeWater()">
+                    <mat-tab label="Woda" [ngClass]="{'active-tab': showWater}"></mat-tab>
+                    <mat-tab label="Prąd" [ngClass]="{'active-tab': !showWater}"></mat-tab>
+                </mat-tab-group>
+            </div>
 
-    </mat-card-header>
-    <mat-card-content>
-      <table mat-table [dataSource]="showWater ? dataSourceWater : dataSourceElectric" class="mainTable">
-        <ng-container matColumnDef="addressC">
-          <th mat-header-cell *matHeaderCellDef>Adres</th>
-          <td mat-cell *matCellDef="let counter">{{ counter.addressC }}</td>
-        </ng-container>
+        </mat-card-header>
+        <mat-card-content>
+            <table mat-table [dataSource]="showWater ? dataSourceWater : dataSourceElectric" class="mainTable">
+                <ng-container matColumnDef="addressC">
+                    <th mat-header-cell *matHeaderCellDef>Adres</th>
+                    <td mat-cell *matCellDef="let counter">{{ counter.addressC }}</td>
+                </ng-container>
 
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef>ID</th>
-          <td mat-cell *matCellDef="let counter">{{ counter.id }}</td>
-        </ng-container>
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef>ID</th>
+                    <td mat-cell *matCellDef="let counter">{{ counter.id }}</td>
+                </ng-container>
 
-        <ng-container matColumnDef="gardenPlotID">
-          <th mat-header-cell *matHeaderCellDef>ID Działki</th>
-          <td mat-cell *matCellDef="let counter">{{ counter.gardenPlotID }}</td>
-        </ng-container>
+                <ng-container matColumnDef="gardenPlotID">
+                    <th mat-header-cell *matHeaderCellDef>ID Działki</th>
+                    <td mat-cell *matCellDef="let counter">{{ counter.gardenPlotID }}</td>
+                </ng-container>
 
-        <ng-container matColumnDef="measurement">
-          <th mat-header-cell *matHeaderCellDef>Poprzedni Pomiar</th>
-          <td mat-cell *matCellDef="let counter">{{ counter.measurement}}</td>
-        </ng-container>
+                <ng-container matColumnDef="measurement">
+                    <th mat-header-cell *matHeaderCellDef>Poprzedni Pomiar</th>
+                    <td mat-cell *matCellDef="let counter">{{ counter.measurement}}</td>
+                </ng-container>
 
-        <ng-container matColumnDef="add">
-          <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let counter" class="icon-size">
-            <button mat-icon-button class="icon-button" (click)="openMeasurementDialog(counter)">
-              <mat-icon class="edit-icon">edit</mat-icon>
-            </button>
-          </td>
-        </ng-container>
+                <ng-container matColumnDef="add">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let counter" class="icon-size">
+                        <button mat-icon-button class="icon-button" (click)="openMeasurementDialog(counter)">
+                            <mat-icon class="edit-icon">edit</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let counter; columns: displayedColumns"></tr>
-      </table>
-    </mat-card-content>
-  </mat-card>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let counter; columns: displayedColumns"></tr>
+            </table>
+        </mat-card-content>
+    </mat-card>
 </div>
 
 
 <button mat-fab color="primary" class="floating-button" (click)="openAddCounterDialog()">
-  <mat-icon>add</mat-icon>
+    <mat-icon>add</mat-icon>
 </button>

@@ -2,7 +2,6 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {Counter, CounterType} from "../counter";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
-import {counters} from "../counters.component";
 import {
     findGardenPlotIdByAddress,
     getMatchingAvenuesWithCounter,
@@ -18,7 +17,7 @@ import {BackendGardenService} from "../../list-of-garden-plot/backend-garden.ser
     styleUrls: ['./add-counter-dialog.component.scss']
 })
 export class AddCounterDialogComponent implements OnInit {
-    isWaterType: boolean = true;
+    isWaterType: boolean;
     addCounterForm: FormGroup;
     showEmptyError: boolean = false;
     showGardenAddress: boolean = false;
@@ -33,19 +32,32 @@ export class AddCounterDialogComponent implements OnInit {
     constructor(
         formBuilder: FormBuilder,
         public dialogRef: MatDialogRef<AddCounterDialogComponent>, private gardenPlotsDataService: BackendGardenService,
-        @Inject(MAT_DIALOG_DATA) public data: { newCounter: Counter }
+        @Inject(MAT_DIALOG_DATA) public data: { counters: Counter[], isShowWater: boolean }
     ) {
+        this.isWaterType = this.data.isShowWater
         this.initData()
         this.addCounterForm = formBuilder.group({
-            id: ['', [Validators.required, uniqueCounterIdValidator(counters)]],
+            id: ['', [Validators.required, uniqueCounterIdValidator(this.data.counters)]],
             address: [''],
             measurement: [0, [Validators.required, Validators.min(0)]],
-            sector: [''],
-            avenue: [''],
-            number: [''],
+            sector: [null],
+            avenue: [null],
+            number: [null],
             showGardenAddress: [false]
         });
 
+        this.showGardenAddressValueSubscribe()
+    }
+
+    resetValues() {
+        this.addCounterForm.patchValue({
+            sector: null,
+            avenue: null,
+            number: null
+        });
+    }
+
+    showGardenAddressValueSubscribe() {
         this.addCounterForm.get('showGardenAddress')?.valueChanges.subscribe((value: boolean) => {
             const addressControl = this.addCounterForm.get('address');
             if (value) {
@@ -53,14 +65,17 @@ export class AddCounterDialogComponent implements OnInit {
                 this.addCounterForm.get('sector')?.setValidators([Validators.required]);
                 this.addCounterForm.get('avenue')?.setValidators([Validators.required]);
                 this.addCounterForm.get('number')?.setValidators([Validators.required]);
-                addressControl?.clearValidators();
+                addressControl?.setValidators([])
             } else {
                 this.addCounterForm.get('sector')?.clearValidators();
                 this.addCounterForm.get('avenue')?.clearValidators();
                 this.addCounterForm.get('number')?.clearValidators();
                 addressControl?.setValidators([Validators.required]);
             }
-            this.addCounterForm.updateValueAndValidity();
+            this.addCounterForm.get('sector')?.updateValueAndValidity();
+            this.addCounterForm.get('avenue')?.updateValueAndValidity();
+            this.addCounterForm.get('number')?.updateValueAndValidity();
+            addressControl?.updateValueAndValidity();
         });
     }
 
@@ -69,21 +84,25 @@ export class AddCounterDialogComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.sectorsOptions = getMatchingSectorsWithCounter(counters, this.gardenPlots);
+        this.sectorsOptions = getMatchingSectorsWithCounter(this.data.counters, this.gardenPlots, this.isWaterType);
+        this.addCounterForm.get('sector')?.valueChanges.subscribe((value) => {
+            this.sectorsOptions = getMatchingSectorsWithCounter(this.data.counters, this.gardenPlots, this.isWaterType);
+        })
 
         this.addCounterForm.get('sector')?.valueChanges.subscribe((value) => {
-            this.avenuesOptions = getMatchingAvenuesWithCounter(counters, this.gardenPlots, this.addCounterForm.get('sector')?.value)
+            this.avenuesOptions = getMatchingAvenuesWithCounter(this.data.counters, this.gardenPlots, this.addCounterForm.get('sector')?.value, this.isWaterType)
             this.numbersOptions = []
         });
 
         this.addCounterForm.get('avenue')?.valueChanges.subscribe((value) => {
-            this.numbersOptions = getMatchingNumbersWithCounter(counters, this.gardenPlots, this.addCounterForm.get('sector')?.value, this.addCounterForm.get('avenue')?.value)
+            this.numbersOptions = getMatchingNumbersWithCounter(this.data.counters, this.gardenPlots, this.addCounterForm.get('sector')?.value, this.addCounterForm.get('avenue')?.value, this.isWaterType)
         });
     }
 
 
     changeType() {
         this.isWaterType = !this.isWaterType
+        this.resetValues()
     }
 
     validationErrors(controlName: string): any[] {
