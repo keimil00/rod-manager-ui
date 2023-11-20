@@ -4,7 +4,6 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Profile} from "../Profile";
 import {Payment, PaymentList} from "./garden-plot-details/PaymentList";
-import {gardenPlots} from "./GardenService";
 import {ListOfUsersService} from "../list-of-users/list-of-users.service";
 
 @Injectable({
@@ -12,7 +11,7 @@ import {ListOfUsersService} from "../list-of-users/list-of-users.service";
 })
 export class BackendGardenService {
 
-  paymentLists: PaymentList[] = [
+  private paymentLists: PaymentList[] = [
     {
       id: '1',
       idUser: '1',
@@ -198,7 +197,7 @@ export class BackendGardenService {
       ]
     }];
 
-  gardenPlotsBackend: GardenPlotBackend[] = [
+  private gardenPlotsBackend: GardenPlotBackend[] = [
     {
       gardenPlotID: '1',
       sector: 'A',
@@ -390,6 +389,198 @@ export class BackendGardenService {
     },
   ];
 
+  private gardenPlots: GardenPlot[] = [
+    {
+      gardenPlotID: '1',
+      sector: 'A',
+      avenue: 'Avenue 1',
+      number: 101,
+      area: 500,
+      leaseholderID: null,
+      gardenStatus: PlotStatus.Available
+    },
+    {
+      gardenPlotID: '2',
+      sector: 'B',
+      avenue: 'Avenue 2',
+      number: 201,
+      area: 600,
+      leaseholderID: null,
+      gardenStatus: PlotStatus.Available
+    },
+    {
+      gardenPlotID: '3',
+      sector: 'C',
+      avenue: 'Avenue 3',
+      number: 301,
+      area: 750,
+      leaseholderID: '1',
+      gardenStatus: PlotStatus.Available
+    },
+    {
+      gardenPlotID: '4',
+      sector: 'D',
+      avenue: 'Avenue 4',
+      number: 401,
+      area: 550,
+      leaseholderID: null,
+      gardenStatus: PlotStatus.Available
+    },
+    {
+      gardenPlotID: '5',
+      sector: 'E',
+      avenue: 'Avenue 5',
+      number: 501,
+      area: 700,
+      leaseholderID: '6',
+      gardenStatus: PlotStatus.Unavailable
+    },
+    {
+      gardenPlotID: '6',
+      sector: 'F',
+      avenue: 'Avenue 6',
+      number: 601,
+      area: 600,
+      leaseholderID: '3',
+      gardenStatus: PlotStatus.Unavailable
+    },
+    {
+      gardenPlotID: '7',
+      sector: 'G',
+      avenue: 'Avenue 7',
+      number: 701,
+      area: 800,
+      leaseholderID: '8',
+      gardenStatus: PlotStatus.Available
+    },
+    {
+      gardenPlotID: '8',
+      sector: 'H',
+      avenue: 'Avenue 8',
+      number: 801,
+      area: 900,
+      leaseholderID: '10',
+      gardenStatus: PlotStatus.Unavailable
+    },
+    {
+      gardenPlotID: '9',
+      sector: 'I',
+      avenue: 'Avenue 9',
+      number: 901,
+      area: 450,
+      leaseholderID: '11',
+      gardenStatus: PlotStatus.Available
+    },
+    {
+      gardenPlotID: '10',
+      sector: 'J',
+      avenue: 'Avenue 10',
+      number: 1001,
+      area: 600,
+      leaseholderID: '16',
+      gardenStatus: PlotStatus.Unavailable
+    },
+    {
+      gardenPlotID: '11',
+      sector: 'K',
+      avenue: 'Avenue 11',
+      number: 1101,
+      area: 700,
+      leaseholderID: '19',
+      gardenStatus: PlotStatus.Unavailable
+    },
+    {
+      gardenPlotID: '12',
+      sector: 'L',
+      avenue: 'Avenue 12',
+      number: 1201,
+      area: 800,
+      leaseholderID: null,
+      gardenStatus: PlotStatus.Available
+    },
+    {
+      gardenPlotID: '13',
+      sector: 'M',
+      avenue: 'Avenue 13',
+      number: 1301,
+      area: 750,
+      leaseholderID: '20',
+      gardenStatus: PlotStatus.Unavailable
+    },
+    {
+      gardenPlotID: '14',
+      sector: 'N',
+      avenue: 'Avenue 14',
+      number: 1401,
+      area: 600,
+      leaseholderID: '14',
+      gardenStatus: PlotStatus.Available
+    },
+    {
+      gardenPlotID: '15',
+      sector: 'O',
+      avenue: 'Avenue 15',
+      number: 1501,
+      area: 850,
+      leaseholderID: '17',
+      gardenStatus: PlotStatus.Unavailable
+    },
+    {
+      gardenPlotID: '16',
+      sector: 'P',
+      avenue: 'Avenue 16',
+      number: 1601,
+      area: 700,
+      leaseholderID: null,
+      gardenStatus: PlotStatus.Available
+    },
+    {
+      gardenPlotID: '17',
+      sector: 'Q',
+      avenue: 'Avenue 17',
+      number: 1701,
+      area: 600,
+      leaseholderID: '12',
+      gardenStatus: PlotStatus.Unavailable
+    },
+    {
+      gardenPlotID: '18',
+      sector: 'R',
+      avenue: 'Avenue 18',
+      number: 1801,
+      area: 750,
+      leaseholderID: null,
+      gardenStatus: PlotStatus.Available
+    },
+    {
+      gardenPlotID: '19',
+      sector: 'S',
+      avenue: 'Avenue 19',
+      number: 1901,
+      area: 500,
+      leaseholderID: '2',
+      gardenStatus: PlotStatus.Unavailable
+    },
+    {
+      gardenPlotID: '20',
+      sector: 'T',
+      avenue: 'Avenue 20',
+      number: 2001,
+      area: 600,
+      leaseholderID: '4',
+      gardenStatus: PlotStatus.Unavailable
+    },
+    {
+      gardenPlotID: '21',
+      sector: 'A',
+      avenue: 'Avenue 1',
+      number: 102,
+      area: 600,
+      leaseholderID: null,
+      gardenStatus: PlotStatus.Unavailable
+    },
+  ];
+
   constructor(private httpClient: HttpClient, private listOfUsersService:ListOfUsersService) {
   }
 
@@ -455,8 +646,8 @@ export class BackendGardenService {
   //   const url = `${'https://localhost:1337/api/profile-from-garden-id'}/${gardenPlotID}`;
   //   return this.httpClient.get<Profile>(url);
   // }
-  getLeaseholder(gardenPlotID: string | undefined, gardenPlots: GardenPlot[]): Profile {
-    const id = gardenPlots.find(gardenPlot => gardenPlot.gardenPlotID === gardenPlotID)?.leaseholderID
+  getLeaseholder(gardenPlotID: string | undefined): Profile {
+    const id = this.gardenPlots.find(gardenPlot => gardenPlot.gardenPlotID === gardenPlotID)?.leaseholderID
     return <Profile>this.listOfUsersService.getAllProfiles().find(profile => profile.profileId === id) || null;
   }
 
@@ -495,6 +686,9 @@ export class BackendGardenService {
     this.gardenPlotsBackend.push(newGarden)
   }
 
+  addGarden3(newGarden: GardenPlot): void {
+    this.gardenPlots.push(newGarden)
+  }
 
   //TODO to endpoint
   addGarden2(newGarden: GardenPlot): Observable<any> {
@@ -538,7 +732,7 @@ export class BackendGardenService {
 //nowe
 //nowe
   getAllGardenPlots(): GardenPlot[] {
-    return gardenPlots
+    return this.gardenPlots
   }
   //TODO to endpoint
   // getAllGardenPlots(): Observable<GardenPlot[]> {
@@ -546,6 +740,15 @@ export class BackendGardenService {
   //   return this.httpClient.get<GardenPlot[]>('https://localhost:1337/api/all-gardens');
   // }
 
+
+  updateLeaseholderID(targetID: string | null | undefined, newLeaseholderID: string | null) {
+    //to zastapi push
+    for (let garden of this.gardenPlots) {
+      if (garden.gardenPlotID === targetID) {
+        garden.leaseholderID = newLeaseholderID
+      }
+    }
+  }
 }
 
 

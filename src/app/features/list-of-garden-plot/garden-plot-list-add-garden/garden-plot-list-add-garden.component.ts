@@ -8,7 +8,6 @@ import {
     profileEmailValidator,
 } from "../../list-of-users/ProfilesService";
 import {
-    gardenPlots,
     getMatchingAvenues,
     getMatchingSectors,
     uniqueGardenValidator,
@@ -32,6 +31,8 @@ export class GardenPlotListAddGardenComponent {
 
     // @ts-ignore
     private profiles: Profile[]
+    // @ts-ignore
+    private gardenPlots: GardenPlot[]
 
     closeAddingGardenPlot() {
         this.dialogRef.close();
@@ -94,36 +95,37 @@ export class GardenPlotListAddGardenComponent {
     initData() {
         this.listOfUsersService.sortProfiles()
         this.profiles = this.listOfUsersService.getAllProfiles()
+        this.gardenPlots = this.gardenPlotsDataService.getAllGardenPlots()
     }
 
     ngOnInit() {
         this.leaseHolderOptions = [{
             fullName: 'brak',
             email: 'brak'
-        }, ...getMatchingProfiles(this.addGardenForm.get('leaseholderEmail')?.value, this.profiles, gardenPlots, false)];
+        }, ...getMatchingProfiles(this.addGardenForm.get('leaseholderEmail')?.value, this.profiles, this.gardenPlots, false)];
 
         this.addGardenForm.get('leaseholderEmail')?.valueChanges.subscribe((value) => {
             this.leaseHolderOptions = [{
                 fullName: 'brak',
                 email: 'brak'
-            }, ...getMatchingProfiles(value, this.profiles, gardenPlots, false)];
+            }, ...getMatchingProfiles(value, this.profiles, this.gardenPlots, false)];
         });
 
-        this.sectorsOptions = getMatchingSectors(this.addGardenForm.get('sector')?.value, gardenPlots);
+        this.sectorsOptions = getMatchingSectors(this.addGardenForm.get('sector')?.value, this.gardenPlots);
         this.addGardenForm.get('sector')?.valueChanges.subscribe((value) => {
-            this.sectorsOptions = getMatchingSectors(this.addGardenForm.get('sector')?.value, gardenPlots);
+            this.sectorsOptions = getMatchingSectors(this.addGardenForm.get('sector')?.value, this.gardenPlots);
             this.updateAvenousAndNumberValidator()
         });
 
-        this.avenuesOptions = getMatchingAvenues(this.addGardenForm.get('avenue')?.value, this.addGardenForm.get('sector')?.value, gardenPlots);
+        this.avenuesOptions = getMatchingAvenues(this.addGardenForm.get('avenue')?.value, this.addGardenForm.get('sector')?.value, this.gardenPlots);
         this.addGardenForm.get('avenue')?.valueChanges.subscribe((value) => {
             this.updateAvenousAndNumberValidator()
         });
     }
 
     updateAvenousAndNumberValidator() {
-        this.avenuesOptions = getMatchingAvenues(this.addGardenForm.get('avenue')?.value, this.addGardenForm.get('sector')?.value, gardenPlots);
-        this.addGardenForm.get('number')?.setValidators([Validators.required, uniqueGardenValidator(this.addGardenForm.get('sector')?.value, this.addGardenForm.get('avenue')?.value, gardenPlots, false)])
+        this.avenuesOptions = getMatchingAvenues(this.addGardenForm.get('avenue')?.value, this.addGardenForm.get('sector')?.value, this.gardenPlots);
+        this.addGardenForm.get('number')?.setValidators([Validators.required, uniqueGardenValidator(this.addGardenForm.get('sector')?.value, this.addGardenForm.get('avenue')?.value, this.gardenPlots, false)])
     }
 
     validationErrors(controlName: string): any[] {
@@ -180,8 +182,7 @@ export class GardenPlotListAddGardenComponent {
 
             this.gardenPlotsDataService.addGarden(newGardenPlot2)
             this.gardenPlotsDataService.addGarden2(newGardenPlot)
-
-            gardenPlots.push(newGardenPlot)
+            this.gardenPlotsDataService.addGarden3(newGardenPlot)
 
             this.addGardenForm.reset();
             this.closeAddingGardenPlot()

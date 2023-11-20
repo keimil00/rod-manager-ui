@@ -1,11 +1,7 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {GardenPlot} from "../list-of-garden-plot/garden-plot";
-import {gardenPlots} from "../list-of-garden-plot/GardenService";
+import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {GardenPlotInfoService} from "./garden-plot-info.service";
 import {GardenPlotInfo, GardenPlotInfoFee, IndividualPaymentGardenPlot, MediaIndividualFee} from "./gardenPlotInfo";
 import {MatTableDataSource} from "@angular/material/table";
-import {Fee, IndividualPayment} from "../payments/payments";
-import {Payment} from "../list-of-garden-plot/garden-plot-details/PaymentList";
 import {MatSort} from "@angular/material/sort";
 
 @Component({

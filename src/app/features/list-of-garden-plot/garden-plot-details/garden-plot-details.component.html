@@ -57,7 +57,7 @@
                 </tr>
                 <tr>
                   <td>Termin płatności</td>
-                  <td>{{ leaseholder?.paymentDueDate }}</td>
+                  <td>{{ leaseholder?.paymentDueDate | date:'dd.MM.yyyy'}}</td>
                 </tr>
               </table>
             </mat-card-content>

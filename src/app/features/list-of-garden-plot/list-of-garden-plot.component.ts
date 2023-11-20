@@ -2,7 +2,6 @@ import {Component, ViewChild} from '@angular/core';
 import {GardenPlot, GardenPlotBackend} from './garden-plot';
 import {MatTableDataSource} from "@angular/material/table";
 import {Profile} from "../Profile";
-import {gardenPlots} from "./GardenService";
 import {MatDialog} from "@angular/material/dialog";
 import {GardenPlotDetailsComponent} from "./garden-plot-details/garden-plot-details.component";
 import {GardenPlotAddLeaseholderComponent} from "./garden-plot-add-leaseholder/garden-plot-add-leaseholder.component";
@@ -121,7 +120,7 @@ export class ListOfGardenPlotComponent {
     // }
 
     selectDetails(gardenPlot: GardenPlot) {
-        const leaseholder = this.gardenPlotsDataService.getLeaseholder(gardenPlot.gardenPlotID, gardenPlots)
+        const leaseholder = this.gardenPlotsDataService.getLeaseholder(gardenPlot.gardenPlotID)
         this.showDetails = true;
         this.showDetailsDialog(gardenPlot, leaseholder)
     }
