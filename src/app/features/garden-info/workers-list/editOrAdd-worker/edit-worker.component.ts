@@ -2,7 +2,7 @@ import {Component, Inject} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Employer} from "../../employer.model";
-import {addEmployer, employers, updateEmployer} from "../../garden-info.component";
+import {GardenInfoService} from "../../garden-info.service";
 
 @Component({
   selector: 'app-edit-worker',
@@ -14,7 +14,7 @@ export class EditWorkerComponent {
   employer: Employer
   isToAdd: boolean
 
-  constructor(formBuilder: FormBuilder,
+  constructor(formBuilder: FormBuilder, private gardenInfoService: GardenInfoService,
               public dialogRef: MatDialogRef<EditWorkerComponent>,
               @Inject(MAT_DIALOG_DATA) public data: { employer: Employer, isToAdd: boolean }
   ) {
@@ -113,9 +113,9 @@ export class EditWorkerComponent {
       //TODO Push do backendu
       this.employer = newEmployer
       if (this.isToAdd) {
-        addEmployer(newEmployer, employers)
+        this.gardenInfoService.addEmployer(newEmployer)
       } else {
-        updateEmployer(newEmployer, employers)
+        this.gardenInfoService.updateEmployer(newEmployer)
       }
       this.closeEditingingEmployer()
     }
