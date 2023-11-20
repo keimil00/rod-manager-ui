@@ -4,9 +4,6 @@ import {PaymentsService} from "../payments.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Fee, TypeOfFee} from "../payments";
 import {IndividualPaymentsComponent} from "../individual-payments/individual-payments.component";
-import {GardenPlotBackend} from "../../list-of-garden-plot/garden-plot";
-import {findProfileEmailByID} from "../../list-of-garden-plot/GardenService";
-import {profiles} from "../../list-of-users/ProfilesService";
 
 @Component({
     selector: 'app-editing-lease-fee',

@@ -11,7 +11,8 @@ import {
   gardenPlots,
   updateLeaseholderID
 } from "../list-of-garden-plot/GardenService";
-import {profiles} from "../list-of-users/ProfilesService";
+import {ListOfUsersService} from "../list-of-users/list-of-users.service";
+import {UserInfoService} from "./user-info.service";
 
 @Component({
   selector: 'app-user-info',
@@ -31,7 +32,10 @@ export class UserInfoComponent implements OnInit {
   avenuesOptions: (string | null)[] = [];
   numbersOptions: (number | null)[] = [];
 
-  constructor(private route: ActivatedRoute, formBuilder: FormBuilder, private router: Router) {
+  // @ts-ignore
+  profiles:Profile[];
+
+  constructor(private route: ActivatedRoute, formBuilder: FormBuilder, private router: Router ,private listOfUsersService: ListOfUsersService, private userInfoService:UserInfoService) {
     this.userInfoForm = formBuilder.group({
       firstName: [{value: '', disabled: true}],
       lastName: [{value: '', disabled: true}],
@@ -44,6 +48,10 @@ export class UserInfoComponent implements OnInit {
     });
   }
 
+  initData(){
+    this.profiles = this.listOfUsersService.getAllProfiles()
+  }
+
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.id = params['id'];
@@ -54,15 +62,15 @@ export class UserInfoComponent implements OnInit {
       this.showGardenAddress = true
     }
 
-    this.sectorsOptions = this.getMatchingSectors(profiles, gardenPlots);
+    this.sectorsOptions = this.getMatchingSectors(this.profiles, gardenPlots);
 
     this.userInfoForm.get('plotSector')?.valueChanges.subscribe((value) => {
-      this.avenuesOptions = this.getMatchingAvenues(profiles, gardenPlots, this.userInfoForm.get('plotSector')?.value)
+      this.avenuesOptions = this.getMatchingAvenues(this.profiles, gardenPlots, this.userInfoForm.get('plotSector')?.value)
       this.numbersOptions = []
     });
 
     this.userInfoForm.get('plotAvenue')?.valueChanges.subscribe((value) => {
-      this.numbersOptions = this.getMatchingNumbers(profiles, gardenPlots, this.userInfoForm.get('plotSector')?.value, this.userInfoForm.get('plotAvenue')?.value)
+      this.numbersOptions = this.getMatchingNumbers(this.profiles, gardenPlots, this.userInfoForm.get('plotSector')?.value, this.userInfoForm.get('plotAvenue')?.value)
     });
     this.populateFormFromGardenPlot(this.profile);
   }
@@ -82,7 +90,7 @@ export class UserInfoComponent implements OnInit {
   }
 
   getProfileById(id: string | null) {
-    return profiles.find(profile => profile.profileId === id);
+    return this.userInfoService.getProfileById(id)
   }
 
   findPlotAddressTupleByUserId(gardenPlots: GardenPlot[], id: string | undefined): {

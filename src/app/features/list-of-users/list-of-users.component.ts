@@ -1,12 +1,9 @@
 import {Component, ViewChild} from '@angular/core';
-import {MatTableDataSource, MatTableDataSourcePaginator} from "@angular/material/table";
+import {MatTableDataSource} from "@angular/material/table";
 import {Profile} from "../Profile";
 
 import {Router} from "@angular/router";
-import {profiles} from "./ProfilesService";
-import {GardenPlotBackend} from "../list-of-garden-plot/garden-plot";
 import {MatPaginator} from "@angular/material/paginator";
-import {BackendGardenService} from "../list-of-garden-plot/backend-garden.service";
 import {ListOfUsersService} from "./list-of-users.service";
 
 @Component({
@@ -26,21 +23,7 @@ export class ListOfUsersComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(private router: Router, private listOfUsersService: ListOfUsersService) {
-    profiles.sort((a, b) => {
-
-      const lastNameComparison = a.lastName.localeCompare(b.lastName);
-      if (lastNameComparison !== 0) {
-        return lastNameComparison;
-      }
-
-      const firstNameComparison = a.firstName.localeCompare(b.firstName);
-      if (firstNameComparison !== 0) {
-        return firstNameComparison;
-      }
-
-      return a.email.localeCompare(b.email);
-    }
-    );
+    this.sortData()
     this.initData();
     this.dataProfiles = new MatTableDataSource(this.profilesLoaded);
     this.updateData()
@@ -48,6 +31,9 @@ export class ListOfUsersComponent {
     this.dataProfiles.paginator = this.paginator;
   }
 
+  private sortData(){
+    this.listOfUsersService.sortProfiles()
+  }
   private initData() {
     this.profilesLoaded = this.listOfUsersService.getProfiles(0, this.pageSize);
   }

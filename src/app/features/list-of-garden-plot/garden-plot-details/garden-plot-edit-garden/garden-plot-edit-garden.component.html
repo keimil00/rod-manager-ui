@@ -69,8 +69,8 @@
                     <mat-form-field class="full-width">
                         <mat-label>Status</mat-label>
                         <mat-select formControlName="status">
-                            <mat-option *ngFor="let status of Object.values(PlotStatus)"
-                                        [value]="status">{{ status }}</mat-option>
+                            <mat-option *ngFor="let gardenStatus of Object.values(PlotStatus)"
+                                        [value]="gardenStatus">{{ gardenStatus }}</mat-option>
                         </mat-select>
                         <mat-error *ngFor="let error of validationErrors('status')">
                             {{ error.message }}

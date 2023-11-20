@@ -3,7 +3,6 @@ import {GardenPlot, GardenPlotBackend} from './garden-plot';
 import {MatTableDataSource} from "@angular/material/table";
 import {Profile} from "../Profile";
 import {gardenPlots} from "./GardenService";
-import {profiles} from "../list-of-users/ProfilesService";
 import {MatDialog} from "@angular/material/dialog";
 import {GardenPlotDetailsComponent} from "./garden-plot-details/garden-plot-details.component";
 import {GardenPlotAddLeaseholderComponent} from "./garden-plot-add-leaseholder/garden-plot-add-leaseholder.component";
@@ -113,13 +112,13 @@ export class ListOfGardenPlotComponent {
         this.gardenPlotsDataService.sortData()
     }
 
-    getLeaseholderName(leaseholderID: string): any {
-        const leaseholder = profiles.find(profile => profile.profileId === leaseholderID);
-        if (leaseholder) {
-            return `${leaseholder.firstName} ${leaseholder.lastName}`;
-        }
-        return null;
-    }
+    // getLeaseholderName(leaseholderID: string): any {
+    //     const leaseholder = profiles.find(profile => profile.profileId === leaseholderID);
+    //     if (leaseholder) {
+    //         return `${leaseholder.firstName} ${leaseholder.lastName}`;
+    //     }
+    //     return null;
+    // }
 
     selectDetails(gardenPlot: GardenPlot) {
         const leaseholder = this.gardenPlotsDataService.getLeaseholder(gardenPlot.gardenPlotID, gardenPlots)

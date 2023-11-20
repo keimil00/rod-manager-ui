@@ -3,20 +3,21 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {GardenPlot, GardenPlotBackend, PlotStatus} from "../garden-plot";
 
 import {
-  findProfileIdByEmail,
-  getMatchingProfiles,
-  profileEmailValidator,
-  profiles
+    findProfileIdByEmail,
+    getMatchingProfiles,
+    profileEmailValidator,
 } from "../../list-of-users/ProfilesService";
 import {
-  gardenPlots,
-  getMatchingAvenues,
-  getMatchingSectors,
-  uniqueGardenValidator,
-  uniqueLeaseholderIDValidator
+    gardenPlots,
+    getMatchingAvenues,
+    getMatchingSectors,
+    uniqueGardenValidator,
+    uniqueLeaseholderIDValidator
 } from "../GardenService";
 import {MatDialogRef} from "@angular/material/dialog";
 import {BackendGardenService} from "../backend-garden.service";
+import {ListOfUsersService} from "../../list-of-users/list-of-users.service";
+import {Profile} from "../../Profile";
 
 
 @Component({
@@ -28,6 +29,9 @@ export class GardenPlotListAddGardenComponent {
     leaseHolderOptions: { email: string; fullName: string }[] = [];
     sectorsOptions: (string | null)[] = [];
     avenuesOptions: (string | null)[] = [];
+
+    // @ts-ignore
+    private profiles: Profile[]
 
     closeAddingGardenPlot() {
         this.dialogRef.close();
@@ -59,7 +63,8 @@ export class GardenPlotListAddGardenComponent {
         ]
     };
 
-    constructor(formBuilder: FormBuilder, public dialogRef: MatDialogRef<GardenPlotListAddGardenComponent>, private gardenPlotsDataService: BackendGardenService) {
+    constructor(formBuilder: FormBuilder, public dialogRef: MatDialogRef<GardenPlotListAddGardenComponent>, private gardenPlotsDataService: BackendGardenService, private listOfUsersService: ListOfUsersService) {
+        this.initData()
         this.addGardenForm = formBuilder.group({
             sector: ['', [
                 Validators.required,
@@ -75,8 +80,10 @@ export class GardenPlotListAddGardenComponent {
                 Validators.min(0.01),
             ]],
             leaseholderEmail: ['', [
-                profileEmailValidator(profiles),
-                uniqueLeaseholderIDValidator(gardenPlots, profiles, false)
+                // @ts-ignore
+                profileEmailValidator(this.profiles),
+                // @ts-ignore
+                uniqueLeaseholderIDValidator(gardenPlots, this.profiles, false)
             ]],
             status: ['',
                 Validators.required]
@@ -84,17 +91,22 @@ export class GardenPlotListAddGardenComponent {
         this.addGardenForm.updateValueAndValidity();
     }
 
+    initData() {
+        this.listOfUsersService.sortProfiles()
+        this.profiles = this.listOfUsersService.getAllProfiles()
+    }
+
     ngOnInit() {
         this.leaseHolderOptions = [{
             fullName: 'brak',
             email: 'brak'
-        }, ...getMatchingProfiles(this.addGardenForm.get('leaseholderEmail')?.value, profiles, gardenPlots, false)];
+        }, ...getMatchingProfiles(this.addGardenForm.get('leaseholderEmail')?.value, this.profiles, gardenPlots, false)];
 
         this.addGardenForm.get('leaseholderEmail')?.valueChanges.subscribe((value) => {
             this.leaseHolderOptions = [{
                 fullName: 'brak',
                 email: 'brak'
-            }, ...getMatchingProfiles(value, profiles, gardenPlots, false)];
+            }, ...getMatchingProfiles(value, this.profiles, gardenPlots, false)];
         });
 
         this.sectorsOptions = getMatchingSectors(this.addGardenForm.get('sector')?.value, gardenPlots);
@@ -106,18 +118,6 @@ export class GardenPlotListAddGardenComponent {
         this.avenuesOptions = getMatchingAvenues(this.addGardenForm.get('avenue')?.value, this.addGardenForm.get('sector')?.value, gardenPlots);
         this.addGardenForm.get('avenue')?.valueChanges.subscribe((value) => {
             this.updateAvenousAndNumberValidator()
-        });
-
-        profiles.sort((a, b) => {
-            const lastNameComparison = a.lastName.localeCompare(b.lastName);
-            if (lastNameComparison !== 0) {
-                return lastNameComparison;
-            }
-            const firstNameComparison = a.firstName.localeCompare(b.firstName);
-            if (firstNameComparison !== 0) {
-                return firstNameComparison;
-            }
-            return a.email.localeCompare(b.email);
         });
     }
 
@@ -154,7 +154,7 @@ export class GardenPlotListAddGardenComponent {
             if (newLeaseholderEmail === '' || newLeaseholderEmail === 'brak' || newLeaseholderEmail === null) {
                 newLeaseholderID = null
             } else
-                newLeaseholderID = findProfileIdByEmail(newLeaseholderEmail, profiles)
+                newLeaseholderID = findProfileIdByEmail(newLeaseholderEmail, this.profiles)
 
             const newGardenPlot: GardenPlot = {
                 gardenPlotID: uniqueId,

@@ -1,11 +1,12 @@
-import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
-import {GardenPlot, GardenPlotBackend} from "../garden-plot";
+import {Component, Inject, OnInit} from '@angular/core';
+import {GardenPlotBackend} from "../garden-plot";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Profile} from "../../Profile";
-import {findProfileEmailByID, gardenPlots, uniqueGardenValidator, uniqueLeaseholderIDValidator} from "../GardenService";
-import {getMatchingProfiles, profileEmailValidator, profiles} from "../../list-of-users/ProfilesService";
+import {findProfileEmailByID, gardenPlots, uniqueLeaseholderIDValidator} from "../GardenService";
+import {getMatchingProfiles, profileEmailValidator} from "../../list-of-users/ProfilesService";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {BackendGardenService} from "../backend-garden.service";
+import {ListOfUsersService} from "../../list-of-users/list-of-users.service";
+import {Profile} from "../../Profile";
 
 
 @Component({
@@ -21,6 +22,9 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
   // @ts-ignore
   leasholderID: string | null
 
+  // @ts-ignore
+  private profiles: Profile[]
+
   closeAddingLeaseHolder() {
     this.dialogRef.close();
   }
@@ -32,14 +36,19 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
     });
   }
 
-  constructor(formBuilder: FormBuilder, private gardenPlotsDataService: BackendGardenService,
+  constructor(formBuilder: FormBuilder, private gardenPlotsDataService: BackendGardenService,private listOfUsersService: ListOfUsersService,
               public dialogRef: MatDialogRef<GardenPlotAddLeaseholderComponent>,
               @Inject(MAT_DIALOG_DATA) public data: { gardenPlot: GardenPlotBackend }
   ) {
+    this.initData()
     this.gardenPlot = data.gardenPlot
     this.addLeaseHolderForm = formBuilder.group({
       leaseholderEmail: [''],
     });
+  }
+  initData() {
+    this.listOfUsersService.sortProfiles()
+    this.profiles = this.listOfUsersService.getAllProfiles()
   }
 
   ngOnInit() {
@@ -47,36 +56,21 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
     if (leasHolder) {
       this.leasholderID = leasHolder.profileId
     } else this.leasholderID = null
-    this.addLeaseHolderForm.get('leaseholderEmail')?.setValidators([Validators.required, profileEmailValidator(profiles), uniqueLeaseholderIDValidator(gardenPlots, profiles, true, this.leasholderID)])
+    this.addLeaseHolderForm.get('leaseholderEmail')?.setValidators([Validators.required, profileEmailValidator(this.profiles), uniqueLeaseholderIDValidator(gardenPlots, this.profiles, true, this.leasholderID)])
 
     this.leaseHolderOptions = [{
       fullName: 'brak',
       email: 'brak'
-    }, ...getMatchingProfiles(this.addLeaseHolderForm.get('leaseholderEmail')?.value, profiles, gardenPlots, true, this.leasholderID)];
+    }, ...getMatchingProfiles(this.addLeaseHolderForm.get('leaseholderEmail')?.value, this.profiles, gardenPlots, true, this.leasholderID)];
 
     this.addLeaseHolderForm.get('leaseholderEmail')?.valueChanges.subscribe((value) => {
       this.leaseHolderOptions = [{
         fullName: 'brak',
         email: 'brak'
-      }, ...getMatchingProfiles(value, profiles, gardenPlots, true, this.leasholderID)];
+      }, ...getMatchingProfiles(value, this.profiles, gardenPlots, true, this.leasholderID)];
     });
 
     this.populateFormFromGardenPlot(this.gardenPlot);
-
-    profiles.sort((a, b) => {
-
-      const lastNameComparison = a.lastName.localeCompare(b.lastName);
-      if (lastNameComparison !== 0) {
-        return lastNameComparison;
-      }
-
-      const firstNameComparison = a.firstName.localeCompare(b.firstName);
-      if (firstNameComparison !== 0) {
-        return firstNameComparison;
-      }
-
-      return a.email.localeCompare(b.email);
-    });
   }
 
   accept() {
@@ -90,7 +84,7 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
 
         this.closeAddingLeaseHolder();
       } else {
-        const selectedProfile = profiles.find((profile) => {
+        const selectedProfile = this.profiles.find((profile) => {
           return profile.email === this.addLeaseHolderForm.get('leaseholderEmail')?.value;
         });
 

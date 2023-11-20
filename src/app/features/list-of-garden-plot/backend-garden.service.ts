@@ -3,9 +3,9 @@ import {GardenPlot, GardenPlotBackend, PlotStatus} from "./garden-plot";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Profile} from "../Profile";
-import {profiles} from "../list-of-users/ProfilesService";
 import {Payment, PaymentList} from "./garden-plot-details/PaymentList";
 import {gardenPlots} from "./GardenService";
+import {ListOfUsersService} from "../list-of-users/list-of-users.service";
 
 @Injectable({
   providedIn: 'root'
@@ -390,7 +390,7 @@ export class BackendGardenService {
     },
   ];
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private listOfUsersService:ListOfUsersService) {
   }
 
   loadedGardenPlots: GardenPlotBackend[] = this.gardenPlotsBackend;
@@ -457,7 +457,7 @@ export class BackendGardenService {
   // }
   getLeaseholder(gardenPlotID: string | undefined, gardenPlots: GardenPlot[]): Profile {
     const id = gardenPlots.find(gardenPlot => gardenPlot.gardenPlotID === gardenPlotID)?.leaseholderID
-    return <Profile>profiles.find(profile => profile.profileId === id) || null;
+    return <Profile>this.listOfUsersService.getAllProfiles().find(profile => profile.profileId === id) || null;
   }
 
   editGarden(gardenId: string | undefined, newGarden: GardenPlotBackend | undefined): void {
