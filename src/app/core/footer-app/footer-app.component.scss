@@ -1,0 +1,43 @@
+.mat-toolbar {
+  background-color: #000; // Set the background color to black
+  color: #fff; // Set the text color to white
+  flex-direction: column;
+  min-height: 80px;
+  padding-bottom: 20px;
+
+  .options {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    span {
+      color: gray; // Set the text color to gray
+    }
+
+    button {
+      color: gray; // Set the text color to gray
+      font-size: 16px;
+    }
+
+    button:hover {
+      color: lightgray; // Set the text color to gray
+    }
+  }
+  .autors {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .autor {
+    color: gray;
+    font-size: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .autor:hover {
+    color: lightgray;
+  }
+
+}
+
