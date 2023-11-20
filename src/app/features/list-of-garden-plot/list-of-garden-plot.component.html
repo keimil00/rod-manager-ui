@@ -67,9 +67,8 @@
       <app-paginator
         #paginator
         [loadDataFunction]="fetchData.bind(this)"
-        (dataLoaded)="onNewDataLoaded($event)"
         [totalItemsCount]="this.totalGardenCount"
-        [pageSize]="this.pageSize"
+        [pageSize]="this.defoultpageSize"
       ></app-paginator>
     </mat-card-content>
   </mat-card>

@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {GardenPlotBackend} from "../list-of-garden-plot/garden-plot";
 import {Profile, Role_TEMP} from "../Profile";
+import {Page} from "../../shared/paginator/page.model";
+import {Observable, of} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -283,17 +285,18 @@ export class ListOfUsersService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getTotalProfiles(): number {
-    return this.profiles.length;
-  }
+  getProfiles(index: number, size: number): Observable<Page<Profile>> {
+    const profilesOnPage = this.profiles.slice((index-1) * size, (index-1) * size + size);
+    const count = this.profiles.length;
+    const page: Page<Profile> = { count, results: profilesOnPage };
 
-  getProfiles(index: number, size: number): Profile[] {
-    return this.profiles.slice(index * size, index * size + size);
+    return of(page);
   }
 
   getAllProfiles(){
     return this.profiles
   }
+
 
   sortProfiles(){
     this.profiles.sort((a, b) => {

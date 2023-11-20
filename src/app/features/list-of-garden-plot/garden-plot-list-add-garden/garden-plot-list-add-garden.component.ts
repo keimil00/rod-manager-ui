@@ -84,7 +84,7 @@ export class GardenPlotListAddGardenComponent {
                 // @ts-ignore
                 profileEmailValidator(this.profiles),
                 // @ts-ignore
-                uniqueLeaseholderIDValidator(gardenPlots, this.profiles, false)
+                uniqueLeaseholderIDValidator(this.gardenPlots, this.profiles, false)
             ]],
             status: ['',
                 Validators.required]

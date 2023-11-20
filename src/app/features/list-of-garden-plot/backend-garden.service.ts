@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
 import {GardenPlot, GardenPlotBackend, PlotStatus} from "./garden-plot";
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 import {Profile} from "../Profile";
 import {Payment, PaymentList} from "./garden-plot-details/PaymentList";
 import {ListOfUsersService} from "../list-of-users/list-of-users.service";
+import {Page} from "../../shared/paginator/page.model";
 
 @Injectable({
   providedIn: 'root'
@@ -599,6 +600,14 @@ export class BackendGardenService {
 
   getGardenPlots(index: number, size: number): GardenPlotBackend[] {
     return this.loadedGardenPlots.slice(index * size, index * size + size);
+  }
+
+  getGardenPlots2(index: number, size: number): Observable<Page<GardenPlotBackend>> {
+    const profilesOnPage = this.loadedGardenPlots.slice((index-1) * size, (index-1) * size + size);
+    const count = this.loadedGardenPlots.length;
+    const page: Page<GardenPlotBackend> = { count, results: profilesOnPage };
+
+    return of(page);
   }
 
   //TODO to endpoint
