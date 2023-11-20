@@ -19,7 +19,7 @@ export class TagDialogComponent {
   tagCtrl = new FormControl('');
   filteredTags: Observable<string[]>;
   tags: string[] = [];
-  allTags: string[];
+  allTags: string[] = [];
 
   @ViewChild('tagInput') tagInput!: ElementRef<HTMLInputElement>;
 
@@ -31,10 +31,23 @@ export class TagDialogComponent {
     private postDataService: PostDataService
   ) {
     this.tags = data.get('tags')!.value;
-    this.allTags = this.postDataService.getTags();
+    this.fetchTags();
     this.filteredTags = this.tagCtrl.valueChanges.pipe(
       startWith(null),
       map((tag: string | null) => (tag ? this._filter(tag) : this.allTags.slice())),
+    );
+  }
+
+  fetchTags() {
+    this.postDataService.getTags().subscribe(
+      {
+        next: data => {
+          this.allTags = data.map(tag => tag.name);
+        },
+        error: error => {
+          console.error(error);
+        }
+      }
     );
   }
 
@@ -46,6 +59,7 @@ export class TagDialogComponent {
       this.tags.push(value);
       if (!this.allTags.includes(value)) {
         this.postDataService.createTag(value);
+        this.fetchTags();
       }
     }
 

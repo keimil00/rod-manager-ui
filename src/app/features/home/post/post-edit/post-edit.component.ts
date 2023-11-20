@@ -31,7 +31,7 @@ export class PostEditComponent {
 
     this.postForm = this.fb.group({
       title: ['', Validators.required],
-      content: [''],
+      body: [''],
       tags: this.fb.array([]),
       event: this.fb.group({
         title: [''],

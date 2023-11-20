@@ -37,35 +37,28 @@ export class AuthService {
     );
   }
 
-  refreshToken(): void {
-    this.httpClient.post<AuthResponse>(API_ENDPOINTS.public.refreshToken,
-      {refresh: this.storageService.getRefreshToken()})
-      .subscribe({
-        next: data => {
-          this.storageService.setTokens(data.access, data.refresh);
-        },
-        error: error => {
-          console.error(error);
-          this.logout();
-        }
-      });
+  refreshToken(): Observable<AuthResponse> {
+    const refreshToken = this.storageService.getRefreshToken();
+    console.log('Refresh token in auth:' + refreshToken)
+    return this.httpClient.post<AuthResponse>(API_ENDPOINTS.public.refreshToken,
+      {refresh: this.storageService.getRefreshToken()});
   }
 
   logout(): void {
     this.storageService.setLoggedIn(false);
     this.storageService.clearTokens();
     this.storageService.clearRoles();
-    this.httpClient.post<any>(API_ENDPOINTS.authenticated.logout, {}).subscribe(
-      {
-        next: data => {
-          this.router.navigate(['login']);
-        },
-        error: error => {
-          console.error(error);
-          this.router.navigate(['login']);
-        }
-      }
-    );
+    // this.httpClient.post<any>(API_ENDPOINTS.mixed.logout, {}).subscribe(
+    //   {
+    //     next: data => {
+    //       this.router.navigate(['login']);
+    //     },
+    //     error: error => {
+    //       console.error(error);
+    //       this.router.navigate(['login']);
+    //     }
+    //   }
+    // );
   }
 
 }

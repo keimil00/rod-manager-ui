@@ -1,6 +1,6 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
-import {map, Observable, startWith} from "rxjs";
+import {combineLatest, combineLatestWith, finalize, map, Observable, startWith, tap} from "rxjs";
 import {FormControl} from "@angular/forms";
 import {Post, Tag} from "./post/post.model";
 import {PostDataService} from "./post-data.service";
@@ -19,30 +19,43 @@ export class HomeComponent {
   @ViewChild(PaginatorComponent) paginatorComponent!: PaginatorComponent;
   isCreatingPost = false;
 
-  defaultTags: Tag[] = [
-    {name: 'Ogłoszenia', selected: false},
-    {name: 'Wydarzenia', selected: false},
-    {name: 'Środowisko', selected: false},
-    {name: 'Ciekawostki', selected: false},
-    {name: 'Organizacja', selected: false}
-  ];
+  displayedTags: Tag[] = [];
 
   postsLoaded: Post[] = [];
-  totalPostsCount: number;
-  pageSize = 2;
+  totalPostsCount: number = 0;
+  readonly defaultPageSize = 2;
+  currentPageIndex = 1;
+  currentPageSize = this.defaultPageSize;
 
-  constructor(private postDataService: PostDataService) {
+  constructor(private postDataService: PostDataService, private changeDetectorRef: ChangeDetectorRef ) {
+    this.initData();
     this.filteredTags = this.tagControl.valueChanges.pipe(
       startWith(null),
       map((tag: string | null) => (tag ? this._filter(tag) : this.allTags.slice())),
     );
-    this.totalPostsCount = this.postDataService.getTotalPostsCount();
-    this.initData();
-    this.allTags = this.postDataService.getTags();
   }
 
   private initData() {
-    this.postsLoaded = this.postDataService.getPosts(0, this.pageSize);
+    this.fetchData(1, this.currentPageSize);
+    this.postDataService.getTags()
+      .pipe(
+        finalize(() => {
+          this.filteredTags = this.tagControl.valueChanges.pipe(
+            startWith(null),
+            map((tag: string | null) => (tag ? this._filter(tag) : this.allTags.slice())),
+          );
+        }))
+      .subscribe(
+        {
+          next: data => {
+            this.allTags = data.map(tag => tag.name);
+            this.displayedTags = this.allTags.slice(0, 5).map(tag => ({name: tag, selected: false}));
+          },
+          error: error => {
+            console.error(error);
+          }
+        }
+      );
   }
 
   updateTagControl(input: Event) {
@@ -56,12 +69,12 @@ export class HomeComponent {
   }
 
   addTag(name: string): void {
-    if (this.defaultTags.some(tag => tag.name === name)) {
-      this.filterPostsByTags(this.defaultTags.find(tag => tag.name === name)!)
+    if (this.displayedTags.some(tag => tag.name === name)) {
+      this.filterPostsByTags(this.displayedTags.find(tag => tag.name === name)!)
     } else {
       let tag: Tag = {name: name, selected: false};
       this.filterPostsByTags(tag)
-      this.defaultTags.push(tag);
+      this.displayedTags.push(tag);
     }
   }
 
@@ -70,21 +83,33 @@ export class HomeComponent {
     return this.allTags.filter(tag => tag.toLowerCase().includes(filterValue));
   }
 
-  fetchData(pageIndex: number, pageSize: number): any[] {
-    return this.postDataService.getPosts(pageIndex, pageSize);
-  }
-
-  onNewDataLoaded(data: any[]) {
-    this.postsLoaded = data;
+  fetchData(pageIndex: number, pageSize: number): void {
+    this.currentPageIndex = pageIndex;
+    this.currentPageSize = pageSize;
+    const filterTags = this.displayedTags.filter(tag => tag.selected).map(tag => tag.name);
+    console.log(filterTags);
+    this.postDataService.fetchPosts(pageIndex, pageSize, filterTags)
+      .pipe(
+        finalize(() => {
+          this.changeDetectorRef.detectChanges();
+        }))
+      .subscribe(
+        {
+          next: data => {
+            this.totalPostsCount = data.count;
+            this.postsLoaded = data.results;
+          },
+          error: error => {
+            console.error(error);
+          }
+        }
+      );
   }
 
   filterPostsByTags(tag: Tag) {
     tag.selected = !tag.selected;
-    const selectedTags = this.defaultTags.filter(tag => tag.selected);
-    if (selectedTags.length === 0) this.postsLoaded = this.postDataService.getPosts(0, this.paginatorComponent.pageSize);
-    this.postDataService.filterPostsByTags(selectedTags.map(tag => tag.name));
     this.paginatorComponent.reset();
-    this.initData();
+    this.fetchData(1, this.currentPageSize);
   }
 
   createPost() {
@@ -95,14 +120,7 @@ export class HomeComponent {
     console.log(post);
     this.isCreatingPost = false;
     this.postDataService.savePost(post);
-    this.refresh();
-  }
-
-  refresh() {
-    this.totalPostsCount = this.postDataService.getTotalPostsCount();
     this.initData();
-    this.allTags = this.postDataService.getTags();
-    this.tagControl.setValue(null);
   }
 
   onPostCreatingCancelled() {
