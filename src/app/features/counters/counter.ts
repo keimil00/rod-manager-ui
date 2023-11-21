@@ -1,5 +1,3 @@
-import {PlotStatus} from "../list-of-garden-plot/garden-plot";
-
 export interface Counter {
   id: string;
   addressC: string| null;

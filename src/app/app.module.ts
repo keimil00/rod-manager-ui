@@ -94,6 +94,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { GardenPlotInfoComponent } from './features/garden-plot-info/garden-plot-info.component';
 import { FooterAppComponent } from './core/footer-app/footer-app.component';
 import { TechnicalIssueDialogComponent } from './core/footer-app/technical-issue-dialog/technical-issue-dialog.component';
+import { AccesDeniedComponent } from './features/acces-denied/acces-denied.component';
 
 @NgModule({
     declarations: [
@@ -138,7 +139,8 @@ import { TechnicalIssueDialogComponent } from './core/footer-app/technical-issue
         EditDateComponent,
         GardenPlotInfoComponent,
         FooterAppComponent,
-        TechnicalIssueDialogComponent
+        TechnicalIssueDialogComponent,
+        AccesDeniedComponent
     ],
     imports: [
         BrowserModule,

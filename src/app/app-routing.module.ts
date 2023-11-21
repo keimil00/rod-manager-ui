@@ -15,6 +15,7 @@ import {UserInfoComponent} from "./features/user-info/user-info.component";
 import {WorkersListComponent} from "./features/garden-info/workers-list/workers-list.component";
 import {PaymentsComponent} from "./features/payments/payments.component";
 import {GardenPlotInfoComponent} from "./features/garden-plot-info/garden-plot-info.component";
+import {AccesDeniedComponent} from "./features/acces-denied/acces-denied.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -31,6 +32,7 @@ const routes: Routes = [
   { path: 'payments', component: PaymentsComponent},
   { path: 'my-garden-plot-info', component: GardenPlotInfoComponent},
   { path: '404', component: PageNotFoundComponent },
+  { path: '403', component: AccesDeniedComponent },
   { path: '**', redirectTo: '/404' }
   // { path: 'admin', component: AdminComponent, canActivate: [authGuard([Role.ADMIN] TODO: gdy będą role trzeba to pododawać
 ];

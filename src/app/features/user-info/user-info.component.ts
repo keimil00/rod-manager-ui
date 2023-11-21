@@ -58,6 +58,15 @@ export class UserInfoComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.id = params['id'];
+      this.route.params.subscribe(params => {
+        // TODO !!!!!!!!!!!!!!!!!
+        // if (!this.authService.isManagerOrAdmin() || this.authService.isOwnProfile(this.userId)) {
+        //   // Pozwól użytkownikowi na dostęp do profilu
+        //   this.profile = this.getProfileById(this.id)
+        // } else {
+        //   this.router.navigate(['/403']);
+        // }
+      });
       this.profile = this.getProfileById(this.id)
     });
 

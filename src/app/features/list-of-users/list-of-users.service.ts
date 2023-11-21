@@ -293,8 +293,20 @@ export class ListOfUsersService {
     return of(page);
   }
 
-  getAllProfiles(){
+  // TODO endPoint
+  getProfiles2(index: number, size: number): Observable<Page<Profile>> {
+    const url = `https://localhost:1337/api/profiles?page=${index}&size=${size}`;
+    return this.httpClient.get<Page<Profile>>(url);
+  }
+
+  getAllProfiles() : Profile[]{
     return this.profiles
+  }
+
+  // TODO endPoint
+  getAllProfiles2(): Observable<Profile[]> {
+    const url = 'https://localhost:1337/api/all-profiles';
+    return this.httpClient.get<Profile[]>(url);
   }
 
 
@@ -316,3 +328,111 @@ export class ListOfUsersService {
     );
   }
 }
+
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+//
+// ### GET request to retrieve profiles
+//
+// Retrieves a paginated list of profiles.
+//
+// #### Endpoint
+//
+// - Method: `GET`
+// - URL: `https://localhost:1337/api/profiles`
+// - Query Parameters:
+//   - `page`: The page number to retrieve.
+// - `size`: The number of profiles per page.
+//
+// #### Response
+//
+// The response body contains a paginated list of profiles.
+//
+//   ```typescript
+// interface Profile {
+//   profileId: string;
+//   firstName: string;
+//   lastName: string;
+//   phoneNumber: string;
+//   email: string;
+//   accountStatus: Role_TEMP[];
+//   paymentAmount: number | null;
+//   paymentDueDate: Date;
+// }
+//
+// export enum Role_TEMP {
+//   USER = 'UŻYTKOWNIK',
+//   ADMIN = 'ADMINISTRATOR',
+//   MANAGER = 'Zarządca ogrodu',
+//   GARDENER = 'Działkowiec',
+//   EMPLOYEE = 'PRACOWNIK',
+// }
+//
+// interface Page<T> {
+//   count: number;
+//   results: T[];
+// }
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// ### GET request to fetch all profiles
+//
+// Retrieves all profiles available in the system.
+//
+// #### Endpoint
+//
+// - Method: `GET`
+// - URL: `https://localhost:1337/api/all-profiles`
+//
+// #### Response
+//
+// The response body contains an array of profiles.
+//
+//   ```typescript
+// interface Profile {
+//   profileId: string;
+//   firstName: string;
+//   lastName: string;
+//   phoneNumber: string;
+//   email: string;
+//   accountStatus: Role_TEMP[];
+//   paymentAmount: number | null;
+//   paymentDueDate: Date;
+// }
+//
+// export enum Role_TEMP {
+//   USER = 'UŻYTKOWNIK',
+//   ADMIN = 'ADMINISTRATOR',
+//   MANAGER = 'Zarządca ogrodu',
+//   GARDENER = 'Działkowiec',
+//   EMPLOYEE = 'PRACOWNIK',
+// }
+

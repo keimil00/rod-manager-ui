@@ -1,5 +1,6 @@
 import {Component, HostListener} from '@angular/core';
 import {Document} from './document';
+import {DocumentsService} from "./documents.service";
 
 @Component({
   selector: 'app-documents',
@@ -25,6 +26,9 @@ export class DocumentsComponent {
   selectedFile: File | null = null;
   selectedMapFile: File | null = null;
   selectedStatuteFile: File | null = null;
+
+  constructor(private documentsService: DocumentsService) {
+  }
 
   toggleAddDocumentForm() {
     this.showAddDocumentForm = !this.showAddDocumentForm;
@@ -65,17 +69,17 @@ export class DocumentsComponent {
 
   addMapDocument() {
     if (this.selectedMapFile) {
-      this.linkUrlMap = "tutaj trzeba pozmieniac"
-      // TODO pomyslec nad wrzuceniem na backend
-      this.resetAddMapDocumentForm()
+      this.documentsService.uploadMapDocument(this.selectedMapFile).subscribe(response => {
+        console.log('File uploaded successfully!', response);
+      });
     }
   }
 
   addStatuteDocument() {
     if (this.selectedStatuteFile) {
-      this.linkUrlStatute = "tutaj trzeba pozmieniac"
-      // TODO pomyslec nad wrzuceniem na backend
-      this.resetAddStatuteDocumentForm()
+      this.documentsService.uploadStatuteDocument(this.selectedStatuteFile).subscribe(response => {
+        console.log('File uploaded successfully!', response);
+      });
     }
   }
 

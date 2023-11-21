@@ -587,10 +587,6 @@ export class BackendGardenService {
 
   loadedGardenPlots: GardenPlotBackend[] = this.gardenPlotsBackend;
 
-  getTotalGardenPlotsCount(): number {
-    return this.loadedGardenPlots.length;
-  }
-
   //TODO to endpoint
   //   jednak bedzie jakos z PAGE
   // getTotalPostsCount(): Observable<number> {
@@ -758,6 +754,11 @@ export class BackendGardenService {
       }
     }
   }
+  updateLeaseholderID2(targetID: string | null | undefined, newLeaseholderID: string | null): Observable<any> {
+    const url = `https://localhost:1337/api/updateLeaseholderID`;
+    return this.httpClient.post<any>(url, {targetID,newLeaseholderID});
+  }
+
 }
 
 
@@ -986,4 +987,35 @@ export class BackendGardenService {
 //         GardenStatus: PlotStatus; // enum with values: "Available" or "Unavailable"
 //       }
 //     ]
+//
+//
+// ### POST request to update leaseholderID
+//
+// Updates the leaseholderID for a specific garden plot by sending a POST request to the specified endpoint.
+//
+// #### Endpoint
+//
+// - Method: `POST`
+// - URL: `https://localhost:1337/api/updateLeaseholderID`
+// - Headers:
+// - Content-Type: `application/json`
+//
+// #### Request body
+//
+// The request body should contain the following fields in JSON format:
+//
+//   ```json
+// {
+//   "targetID": "string | null | undefined",
+//   "newLeaseholderID": "string | null"
+// }
+//
+// Moja funkcja:
+// updateLeaseholderID(targetID: string | null | undefined, newLeaseholderID: string | null) {
+//   for (let garden of this.gardenPlots) {
+//     if (garden.gardenPlotID === targetID) {
+//       garden.leaseholderID = newLeaseholderID
+//     }
+//   }
+// }
 
