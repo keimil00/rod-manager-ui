@@ -7,6 +7,7 @@ export const API_ENDPOINTS = {
     register: '/api/register/',
     getAnnouncements: '/api/announcements/',
     getTags: '/api/announcements/tag/',
+    getEvents: '/api/announcements/event/'
   },
 
   mixed: {
