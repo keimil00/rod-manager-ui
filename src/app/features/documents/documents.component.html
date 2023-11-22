@@ -23,7 +23,7 @@
                 Tutaj dodaj mape ogrodu
               </mat-panel-description>
             </mat-expansion-panel-header>
-            <a [href]="linkUrlMap" target="_blank">Twoja mapa</a>
+            <a (click)="testowa()" target="_blank" class="showClick">Twoja mapa</a>
             <div>
               <app-text-button class="add-button" [text]="'Dodaj dokument'" [color]="'accent'"
                                (click)="toggleAddMapDocumentForm()"></app-text-button>
@@ -66,25 +66,31 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <div>
-            <mat-expansion-panel *ngFor="let document of documents">
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  {{ document.title }}
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <a [href]="document.link" target="_blank">Otwórz dokument</a>
-            </mat-expansion-panel>
-
+            <ng-container *ngFor="let item of documents">
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    {{ item.title }}
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <ng-container *ngIf="item.link">
+                  <a [href]="item.link" target="_blank">Otwórz dokument</a>
+                </ng-container>
+                <ng-container *ngIf="item.items">
+                  <div>
+                    <app-text-button class="add-button" [text]="'Dodaj dokument'" [color]="'accent'"
+                                     (click)="addNewDocument(item)"></app-text-button>
+                    <app-text-button class="add-button" [text]="'Dodaj listę'" [color]="'accent'"
+                                     (click)="addNewList(item)"></app-text-button>
+                  </div>
+                </ng-container>
+              </mat-expansion-panel>
+            </ng-container>
             <div>
               <app-text-button class="add-button" [text]="'Dodaj dokument'" [color]="'accent'"
-                               (click)="toggleAddDocumentForm()"></app-text-button>
-            </div>
-
-            <div *ngIf="showAddDocumentForm">
-              <input type="text" [(ngModel)]="newDocumentTitle" placeholder="Tytuł dokumentu">
-              <input type="file" (change)="onFileSelected($event)">
-              <app-text-button class="add-button" [text]="'Dodaj'" [color]="'accent'"
-                               (click)="addDocument()"></app-text-button>
+                               (click)="addNewDocument2()"></app-text-button>
+              <app-text-button class="add-button" [text]="'Dodaj listę'" [color]="'accent'"
+                               (click)="addNewList2()"></app-text-button>
             </div>
           </div>
         </mat-expansion-panel>

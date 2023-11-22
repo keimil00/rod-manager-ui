@@ -585,20 +585,15 @@ export class BackendGardenService {
   constructor(private httpClient: HttpClient, private listOfUsersService:ListOfUsersService) {
   }
 
+  private readonly gardensURL= 'api/gardens'
+  private readonly gardenURL= 'api/garden'
+  private readonly comfirmPaymentURL= 'api/user/confirmPayment'
+  private readonly profileFromURL= 'api/profile-from-garden-id'
+
   loadedGardenPlots: GardenPlotBackend[] = this.gardenPlotsBackend;
 
-  //TODO to endpoint
-  //   jednak bedzie jakos z PAGE
-  // getTotalPostsCount(): Observable<number> {
-  //   return this.httpClient.get<number>('https://localhost:1337/api/gardens/count');
-  // }
 
-
-  getGardenPlots(index: number, size: number): GardenPlotBackend[] {
-    return this.loadedGardenPlots.slice(index * size, index * size + size);
-  }
-
-  getGardenPlots2(index: number, size: number): Observable<Page<GardenPlotBackend>> {
+  getGardenPlots(index: number, size: number): Observable<Page<GardenPlotBackend>> {
     const profilesOnPage = this.loadedGardenPlots.slice((index-1) * size, (index-1) * size + size);
     const count = this.loadedGardenPlots.length;
     const page: Page<GardenPlotBackend> = { count, results: profilesOnPage };
@@ -608,24 +603,24 @@ export class BackendGardenService {
 
   //TODO to endpoint
   //   tu tez trzeba wziac  getTotalGardenPlotsCount
-  // getGardenPlots(index: number, size: number): Observable<GardenPlotBackend[]> {
-  //   const params = new HttpParams()
-  //     .set('index', index.toString())
-  //     .set('size', size.toString());
-  //   return this.httpClient.get<GardenPlotBackend[]>('https://localhost:1337/api/gardens', { params });
-  // }
+  getGardenPlots3(index: number, size: number): Observable<GardenPlotBackend[]> {
+    const params = new HttpParams()
+      .set('index', index.toString())
+      .set('size', size.toString());
+    return this.httpClient.get<GardenPlotBackend[]>(this.gardensURL, { params });
+  }
 
   //TODO to endpoint
-  // getPayments(user_id: string | undefined): Observable<any>{
-  //     const url = `https://localhost:1337/api/garden/payments/${user_id}`;
-  //     return this.httpClient.get<Payment[]>(url);
-  // }
+  getPayments2(user_id: string | undefined): Observable<any>{
+      const url = `${this.gardenURL}/payments/${user_id}`;
+      return this.httpClient.get<Payment[]>(url);
+  }
   getPayments(user_id: string | undefined): Payment[]{
     return  this.paymentLists.find((user) => user.idUser === user_id)?.userPaymentList || [];
   }
 
   confirmPayment(userId: string | undefined, payment: Payment): Observable<any> {
-    const url = `https://localhost:1337/api/user/confirmPayment/${userId}`;
+    const url = `${this.comfirmPaymentURL}${userId}`;
     return this.httpClient.post<any>(url, payment);
   }
 
@@ -647,10 +642,10 @@ export class BackendGardenService {
   }
 
   //TODO to endpoint
-  // getLeaseholder(gardenPlotID: string): Observable<Profile> {
-  //   const url = `${'https://localhost:1337/api/profile-from-garden-id'}/${gardenPlotID}`;
-  //   return this.httpClient.get<Profile>(url);
-  // }
+  getLeaseholder2(gardenPlotID: string): Observable<Profile> {
+    const url = `${this.profileFromURL}/${gardenPlotID}`;
+    return this.httpClient.get<Profile>(url);
+  }
   getLeaseholder(gardenPlotID: string | undefined): Profile {
     const id = this.gardenPlots.find(gardenPlot => gardenPlot.gardenPlotID === gardenPlotID)?.leaseholderID
     return <Profile>this.listOfUsersService.getAllProfiles().find(profile => profile.profileId === id) || null;
@@ -682,7 +677,7 @@ export class BackendGardenService {
 
   //TODO to endpoint
   editGarden3(gardenId: string | undefined, newGarden: GardenPlot): Observable<any> {
-    const url = `${'https://localhost:1337/api/garden'}/${gardenId}`;
+    const url = `${this.gardenURL}/${gardenId}`;
     return this.httpClient.put<any>(url, {newGarden});
   }
 
@@ -697,7 +692,7 @@ export class BackendGardenService {
 
   //TODO to endpoint
   addGarden2(newGarden: GardenPlot): Observable<any> {
-    const url = `${'https://localhost:1337/api/garden'}`;
+    const url = this.gardenURL;
     return this.httpClient.post<any>(url, {newGarden});
   }
 
@@ -723,7 +718,7 @@ export class BackendGardenService {
 
   //TODO to endpoint
   editLeaseholder3(gardenId: string | undefined, newLeaseholderID: string | null): Observable<any> {
-    const url = `${'https://localhost:1337/api/api/garden/leaseholder'}/${gardenId}`;
+    const url = `${this.gardenURL}/leaseholder/${gardenId}`;
     return this.httpClient.patch<any>(url, {leaseholderID:newLeaseholderID});
   }
 

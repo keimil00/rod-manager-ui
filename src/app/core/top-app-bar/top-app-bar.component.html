@@ -13,9 +13,11 @@
     <span>/</span>
     <button mat-button>Kalendarz</button>
 <!--    TODO zmiana bo to do testu-->
+    <div *ngIf="isLoggedIn()">
     <div *appHasRole="[Role.GARDENER, Role.ADMIN]">
       <span>/</span>
       <button mat-button (click)="navigate('my-garden-plot-info')">Moja działka</button>
+    </div>
     </div>
     <div *ngIf="isLoggedIn()">
       <span>/</span>

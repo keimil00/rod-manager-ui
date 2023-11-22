@@ -37,7 +37,11 @@
   padding-top: 10px;
   padding-bottom: 10px;
 }
+a:hover {
+  cursor: pointer;
+}
 
+//@import '../../../assets/Potwierdzenie_wykonania_operacji.pdf';
 @media only screen and (max-width: 600px) {
   .large-card-size {
     width: 95%;

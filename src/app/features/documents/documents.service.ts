@@ -1,31 +1,41 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+import {Observable, Observer} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class DocumentsService {
-
+  private baseUrl = '/api/documents';
   constructor(private httpClient: HttpClient) {}
 
-  uploadMapDocument(file: File) {
+  uploadMapDocument(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
 
-    return this.httpClient.post<any>('https://localhost:1337/api/upload-map-document', formData);
+    return this.httpClient.post<any>(`${this.baseUrl}/upload-map`, formData);
   }
 
-  uploadStatuteDocument(file: File) {
+  uploadStatuteDocument(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
 
-    return this.httpClient.post<any>('https://localhost:1337/api/upload-statute-document', formData);
+    return this.httpClient.post<any>(`${this.baseUrl}/upload-statute`, formData);
   }
 
-  uploadDocument(file: File) {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    return this.httpClient.post<any>('https://localhost:1337/api/upload-document', formData);
+  downloadDocument(documentId: string): Observable<Blob> {
+    return this.httpClient.get(`${this.baseUrl}/download/${documentId}`, { responseType: 'blob' });
   }
+
+
+  // downloadDocumentSimulate(): Observable<Blob> {
+  //   const filePath = '../../../assets/Potwierdzenie_wykonania_operacji.pdf';
+  //   return this.httpClient.get(filePath, { responseType: 'blob' });
+  // }
+  downloadDocumentSimulate(): Observable<Blob> {
+    const filePath = 'assets/Potwierdzenie_wykonania_operacji.pdf';
+    return this.httpClient.get(filePath, { responseType: 'blob' });
+  }
+
+
 }
