@@ -96,6 +96,10 @@ import { FooterAppComponent } from './core/footer-app/footer-app.component';
 import { TechnicalIssueDialogComponent } from './core/footer-app/technical-issue-dialog/technical-issue-dialog.component';
 import { AccesDeniedComponent } from './features/acces-denied/acces-denied.component';
 import { FolderListComponent } from './features/documents/folder-list/folder-list.component';
+import { VotingsComponent } from './features/votings/votings.component';
+import { CurrentVotingsComponent } from './features/votings/current-votings/current-votings.component';
+import { FinishedVotingsComponent } from './features/votings/finished-votings/finished-votings.component';
+import {MatRadioModule} from "@angular/material/radio";
 
 @NgModule({
     declarations: [
@@ -142,44 +146,47 @@ import { FolderListComponent } from './features/documents/folder-list/folder-lis
         FooterAppComponent,
         TechnicalIssueDialogComponent,
         AccesDeniedComponent,
-        FolderListComponent
+        FolderListComponent,
+        VotingsComponent,
+        CurrentVotingsComponent,
+        FinishedVotingsComponent
     ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        HttpClientModule,
-        BrowserAnimationsModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatMenuModule,
-        MatCardModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        MatSelectModule,
-        MatDividerModule,
-        SocialLoginModule,
-        GoogleSigninButtonModule,
-        MatIconModule,
-        MatGridListModule,
-        MatExpansionModule,
-        FormsModule,
-        MatTableModule,
-        MatSortModule,
-        MatDatepickerModule,
-        MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule, MatCheckboxModule,
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatCardModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatDividerModule,
+    SocialLoginModule,
+    GoogleSigninButtonModule,
+    MatIconModule,
+    MatGridListModule,
+    MatExpansionModule,
+    FormsModule,
+    MatTableModule,
+    MatSortModule,
+    MatDatepickerModule,
+    MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule, MatCheckboxModule,
 
-        GoogleSigninButtonModule,
-        MatChipsModule,
-        MatIconModule,
-        MatAutocompleteModule,
-        FlexModule,
-        MatPaginatorModule,
-        MatChipsModule,
-        FormsModule,
-        QuillModule.forRoot(),
-        MatDialogModule, MatTabsModule,
-        MatSnackBarModule
-    ],
+    GoogleSigninButtonModule,
+    MatChipsModule,
+    MatIconModule,
+    MatAutocompleteModule,
+    FlexModule,
+    MatPaginatorModule,
+    MatChipsModule,
+    FormsModule,
+    QuillModule.forRoot(),
+    MatDialogModule, MatTabsModule,
+    MatSnackBarModule, MatRadioModule
+  ],
     providers: [
         {provide: MAT_DATE_LOCALE, useValue: 'pl-PL'},
         {

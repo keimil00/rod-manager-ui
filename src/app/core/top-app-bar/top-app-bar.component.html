@@ -21,7 +21,7 @@
     </div>
     <div *ngIf="isLoggedIn()">
       <span>/</span>
-      <button mat-button>Głosowania</button>
+      <button mat-button  (click)="navigate('voting')">Głosowania</button>
     </div>
     <div *ngIf="isLoggedIn()">
       <span>/</span>
@@ -75,7 +75,7 @@
     </div>
     <div *ngIf="isLoggedIn()">
       <mat-divider></mat-divider>
-      <button mat-menu-item class="button-menu">Głosowania</button>
+      <button mat-menu-item class="button-menu" (click)="navigate('voting')">Głosowania</button>
     </div>
     <div *ngIf="isLoggedIn()">
       <mat-divider></mat-divider>

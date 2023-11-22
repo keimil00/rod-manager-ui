@@ -16,6 +16,7 @@ import {WorkersListComponent} from "./features/garden-info/workers-list/workers-
 import {PaymentsComponent} from "./features/payments/payments.component";
 import {GardenPlotInfoComponent} from "./features/garden-plot-info/garden-plot-info.component";
 import {AccesDeniedComponent} from "./features/acces-denied/acces-denied.component";
+import {VotingsComponent} from "./features/votings/votings.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -31,6 +32,7 @@ const routes: Routes = [
   { path: 'workers-list', component: WorkersListComponent},
   { path: 'payments', component: PaymentsComponent},
   { path: 'my-garden-plot-info', component: GardenPlotInfoComponent},
+  { path: 'voting', component: VotingsComponent},
   { path: '404', component: PageNotFoundComponent },
   { path: '403', component: AccesDeniedComponent },
   { path: '**', redirectTo: '/404' }
