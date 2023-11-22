@@ -9,9 +9,9 @@
   <div class="options">
     <button mat-button (click)="navigate('home')">Strona główna</button>
     <span>/</span>
-    <button mat-button>Dostępne działki</button>
+    <button mat-button (click)="navigate('garden-offers')">Dostępne działki</button>
     <span>/</span>
-    <button mat-button>Kalendarz</button>
+    <button mat-button (click)="navigate('calendar')">Kalendarz</button>
 <!--    TODO zmiana bo to do testu-->
     <div *appHasRole="[Role.GARDENER, Role.ADMIN]">
       <span>/</span>

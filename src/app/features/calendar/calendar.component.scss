@@ -1,0 +1,59 @@
+.cal-cell-top {
+  font-weight: bold;
+  /* Adjust font size and padding as needed */
+}
+
+.cal-events {
+  display: flex;
+  flex-direction: column;
+  /* Adjust padding and spacing as needed */
+}
+
+.cal-event {
+  font-size: 0.85em; /* Adjust the font size */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Truncate with ellipsis */
+  padding: 2px; /* Adjust padding */
+  margin-top: 2px; /* Space between events */
+}
+
+.custom-event {
+  //background: #129cfd;
+  //color: whitesmoke;
+  width: 100%;
+  height: min-content;
+  border-radius: 5px;
+  display: inline-block;
+  margin: 5px;
+}
+
+.current-month {
+  display: flex; // Enables flexbox
+  justify-content: center; // Centers the content
+  align-items: center; // Align items vertically
+  width: 100%;
+
+  // Assuming your buttons and h3 are direct children of .current-month
+  h3 {
+    margin-top: 0.5rem; // Adds space around the h3 element
+  }
+
+  button:first-child {
+    margin-left: auto; // Pushes the first button to the left
+  }
+
+  button:last-child {
+    margin-right: auto; // Pushes the last button to the right
+  }
+}
+
+
+
+.cal-month-view .cal-event {
+  /* width: 10px; */
+  /* height: 10px; */
+  border-radius: 20%;
+  display: inline-block;
+  margin: 5px;
+}
