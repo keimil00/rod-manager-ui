@@ -2,6 +2,8 @@ import {Component} from '@angular/core';
 
 import {DocumentsService} from "./documents.service";
 import {Document} from "./document";
+import {Subscription} from "rxjs";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 
 @Component({
@@ -10,81 +12,115 @@ import {Document} from "./document";
   styleUrls: ['./documents.component.scss']
 })
 export class DocumentsComponent {
-  panelOpenState: boolean = false;
+  // @ts-ignore
+  documents: Document[];
 
-  linkUrlMap = 'link do mapy';
-  linkUrlStatute = 'link do regulaminu';
-
-  documents: Document[] = [
-    {id: '1', title: 'Dokument 1', link: 'https://link-do-dokumentu-1'},
-    {id: '2', title: 'Dokument 2', link: 'https://link-do-dokumentu-2'},
-    {
-      id: '3',
-      title: 'Lista Dokumentów',
-      items: [
-        {id: '4', title: 'Pod-Dokument 1', link: 'https://link-do-pod-dokumentu-1'},
-        {id: '5', title: 'Pod-Dokument 2', link: 'https://link-do-pod-dokumentu-2'}
-      ]
-    }
-  ];
+  isMapAvailable = false
+  isStatuteAvailable = false
 
 
-  // showAddDocumentForm = false;
+  addFileForm: FormGroup;
+  addListForm: FormGroup;
+  showAddDocumentForm = false;
   showAddMapDocumentForm = false;
   showAddStatuteDocumentForm = false;
-  // newDocumentTitle = '';
+  showAddListForm = false;
   selectedFile: File | null = null;
   selectedMapFile: File | null = null;
   selectedStatuteFile: File | null = null;
 
-  constructor(private documentsService: DocumentsService) {
+  constructor(formBuilder: FormBuilder, private documentsService: DocumentsService) {
+    this.initData()
+    this.addFileForm = formBuilder.group({
+      name: ['', [
+        Validators.required,
+      ]],
+      file: ['', [
+        Validators.required,
+      ]]
+    })
+    this.addListForm = formBuilder.group({
+      name: ['', [
+        Validators.required,
+      ]],
+    })
   }
 
-  testowa() {
-    const filePath = 'assets/Potwierdzenie_wykonania_operacji.pdf';
-    window.open(filePath, '_blank'); // Otwiera pobrany plik w nowym oknie
-    // this.documentsService.downloadDocumentSimulate().subscribe(
-    //   (blob: Blob) => {
-    //     // Tutaj możesz obsłużyć pobrany blob, na przykład:
-    //     const blobUrl = URL.createObjectURL(blob);
-    //     const filePath = 'assets/Potwierdzenie_wykonania_operacji.pdf';
-    //     window.open(filePath,'_blank'); // Otwiera pobrany plik w nowym oknie
-    //   },
-    //   (error) => {
-    //     // Obsługa błędów, jeśli wystąpią podczas pobierania
-    //     console.error('Błąd podczas pobierania pliku:', error);
-    //   }
-    // );
+  initData() {
+    this.documentsInit()
+    this.mapInit()
+    this.statueInit()
   }
 
-  newFolderName: string = '';
-  showAddFolderForm: boolean = false;
-
-  toggleAddFolderForm() {
-    this.showAddFolderForm = !this.showAddFolderForm;
-    this.newFolderName = ''; // Czyszczenie pola przy przełączaniu stanu formularza
+  documentsInit(){
+    this.documentsService.getDocuments()
+      .subscribe((result: Document[]) => {
+        this.documents=result
+      });
   }
 
-  addFolder() {
-    const newFolder = {
-      title: this.newFolderName,
-      subDocuments: [] // Puste tablice na ewentualne podfoldery
-    };
+  mapInit() {
+    this.documentsService.isMapAvailable()
+      .subscribe((result: boolean) => {
+        this.isMapAvailable = result;
+      });
+  }
 
-    // Dodanie nowego folderu do listy dokumentów
+  statueInit() {
+    this.documentsService.isStatuteAvailable()
+      .subscribe((result: boolean) => {
+        this.isStatuteAvailable = result;
+      });
+  }
+
+
+  errorMessages = {
+    name: [
+      {type: 'required', message: 'Proszę podać nazwę'},
+    ],
+    file: [
+      {type: 'required', message: 'Proszę podać plik'},
+    ],
+  }
+
+  validationErrors(controlName: string, form: FormGroup): any[] {
+    let errors = []
     // @ts-ignore
-
-    let list = new list[Document]
-    this.documents.push(list);
-
-    // Ukrycie formularza po dodaniu folderu
-    this.showAddFolderForm = false;
+    for (let error of this.errorMessages[controlName]) {
+      if (form.get(controlName)?.hasError(error.type)) {
+        errors.push(error);
+      }
+    }
+    return errors;
   }
 
 
-  // toggleAddDocumentForm() {
-  //   this.showAddDocumentForm = !this.showAddDocumentForm;
-  // }
+  downloadMap() {
+    this.downloadFile('map')
+  }
+
+  downloadStatue() {
+    this.downloadFile('statue')
+  }
+
+  downloadFile(idDocument: string) {
+    let filePath: string = ''
+    const subscription: Subscription = this.documentsService.downloadDocumentSimulate(idDocument)
+      .subscribe((result: string) => {
+        filePath = result;
+        window.open(filePath, '_blank');
+      });
+  }
+
+  toggleAddDocumentForm() {
+    this.showAddDocumentForm = !this.showAddDocumentForm;
+    this.addFileForm.reset()
+  }
+
+  toggleAddListForm() {
+    this.showAddListForm = !this.showAddListForm;
+    this.addListForm.reset()
+  }
 
   toggleAddMapDocumentForm() {
     this.showAddMapDocumentForm = !this.showAddMapDocumentForm;
@@ -106,21 +142,40 @@ export class DocumentsComponent {
     this.selectedStatuteFile = event.target.files[0];
   }
 
-  // addDocument() {
-  //   if (this.newDocumentTitle && this.selectedFile) {
-  //     // TODO pomyslec nad wrzuceniem na backend
-  //     const newDocument = new Document(this.newDocumentTitle,'costam')
-  //
-  //     this.documents.push(newDocument);
-  //     this.resetAddDocumentForm();
-  //   }
-  // }
+
+  addNewDocument() {
+    if (this.addFileForm.valid && this.selectedFile) {
+      const newTitle: string = this.addFileForm.get('name')?.value;
+      const id = generateRandomID();
+      const newDocument: Document = {id: id, title: newTitle};
+      this.documents.push(newDocument);
+      this.documentsService.update(this.documents).subscribe(response => {
+        console.log('Zaktualizowano dane: ', response);
+      });
+      this.documentsService.uploadDocument(this.selectedFile, id)
+      this.showAddDocumentForm = false
+    }
+  }
+
+  addNewList() {
+    if (this.addListForm.valid) {
+      const newTitle: string = this.addListForm.get('name')?.value;
+      const id = generateRandomID();
+      const newList: Document = {id: id, title: newTitle, items: []};
+      this.documents.push(newList);
+      this.documentsService.update(this.documents).subscribe(response => {
+        console.log('Zaktualizowano dane: ', response);
+      });
+      this.showAddListForm = false
+    }
+  }
 
   addMapDocument() {
     if (this.selectedMapFile) {
       this.documentsService.uploadMapDocument(this.selectedMapFile).subscribe(response => {
         console.log('File uploaded successfully!', response);
       });
+      this.isMapAvailable = true
     }
   }
 
@@ -129,120 +184,22 @@ export class DocumentsComponent {
       this.documentsService.uploadStatuteDocument(this.selectedStatuteFile).subscribe(response => {
         console.log('File uploaded successfully!', response);
       });
+      this.isStatuteAvailable = true
     }
   }
 
-  resetAddDocumentForm() {
-    this.newDocumentTitle = '';
-    this.selectedFile = null;
-    this.showAddDocumentForm = false;
-  }
-
-  resetAddMapDocumentForm() {
-    this.selectedMapFile = null;
-    this.showAddMapDocumentForm = false;
-  }
-
-  resetAddStatuteDocumentForm() {
-    this.selectedStatuteFile = null;
-    this.showAddStatuteDocumentForm = false;
-  }
-
-
-  // ... (pozostała część kodu)
-
-  newDocumentTitle: string = '';
-  newDocumentLink: string = '';
-  newListTitle: string = '';
-  showAddDocumentForm: boolean = false;
-  showAddListForm: boolean = false;
-
-  toggleAddDocumentForm() {
-    this.showAddDocumentForm = !this.showAddDocumentForm;
-    this.newDocumentTitle = '';
-    this.newDocumentLink = '';
-  }
-
-  toggleAddListForm() {
-    this.showAddListForm = !this.showAddListForm;
-    this.newListTitle = '';
-  }
-
-  // addDocument() {
-  //   const newDocument = {title: this.newDocumentTitle,link: this.newDocumentLink)}
-  //   this.documents.push(newDocument);
-  //   this.showAddDocumentForm = false;
-  // }
-
-  // addList() {
-  //   const newList = new DocumentList(this.newListTitle, []);
-  //   this.documents.push(newList);
-  //   this.showAddListForm = false;
-  // }
-
-  // addNewDocument() {
-  //   const newDocument: Document = { title: 'Nowy dokument', link: '' };
-  //   // @ts-ignore
-  //   this.documents.push(newDocument);
-  // }
-  //
-  // addNewList() {
-  //   const newList: Document = { title: 'Nowa lista', items: [] };
-  //   // this.documents[index].items = this.documents[index].items || [];
-  //   // @ts-ignore
-  //   this.documents.push(newList);
-  // }
-
-  // addNewDocument(item: Document, index: number) {
-  //
-  //   const newDocument: Document = { id:generateRandomID(5), title: 'Nowy dokument', link: '' };
-  //   // item.items = item.items || [];
-  //  // @ts-ignore
-  //   item.push(newDocument);
-  // }
-
-  addNewDocument(item: Document) {
-    const id = generateRandomID();
-    // @ts-ignore
-    item.items.push({
-      id: id,
-      title: 'Nowy dokument',
-      link: id
-    });
-
-  }
-
-  addNewList(item: Document) {
-    // @ts-ignore
-    item.items.push({
-      id: generateRandomID(),
-      title: 'Nowy Folder',
-      items: []
-    });
-
+  onItemAdded() {
     console.log(this.documents)
-  }
-
-  addNewDocument2() {
-    const id = generateRandomID();
-    const newDocument: Document = {id: id, title: 'Nowy dokument', link: id};
-    // item.items = item.items || [];
-    // @ts-ignore
-    this.documents.push(newDocument);
-  }
-
-  addNewList2() {
-    const newList: Document = {id: generateRandomID(), title: 'Nowa lista', items: []};
-    // item.items = item.items || [];
-    // @ts-ignore
-    this.documents.push(newList);
+    this.documentsService.update(this.documents).subscribe(response => {
+      console.log('Zaktualizowano dane: ', response);
+    });
   }
 
 
   title: any;
 }
 
-function generateRandomID(): string {
+export function generateRandomID(): string {
   const length = 15;
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const charactersLength = characters.length;

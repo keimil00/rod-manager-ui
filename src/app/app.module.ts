@@ -95,6 +95,7 @@ import { GardenPlotInfoComponent } from './features/garden-plot-info/garden-plot
 import { FooterAppComponent } from './core/footer-app/footer-app.component';
 import { TechnicalIssueDialogComponent } from './core/footer-app/technical-issue-dialog/technical-issue-dialog.component';
 import { AccesDeniedComponent } from './features/acces-denied/acces-denied.component';
+import { FolderListComponent } from './features/documents/folder-list/folder-list.component';
 
 @NgModule({
     declarations: [
@@ -140,7 +141,8 @@ import { AccesDeniedComponent } from './features/acces-denied/acces-denied.compo
         GardenPlotInfoComponent,
         FooterAppComponent,
         TechnicalIssueDialogComponent,
-        AccesDeniedComponent
+        AccesDeniedComponent,
+        FolderListComponent
     ],
     imports: [
         BrowserModule,

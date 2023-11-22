@@ -1,8 +1,11 @@
 .add-button {
+}
+.left-button {
   display: flex;
   justify-content: flex-start;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  align-items: flex-start;
+  margin-top: 7px;
+  margin-bottom: 7px;
 }
 
 .page-container {
@@ -41,7 +44,10 @@ a:hover {
   cursor: pointer;
 }
 
-//@import '../../../assets/Potwierdzenie_wykonania_operacji.pdf';
+.row-item{
+  flex: 1;
+}
+
 @media only screen and (max-width: 600px) {
   .large-card-size {
     width: 95%;

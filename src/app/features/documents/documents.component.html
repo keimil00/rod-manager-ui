@@ -23,16 +23,21 @@
                 Tutaj dodaj mape ogrodu
               </mat-panel-description>
             </mat-expansion-panel-header>
-            <a (click)="testowa()" target="_blank" class="showClick">Twoja mapa</a>
-            <div>
+            <div *ngIf="isMapAvailable">
+              <a (click)="downloadMap()" target="_blank" class="showClick">Twoja mapa</a>
+            </div>
+
+            <div class="left-button">
               <app-text-button class="add-button" [text]="'Dodaj dokument'" [color]="'accent'"
                                (click)="toggleAddMapDocumentForm()"></app-text-button>
             </div>
 
             <div *ngIf="showAddMapDocumentForm">
               <input type="file" (change)="onMapFileSelected($event)">
-              <app-text-button class="add-button" [text]="'Dodaj'" [color]="'accent'"
-                               (click)="addMapDocument()"></app-text-button>
+              <div class="left-button">
+                <app-text-button class="add-button" [text]="'Dodaj'" [color]="'accent'"
+                                 (click)="addMapDocument()"></app-text-button>
+              </div>
             </div>
           </mat-expansion-panel>
           <mat-expansion-panel>
@@ -44,17 +49,20 @@
                 Tutaj dodaj regulamin ogrodu
               </mat-panel-description>
             </mat-expansion-panel-header>
-            <a [href]="linkUrlStatute" target="_blank">Twój regulamin</a>
-            <div>
+            <div *ngIf="isStatuteAvailable">
+              <a (click)="downloadStatue()" target="_blank">Twój regulamin</a>
+            </div>
+            <div class="left-button">>
               <app-text-button class="add-button" [text]="'Dodaj dokument'" [color]="'accent'"
                                (click)="toggleAddStatuteDocumentForm()"></app-text-button>
             </div>
 
             <div *ngIf="showAddStatuteDocumentForm">
               <input type="file" (change)="onStatuteFileSelected($event)">
-
-              <app-text-button class="add-button" [text]="'Dodaj'" [color]="'accent'"
-                               (click)="addStatuteDocument()"></app-text-button>
+              <div class="left-button">
+                <app-text-button class="add-button" [text]="'Dodaj'" [color]="'accent'"
+                                 (click)="addStatuteDocument()"></app-text-button>
+              </div>
             </div>
           </mat-expansion-panel>
         </mat-expansion-panel>
@@ -66,31 +74,62 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <div>
-            <ng-container *ngFor="let item of documents">
-              <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                  <mat-panel-title>
-                    {{ item.title }}
-                  </mat-panel-title>
-                </mat-expansion-panel-header>
-                <ng-container *ngIf="item.link">
-                  <a [href]="item.link" target="_blank">Otwórz dokument</a>
-                </ng-container>
-                <ng-container *ngIf="item.items">
+            <app-folder-list [documents]="documents" (itemAdded)="onItemAdded()"></app-folder-list>
+            <div>
+              <div>
+                <div class="left-button">
                   <div>
                     <app-text-button class="add-button" [text]="'Dodaj dokument'" [color]="'accent'"
-                                     (click)="addNewDocument(item)"></app-text-button>
-                    <app-text-button class="add-button" [text]="'Dodaj listę'" [color]="'accent'"
-                                     (click)="addNewList(item)"></app-text-button>
+                                     (click)="toggleAddDocumentForm()"></app-text-button>
                   </div>
-                </ng-container>
-              </mat-expansion-panel>
-            </ng-container>
-            <div>
-              <app-text-button class="add-button" [text]="'Dodaj dokument'" [color]="'accent'"
-                               (click)="addNewDocument2()"></app-text-button>
-              <app-text-button class="add-button" [text]="'Dodaj listę'" [color]="'accent'"
-                               (click)="addNewList2()"></app-text-button>
+                </div>
+
+                <div *ngIf="showAddDocumentForm">
+                  <form class [formGroup]="addFileForm">
+                    <mat-form-field class="row-item">
+                      <mat-label>Nazwa</mat-label>
+                      <input matInput type="string" placeholder="Nazwa" formControlName="name">
+                      <mat-error *ngFor="let error of validationErrors('name',addFileForm)">
+                        {{ error.message }}
+                      </mat-error>
+                    </mat-form-field>
+                    <div class="row-item">
+                      <input type="file" (change)="onFileSelected($event)" formControlName="file">
+                      <mat-error *ngFor="let error of validationErrors('file',addFileForm)">
+                        {{ error.message }}
+                      </mat-error>
+                    </div>
+                    <div class="left-button">
+                      <app-text-button type="submit" class="add-button" [text]="'Dodaj'" [color]="'accent'"
+                                       (click)="addNewDocument()"></app-text-button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div>
+                <div class="left-button">
+                  <div>
+                    <app-text-button class="add-button" [text]="'Dodaj Folder'" [color]="'accent'"
+                                     (click)="toggleAddListForm()"></app-text-button>
+                  </div>
+                </div>
+
+                <div *ngIf="showAddListForm">
+                  <form class [formGroup]="addListForm">
+                    <mat-form-field class="row-item">
+                      <mat-label>Nazwa</mat-label>
+                      <input matInput type="string" placeholder="Nazwa" formControlName="name">
+                      <mat-error *ngFor="let error of validationErrors('name',addListForm)">
+                        {{ error.message }}
+                      </mat-error>
+                    </mat-form-field>
+                    <div class="left-button">
+                      <app-text-button type="submit" class="add-button" [text]="'Dodaj'" [color]="'accent'"
+                                       (click)="addNewList()"></app-text-button>
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
           </div>
         </mat-expansion-panel>
