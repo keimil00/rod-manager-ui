@@ -7,16 +7,14 @@
 
     </mat-card-header>
     <mat-card-content>
-<!--      <div class="page-container2">-->
-        <div *ngFor="let vote of currentVotes">
-          <div class="page-container">
+      <div *ngFor="let vote of currentVotes">
+        <div class="page-container">
           <mat-card class="vote-card-size">
             <mat-card-header class="row-container">
               <div class="left-item">
                 <h2 class="title2">{{ vote.title }}</h2>
                 <p>{{ vote.description }}</p>
               </div>
-
             </mat-card-header>
             <mat-card-content>
               <mat-radio-group [formControl]="selectedOptions[vote.id]" class="radio-group">
@@ -30,8 +28,12 @@
                 Zatwierdź głos
               </button>
               <hr>
-
             </mat-card-content>
+            <mat-card-footer>
+              <h2 class="title4">
+                {{vote.finishDate | date:'dd.MM.yyyy'}}
+              </h2>
+            </mat-card-footer>
           </mat-card>
         </div>
       </div>

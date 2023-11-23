@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {LoginComponent} from './features/login/login.component';
@@ -100,6 +99,8 @@ import { VotingsComponent } from './features/votings/votings.component';
 import { CurrentVotingsComponent } from './features/votings/current-votings/current-votings.component';
 import { FinishedVotingsComponent } from './features/votings/finished-votings/finished-votings.component';
 import {MatRadioModule} from "@angular/material/radio";
+import {NgApexchartsModule} from "ng-apexcharts";
+import { AddVotingComponent } from './features/votings/add-voting/add-voting.component';
 
 @NgModule({
     declarations: [
@@ -149,7 +150,8 @@ import {MatRadioModule} from "@angular/material/radio";
         FolderListComponent,
         VotingsComponent,
         CurrentVotingsComponent,
-        FinishedVotingsComponent
+        FinishedVotingsComponent,
+        AddVotingComponent
     ],
   imports: [
     BrowserModule,
@@ -185,7 +187,8 @@ import {MatRadioModule} from "@angular/material/radio";
     FormsModule,
     QuillModule.forRoot(),
     MatDialogModule, MatTabsModule,
-    MatSnackBarModule, MatRadioModule
+    MatSnackBarModule, MatRadioModule,
+    NgApexchartsModule,
   ],
     providers: [
         {provide: MAT_DATE_LOCALE, useValue: 'pl-PL'},

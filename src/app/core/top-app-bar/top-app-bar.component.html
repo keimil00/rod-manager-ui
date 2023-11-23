@@ -12,16 +12,16 @@
     <button mat-button>Dostępne działki</button>
     <span>/</span>
     <button mat-button>Kalendarz</button>
-<!--    TODO zmiana bo to do testu-->
+    <!--    TODO zmiana bo to do testu-->
     <div *ngIf="isLoggedIn()">
-    <div *appHasRole="[Role.GARDENER, Role.ADMIN]">
-      <span>/</span>
-      <button mat-button (click)="navigate('my-garden-plot-info')">Moja działka</button>
-    </div>
+      <div *appHasRole="[Role.GARDENER, Role.ADMIN]">
+        <span>/</span>
+        <button mat-button (click)="navigate('my-garden-plot-info')">Moja działka</button>
+      </div>
     </div>
     <div *ngIf="isLoggedIn()">
       <span>/</span>
-      <button mat-button  (click)="navigate('voting')">Głosowania</button>
+      <button mat-button (click)="navigate('voting')">Głosowania</button>
     </div>
     <div *ngIf="isLoggedIn()">
       <span>/</span>
@@ -62,16 +62,18 @@
     </mat-menu>
   </div>
 
-<!--  TODO mozna poprawic bo cos na iphone SE nie miesci sie a nie umialem zmniejszyc menu-item-->
+  <!--  TODO mozna poprawic bo cos na iphone SE nie miesci sie a nie umialem zmniejszyc menu-item-->
   <mat-menu #menu1="matMenu" class="mat-menu-custom-style">
     <button mat-menu-item class="button-menu" (click)="navigate('home')">Strona główna</button>
     <mat-divider></mat-divider>
     <button mat-menu-item class="button-menu">Dostępne działki</button>
     <mat-divider></mat-divider>
     <button mat-menu-item class="button-menu">Kalendarz</button>
-    <div *appHasRole="[Role.GARDENER]">
-      <mat-divider></mat-divider>
-      <button mat-menu-item class="button-menu">Moja działka</button>
+    <div *ngIf="isLoggedIn()">
+      <div *appHasRole="[Role.GARDENER]">
+        <mat-divider></mat-divider>
+        <button mat-menu-item class="button-menu">Moja działka</button>
+      </div>
     </div>
     <div *ngIf="isLoggedIn()">
       <mat-divider></mat-divider>
@@ -91,7 +93,7 @@
     <mat-divider></mat-divider>
 
     <div *appHasRole="[Role.MANAGER, Role.TECHNICAL_EMPLOYEE, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]">
-      <div *appHasRole="[Role.MANAGER]">
+      <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
         <button mat-menu-item class="button-menu" (click)="navigate('documents')">Dokumenty</button>
         <mat-divider></mat-divider>
       </div>

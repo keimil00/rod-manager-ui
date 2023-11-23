@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {VotingsService} from "../votings.service";
 import {VotingItem} from "../voting-item.model";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormControl} from "@angular/forms";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-current-votings',
@@ -13,12 +14,21 @@ export class CurrentVotingsComponent {
   // @ts-ignore
   currentVotes: VotingItem[];
   selectedOptions: { [voteId: string]: FormControl } = {};
-
-  constructor(private votingService: VotingsService, private _snackBar: MatSnackBar) {}
+    // @ts-ignore
+    private addVotingFinishedSubscription: Subscription;
+  constructor(private votingService: VotingsService, private _snackBar: MatSnackBar) {
+  }
 
   ngOnInit() {
     this.getCurrentVotes();
+    this.addVotingFinishedSubscription = this.votingService.addVotingFinished$.subscribe(() => {
+      this.getCurrentVotes();
+    });
   }
+
+    ngOnDestroy() {
+        this.addVotingFinishedSubscription.unsubscribe();
+    }
 
   getCurrentVotes() {
     this.votingService.getCurrentVotes().subscribe((votes: VotingItem[]) => {
@@ -59,6 +69,6 @@ export class CurrentVotingsComponent {
   }
 
   private showSuccessMessage(message: string): void {
-    this._snackBar.open(`Pomyślnie zagłosowano na: ${message}`, 'Zamknij', { duration: 4000 });
+    this._snackBar.open(`Pomyślnie zagłosowano na: ${message}`, 'Zamknij', {duration: 4000});
   }
 }

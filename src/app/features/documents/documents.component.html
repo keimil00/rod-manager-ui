@@ -50,9 +50,9 @@
               </mat-panel-description>
             </mat-expansion-panel-header>
             <div *ngIf="isStatuteAvailable">
-              <a (click)="downloadStatue()" target="_blank">Twój regulamin</a>
+              <a (click)="downloadStatue()" target="_blank" class="showClick">Twój regulamin</a>
             </div>
-            <div class="left-button">>
+            <div class="left-button">
               <app-text-button class="add-button" [text]="'Dodaj dokument'" [color]="'accent'"
                                (click)="toggleAddStatuteDocumentForm()"></app-text-button>
             </div>

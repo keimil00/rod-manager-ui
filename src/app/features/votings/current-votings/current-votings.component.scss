@@ -61,8 +61,14 @@
 .title2 {
   text-align: left;
 }
+.title4 {
+  padding-top: 10px;
+  padding-right: 2%;
+  text-align: right;
+  font-size: 10px
+}
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 1000px) {
   .large-card-size {
     width: 95%;
   }
