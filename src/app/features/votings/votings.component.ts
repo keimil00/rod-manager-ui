@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {AddVotingComponent} from "./add-voting/add-voting.component";
 import {VotingsService} from "./votings.service";
+import {Role} from "../register/user.model";
 
 @Component({
     selector: 'app-votings',
@@ -24,4 +25,6 @@ export class VotingsComponent {
             }
         });
     }
+
+    protected readonly Role = Role;
 }

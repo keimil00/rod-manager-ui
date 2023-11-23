@@ -8,5 +8,6 @@ export class TechnicalIssueService {
 
   constructor(private httpClient: HttpClient) { }
 
+  // TODO: Implement this method
   sendIssue(title:string,description:string){}
 }

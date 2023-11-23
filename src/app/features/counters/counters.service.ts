@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Counter, CounterType} from "./counter";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 
 @Injectable({
@@ -155,8 +155,8 @@ export class CountersService {
 
   private readonly countersUrl = 'https://localhost:1337/api/counters';
 
-  getAllCounters(): Counter[] {
-    return this.counters
+  getAllCounters(): Observable<Counter[]>  {
+    return of (this.counters)
   }
 
   // TODO
@@ -164,8 +164,9 @@ export class CountersService {
     return this.httpClient.get<Counter[]>(this.countersUrl);
   }
 
-  addCounter(counter: Counter) {
+  addCounter(counter: Counter):Observable<any> {
     this.counters.push(counter)
+    return of('dodano licznik')
   }
 
   // TODO
@@ -173,12 +174,14 @@ export class CountersService {
     return this.httpClient.post(this.countersUrl, counter);
   }
 
-  updateMeasurement(counterID: string, newMeasurement: number) {
+  updateMeasurement(counterID: string, newMeasurement: number):Observable<any> {
+    //zmienić stan konta użytkownika
     const foundCounterIndex = this.counters.findIndex(counter => counter.id === counterID);
 
     if (foundCounterIndex !== -1) {
       this.counters[foundCounterIndex].measurement = newMeasurement;
     }
+    return of('aktualizacja pomiaru zakończona sukcesem')
   }
 
   // TODO

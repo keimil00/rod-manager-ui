@@ -4,7 +4,7 @@ import {PlotStatus} from "../list-of-garden-plot/garden-plot";
 import {GardenPlotInfo, GardenPlotInfoFee, IndividualPaymentGardenPlot, MediaIndividualFee} from "./gardenPlotInfo";
 import {MatTableDataSource} from "@angular/material/table";
 import {Fee, IndividualPayment, TypeOfFee} from "../payments/payments";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -134,8 +134,8 @@ export class GardenPlotInfoService {
   private readonly gardenPlotInfoUrl = 'https://localhost:1337/api/garden-plot-info';
 
 
-  getGardenPlotInfo(): GardenPlotInfo {
-    return this.gardenPlotInfo
+  getGardenPlotInfo(): Observable<GardenPlotInfo> {
+    return of (this.gardenPlotInfo)
   }
 
   getGardenPlotInfo2(): Observable<GardenPlotInfo> {

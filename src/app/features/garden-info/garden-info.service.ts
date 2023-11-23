@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Employer} from "./employer.model";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -36,8 +36,8 @@ export class GardenInfoService {
 
   private readonly employersUrl = 'https://localhost:1337/api/employers';
 
-  getEmployers() :Employer[] {
-    return this.employers
+  getEmployers() :Observable<Employer[]> {
+    return of( this.employers)
   }
 
   // TODO

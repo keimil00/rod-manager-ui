@@ -3,7 +3,7 @@ import {Fee, IndividualPayment, IndividualPayments, Payments, TypeOfFee} from ".
 import {HttpClient} from "@angular/common/http";
 import {GardenPlot} from "../list-of-garden-plot/garden-plot";
 import {EditingLeaseFeeComponent} from "./editing-lease-fee/editing-lease-fee.component";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -416,8 +416,8 @@ export class PaymentsService {
   constructor(private httpClient: HttpClient) {
   }
 
-  getPayments(): Payments {
-    return this.payments
+  getPayments(): Observable<Payments> {
+    return of (this.payments)
   }
 
   // TODO Backend
@@ -426,15 +426,15 @@ export class PaymentsService {
   }
 
   //   TODO pamietac ze przy rejestracji trzeba dodawac to do listy
-  findUserPaymentsByAddress(sector: string | null, avenue: string | null, number: number | null, gardenPlots: GardenPlot[]): IndividualPayments | null {
+  findUserPaymentsByAddress(sector: string | null, avenue: string | null, number: number | null, gardenPlots: GardenPlot[]): Observable<IndividualPayments | null> {
     const matchingGardenPlot = gardenPlots.find((gardenPlot) =>
       gardenPlot.sector === sector && gardenPlot.avenue === avenue && gardenPlot.number === number
     );
     const leaseholderID = matchingGardenPlot ? matchingGardenPlot.leaseholderID : null;
     const individualPayment = this.individualPayments.find((payment) => payment.userID === leaseholderID)
     if (individualPayment) {
-      return individualPayment
-    } else return null
+      return of( individualPayment)
+    } else return of( null)
   }
 
   //   TODO
@@ -443,12 +443,13 @@ export class PaymentsService {
     return this.httpClient.get<IndividualPayments | null>(url);
   }
 
-  addNewIndividualPayment(userId: string | undefined, individualPayment: IndividualPayment) {
+  addNewIndividualPayment(userId: string | undefined, individualPayment: IndividualPayment): Observable<any> {
     const foundUserIndex = this.individualPayments.findIndex(payment => payment.userID === userId);
     if (foundUserIndex !== -1) {
       // @ts-ignore
       this.individualPayments[foundUserIndex].paymentsList.push(individualPayment);
     }
+    return of(null);
   }
 
   //   TODO
@@ -457,7 +458,7 @@ export class PaymentsService {
     return this.httpClient.post(url, individualPayment);
   }
 
-  deleteIndividualPayment(userID: string, paymentID: string) {
+  deleteIndividualPayment(userID: string, paymentID: string): Observable<any> {
     const foundUserIndex = this.individualPayments.findIndex(payments => payments.userID === userID);
     if (foundUserIndex !== -1) {
       // @ts-ignore
@@ -467,6 +468,7 @@ export class PaymentsService {
         this.individualPayments[foundUserIndex].paymentsList.splice(foundPaymentIndex, 1);
       }
     }
+    return of(null);
   }
 
   //   TODO
@@ -475,23 +477,25 @@ export class PaymentsService {
     return this.httpClient.delete(url);
   }
 
-  editLeaseFee(payments: Fee[]) {
+  editLeaseFee(payments: Fee[]): Observable<any> {
     this.payments.leaseFees = payments;
+    return of(null);
   }
   //   TODO
   editLeaseFee2(payments: Fee[]): Observable<any> {
     return this.httpClient.put(this.paymentsUrl + '/leaseFees', payments);
   }
 
-  editUtilityFee(payments: Fee[]) {
+  editUtilityFee(payments: Fee[]): Observable<any> {
     this.payments.utilityFees = payments;
+    return of(null);
   }
   //   TODO
   editUtilityFee2(payments: Fee[]): Observable<any> {
     return this.httpClient.put(this.paymentsUrl + '/utilityFees', payments);
   }
 
-  editAdditionalFee(payment: Fee | undefined) {
+  editAdditionalFee(payment: Fee | undefined): Observable<any> {
     // @ts-ignore
     const foundIndex = this.payments.additionalFees.findIndex(curentPayment => curentPayment.feeID === payment.feeID);
     if (foundIndex !== -1) {
@@ -499,6 +503,7 @@ export class PaymentsService {
         this.payments.additionalFees[foundIndex] = payment;
       }
     }
+    return of(null);
   }
   //   TODO
   editAdditionalFee2(payment: Fee | undefined): Observable<any> {
@@ -506,8 +511,9 @@ export class PaymentsService {
     return this.httpClient.put(url, payment);
   }
 
-  addAdditionalFee(payment: Fee) {
+  addAdditionalFee(payment: Fee): Observable<any> {
     this.payments.additionalFees.push(payment)
+    return of(null);
   }
 
   //   TODO
@@ -515,8 +521,9 @@ export class PaymentsService {
     return this.httpClient.post(this.paymentsUrl + '/additionalFees', payment);
   }
 
-  updateDate(date: Date) {
+  updateDate(date: Date): Observable<any> {
     this.payments.date = date
+    return of(null);
   }
 
   updateDate2(date: Date): Observable<any> {

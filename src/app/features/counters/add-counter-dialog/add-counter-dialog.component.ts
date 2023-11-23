@@ -10,6 +10,7 @@ import {
 } from "../../list-of-garden-plot/GardenService";
 import {GardenPlot} from "../../list-of-garden-plot/garden-plot";
 import {BackendGardenService} from "../../list-of-garden-plot/backend-garden.service";
+import {Profile} from "../../Profile";
 
 @Component({
     selector: 'app-add-counter-dialog',
@@ -80,8 +81,11 @@ export class AddCounterDialogComponent implements OnInit {
     }
 
     initData() {
-        this.gardenPlots = this.gardenPlotsDataService.getAllGardenPlots()
+        this.gardenPlotsDataService.getAllGardenPlots().subscribe((gardenPlots: GardenPlot[]) => {
+            this.gardenPlots = gardenPlots;
+        });
     }
+
 
     ngOnInit() {
         this.sectorsOptions = getMatchingSectorsWithCounter(this.data.counters, this.gardenPlots, this.isWaterType);

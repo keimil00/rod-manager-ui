@@ -1,30 +1,43 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {ListOfUsersService} from "../list-of-users/list-of-users.service";
 import {Profile} from "../Profile";
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
+import {GardenPlot} from "../list-of-garden-plot/garden-plot";
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class UserInfoService {
-  private readonly profilesUrl = 'https://localhost:1337/api/profiles';
-  private readonly myIdUrl = 'https://localhost:1337/api/myID';
-  constructor(private listOfUsersService: ListOfUsersService,private httpClient: HttpClient) { }
+    private readonly profilesUrl = 'https://localhost:1337/api/profiles';
+    private readonly myIdUrl = 'https://localhost:1337/api/myID';
 
-  getProfileById(id: string | null) :Profile | undefined {
-    return this.listOfUsersService.getAllProfiles().find(profile => profile.profileId === id);
-  }
+    constructor(private listOfUsersService: ListOfUsersService, private httpClient: HttpClient) {
+    }
 
-  getProfileById2(id: string | null): Observable<Profile> {
-    const url = `${this.profilesUrl}/${id}`;
-    return this.httpClient.get<Profile>(url);
-  }
+    // @ts-ignore
+    profiles: Profile[];
 
-  getProfileID():Observable<string>{
-    const url = this.myIdUrl;
-    return this.httpClient.get<string>(url);
-  }
+    getProfileById(id: string | null): Profile | undefined {
+        this.initProfiles()
+        return this.profiles.find(profile => profile.profileId === id);
+    }
+
+    initProfiles() {
+        this.listOfUsersService.getAllProfiles().subscribe((profiles: Profile[]) => {
+            this.profiles = profiles;
+        });
+    }
+
+    getProfileById2(id: string | null): Observable<Profile> {
+        const url = `${this.profilesUrl}/${id}`;
+        return this.httpClient.get<Profile>(url);
+    }
+
+    getProfileID(): Observable<string> {
+        const url = this.myIdUrl;
+        return this.httpClient.get<string>(url);
+    }
 
 }
 
@@ -49,17 +62,17 @@ export class UserInfoService {
 //   lastName: string;
 //   phoneNumber: string;
 //   email: string;
-//   accountStatus: Role_TEMP[];
+//   accountStatus: Role[];
 //   paymentAmount: number | null;
 //   paymentDueDate: Date;
 // }
 //
-// export enum Role_TEMP {
-//   USER = 'UŻYTKOWNIK',
-//   ADMIN = 'ADMINISTRATOR',
-//   MANAGER = 'Zarządca ogrodu',
-//   GARDENER = 'Działkowiec',
-//   EMPLOYEE = 'PRACOWNIK',
+// export enum Role {
+//   ADMIN = 'ADMIN',
+//   MANAGER = 'Zarządca',
+//   GARDENER = 'Działkowicz',
+//   TECHNICAL_EMPLOYEE = 'pracownik_techniczny',
+//   NON_TECHNICAL_EMPLOYEE = 'pracownik_nie_techniczny',
 // }
 // .
 // .

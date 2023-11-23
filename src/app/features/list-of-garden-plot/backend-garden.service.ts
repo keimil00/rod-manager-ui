@@ -611,15 +611,20 @@ export class BackendGardenService {
   }
 
   //TODO to endpoint
-  getPayments2(user_id: string | undefined): Observable<any>{
+  getPayments2(user_id: string | undefined): Observable<Payment[]>{
       const url = `${this.gardenURL}/payments/${user_id}`;
       return this.httpClient.get<Payment[]>(url);
   }
-  getPayments(user_id: string | undefined): Payment[]{
-    return  this.paymentLists.find((user) => user.idUser === user_id)?.userPaymentList || [];
+  getPayments(user_id: string | undefined): Observable<Payment[]>{
+    return of( this.paymentLists.find((user) => user.idUser === user_id)?.userPaymentList || []);
   }
 
   confirmPayment(userId: string | undefined, payment: Payment): Observable<any> {
+    //obizyc kwote do zaplaty
+    return of(this.paymentLists.find((user) => user.idUser === userId)?.userPaymentList.push(payment));
+  }
+  confirmPayment2(userId: string | undefined, payment: Payment): Observable<any> {
+    //obizyc kwote do zaplaty
     const url = `${this.comfirmPaymentURL}${userId}`;
     return this.httpClient.post<any>(url, payment);
   }
@@ -646,12 +651,22 @@ export class BackendGardenService {
     const url = `${this.profileFromURL}/${gardenPlotID}`;
     return this.httpClient.get<Profile>(url);
   }
-  getLeaseholder(gardenPlotID: string | undefined): Profile {
+
+  // @ts-ignore
+  profiles: Profile[];
+
+  initProfiles() {
+    this.listOfUsersService.getAllProfiles().subscribe((profiles: Profile[]) => {
+      this.profiles = profiles;
+    });
+  }
+  getLeaseholder(gardenPlotID: string | undefined): Observable<Profile> {
+    this.initProfiles()
     const id = this.gardenPlots.find(gardenPlot => gardenPlot.gardenPlotID === gardenPlotID)?.leaseholderID
-    return <Profile>this.listOfUsersService.getAllProfiles().find(profile => profile.profileId === id) || null;
+    return of(<Profile>this.profiles.find(profile => profile.profileId === id) || null);
   }
 
-  editGarden(gardenId: string | undefined, newGarden: GardenPlotBackend | undefined): void {
+  editGarden(gardenId: string | undefined, newGarden: GardenPlotBackend | undefined): Observable<any> {
     const index = this.gardenPlotsBackend.findIndex(garden => garden.gardenPlotID === gardenId);
 
     if (index !== -1) {
@@ -661,9 +676,10 @@ export class BackendGardenService {
     } else {
       console.error('Garden not found with ID:', gardenId);
     }
+    return of(null);
   }
 
-  editGarden2(gardenId: string | undefined, newGarden: GardenPlot | undefined, gardenPlots: GardenPlot[]): void {
+  editGarden2(gardenId: string | undefined, newGarden: GardenPlot | undefined, gardenPlots: GardenPlot[]): Observable<any> {
     const index = gardenPlots.findIndex(garden => garden.gardenPlotID === gardenId);
 
     if (index !== -1) {
@@ -673,6 +689,7 @@ export class BackendGardenService {
     } else {
       console.error('Garden not found with ID:', gardenId);
     }
+    return of(null);
   }
 
   //TODO to endpoint
@@ -682,12 +699,14 @@ export class BackendGardenService {
   }
 
 
-  addGarden(newGarden: GardenPlotBackend): void {
+  addGarden(newGarden: GardenPlotBackend): Observable<any> {
     this.gardenPlotsBackend.push(newGarden)
+    return of(null);
   }
 
-  addGarden3(newGarden: GardenPlot): void {
+  addGarden3(newGarden: GardenPlot): Observable<any> {
     this.gardenPlots.push(newGarden)
+    return of(null);
   }
 
   //TODO to endpoint
@@ -696,7 +715,7 @@ export class BackendGardenService {
     return this.httpClient.post<any>(url, {newGarden});
   }
 
-  editLeaseholder(gardenId: string | undefined, newLeaseholderID: string | null): void {
+  editLeaseholder(gardenId: string | undefined, newLeaseholderID: string | null): Observable<any> {
     const index = this.gardenPlotsBackend.findIndex(garden => garden.gardenPlotID === gardenId);
 
     if (index !== -1) {
@@ -704,9 +723,10 @@ export class BackendGardenService {
     } else {
       console.error('Garden not found with ID:', gardenId);
     }
+    return of(null);
   }
 
-  editLeaseholder2(gardenId: string | undefined, newLeaseholderID: string | null, gardenPlots: GardenPlot[]): void {
+  editLeaseholder2(gardenId: string | undefined, newLeaseholderID: string | null, gardenPlots: GardenPlot[]): Observable<any> {
     const index = gardenPlots.findIndex(garden => garden.gardenPlotID === gardenId);
 
     if (index !== -1) {
@@ -714,6 +734,7 @@ export class BackendGardenService {
     } else {
       console.error('Garden not found with ID:', gardenId);
     }
+    return of(null);
   }
 
   //TODO to endpoint
@@ -731,8 +752,8 @@ export class BackendGardenService {
 //nowe
 //nowe
 //nowe
-  getAllGardenPlots(): GardenPlot[] {
-    return this.gardenPlots
+  getAllGardenPlots(): Observable<GardenPlot[]> {
+    return of(this.gardenPlots);
   }
   //TODO to endpoint
   // getAllGardenPlots(): Observable<GardenPlot[]> {
@@ -741,13 +762,14 @@ export class BackendGardenService {
   // }
 
 
-  updateLeaseholderID(targetID: string | null | undefined, newLeaseholderID: string | null) {
+  updateLeaseholderID(targetID: string | null | undefined, newLeaseholderID: string | null):Observable<any> {
     //to zastapi push
     for (let garden of this.gardenPlots) {
       if (garden.gardenPlotID === targetID) {
         garden.leaseholderID = newLeaseholderID
       }
     }
+    return of(null);
   }
   updateLeaseholderID2(targetID: string | null | undefined, newLeaseholderID: string | null): Observable<any> {
     const url = `https://localhost:1337/api/updateLeaseholderID`;
@@ -838,9 +860,16 @@ export class BackendGardenService {
 //   lastName: string;
 //   phoneNumber: string;
 //   email: string;
-//   accountStatus: Role_TEMP[]; // enum with values: "USER" or "ADMIN " or "MANAGER" or "GARDENER" or "EMPLOYEE"
+//   accountStatus: Role[];
 //   paymentAmount: number | null;
 //   paymentDueDate: Date;
+// }
+// export enum Role {
+//   ADMIN = 'ADMIN',
+//   MANAGER = 'Zarządca',
+//   GARDENER = 'Działkowicz',
+//   TECHNICAL_EMPLOYEE = 'pracownik_techniczny',
+//   NON_TECHNICAL_EMPLOYEE = 'pracownik_nie_techniczny',
 // }
 
 // // ### POST with parameter

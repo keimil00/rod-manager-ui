@@ -88,9 +88,13 @@ export class ListOfGardenPlotComponent {
     }
 
     selectDetails(gardenPlot: GardenPlot) {
-        const leaseholder = this.gardenPlotsDataService.getLeaseholder(gardenPlot.gardenPlotID)
+
+        let leaseHolder : Profile
+        this.gardenPlotsDataService.getLeaseholder(gardenPlot.gardenPlotID).subscribe((leaseholder) => {leaseHolder = leaseholder});
+        // @ts-ignore
         this.showDetails = true;
-        this.showDetailsDialog(gardenPlot, leaseholder)
+        // @ts-ignore
+        this.showDetailsDialog(gardenPlot, leaseHolder)
     }
 
     showDetailsDialog(gardenPlot: GardenPlot, leaseholder: Profile | undefined) {

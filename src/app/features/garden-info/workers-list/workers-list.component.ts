@@ -22,8 +22,10 @@ export class WorkersListComponent {
     this.initData()
   }
 
-  initData(){
-    this.dataSource = new MatTableDataSource(this.gardenInfoService.getEmployers());
+  initData() {
+    this.gardenInfoService.getEmployers().subscribe(employers => {
+      this.dataSource = new MatTableDataSource(employers);
+    });
   }
 
   updateData() {
