@@ -48,6 +48,21 @@ img {
   max-width: 100%; height: auto
 }
 
+.cal-month-view .custom-event {
+  width: 100%;
+  height: auto;
+  border-radius: 20%;
+  display: inline-block;
+  margin: 5px;
+}
+
+.custom-event {
+  .mat-mdc-button.mat-mdc-button-base, .mat-mdc-raised-button.mat-mdc-button-base, .mat-mdc-unelevated-button.mat-mdc-button-base, .mat-mdc-outlined-button.mat-mdc-button-bas {
+    height: 1.2rem;
+    //width: 100%;
+  }
+}
+
 
 /* Importing Bootstrap SCSS file. */
 @import "node_modules/bootstrap/scss/bootstrap";

@@ -17,12 +17,17 @@ import {PaymentsComponent} from "./features/payments/payments.component";
 import {GardenPlotInfoComponent} from "./features/garden-plot-info/garden-plot-info.component";
 import {AccesDeniedComponent} from "./features/acces-denied/acces-denied.component";
 import {VotingsComponent} from "./features/votings/votings.component";
+import {GardenOffersComponent} from "./features/garden-offers/garden-offers.component";
+import {CalendarComponent} from "./features/calendar/calendar.component";
+
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent },
+  { path: 'garden-offers', component: GardenOffersComponent},
+  { path: 'calendar', component: CalendarComponent},
   { path: 'garden-info', component: GardenInfoComponent },
   { path: 'documents', component: DocumentsComponent},
   { path: 'list-of-garden-plot', component: ListOfGardenPlotComponent},

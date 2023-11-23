@@ -38,7 +38,9 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
         });
     }
 
-    constructor(formBuilder: FormBuilder, private gardenPlotsDataService: BackendGardenService, private listOfUsersService: ListOfUsersService,
+    constructor(formBuilder: FormBuilder,
+                private gardenPlotsDataService: BackendGardenService,
+                private listOfUsersService: ListOfUsersService,
                 public dialogRef: MatDialogRef<GardenPlotAddLeaseholderComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: { gardenPlot: GardenPlotBackend }
     ) {

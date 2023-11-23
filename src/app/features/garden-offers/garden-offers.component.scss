@@ -1,0 +1,67 @@
+.page-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.title {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.row-item {
+  flex: 1; /* Allow items to grow and take equal space */
+  margin-right: 10px; /* Adjust as needed for spacing between items */
+  width: 60%;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: contents;
+}
+
+.row-container {
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Arrange items in a row */
+  justify-content: space-between; /* Distribute items evenly along the row */
+  width: 100%;
+  align-items: center;
+}
+
+.column-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between; // Distributes space between columns
+
+  .column-item {
+    flex: 1; // Each column takes equal width
+    padding: 10px;
+    margin: 5px; // Space between columns
+    display: flex;
+    flex-direction: column; // Stacks children vertically
+  }
+}
+
+mat-label {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+mat-slider {
+  width: 300px;
+}
+
+.search-field {
+  margin: 1rem auto;
+  width: 50%; /* or any fixed or max-width */
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.floating-button {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 100;
+}

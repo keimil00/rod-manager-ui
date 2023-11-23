@@ -89,18 +89,34 @@ import {
     EditingSingleAdditionalFeeComponent
 } from './features/payments/editing-additional-fees/editing-single-additional-fee/editing-single-additional-fee.component';
 import {EditDateComponent} from './features/payments/edit-date/edit-date.component';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { GardenPlotInfoComponent } from './features/garden-plot-info/garden-plot-info.component';
-import { FooterAppComponent } from './core/footer-app/footer-app.component';
-import { TechnicalIssueDialogComponent } from './core/footer-app/technical-issue-dialog/technical-issue-dialog.component';
-import { AccesDeniedComponent } from './features/acces-denied/acces-denied.component';
-import { FolderListComponent } from './features/documents/folder-list/folder-list.component';
-import { VotingsComponent } from './features/votings/votings.component';
-import { CurrentVotingsComponent } from './features/votings/current-votings/current-votings.component';
-import { FinishedVotingsComponent } from './features/votings/finished-votings/finished-votings.component';
+
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {GardenPlotInfoComponent} from './features/garden-plot-info/garden-plot-info.component';
+import {FooterAppComponent} from './core/footer-app/footer-app.component';
+import {TechnicalIssueDialogComponent} from './core/footer-app/technical-issue-dialog/technical-issue-dialog.component';
+import {AccesDeniedComponent} from './features/acces-denied/acces-denied.component';
+import {FolderListComponent} from './features/documents/folder-list/folder-list.component';
+import {VotingsComponent} from './features/votings/votings.component';
+import {CurrentVotingsComponent} from './features/votings/current-votings/current-votings.component';
+import {FinishedVotingsComponent} from './features/votings/finished-votings/finished-votings.component';
 import {MatRadioModule} from "@angular/material/radio";
 import {NgApexchartsModule} from "ng-apexcharts";
-import { AddVotingComponent } from './features/votings/add-voting/add-voting.component';
+import {AddVotingComponent} from './features/votings/add-voting/add-voting.component';
+
+import {GardenOffersComponent} from './features/garden-offers/garden-offers.component';
+import {MatSliderModule} from "@angular/material/slider";
+import {GardenOfferComponent} from './features/garden-offers/garden-offer/garden-offer.component';
+import {ContactComponent} from './features/garden-offers/garden-offer/contact/contact.component';
+import {OfferDetailsComponent} from './features/garden-offers/garden-offer/offer-details/offer-details.component';
+import {CalendarComponent} from './features/calendar/calendar.component';
+import {CalendarModule, DateAdapter} from 'angular-calendar';
+import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
+import {EventDetailsComponent} from './features/calendar/event-details/event-details.component';
+import localePl from '@angular/common/locales/pl';
+import {registerLocaleData} from "@angular/common";
+import {LOCALE_ID} from '@angular/core';
+
+registerLocaleData(localePl);
 
 @NgModule({
     declarations: [
@@ -151,45 +167,100 @@ import { AddVotingComponent } from './features/votings/add-voting/add-voting.com
         VotingsComponent,
         CurrentVotingsComponent,
         FinishedVotingsComponent,
-        AddVotingComponent
+        AddVotingComponent,
+        AppComponent,
+        LoginComponent,
+        RegisterComponent,
+        TopAppBarComponent,
+        TextButtonComponent,
+        HomeComponent,
+        HasRoleDirective,
+        PageNotFoundComponent,
+        GardenInfoComponent,
+        PersonCardGardenComponent,
+        DocumentsComponent,
+        ListOfGardenPlotComponent,
+        GardenPlotDetailsComponent,
+        GardenPlotDetailsPaymentHistoryComponent,
+        GardenPlotAddLeaseholderComponent,
+        GardenPlotListAddGardenComponent,
+        GardenPlotEditGardenComponent,
+        HasRoleDirective,
+        PaginatorComponent,
+        PaginatorComponent,
+        PostComponent,
+        PostEditComponent,
+        TagDialogComponent,
+        CountersComponent,
+        MeasurementDialogComponent,
+        AddCounterDialogComponent,
+        ListOfUsersComponent,
+        UserInfoComponent,
+        WorkersListComponent,
+        EditWorkerComponent,
+        PaymentsComponent,
+        IndividualPaymentsComponent,
+        AddIndividualPaymentComponent,
+        EditingLeaseFeeComponent,
+        EditingUtilityFeeComponent,
+        EditingAdditionalFeesComponent,
+        AddAdditionalFeesComponent,
+        EditingSingleAdditionalFeeComponent,
+        EditDateComponent,
+        GardenPlotInfoComponent,
+        FooterAppComponent,
+        TechnicalIssueDialogComponent,
+        GardenOffersComponent,
+        GardenOfferComponent,
+        ContactComponent,
+        OfferDetailsComponent,
+        CalendarComponent,
+        EventDetailsComponent
     ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatMenuModule,
-    MatCardModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatSelectModule,
-    MatDividerModule,
-    SocialLoginModule,
-    GoogleSigninButtonModule,
-    MatIconModule,
-    MatGridListModule,
-    MatExpansionModule,
-    FormsModule,
-    MatTableModule,
-    MatSortModule,
-    MatDatepickerModule,
-    MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule, MatCheckboxModule,
 
-    GoogleSigninButtonModule,
-    MatChipsModule,
-    MatIconModule,
-    MatAutocompleteModule,
-    FlexModule,
-    MatPaginatorModule,
-    MatChipsModule,
-    FormsModule,
-    QuillModule.forRoot(),
-    MatDialogModule, MatTabsModule,
-    MatSnackBarModule, MatRadioModule,
-    NgApexchartsModule,
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        BrowserAnimationsModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatMenuModule,
+        MatCardModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        MatSelectModule,
+        MatDividerModule,
+        SocialLoginModule,
+        GoogleSigninButtonModule,
+        MatIconModule,
+        MatGridListModule,
+        MatExpansionModule,
+        FormsModule,
+        MatTableModule,
+        MatSortModule,
+        MatDatepickerModule,
+        MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule, MatCheckboxModule,
+
+        GoogleSigninButtonModule,
+        MatChipsModule,
+        MatIconModule,
+        MatAutocompleteModule,
+        FlexModule,
+        MatPaginatorModule,
+        MatChipsModule,
+        FormsModule,
+        QuillModule.forRoot(),
+
+        MatDialogModule, MatTabsModule,
+        MatSnackBarModule, MatRadioModule,
+        NgApexchartsModule,
+        MatDialogModule,
+        MatTabsModule,
+        MatSnackBarModule,
+        MatSliderModule,
+        CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory})
+    ],
     providers: [
         {provide: MAT_DATE_LOCALE, useValue: 'pl-PL'},
         {
@@ -212,9 +283,14 @@ import { AddVotingComponent } from './features/votings/add-voting/add-voting.com
         {
             provide: MatPaginatorIntl,
             useClass: PaginatorComponent
+        },
+        {
+            provide: LOCALE_ID,
+            useValue: 'pl-PL'
         }
     ],
     bootstrap: [AppComponent]
+
 })
 export class AppModule {
 }

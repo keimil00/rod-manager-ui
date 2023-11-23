@@ -1,0 +1,20 @@
+<mat-card appearance="outlined" class="card">
+  <mat-card-header class="mat-header col-container">
+    <mat-card-title class="title">
+      <div class="col-item">{{ offer.title }}</div>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="row-container">
+    <div class="row-item">
+      <div [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(offer.content)"></div>
+    </div>
+    <div class="row-item">
+      <app-contact [edit]="false" [contact]="offer.contact"></app-contact>
+    </div>
+    <div class="row-item">
+      <app-offer-details [edit]="false" [gardenInfo]="offer.gardenInfo"></app-offer-details>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+
