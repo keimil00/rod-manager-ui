@@ -7,22 +7,22 @@
         </button>
     </div>
     <div class="options">
-        <button mat-button (click)="navigate('home')">Strona główna</button>
+        <button mat-button (click)="navigate('home')" [ngClass]="{'is-in-view': isInHomeComponent}">Strona główna</button>
         <span>/</span>
-        <button mat-button (click)="navigate('garden-offers')">Dostępne działki</button>
+        <button mat-button (click)="navigate('garden-offers')" [ngClass]="{'is-in-view': isInGardenOffers}">Dostępne działki</button>
         <span>/</span>
 
-        <button mat-button (click)="navigate('calendar')">Kalendarz</button>
+        <button mat-button (click)="navigate('calendar')" [ngClass]="{'is-in-view': isInCalendarComponent}">Kalendarz</button>
         <!--    TODO zmiana bo to do testu-->
         <div *ngIf="isLoggedIn()">
             <div *appHasRole="[Role.GARDENER, Role.ADMIN]">
                 <span>/</span>
-                <button mat-button (click)="navigate('my-garden-plot-info')">Moja działka</button>
+                <button mat-button (click)="navigate('my-garden-plot-info')" [ngClass]="{'is-in-view': isInMyGardenPlotInfoComponent}">Moja działka</button>
             </div>
         </div>
         <div *ngIf="isLoggedIn()">
             <span>/</span>
-            <button mat-button (click)="navigate('voting')">Głosowania</button>
+            <button mat-button (click)="navigate('voting')" [ngClass]="{'is-in-view': isInVotingComponent}">Głosowania</button>
         </div>
         <div *ngIf="isLoggedIn()">
             <span>/</span>
