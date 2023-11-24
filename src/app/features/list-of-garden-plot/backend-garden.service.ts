@@ -587,7 +587,7 @@ export class BackendGardenService {
 
   private readonly gardensURL= 'api/gardens'
   private readonly gardenURL= 'api/garden'
-  private readonly comfirmPaymentURL= 'api/user/confirmPayment'
+  private readonly userURL= 'api/user'
   private readonly profileFromURL= 'api/profile-from-garden-id'
 
   loadedGardenPlots: GardenPlotBackend[] = this.gardenPlotsBackend;
@@ -612,9 +612,10 @@ export class BackendGardenService {
 
   //TODO to endpoint
   getPayments2(user_id: string | undefined): Observable<Payment[]>{
-      const url = `${this.gardenURL}/payments/${user_id}`;
+      const url = `${this.userURL}/payments/${user_id}`;
       return this.httpClient.get<Payment[]>(url);
   }
+
   getPayments(user_id: string | undefined): Observable<Payment[]>{
     return of( this.paymentLists.find((user) => user.idUser === user_id)?.userPaymentList || []);
   }
@@ -625,9 +626,10 @@ export class BackendGardenService {
   }
   confirmPayment2(userId: string | undefined, payment: Payment): Observable<any> {
     //obizyc kwote do zaplaty
-    const url = `${this.comfirmPaymentURL}${userId}`;
+    const url = `${this.userURL}/confirmPayment${userId}`;
     return this.httpClient.post<any>(url, payment);
   }
+
 
   sortData() {
     this.gardenPlotsBackend.sort((a, b) => {
@@ -866,10 +868,10 @@ export class BackendGardenService {
 // }
 // export enum Role {
 //   ADMIN = 'ADMIN',
-//   MANAGER = 'Zarządca',
-//   GARDENER = 'Działkowicz',
-//   TECHNICAL_EMPLOYEE = 'pracownik_techniczny',
-//   NON_TECHNICAL_EMPLOYEE = 'pracownik_nie_techniczny',
+//   MANAGER = 'MANAGER',
+//   GARDENER = 'GARDENER',
+//   TECHNICAL_EMPLOYEE = 'TECHNICAL_EMPLOYEE',
+//   NON_TECHNICAL_EMPLOYEE = 'NON_TECHNICAL_EMPLOYEE',
 // }
 
 // // ### POST with parameter
@@ -901,14 +903,14 @@ export class BackendGardenService {
 // }
 // }
 
-
-// PATCH https://localhost:1337/api/garden/leaseholder:garden-plot-id
+//GetPayments
+// PATCH https://localhost:1337/api/user/payments/leaseholder:user_id
 //   Content-Type: application/json
 // Accept: application/json
 //
 // Request Body:
 // {
-//   "leaseholderID": 10, // example: value of the new payment
+//   "leaseholderID": 10,
 // }
 
 

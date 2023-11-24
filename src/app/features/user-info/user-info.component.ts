@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Profile} from "../Profile";
 import {GardenPlot} from "../list-of-garden-plot/garden-plot";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Role} from "../register/user.model";
+import {getTranslatedRole, Role} from "../register/user.model";
 import {
     findGardenByID,
     findGardenByUserID,
@@ -74,7 +74,7 @@ export class UserInfoComponent implements OnInit {
 
     isAvailableToEditProfile() {
         // @ts-ignore
-        if ((this.profile?.accountStatus.includes(Role.ADMIN)) || (this.profile?.accountStatus.includes(Role.MANAGER))){
+        if ((this.profile?.accountStatus.includes(Role.ADMIN)) || (this.profile?.accountStatus.includes(Role.MANAGER))) {
             if (this.storageService.getRoles().includes(Role.MANAGER)) {
                 this.isAvailableToEdit = false;
             }
@@ -88,9 +88,9 @@ export class UserInfoComponent implements OnInit {
                 // TODO !!!!!!!!!!!!!!!!!
                 // if (!this.storageService.getRoles().includes(Role.ADMIN) || (!this.storageService.getRoles().includes(Role.MANAGER) || this.authService.isOwnProfile(this.userId)) {
                 if (this.storageService.getRoles().includes(Role.ADMIN) || (this.storageService.getRoles().includes(Role.MANAGER))) {
-                  this.profile = this.getProfileById(this.id)
+                    this.profile = this.getProfileById(this.id)
                 } else {
-                  this.router.navigate(['/403']);
+                    this.router.navigate(['/403']);
                 }
             });
             this.isAvailableToEditProfile()
@@ -255,7 +255,6 @@ export class UserInfoComponent implements OnInit {
 
             let newStatus: Role[] = this.userInfoForm.get('accountStatus')?.value;
 
-
             const newUser: Profile = {
                 // @ts-ignore
                 profileId: this.id,
@@ -277,17 +276,12 @@ export class UserInfoComponent implements OnInit {
                 paymentDueDate: this.profile?.paymentDueDate
             };
 
-            //TODO push do backendu
-            // this.profile = newUser;
-            // let idToNull = findGardenByUserID(this.id, gardenPlots)?.id
-            // updateLeaseholderID(idToNull, null)
-            // updateLeaseholderID(gardenID, this.id)
-
             if (newSector !== null) {
                 let idToNull = findGardenByUserID(this.id, this.gardenPlots)?.gardenPlotID
                 this.backendGardenService.updateLeaseholderID(idToNull, null)
                 this.backendGardenService.updateLeaseholderID(gardenID, this.id)
             }
+            this.listOfUsersService.editProfile(newUser)
             this.profile = newUser;
             this.disableFormFields()
         }
@@ -334,12 +328,13 @@ export class UserInfoComponent implements OnInit {
     protected readonly Object = Object;
     protected readonly Role_temp = Role;
     protected readonly Role_temp2 = Role_temp2;
+    protected readonly getTranslatedRole = getTranslatedRole;
 }
 
 
 //TODO zmienic bo to jest tylko chwilowe
 enum Role_temp2 {
-    GARDENER = 'Działkowicz',
-    TECHNICAL_EMPLOYEE = 'pracownik_techniczny',
-    NON_TECHNICAL_EMPLOYEE = 'pracownik_nie_techniczny',
+    GARDENER = 'GARDENER',
+    TECHNICAL_EMPLOYEE = 'TECHNICAL_EMPLOYEE',
+    NON_TECHNICAL_EMPLOYEE = 'NON_TECHNICAL_EMPLOYEE',
 }

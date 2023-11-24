@@ -328,6 +328,16 @@ export class ListOfUsersService {
             }
         );
     }
+
+    editProfile(profile: Profile): Observable<any>{
+        const index = this.profiles.findIndex(p => p.profileId === profile.profileId);
+        this.profiles[index] = profile;
+        return of(null)
+    }
+    editProfile2(profile: Profile) {
+        const url = 'https://localhost:1337/api/profiles'+'profile.profileId';
+        this.httpClient.put(url, profile);
+    }
 }
 
 // .
@@ -376,11 +386,11 @@ export class ListOfUsersService {
 // }
 //
 // export enum Role {
-//   ADMIN = 'ADMIN',
-//   MANAGER = 'Zarządca',
-//   GARDENER = 'Działkowicz',
-//   TECHNICAL_EMPLOYEE = 'pracownik_techniczny',
-//   NON_TECHNICAL_EMPLOYEE = 'pracownik_nie_techniczny',
+//     ADMIN = 'ADMIN',
+//     MANAGER = 'MANAGER',
+//     GARDENER = 'GARDENER',
+//     TECHNICAL_EMPLOYEE = 'TECHNICAL_EMPLOYEE',
+//     NON_TECHNICAL_EMPLOYEE = 'NON_TECHNICAL_EMPLOYEE',
 // }
 //
 // interface Page<T> {

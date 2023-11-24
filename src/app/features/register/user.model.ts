@@ -17,10 +17,16 @@ export enum Role {
   TECHNICAL_EMPLOYEE = 'TECHNICAL_EMPLOYEE',
   NON_TECHNICAL_EMPLOYEE = 'NON_TECHNICAL_EMPLOYEE',
 }
-// }export enum Role {
-//   ADMIN = 'ADMIN',
-//   MANAGER = 'Zarządca',
-//   GARDENER = 'Działkowicz',
-//   TECHNICAL_EMPLOYEE = 'pracownik_techniczny',
-//   NON_TECHNICAL_EMPLOYEE = 'pracownik_nie_techniczny',
-// }
+
+const translatedRoles: Record<string, string> = {
+  [Role.ADMIN]: 'Administrator',
+  [Role.MANAGER]: 'Zarządca',
+  [Role.GARDENER]: 'Działkowicz',
+  [Role.TECHNICAL_EMPLOYEE]: 'Pracownik techniczny',
+  [Role.NON_TECHNICAL_EMPLOYEE]: 'Pracownik nietechniczny',
+};
+
+export function getTranslatedRole(role: string): string {
+  return translatedRoles[role] || 'Nieznana rola';
+}
+

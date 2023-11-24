@@ -98,8 +98,8 @@
                                 <mat-label>Status konta</mat-label>
                                 <ng-container>
                                     <mat-select multiple formControlName="accountStatus">
-                                        <mat-option *ngFor="let option of Object.values(Role_temp)" [value]="option">
-                                            {{ option}}
+                                        <mat-option *ngFor="let roleKey of Object.keys(Role_temp)" [value]="roleKey">
+                                            {{ getTranslatedRole(roleKey) }}
                                         </mat-option>
                                     </mat-select>
                                 </ng-container>
@@ -111,9 +111,8 @@
                                     <mat-label>Status konta</mat-label>
                                     <ng-container>
                                         <mat-select multiple formControlName="accountStatus">
-                                            <mat-option *ngFor="let option of Object.values(Role_temp)"
-                                                        [value]="option">
-                                                {{ option}}
+                                            <mat-option *ngFor="let roleKey of Object.keys(Role_temp)" [value]="roleKey">
+                                                {{ getTranslatedRole(roleKey) }}
                                             </mat-option>
                                         </mat-select>
                                     </ng-container>
@@ -127,16 +126,14 @@
                                     <mat-label>Status konta</mat-label>
                                     <ng-container>
                                         <mat-select multiple formControlName="accountStatus" *ngIf="showEditFullStatus">
-                                            <mat-option *ngFor="let option of Object.values(Role_temp)" [value]="option"
-                                                        [disabled]="option === Role_temp.ADMIN || option === Role_temp.MANAGER">
-                                                {{ option}}
+                                            <mat-option *ngFor="let roleKey of Object.keys(Role_temp)" [value]="roleKey" [disabled]="roleKey === Role_temp.ADMIN || roleKey === Role_temp.MANAGER">
+                                                {{ getTranslatedRole(roleKey) }}
                                             </mat-option>
                                         </mat-select>
                                         <mat-select multiple formControlName="accountStatus"
                                                     *ngIf="!showEditFullStatus">
-                                            <mat-option *ngFor="let option of Object.values(Role_temp2)"
-                                                        [value]="option">
-                                                {{ option}}
+                                            <mat-option *ngFor="let roleKey of Object.keys(Role_temp2)" [value]="roleKey">
+                                                {{ getTranslatedRole(roleKey) }}
                                             </mat-option>
                                         </mat-select>
                                     </ng-container>
