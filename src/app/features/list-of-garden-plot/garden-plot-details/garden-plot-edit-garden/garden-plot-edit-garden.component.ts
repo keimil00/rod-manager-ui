@@ -91,9 +91,22 @@ export class GardenPlotEditGardenComponent implements OnInit {
 
     initData() {
         this.listOfUsersService.sortProfiles()
-        this.profiles = this.listOfUsersService.getAllProfiles()
-        this.gardenPlots = this.gardenPlotsDataService.getAllGardenPlots()
+        this.initProfiles()
+        this.initGardenPlots()
     }
+
+    initGardenPlots() {
+        this.gardenPlotsDataService.getAllGardenPlots().subscribe((gardenPlots: GardenPlot[]) => {
+            this.gardenPlots = gardenPlots;
+        });
+    }
+
+    initProfiles() {
+        this.listOfUsersService.getAllProfiles().subscribe((profiles: Profile[]) => {
+            this.profiles = profiles;
+        });
+    }
+
 
     populateFormFromGardenPlot(gardenPlot: GardenPlotBackend) {
         this.editGardenForm.patchValue({
@@ -109,9 +122,12 @@ export class GardenPlotEditGardenComponent implements OnInit {
     ngOnInit() {
         // @ts-ignore
         const gardenPlot: GardenPlotBackend = this.gardenPlot
-        const leaseholder = this.gardenPlotsDataService.getLeaseholder(this.gardenPlot?.gardenPlotID)
-        if (leaseholder) {
-            this.leasholderID = leaseholder.profileId
+        let leaseHolder : Profile
+        this.gardenPlotsDataService.getLeaseholder(this.gardenPlot?.gardenPlotID).subscribe((leaseholder) => {leaseHolder = leaseholder});
+
+        // @ts-ignore
+        if (leaseHolder) {
+            this.leasholderID = leaseHolder.profileId
         } else this.leasholderID = null
         this.populateFormFromGardenPlot(gardenPlot);
 

@@ -10,8 +10,12 @@
         <mat-card class="inter-card-size">
           <mat-card-header>
             <div class="center-item column">
-              <a mat-button color="primary" class="document">Mapa</a>
-              <a mat-button color="primary" class="document">Regulamin</a>
+              <div *ngIf="isMapAvailable">
+                <a mat-button (click)="downloadMap()" color="primary" target="_blank" class="document">Twoja mapa</a>
+              </div>
+              <div *ngIf="isStatuteAvailable">
+                <a mat-button (click)="downloadStatue()" color="primary" target="_blank" class="document">Twój regulamin</a>
+              </div>
             </div>
           </mat-card-header>
         </mat-card>

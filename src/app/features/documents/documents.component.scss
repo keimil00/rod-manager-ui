@@ -1,8 +1,11 @@
 .add-button {
+}
+.left-button {
   display: flex;
   justify-content: flex-start;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  align-items: flex-start;
+  margin-top: 7px;
+  margin-bottom: 7px;
 }
 
 .page-container {
@@ -37,8 +40,15 @@
   padding-top: 10px;
   padding-bottom: 10px;
 }
+a:hover {
+  cursor: pointer;
+}
 
-@media only screen and (max-width: 600px) {
+.row-item{
+  flex: 1;
+}
+
+@media only screen and (max-width: 1300px) {
   .large-card-size {
     width: 95%;
   }

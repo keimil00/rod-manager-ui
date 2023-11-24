@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
-import {Fee, IndividualPayments, Payments} from "./payments";
+import {Fee, IndividualPayments, Payments, UtilityValues} from "./payments";
 import {Role} from "../register/user.model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {getAvenues, getNumbers, getSectors} from "../list-of-garden-plot/GardenService";
@@ -14,6 +14,8 @@ import {EditingUtilityFeeComponent} from "./editing-utility-fee/editing-utility-
 import {EditingAdditionalFeesComponent} from "./editing-additional-fees/editing-additional-fees.component";
 import {EditDateComponent} from "./edit-date/edit-date.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {Profile} from "../Profile";
+import {EditUtilityValuesComponent} from "./edit-utility-values/edit-utility-values.component";
 
 
 //TODO na tym ekranie od terminu płatności zrobic przysik zatwierdz z jakaś uwagą ze beda naliczone te koszty co wyzej i nie będzie mozna tego zmienić plus dane z obecnego stanu liczników
@@ -66,9 +68,21 @@ export class PaymentsComponent {
         });
     }
 
-    private initData() {
-        this.payment = this.paymentsService.getPayments()
-        this.gardenPlots = this.gardenPlotsDataService.getAllGardenPlots()
+    initData() {
+        this.initPayments()
+        this.initGardenPlots()
+    }
+
+    initGardenPlots() {
+        this.gardenPlotsDataService.getAllGardenPlots().subscribe((gardenPlots: GardenPlot[]) => {
+            this.gardenPlots = gardenPlots;
+        });
+    }
+
+    initPayments() {
+        this.paymentsService.getPayments().subscribe((payments: Payments) => {
+            this.payment = payments;
+        });
     }
 
     private updateAdditionalPayments() {
@@ -144,10 +158,15 @@ export class PaymentsComponent {
             const sector: string = this.individualPaymentsForm.get('sector')?.value;
             const avenue: string = this.individualPaymentsForm.get('avenue')?.value;
             const number: number = this.individualPaymentsForm.get('number')?.value;
-
-            const individualPayments = this.paymentsService.findUserPaymentsByAddress(sector, avenue, number, this.gardenPlots)
+            let individualPayments: IndividualPayments | null
+            this.paymentsService.findUserPaymentsByAddress(sector, avenue, number, this.gardenPlots).subscribe((individualPayments2: IndividualPayments | null) => {
+                individualPayments = individualPayments2
+            });
             const address = `${sector}, ${avenue}, ${number}`
             this.showDetails = true;
+
+            //TODO nie wiem czy to jest dobrze
+            // @ts-ignore
             this.showDetailsDialog(individualPayments, address)
         }
     }
@@ -225,6 +244,18 @@ export class PaymentsComponent {
             }
         });
     }
+    openUtilityDialog(): void {
+        const dialogRef = this.dialog.open(EditUtilityValuesComponent, {
+            width: '400px',
+            data: {utilityValues: this.payment.utilityValues}
+        });
+
+        dialogRef.afterClosed().subscribe((Data: UtilityValues) => {
+            if (Data) {
+                this.payment.utilityValues= Data;
+            }
+        });
+    }
 
     addPayments() {
         this.paymentsService.confirmALLPayments()
@@ -232,7 +263,7 @@ export class PaymentsComponent {
     }
 
     private showSuccessMessage(): void {
-        this._snackBar.open('Pomyślnie dodano opłaty! (tak naprawde to nie)', 'Zamknij',{duration:4000});
+        this._snackBar.open('Pomyślnie dodano opłaty! (tak naprawde to nie)', 'Zamknij', {duration: 4000});
     }
 
     closeDetails() {

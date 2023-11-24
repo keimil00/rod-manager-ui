@@ -24,6 +24,7 @@
       color: lightgray; // Set the text color to gray
     }
   }
+
   .autors {
     display: flex;
     flex-direction: row;
@@ -35,9 +36,23 @@
     padding-left: 10px;
     padding-right: 10px;
   }
+
   .autor:hover {
     color: lightgray;
   }
 
+}
+
+.mat-toolbar {
+  @media only screen and (max-width: 550px) {
+    .autors {
+      display: none;
+    }
+    .autor {
+      display: none;
+    }
+    min-height: 20px;
+    padding-bottom: 0;
+  }
 }
 

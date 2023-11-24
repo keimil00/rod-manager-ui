@@ -34,7 +34,7 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
     populateFormFromGardenPlot(gardenPlot: GardenPlotBackend | undefined) {
         this.addLeaseHolderForm.patchValue({
             // @ts-ignore
-            leaseholderEmail: gardenPlot.leaseholder !== null ? findProfileEmailByID(this.leasholderID, profiles) : 'brak',
+            leaseholderEmail: gardenPlot.leaseholder !== null ? findProfileEmailByID(this.leasholderID, this.profiles) : 'brak',
         });
     }
 
@@ -53,14 +53,29 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
 
     initData() {
         this.listOfUsersService.sortProfiles()
-        this.profiles = this.listOfUsersService.getAllProfiles()
-        this.gardenPlots = this.gardenPlotsDataService.getAllGardenPlots()
+        this.initProfiles()
+        this.initGardenPlots()
+    }
+
+    initGardenPlots() {
+        this.gardenPlotsDataService.getAllGardenPlots().subscribe((gardenPlots: GardenPlot[]) => {
+            this.gardenPlots = gardenPlots;
+        });
+    }
+
+    initProfiles() {
+        this.listOfUsersService.getAllProfiles().subscribe((profiles: Profile[]) => {
+            this.profiles = profiles;
+        });
     }
 
     ngOnInit() {
-        const leasHolder = this.gardenPlotsDataService.getLeaseholder(this.gardenPlot?.gardenPlotID)
-        if (leasHolder) {
-            this.leasholderID = leasHolder.profileId
+        // @ts-ignore
+        let leaseHolder : Profile
+         this.gardenPlotsDataService.getLeaseholder(this.gardenPlot?.gardenPlotID).subscribe((leaseholder) => {leaseHolder = leaseholder});
+        // @ts-ignore
+        if (leaseHolder) {
+            this.leasholderID = leaseHolder.profileId
         } else this.leasholderID = null
         this.addLeaseHolderForm.get('leaseholderEmail')?.setValidators([Validators.required, profileEmailValidator(this.profiles), uniqueLeaseholderIDValidator(this.gardenPlots, this.profiles, true, this.leasholderID)])
 

@@ -1,0 +1,43 @@
+<div class="page-container">
+  <mat-card class="large-card-size">
+    <mat-card-header class="row-container">
+      <div class="center-item">
+        <h2 class="title">Aktualne Głosowania</h2>
+      </div>
+
+    </mat-card-header>
+    <mat-card-content>
+      <div *ngFor="let vote of currentVotes">
+        <div class="page-container">
+          <mat-card class="vote-card-size">
+            <mat-card-header class="row-container">
+              <div class="left-item">
+                <h2 class="title2">{{ vote.title }}</h2>
+                <p>{{ vote.description }}</p>
+              </div>
+            </mat-card-header>
+            <mat-card-content>
+              <mat-radio-group [formControl]="selectedOptions[vote.id]" class="radio-group">
+                <mat-radio-button *ngFor="let option of vote.options" [value]="option.optionId"
+                                  (change)="selectOption(vote.id, option.optionId)">
+                  {{ option.label }}
+                </mat-radio-button>
+              </mat-radio-group>
+              <button mat-raised-button color="primary" (click)="submitVote(vote.id)"
+                      [disabled]="!isVoteValid(vote.id)">
+                Zatwierdź głos
+              </button>
+              <hr>
+            </mat-card-content>
+            <mat-card-footer>
+              <h2 class="title4">
+                {{vote.finishDate | date:'dd.MM.yyyy'}}
+              </h2>
+            </mat-card-footer>
+          </mat-card>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+

@@ -94,8 +94,20 @@ export class GardenPlotListAddGardenComponent {
 
     initData() {
         this.listOfUsersService.sortProfiles()
-        this.profiles = this.listOfUsersService.getAllProfiles()
-        this.gardenPlots = this.gardenPlotsDataService.getAllGardenPlots()
+        this.initProfiles()
+        this.initGardenPlots()
+    }
+
+    initGardenPlots() {
+        this.gardenPlotsDataService.getAllGardenPlots().subscribe((gardenPlots: GardenPlot[]) => {
+            this.gardenPlots = gardenPlots;
+        });
+    }
+
+    initProfiles() {
+        this.listOfUsersService.getAllProfiles().subscribe((profiles: Profile[]) => {
+            this.profiles = profiles;
+        });
     }
 
     ngOnInit() {

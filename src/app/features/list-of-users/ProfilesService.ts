@@ -1,6 +1,7 @@
-import {Profile, Role_TEMP} from "../Profile";
+import {Profile} from "../Profile";
 import {GardenPlot} from "../list-of-garden-plot/garden-plot";
 import {AbstractControl, ValidatorFn} from "@angular/forms";
+import {Role} from "../register/user.model";
 
 export function getMatchingProfiles(value: string, profiles: Profile[], gardenPlots: GardenPlot[], showCurrentLeaseHolder: boolean, leaseHolderID?: string|null): {
   email: string,
@@ -11,7 +12,7 @@ export function getMatchingProfiles(value: string, profiles: Profile[], gardenPl
   const availableProfiles = profiles.filter((profile) => {
     const fullName = profile.firstName + ' ' + profile.lastName
     return (
-      (fullName.toLowerCase().includes(lowerCaseValue) || profile.email.toLowerCase().includes(lowerCaseValue)) && (profile.accountStatus.some((role) => role === Role_TEMP.GARDENER)) && (
+      (fullName.toLowerCase().includes(lowerCaseValue) || profile.email.toLowerCase().includes(lowerCaseValue)) && (profile.accountStatus.some((role) => role === Role.GARDENER)) && (
         !gardenPlots.some((plot) => plot.leaseholderID === profile.profileId) || (showCurrentLeaseHolder && leaseHolderID === profile.profileId))
     );
   });

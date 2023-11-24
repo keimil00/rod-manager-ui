@@ -104,7 +104,7 @@
                     <mat-form-field class="full-width">
                       <mat-label>Data</mat-label>
                       <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="date" required>
-                      <mat-hint>DD/MM/YYYY</mat-hint>
+                      <mat-hint>DD.MM.YYYY</mat-hint>
                       <mat-error *ngFor="let error of validationErrors('date')">
                         {{ error.message }}
                       </mat-error>

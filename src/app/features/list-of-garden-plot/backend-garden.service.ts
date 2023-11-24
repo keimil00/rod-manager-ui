@@ -585,24 +585,15 @@ export class BackendGardenService {
   constructor(private httpClient: HttpClient, private listOfUsersService:ListOfUsersService) {
   }
 
+  private readonly gardensURL= 'api/gardens'
+  private readonly gardenURL= 'api/garden'
+  private readonly userURL= 'api/user'
+  private readonly profileFromURL= 'api/profile-from-garden-id'
+
   loadedGardenPlots: GardenPlotBackend[] = this.gardenPlotsBackend;
 
-  getTotalGardenPlotsCount(): number {
-    return this.loadedGardenPlots.length;
-  }
 
-  //TODO to endpoint
-  //   jednak bedzie jakos z PAGE
-  // getTotalPostsCount(): Observable<number> {
-  //   return this.httpClient.get<number>('https://localhost:1337/api/gardens/count');
-  // }
-
-
-  getGardenPlots(index: number, size: number): GardenPlotBackend[] {
-    return this.loadedGardenPlots.slice(index * size, index * size + size);
-  }
-
-  getGardenPlots2(index: number, size: number): Observable<Page<GardenPlotBackend>> {
+  getGardenPlots(index: number, size: number): Observable<Page<GardenPlotBackend>> {
     const profilesOnPage = this.loadedGardenPlots.slice((index-1) * size, (index-1) * size + size);
     const count = this.loadedGardenPlots.length;
     const page: Page<GardenPlotBackend> = { count, results: profilesOnPage };
@@ -612,26 +603,33 @@ export class BackendGardenService {
 
   //TODO to endpoint
   //   tu tez trzeba wziac  getTotalGardenPlotsCount
-  // getGardenPlots(index: number, size: number): Observable<GardenPlotBackend[]> {
-  //   const params = new HttpParams()
-  //     .set('index', index.toString())
-  //     .set('size', size.toString());
-  //   return this.httpClient.get<GardenPlotBackend[]>('https://localhost:1337/api/gardens', { params });
-  // }
+  getGardenPlots3(index: number, size: number): Observable<GardenPlotBackend[]> {
+    const params = new HttpParams()
+      .set('index', index.toString())
+      .set('size', size.toString());
+    return this.httpClient.get<GardenPlotBackend[]>(this.gardensURL, { params });
+  }
 
   //TODO to endpoint
-  // getPayments(user_id: string | undefined): Observable<any>{
-  //     const url = `https://localhost:1337/api/garden/payments/${user_id}`;
-  //     return this.httpClient.get<Payment[]>(url);
-  // }
-  getPayments(user_id: string | undefined): Payment[]{
-    return  this.paymentLists.find((user) => user.idUser === user_id)?.userPaymentList || [];
+  getPayments2(user_id: string | undefined): Observable<Payment[]>{
+      const url = `${this.userURL}/payments/${user_id}`;
+      return this.httpClient.get<Payment[]>(url);
+  }
+
+  getPayments(user_id: string | undefined): Observable<Payment[]>{
+    return of( this.paymentLists.find((user) => user.idUser === user_id)?.userPaymentList || []);
   }
 
   confirmPayment(userId: string | undefined, payment: Payment): Observable<any> {
-    const url = `https://localhost:1337/api/user/confirmPayment/${userId}`;
+    //obizyc kwote do zaplaty
+    return of(this.paymentLists.find((user) => user.idUser === userId)?.userPaymentList.push(payment));
+  }
+  confirmPayment2(userId: string | undefined, payment: Payment): Observable<any> {
+    //obizyc kwote do zaplaty
+    const url = `${this.userURL}/confirmPayment${userId}`;
     return this.httpClient.post<any>(url, payment);
   }
+
 
   sortData() {
     this.gardenPlotsBackend.sort((a, b) => {
@@ -651,16 +649,26 @@ export class BackendGardenService {
   }
 
   //TODO to endpoint
-  // getLeaseholder(gardenPlotID: string): Observable<Profile> {
-  //   const url = `${'https://localhost:1337/api/profile-from-garden-id'}/${gardenPlotID}`;
-  //   return this.httpClient.get<Profile>(url);
-  // }
-  getLeaseholder(gardenPlotID: string | undefined): Profile {
-    const id = this.gardenPlots.find(gardenPlot => gardenPlot.gardenPlotID === gardenPlotID)?.leaseholderID
-    return <Profile>this.listOfUsersService.getAllProfiles().find(profile => profile.profileId === id) || null;
+  getLeaseholder2(gardenPlotID: string): Observable<Profile> {
+    const url = `${this.profileFromURL}/${gardenPlotID}`;
+    return this.httpClient.get<Profile>(url);
   }
 
-  editGarden(gardenId: string | undefined, newGarden: GardenPlotBackend | undefined): void {
+  // @ts-ignore
+  profiles: Profile[];
+
+  initProfiles() {
+    this.listOfUsersService.getAllProfiles().subscribe((profiles: Profile[]) => {
+      this.profiles = profiles;
+    });
+  }
+  getLeaseholder(gardenPlotID: string | undefined): Observable<Profile> {
+    this.initProfiles()
+    const id = this.gardenPlots.find(gardenPlot => gardenPlot.gardenPlotID === gardenPlotID)?.leaseholderID
+    return of(<Profile>this.profiles.find(profile => profile.profileId === id) || null);
+  }
+
+  editGarden(gardenId: string | undefined, newGarden: GardenPlotBackend | undefined): Observable<any> {
     const index = this.gardenPlotsBackend.findIndex(garden => garden.gardenPlotID === gardenId);
 
     if (index !== -1) {
@@ -670,9 +678,10 @@ export class BackendGardenService {
     } else {
       console.error('Garden not found with ID:', gardenId);
     }
+    return of(null);
   }
 
-  editGarden2(gardenId: string | undefined, newGarden: GardenPlot | undefined, gardenPlots: GardenPlot[]): void {
+  editGarden2(gardenId: string | undefined, newGarden: GardenPlot | undefined, gardenPlots: GardenPlot[]): Observable<any> {
     const index = gardenPlots.findIndex(garden => garden.gardenPlotID === gardenId);
 
     if (index !== -1) {
@@ -682,30 +691,33 @@ export class BackendGardenService {
     } else {
       console.error('Garden not found with ID:', gardenId);
     }
+    return of(null);
   }
 
   //TODO to endpoint
   editGarden3(gardenId: string | undefined, newGarden: GardenPlot): Observable<any> {
-    const url = `${'https://localhost:1337/api/garden'}/${gardenId}`;
+    const url = `${this.gardenURL}/${gardenId}`;
     return this.httpClient.put<any>(url, {newGarden});
   }
 
 
-  addGarden(newGarden: GardenPlotBackend): void {
+  addGarden(newGarden: GardenPlotBackend): Observable<any> {
     this.gardenPlotsBackend.push(newGarden)
+    return of(null);
   }
 
-  addGarden3(newGarden: GardenPlot): void {
+  addGarden3(newGarden: GardenPlot): Observable<any> {
     this.gardenPlots.push(newGarden)
+    return of(null);
   }
 
   //TODO to endpoint
   addGarden2(newGarden: GardenPlot): Observable<any> {
-    const url = `${'https://localhost:1337/api/garden'}`;
+    const url = this.gardenURL;
     return this.httpClient.post<any>(url, {newGarden});
   }
 
-  editLeaseholder(gardenId: string | undefined, newLeaseholderID: string | null): void {
+  editLeaseholder(gardenId: string | undefined, newLeaseholderID: string | null): Observable<any> {
     const index = this.gardenPlotsBackend.findIndex(garden => garden.gardenPlotID === gardenId);
 
     if (index !== -1) {
@@ -713,9 +725,10 @@ export class BackendGardenService {
     } else {
       console.error('Garden not found with ID:', gardenId);
     }
+    return of(null);
   }
 
-  editLeaseholder2(gardenId: string | undefined, newLeaseholderID: string | null, gardenPlots: GardenPlot[]): void {
+  editLeaseholder2(gardenId: string | undefined, newLeaseholderID: string | null, gardenPlots: GardenPlot[]): Observable<any> {
     const index = gardenPlots.findIndex(garden => garden.gardenPlotID === gardenId);
 
     if (index !== -1) {
@@ -723,11 +736,12 @@ export class BackendGardenService {
     } else {
       console.error('Garden not found with ID:', gardenId);
     }
+    return of(null);
   }
 
   //TODO to endpoint
   editLeaseholder3(gardenId: string | undefined, newLeaseholderID: string | null): Observable<any> {
-    const url = `${'https://localhost:1337/api/api/garden/leaseholder'}/${gardenId}`;
+    const url = `${this.gardenURL}/leaseholder/${gardenId}`;
     return this.httpClient.patch<any>(url, {leaseholderID:newLeaseholderID});
   }
 
@@ -740,8 +754,8 @@ export class BackendGardenService {
 //nowe
 //nowe
 //nowe
-  getAllGardenPlots(): GardenPlot[] {
-    return this.gardenPlots
+  getAllGardenPlots(): Observable<GardenPlot[]> {
+    return of(this.gardenPlots);
   }
   //TODO to endpoint
   // getAllGardenPlots(): Observable<GardenPlot[]> {
@@ -750,14 +764,20 @@ export class BackendGardenService {
   // }
 
 
-  updateLeaseholderID(targetID: string | null | undefined, newLeaseholderID: string | null) {
+  updateLeaseholderID(targetID: string | null | undefined, newLeaseholderID: string | null):Observable<any> {
     //to zastapi push
     for (let garden of this.gardenPlots) {
       if (garden.gardenPlotID === targetID) {
         garden.leaseholderID = newLeaseholderID
       }
     }
+    return of(null);
   }
+  updateLeaseholderID2(targetID: string | null | undefined, newLeaseholderID: string | null): Observable<any> {
+    const url = `https://localhost:1337/api/updateLeaseholderID`;
+    return this.httpClient.post<any>(url, {targetID,newLeaseholderID});
+  }
+
 }
 
 
@@ -842,9 +862,16 @@ export class BackendGardenService {
 //   lastName: string;
 //   phoneNumber: string;
 //   email: string;
-//   accountStatus: Role_TEMP[]; // enum with values: "USER" or "ADMIN " or "MANAGER" or "GARDENER" or "EMPLOYEE"
+//   accountStatus: Role[];
 //   paymentAmount: number | null;
 //   paymentDueDate: Date;
+// }
+// export enum Role {
+//   ADMIN = 'ADMIN',
+//   MANAGER = 'MANAGER',
+//   GARDENER = 'GARDENER',
+//   TECHNICAL_EMPLOYEE = 'TECHNICAL_EMPLOYEE',
+//   NON_TECHNICAL_EMPLOYEE = 'NON_TECHNICAL_EMPLOYEE',
 // }
 
 // // ### POST with parameter
@@ -876,14 +903,14 @@ export class BackendGardenService {
 // }
 // }
 
-
-// PATCH https://localhost:1337/api/garden/leaseholder:garden-plot-id
+//GetPayments
+// PATCH https://localhost:1337/api/user/payments/leaseholder:user_id
 //   Content-Type: application/json
 // Accept: application/json
 //
 // Request Body:
 // {
-//   "leaseholderID": 10, // example: value of the new payment
+//   "leaseholderID": 10,
 // }
 
 
@@ -986,4 +1013,35 @@ export class BackendGardenService {
 //         GardenStatus: PlotStatus; // enum with values: "Available" or "Unavailable"
 //       }
 //     ]
+//
+//
+// ### POST request to update leaseholderID
+//
+// Updates the leaseholderID for a specific garden plot by sending a POST request to the specified endpoint.
+//
+// #### Endpoint
+//
+// - Method: `POST`
+// - URL: `https://localhost:1337/api/updateLeaseholderID`
+// - Headers:
+// - Content-Type: `application/json`
+//
+// #### Request body
+//
+// The request body should contain the following fields in JSON format:
+//
+//   ```json
+// {
+//   "targetID": "string | null | undefined",
+//   "newLeaseholderID": "string | null"
+// }
+//
+// Moja funkcja:
+// updateLeaseholderID(targetID: string | null | undefined, newLeaseholderID: string | null) {
+//   for (let garden of this.gardenPlots) {
+//     if (garden.gardenPlotID === targetID) {
+//       garden.leaseholderID = newLeaseholderID
+//     }
+//   }
+// }
 
