@@ -12,6 +12,7 @@ import {
 import {ListOfUsersService} from "../list-of-users/list-of-users.service";
 import {UserInfoService} from "./user-info.service";
 import {BackendGardenService} from "../list-of-garden-plot/backend-garden.service";
+import {StorageService} from "../../core/storage/storage.service";
 
 @Component({
     selector: 'app-user-info',
@@ -36,7 +37,11 @@ export class UserInfoComponent implements OnInit {
     // @ts-ignore
     gardenPlots: GardenPlot[];
 
-    constructor(private route: ActivatedRoute, formBuilder: FormBuilder, private router: Router, private listOfUsersService: ListOfUsersService, private userInfoService: UserInfoService, private backendGardenService: BackendGardenService) {
+    isAvailableToEdit: boolean = true;
+
+    constructor(private route: ActivatedRoute, formBuilder: FormBuilder, private router: Router,
+                private listOfUsersService: ListOfUsersService, private userInfoService: UserInfoService,
+                private backendGardenService: BackendGardenService, private storageService: StorageService) {
         this.initData()
         this.userInfoForm = formBuilder.group({
             firstName: [{value: '', disabled: true}],
@@ -67,19 +72,28 @@ export class UserInfoComponent implements OnInit {
         });
     }
 
+    isAvailableToEditProfile() {
+        // @ts-ignore
+        if ((this.profile?.accountStatus.includes(Role.ADMIN)) || (this.profile?.accountStatus.includes(Role.MANAGER))){
+            if (this.storageService.getRoles().includes(Role.MANAGER)) {
+                this.isAvailableToEdit = false;
+            }
+        }
+    }
+
     ngOnInit() {
         this.route.params.subscribe(params => {
             this.id = params['id'];
             this.route.params.subscribe(params => {
                 // TODO !!!!!!!!!!!!!!!!!
-                // if (!this.authService.isManagerOrAdmin() || this.authService.isOwnProfile(this.userId)) {
-                //   // Pozwól użytkownikowi na dostęp do profilu
-                //   this.profile = this.getProfileById(this.id)
-                // } else {
-                //   this.router.navigate(['/403']);
-                // }
+                // if (!this.storageService.getRoles().includes(Role.ADMIN) || (!this.storageService.getRoles().includes(Role.MANAGER) || this.authService.isOwnProfile(this.userId)) {
+                if (this.storageService.getRoles().includes(Role.ADMIN) || (this.storageService.getRoles().includes(Role.MANAGER))) {
+                  this.profile = this.getProfileById(this.id)
+                } else {
+                  this.router.navigate(['/403']);
+                }
             });
-            this.profile = this.getProfileById(this.id)
+            this.isAvailableToEditProfile()
         });
 
         if (findGardenByUserID(this.id, this.gardenPlots)) {
@@ -279,28 +293,30 @@ export class UserInfoComponent implements OnInit {
         }
     }
 
-    getMatchingSectors(profiles: Profile[], gardenPlots: GardenPlot[]):
-        ((string | null)[]) {
+    getMatchingSectors(profiles: Profile[], gardenPlots: GardenPlot[]): (string | null)[] {
         const availableGardenPlots = gardenPlots.filter((gardenPlot) => {
             return (
                 !profiles.some((profile) => profile.profileId === gardenPlot.leaseholderID) || (this.id === gardenPlot.leaseholderID));
         });
 
-        const sectors = availableGardenPlots.map((gardenPlot) => gardenPlot.sector);
-        sectors.sort();
-        return (sectors);
+        const sectorsSet = new Set(availableGardenPlots.map((gardenPlot) => gardenPlot.sector));
+        const uniqueSectors = Array.from(sectorsSet).sort();
+
+        return uniqueSectors;
     }
 
-    getMatchingAvenues(profiles: Profile[], gardenPlots: GardenPlot[], sector: string | null):
-        ((string | null)[]) {
+    getMatchingAvenues(profiles: Profile[], gardenPlots: GardenPlot[], sector: string | null): (string | null)[] {
         const availableGardenPlots = gardenPlots.filter((gardenPlot) => {
             return (
-                (!profiles.some((profile) => profile.profileId === gardenPlot.leaseholderID) || (this.id === gardenPlot.leaseholderID)) && (gardenPlot.sector === sector));
+                (!profiles.some((profile) => profile.profileId === gardenPlot.leaseholderID) || (this.id === gardenPlot.leaseholderID)) &&
+                (gardenPlot.sector === sector)
+            );
         });
 
-        const sectors = availableGardenPlots.map((gardenPlot) => gardenPlot.avenue);
-        sectors.sort();
-        return (sectors);
+        const avenuesSet = new Set(availableGardenPlots.map((gardenPlot) => gardenPlot.avenue));
+        const uniqueAvenues = Array.from(avenuesSet).sort();
+
+        return uniqueAvenues;
     }
 
     getMatchingNumbers(profiles: Profile[], gardenPlots: GardenPlot[], sector: string | null, avenue: string | null,):
