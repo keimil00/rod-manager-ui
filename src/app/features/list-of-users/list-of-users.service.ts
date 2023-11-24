@@ -12,7 +12,7 @@ export class ListOfUsersService {
 
     private profiles: Profile[] = [
         {
-            profileId: 1,
+            id: 1,
             first_name: 'John',
             last_name: 'Doe',
             phone: '123-456-7890',
@@ -22,7 +22,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: 2,
+            id: 2,
             first_name: 'Jane',
             last_name: 'Smith',
             phone: '987-654-3210',
@@ -32,7 +32,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: 3,
+            id: 3,
             first_name: 'David',
             last_name: 'Johnson',
             phone: '555-555-5555',
@@ -42,7 +42,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: 4,
+            id: 4,
             first_name: 'Mary',
             last_name: 'Williams',
             phone: '777-777-7777',
@@ -52,7 +52,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: 5,
+            id: 5,
             first_name: 'Robert',
             last_name: 'Brown',
             phone: '111-111-1111',
@@ -62,7 +62,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: 6,
+            id: 6,
             first_name: 'Linda',
             last_name: 'Jones',
             phone: '222-222-2222',
@@ -72,7 +72,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: 7,
+            id: 7,
             first_name: 'Michael',
             last_name: 'Davis',
             phone: '333-333-3333',
@@ -82,7 +82,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: 8,
+            id: 8,
             first_name: 'Susan',
             last_name: 'Wilson',
             phone: '444-444-4444',
@@ -92,7 +92,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: 9,
+            id: 9,
             first_name: 'William',
             last_name: 'Evans',
             phone: '666-666-6666',
@@ -102,7 +102,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: 10,
+            id: 10,
             first_name: 'Karen',
             last_name: 'Taylor',
             phone: '999-999-9999',
@@ -112,7 +112,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: 11,
+            id: 11,
             first_name: 'Richard',
             last_name: 'Anderson',
             phone: '222-222-2222',
@@ -122,7 +122,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: 12,
+            id: 12,
             first_name: 'Patricia',
             last_name: 'White',
             phone: '333-333-3333',
@@ -132,7 +132,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: 13,
+            id: 13,
             first_name: 'David',
             last_name: 'Thomas',
             phone: '777-777-7777',
@@ -142,7 +142,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: 14,
+            id: 14,
             first_name: 'Susan',
             last_name: 'Jackson',
             phone: '123-123-1234',
@@ -152,7 +152,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: 15,
+            id: 15,
             first_name: 'Michael',
             last_name: 'Harris',
             phone: '456-456-4567',
@@ -162,7 +162,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: 16,
+            id: 16,
             first_name: 'Karen',
             last_name: 'Martin',
             phone: '111-111-1111',
@@ -172,7 +172,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: 17,
+            id: 17,
             first_name: 'William',
             last_name: 'Garcia',
             phone: '555-555-5555',
@@ -182,7 +182,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: 18,
+            id: 18,
             first_name: 'Linda',
             last_name: 'Brown',
             phone: '333-333-3333',
@@ -192,7 +192,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2024, 10, 31),
         },
         {
-            profileId: 19,
+            id: 19,
             first_name: 'Michael',
             last_name: 'Lewis',
             phone: '777-777-7777',
@@ -202,7 +202,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 12, 31),
         },
         {
-            profileId: 20,
+            id: 20,
             first_name: 'Susan',
             last_name: 'Clark',
             phone: '123-123-1234',
@@ -212,7 +212,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: 21,
+            id: 21,
             first_name: 'John',
             last_name: 'Doe',
             phone: '456-456-4567',
@@ -222,7 +222,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 9, 15),
         },
         {
-            profileId: 22,
+            id: 22,
             first_name: 'Alice',
             last_name: 'Johnson',
             phone: '789-789-7890',
@@ -232,7 +232,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 8, 28),
         },
         {
-            profileId: 23,
+            id: 23,
             first_name: 'Bob',
             last_name: 'Smith',
             phone: '234-234-2345',
@@ -242,7 +242,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 11, 15),
         },
         {
-            profileId: 24,
+            id: 24,
             first_name: 'Eva',
             last_name: 'Brown',
             phone: '567-567-5678',
@@ -252,7 +252,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 7, 22),
         },
         {
-            profileId: 25,
+            id: 25,
             first_name: 'Michael',
             last_name: 'Miller',
             phone: '890-890-8901',
@@ -262,7 +262,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 6, 10),
         },
         {
-            profileId: 26,
+            id: 26,
             first_name: 'Sophia',
             last_name: 'Wilson',
             phone: '123-456-7890',
@@ -272,7 +272,7 @@ export class ListOfUsersService {
             paymentDueDate: new Date(2023, 5, 18),
         },
         {
-            profileId: 27,
+            id: 27,
             first_name: 'David',
             last_name: 'Jones',
             phone: '456-789-0123',
@@ -300,21 +300,16 @@ export class ListOfUsersService {
         return this.httpClient.get<Page<Profile>>(url);
     }
 
-    getAllProfiles(): Observable<Profile[]> {
-        return of(this.profiles);
-    }
     // getAllProfiles(): Observable<Profile[]> {
-    //     const url = `api/accounts/?page=${1}&page_size=${10000}`;
-    //     return this.httpClient.get<Page<Profile>>(url).pipe(
-    //         map((page: Page<Profile>) => page.results)
-    //     );
+    //     return of(this.profiles);
     // }
-
-    // TODO endPoint
-    getAllProfiles2(): Observable<Profile[]> {
-        const url = 'https://localhost:1337/api/all-profiles';
-        return this.httpClient.get<Profile[]>(url);
+    getAllProfiles(): Observable<Profile[]> {
+        const url = `api/accounts/?page=${1}&page_size=${10000}`;
+        return this.httpClient.get<Page<Profile>>(url).pipe(
+            map((page: Page<Profile>) => page.results)
+        );
     }
+
 
 
     sortProfiles() {
@@ -335,15 +330,23 @@ export class ListOfUsersService {
         );
     }
 
-    editProfile(profile: Profile): Observable<any>{
-        const index = this.profiles.findIndex(p => p.profileId === profile.profileId);
-        this.profiles[index] = profile;
-        return of(null)
+    getProfileById(id: number | null): Observable<Profile | undefined> {
+        const url = `api/accounts/${id}/`;
+        return this.httpClient.get<Profile>(url);
     }
-    editProfile2(profile: Profile) {
-        const url = 'https://localhost:1337/api/profiles'+'profile.profileId';
-        this.httpClient.put(url, profile);
+
+    // editProfile(profile: any): Observable<any>{
+    //     const index = this.profiles.findIndex(p => p.id === profile.id);
+    //     this.profiles[index] = profile;
+    //     return of(null)
+    // }
+    editProfile(profile: any,id: number | null) {
+        const url = `api/accounts/${id}/`;
+        console.log(profile);
+
+        return this.httpClient.put(url, profile);
     }
+
 }
 
 // .

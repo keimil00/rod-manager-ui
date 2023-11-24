@@ -1,7 +1,7 @@
 import {Role} from "./register/user.model";
 
 export interface Profile {
-  profileId: number;
+  id: number;
   first_name: string;
   last_name: string;
   phone: string;

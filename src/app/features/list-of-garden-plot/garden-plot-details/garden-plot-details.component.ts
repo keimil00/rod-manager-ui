@@ -63,7 +63,7 @@ export class GardenPlotDetailsComponent {
     }
 
     initData() {
-        this.gardenPlotsDataService.getPayments(this.leaseholder?.profileId).subscribe((payments: Payment[]) => {
+        this.gardenPlotsDataService.getPayments(this.leaseholder?.id).subscribe((payments: Payment[]) => {
             this.paymentHistory = payments;
         });
     }
@@ -83,7 +83,7 @@ export class GardenPlotDetailsComponent {
                     date: newPaymentDate,
                 };
 
-                this.addPaymentBackend(this.leaseholder?.profileId, newPayment)
+                this.addPaymentBackend(this.leaseholder?.id, newPayment)
 
                 this.showNewPaymentForm = false;
                 this.paymentForm.reset();

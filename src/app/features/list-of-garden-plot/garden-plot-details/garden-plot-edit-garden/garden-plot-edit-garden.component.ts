@@ -14,13 +14,14 @@ import {
 import {getMatchingProfiles, profileEmailValidator} from "../../../list-of-users/ProfilesService";
 import {BackendGardenService} from "../../backend-garden.service";
 import {ListOfUsersService} from "../../../list-of-users/list-of-users.service";
+import {forkJoin} from "rxjs";
 
 @Component({
     selector: 'app-garden-plot-edit-garden',
     templateUrl: './garden-plot-edit-garden.component.html',
     styleUrls: ['./garden-plot-edit-garden.component.scss']
 })
-export class GardenPlotEditGardenComponent implements OnInit {
+export class GardenPlotEditGardenComponent {
     @Input() gardenPlot: GardenPlotBackend | undefined;
     @Output() closeEditingingGardenPlot = new EventEmitter<void>();
 
@@ -62,9 +63,7 @@ export class GardenPlotEditGardenComponent implements OnInit {
         ]
     };
 
-    constructor(formBuilder: FormBuilder, private gardenPlotsDataService: BackendGardenService, private listOfUsersService: ListOfUsersService) {
-        this.initData()
-
+    constructor(formBuilder: FormBuilder, private gardenPlotsDataService: BackendGardenService, private listOfUsersService: ListOfUsersService)  {
         this.editGardenForm = formBuilder.group({
             sector: ['', [
                 Validators.required,
@@ -89,24 +88,49 @@ export class GardenPlotEditGardenComponent implements OnInit {
         });
     }
 
-    initData() {
-        this.listOfUsersService.sortProfiles()
-        this.initProfiles()
-        this.initGardenPlots()
+    async loadData2() {
+        try {
+            const result = await this.asyncOperation(); // Tu wywołaj swoją asynchroniczną funkcję
+            console.log('Wynik operacji asynchronicznej:', result);
+        } catch (error) {
+            console.error('Wystąpił błąd:', error);
+        }
     }
 
-    initGardenPlots() {
-        this.gardenPlotsDataService.getAllGardenPlots().subscribe((gardenPlots: GardenPlot[]) => {
-            this.gardenPlots = gardenPlots;
+    async asyncOperation(): Promise<string> {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                // @ts-ignore
+                this.populateFormFromGardenPlot(this.gardenPlot);
+                resolve('Dane załadowane asynchronicznie');
+            }, 200);
         });
     }
 
-    initProfiles() {
-        this.listOfUsersService.getAllProfiles().subscribe((profiles: Profile[]) => {
-            this.profiles = profiles;
-        });
+    async ngOnInit(): Promise<void> {
+        this.loadData()
+        // TODO WIEM to jest na siłe bardzo ale już się poddałem po paru godzinach
+        await this.loadData2()
     }
 
+    loadData() {
+        forkJoin({
+            profiles: this.listOfUsersService.getAllProfiles(),
+            gardenPlots: this.gardenPlotsDataService.getAllGardenPlots(),
+            leaseHolder: this.gardenPlotsDataService.getLeaseholder(this.gardenPlot?.gardenPlotID)
+        }).subscribe(async data => {
+            this.profiles = data.profiles;
+            this.gardenPlots = data.gardenPlots;
+            let leaseHolder: Profile | null = data.leaseHolder;
+            if (leaseHolder) {
+                this.leasholderID = leaseHolder.id;
+            } else {
+                this.leasholderID = null;
+            }
+
+            this.initData();
+        });
+    }
 
     populateFormFromGardenPlot(gardenPlot: GardenPlotBackend) {
         this.editGardenForm.patchValue({
@@ -119,17 +143,7 @@ export class GardenPlotEditGardenComponent implements OnInit {
         });
     }
 
-    ngOnInit() {
-        // @ts-ignore
-        const gardenPlot: GardenPlotBackend = this.gardenPlot
-        let leaseHolder : Profile
-        this.gardenPlotsDataService.getLeaseholder(this.gardenPlot?.gardenPlotID).subscribe((leaseholder) => {leaseHolder = leaseholder});
-
-        // @ts-ignore
-        if (leaseHolder) {
-            this.leasholderID = leaseHolder.profileId
-        } else this.leasholderID = null
-        this.populateFormFromGardenPlot(gardenPlot);
+    initData() {
 
         this.leaseHolderOptions = [{
             fullName: 'brak',
@@ -158,7 +172,7 @@ export class GardenPlotEditGardenComponent implements OnInit {
 
     updateAvenousAndNumberValidator() {
         this.avenuesOptions = getMatchingAvenues(this.editGardenForm.get('avenue')?.value, this.editGardenForm.get('sector')?.value, this.gardenPlots);
-        this.editGardenForm.get('number')?.setValidators([Validators.required, uniqueGardenValidator(this.editGardenForm.get('sector')?.value, this.editGardenForm.get('avenue')?.value, this.gardenPlots, true, this.leasholderID)])
+        this.editGardenForm.get('number')?.setValidators([Validators.required, uniqueGardenValidator(this.editGardenForm.get('sector')?.value, this.editGardenForm.get('avenue')?.value, this.gardenPlots, true, this.gardenPlot?.gardenPlotID)])
     }
 
     validationErrors(controlName: string): any[] {
@@ -224,7 +238,7 @@ export class GardenPlotEditGardenComponent implements OnInit {
             this.gardenPlotsDataService.editGarden2(this.gardenPlot?.gardenPlotID, newGarden2, this.gardenPlots)
             // this.gardenPlotsDataService.editGarden3(this.gardenPlot?.id,newGarden2)
 
-            this.editGardenForm.reset();
+            // this.editGardenForm.reset();
             this.closeEditingingGardenPlot.emit()
         }
     }
@@ -235,6 +249,6 @@ export class GardenPlotEditGardenComponent implements OnInit {
 
 function findProfileIdByEmail(emailToFind: string, profiles: Profile[]): number | null {
     const foundProfile = profiles.find((profile) => profile.email === emailToFind);
-    return foundProfile ? foundProfile.profileId : null;
+    return foundProfile ? foundProfile.id : null;
 }
 

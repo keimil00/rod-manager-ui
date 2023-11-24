@@ -245,8 +245,8 @@ export function uniqueLeaseholderIDValidator(gardenPlots: GardenPlot[], profiles
             return null;
         }
 
-        const isUsed = gardenPlots.some((plot) => plot.leaseholderID === selectedProfile.profileId);
-        const isCurrent = (showCurrentLeaseHolder && currentLeaseHolderID === selectedProfile.profileId)
+        const isUsed = gardenPlots.some((plot) => plot.leaseholderID === selectedProfile.id);
+        const isCurrent = (showCurrentLeaseHolder && currentLeaseHolderID === selectedProfile.id)
 
         if (isUsed && !isCurrent) {
             return {nonUniqueLeaseholderID: true};
@@ -255,7 +255,7 @@ export function uniqueLeaseholderIDValidator(gardenPlots: GardenPlot[], profiles
     };
 }
 
-export function uniqueGardenValidator(sector: string, avenue: string, gardenPlots: GardenPlot[], showCurrenGardenPlot: boolean, currentLeaseHolderID?: number | null): ValidatorFn {
+export function uniqueGardenValidator(sector: string, avenue: string, gardenPlots: GardenPlot[], showCurrenGardenPlot: boolean, currentGardenPlotID?: number | null): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
         const gardenPlotNumber = control.value;
 
@@ -268,7 +268,7 @@ export function uniqueGardenValidator(sector: string, avenue: string, gardenPlot
             return null
         }
 
-        const isCurrent = (showCurrenGardenPlot && currentLeaseHolderID === selectedGardenPlotId)
+        const isCurrent = (showCurrenGardenPlot && currentGardenPlotID === selectedGardenPlotId)
 
         if (!isCurrent)
             return {nonUniqueGarden: true};
@@ -277,7 +277,7 @@ export function uniqueGardenValidator(sector: string, avenue: string, gardenPlot
 }
 
 export function findProfileEmailByID(IdToFind: number | null, profiles: Profile[]): string | null {
-    const foundProfile = profiles.find((profile) => profile.profileId === IdToFind);
+    const foundProfile = profiles.find((profile) => profile.id === IdToFind);
     return foundProfile ? foundProfile.email : null;
 }
 

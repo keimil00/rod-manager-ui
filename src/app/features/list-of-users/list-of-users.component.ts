@@ -28,13 +28,8 @@ export class ListOfUsersComponent {
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
     constructor(private router: Router, private listOfUsersService: ListOfUsersService, private changeDetectorRef: ChangeDetectorRef) {
-        this.sortData()
         this.initData();
         this.dataProfiles.paginator = this.paginator;
-    }
-
-    private sortData() {
-        this.listOfUsersService.sortProfiles()
     }
 
     private initData() {

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {GardenPlot, GardenPlotBackend, PlotStatus} from "./garden-plot";
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {Observable, of} from "rxjs";
+import {Observable, of, switchMap} from "rxjs";
 import {Profile} from "../Profile";
 import {Payment, PaymentList} from "./garden-plot-details/PaymentList";
 import {ListOfUsersService} from "../list-of-users/list-of-users.service";
@@ -415,7 +415,7 @@ export class BackendGardenService {
       avenue: 'Avenue 3',
       number: 301,
       area: 750,
-      leaseholderID: 1,
+      leaseholderID: 101,
       gardenStatus: PlotStatus.Available
     },
     {
@@ -433,7 +433,7 @@ export class BackendGardenService {
       avenue: 'Avenue 5',
       number: 501,
       area: 700,
-      leaseholderID: 6,
+      leaseholderID: 106,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -442,7 +442,7 @@ export class BackendGardenService {
       avenue: 'Avenue 6',
       number: 601,
       area: 600,
-      leaseholderID: 3,
+      leaseholderID: 103,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -451,7 +451,7 @@ export class BackendGardenService {
       avenue: 'Avenue 7',
       number: 701,
       area: 800,
-      leaseholderID: 8,
+      leaseholderID: 108,
       gardenStatus: PlotStatus.Available
     },
     {
@@ -460,7 +460,7 @@ export class BackendGardenService {
       avenue: 'Avenue 8',
       number: 801,
       area: 900,
-      leaseholderID: 10,
+      leaseholderID: 110,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -469,7 +469,7 @@ export class BackendGardenService {
       avenue: 'Avenue 9',
       number: 901,
       area: 450,
-      leaseholderID: 11,
+      leaseholderID: 111,
       gardenStatus: PlotStatus.Available
     },
     {
@@ -478,7 +478,7 @@ export class BackendGardenService {
       avenue: 'Avenue 10',
       number: 1001,
       area: 600,
-      leaseholderID: 16,
+      leaseholderID: 116,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -487,7 +487,7 @@ export class BackendGardenService {
       avenue: 'Avenue 11',
       number: 1101,
       area: 700,
-      leaseholderID: 19,
+      leaseholderID: 119,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -505,7 +505,7 @@ export class BackendGardenService {
       avenue: 'Avenue 13',
       number: 1301,
       area: 750,
-      leaseholderID: 20,
+      leaseholderID: 120,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -514,7 +514,7 @@ export class BackendGardenService {
       avenue: 'Avenue 14',
       number: 1401,
       area: 600,
-      leaseholderID: 14,
+      leaseholderID: 114,
       gardenStatus: PlotStatus.Available
     },
     {
@@ -523,7 +523,7 @@ export class BackendGardenService {
       avenue: 'Avenue 15',
       number: 1501,
       area: 850,
-      leaseholderID: 17,
+      leaseholderID: 117,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -541,7 +541,7 @@ export class BackendGardenService {
       avenue: 'Avenue 17',
       number: 1701,
       area: 600,
-      leaseholderID: 12,
+      leaseholderID: 112,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -559,7 +559,7 @@ export class BackendGardenService {
       avenue: 'Avenue 19',
       number: 1901,
       area: 500,
-      leaseholderID: 2,
+      leaseholderID: 102,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -568,7 +568,7 @@ export class BackendGardenService {
       avenue: 'Avenue 20',
       number: 2001,
       area: 600,
-      leaseholderID: 4,
+      leaseholderID: 104,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -654,18 +654,31 @@ export class BackendGardenService {
     return this.httpClient.get<Profile>(url);
   }
 
-  // @ts-ignore
+  // // @ts-ignore
+  // profiles: Profile[];
+  //
+  // initProfiles() {
+  //   this.listOfUsersService.getAllProfiles().subscribe((profiles: Profile[]) => {
+  //     this.profiles = profiles;
+  //   })
+  //   console.log(this.profiles)
+  // }
+// @ts-ignore
   profiles: Profile[];
 
-  initProfiles() {
-    this.listOfUsersService.getAllProfiles().subscribe((profiles: Profile[]) => {
-      this.profiles = profiles;
-    });
+  initProfiles(): Observable<Profile[]> {
+    return this.listOfUsersService.getAllProfiles();
   }
-  getLeaseholder(gardenPlotID: number | undefined): Observable<Profile> {
-    this.initProfiles()
-    const id = this.gardenPlots.find(gardenPlot => gardenPlot.gardenPlotID === gardenPlotID)?.leaseholderID
-    return of(<Profile>this.profiles.find(profile => profile.profileId === id) || null);
+
+  getLeaseholder(gardenPlotID: number | undefined): Observable<Profile | null> {
+    return this.initProfiles().pipe(
+        switchMap((profiles: Profile[]) => {
+          this.profiles = profiles;
+          const id = this.gardenPlots.find(gardenPlot => gardenPlot.gardenPlotID === gardenPlotID)?.leaseholderID;
+          const foundProfile = this.profiles.find(profile => profile.id === id);
+          return of(foundProfile || null);
+        })
+    );
   }
 
   editGarden(gardenId: number | undefined, newGarden: GardenPlotBackend | undefined): Observable<any> {

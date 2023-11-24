@@ -13,7 +13,7 @@ export function getMatchingProfiles(value: string, profiles: Profile[], gardenPl
     const fullName = profile.first_name + ' ' + profile.last_name
     return (
       (fullName.toLowerCase().includes(lowerCaseValue) || profile.email.toLowerCase().includes(lowerCaseValue)) && (profile.groups.some((role) => role === Role.GARDENER)) && (
-        !gardenPlots.some((plot) => plot.leaseholderID === profile.profileId) || (showCurrentLeaseHolder && leaseHolderID === profile.profileId))
+        !gardenPlots.some((plot) => plot.leaseholderID === profile.id) || (showCurrentLeaseHolder && leaseHolderID === profile.id))
     );
   });
 
@@ -25,7 +25,7 @@ export function getMatchingProfiles(value: string, profiles: Profile[], gardenPl
 
 export function findProfileIdByEmail(emailToFind: string, profiles: Profile[]): number | null {
   const foundProfile = profiles.find((profile) => profile.email === emailToFind);
-  return foundProfile ? foundProfile.profileId : null;
+  return foundProfile ? foundProfile.id : null;
 }
 
 export function profileEmailValidator(profiles: Profile[]): ValidatorFn {

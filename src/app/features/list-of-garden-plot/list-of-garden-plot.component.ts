@@ -9,6 +9,7 @@ import {GardenPlotListAddGardenComponent} from "./garden-plot-list-add-garden/ga
 import {MatPaginator} from "@angular/material/paginator";
 import {BackendGardenService} from "./backend-garden.service";
 import {Page} from "../../shared/paginator/page.model";
+import {forkJoin} from "rxjs";
 
 @Component({
     selector: 'app-list-of-garden-plot',
@@ -89,12 +90,16 @@ export class ListOfGardenPlotComponent {
 
     selectDetails(gardenPlot: GardenPlot) {
 
-        let leaseHolder : Profile
-        this.gardenPlotsDataService.getLeaseholder(gardenPlot.gardenPlotID).subscribe((leaseholder) => {leaseHolder = leaseholder});
-        // @ts-ignore
-        this.showDetails = true;
-        // @ts-ignore
-        this.showDetailsDialog(gardenPlot, leaseHolder)
+
+            forkJoin({
+                leaseHolder:this.gardenPlotsDataService.getLeaseholder(gardenPlot.gardenPlotID)
+            }).subscribe(data => {
+                let leaseHolder : Profile | null
+                leaseHolder = data.leaseHolder
+                this.showDetails = true;
+                // @ts-ignore
+                this.showDetailsDialog(gardenPlot, leaseHolder)
+            });
     }
 
     showDetailsDialog(gardenPlot: GardenPlot, leaseholder: Profile | undefined) {

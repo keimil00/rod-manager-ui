@@ -1,25 +1,28 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {Profile} from "../Profile";
-import {GardenPlot} from "../list-of-garden-plot/garden-plot";
+import {GardenPlot, GardenPlotBackend} from "../list-of-garden-plot/garden-plot";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {getTranslatedRole, Role} from "../register/user.model";
 import {
     findGardenByID,
     findGardenByUserID,
-    findGardenPlotIdByAddress,
+    findGardenPlotIdByAddress, uniqueLeaseholderIDValidator,
 } from "../list-of-garden-plot/GardenService";
 import {ListOfUsersService} from "../list-of-users/list-of-users.service";
 import {UserInfoService} from "./user-info.service";
 import {BackendGardenService} from "../list-of-garden-plot/backend-garden.service";
 import {StorageService} from "../../core/storage/storage.service";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {forkJoin} from "rxjs";
+import {getMatchingProfiles, profileEmailValidator} from "../list-of-users/ProfilesService";
 
 @Component({
     selector: 'app-user-info',
     templateUrl: './user-info.component.html',
     styleUrls: ['./user-info.component.scss']
 })
-export class UserInfoComponent implements OnInit {
+export class UserInfoComponent {
     id: number | null = null;
     profile: Profile | undefined;
     userInfoForm: FormGroup;
@@ -42,7 +45,6 @@ export class UserInfoComponent implements OnInit {
     constructor(private route: ActivatedRoute, formBuilder: FormBuilder, private router: Router,
                 private listOfUsersService: ListOfUsersService, private userInfoService: UserInfoService,
                 private backendGardenService: BackendGardenService, private storageService: StorageService) {
-        this.initData()
         this.userInfoForm = formBuilder.group({
             firstName: [{value: '', disabled: true}],
             lastName: [{value: '', disabled: true}],
@@ -53,53 +55,35 @@ export class UserInfoComponent implements OnInit {
             plotNumber: [{value: 0, disabled: true}],
             accountStatus: [{value: '', disabled: true}],
         });
+        this.route.params.subscribe(params => {
+            this.id = parseInt(params['id'], 10)
+        });
+        this.loadData()
+    }
+
+    loadData() {
+        forkJoin({
+            profiles: this.listOfUsersService.getAllProfiles(),
+            gardenPlots: this.backendGardenService.getAllGardenPlots(),
+            profile: this.listOfUsersService.getProfileById(this.id)
+        }).subscribe(data => {
+            if (!(this.storageService.getRoles().includes(Role.ADMIN) || (this.storageService.getRoles().includes(Role.MANAGER)))) {
+                this.router.navigate(['/403']);
+            }
+            this.profiles = data.profiles;
+            this.gardenPlots = data.gardenPlots;
+            this.profile = data.profile;
+            this.initData()
+        });
     }
 
     initData() {
-        this.initProfiles()
-        this.initGardenPlots()
-    }
+        this.isAvailableToEditProfile()
 
-    initGardenPlots() {
-        this.backendGardenService.getAllGardenPlots().subscribe((gardenPlots: GardenPlot[]) => {
-            this.gardenPlots = gardenPlots;
-        });
-    }
-
-    initProfiles() {
-        this.listOfUsersService.getAllProfiles().subscribe((profiles: Profile[]) => {
-            this.profiles = profiles;
-        });
-    }
-
-    isAvailableToEditProfile() {
-        // @ts-ignore
-        if ((this.profile?.groups.includes(Role.ADMIN)) || (this.profile?.groups.includes(Role.MANAGER))) {
-            if (this.storageService.getRoles().includes(Role.MANAGER)) {
-                this.isAvailableToEdit = false;
-            }
-        }
-    }
-
-    ngOnInit() {
-        this.route.params.subscribe(params => {
-            this.id = params['id'];
-            this.route.params.subscribe(params => {
-                // TODO !!!!!!!!!!!!!!!!!
-                // if (!this.storageService.getRoles().includes(Role.ADMIN) || (!this.storageService.getRoles().includes(Role.MANAGER) || this.authService.isOwnProfile(this.userId)) {
-                if (this.storageService.getRoles().includes(Role.ADMIN) || (this.storageService.getRoles().includes(Role.MANAGER))) {
-                    this.profile = this.getProfileById(this.id)
-                } else {
-                    this.router.navigate(['/403']);
-                }
-            });
-            this.isAvailableToEditProfile()
-        });
 
         if (findGardenByUserID(this.id, this.gardenPlots)) {
             this.showGardenAddress = true
         }
-
         this.sectorsOptions = this.getMatchingSectors(this.profiles, this.gardenPlots);
 
         this.userInfoForm.get('plotSector')?.valueChanges.subscribe((value) => {
@@ -113,8 +97,18 @@ export class UserInfoComponent implements OnInit {
         this.populateFormFromGardenPlot(this.profile);
     }
 
+    isAvailableToEditProfile() {
+        // @ts-ignore
+        if ((this.profile?.groups.includes(Role.ADMIN)) || (this.profile?.groups.includes(Role.MANAGER))) {
+            if (this.storageService.getRoles().includes(Role.MANAGER)) {
+                this.isAvailableToEdit = false;
+            }
+        }
+    }
+
+
     populateFormFromGardenPlot(profile: Profile | undefined) {
-        const address = this.findPlotAddressTupleByUserId(this.gardenPlots, profile?.profileId);
+        const address = this.findPlotAddressTupleByUserId(this.gardenPlots, profile?.id);
         this.userInfoForm.patchValue({
             firstName: profile?.first_name,
             lastName: profile?.last_name,
@@ -125,10 +119,6 @@ export class UserInfoComponent implements OnInit {
             plotNumber: address?.number,
             accountStatus: profile?.groups
         });
-    }
-
-    getProfileById(id: number | null) {
-        return this.userInfoService.getProfileById(id)
     }
 
     findPlotAddressTupleByUserId(gardenPlots: GardenPlot[], id: number | undefined): {
@@ -202,6 +192,8 @@ export class UserInfoComponent implements OnInit {
             }
         });
 
+        this.userInfoForm.get('phoneNumber')?.setValidators([])
+        this.userInfoForm.get('accountStatus')?.setValidators([])
         this.userInfoForm.get('plotSector')?.setValidators([])
         this.userInfoForm.get('plotAvenue')?.setValidators([])
         this.userInfoForm.get('plotNumber')?.setValidators([])
@@ -249,31 +241,23 @@ export class UserInfoComponent implements OnInit {
             goodAdress = true
 
         if (this.userInfoForm.valid && goodAdress) {
-            const newFirstName: number = this.userInfoForm.get('firstName')?.value;
-            const newLastName: number = this.userInfoForm.get('lastName')?.value;
-            const newPhoneNumber: number = this.userInfoForm.get('phoneNumber')?.value;
+            const newFirstName: string = this.userInfoForm.get('firstName')?.value;
+            const newLastName: string = this.userInfoForm.get('lastName')?.value;
+            const newPhoneNumber: string = this.userInfoForm.get('phoneNumber')?.value;
 
             let newStatus: Role[] = this.userInfoForm.get('accountStatus')?.value;
 
-            const newUser: Profile = {
-                // @ts-ignore
-                profileId: this.id,
-                // @ts-ignore
-                userID: this.profile?.userID,
-                // @ts-ignore
+            const newUser: any = {
                 first_name: newFirstName,
-                // @ts-ignore
                 last_name: newLastName,
-                // @ts-ignore
-                phone: newPhoneNumber,
-                // @ts-ignore
                 email: this.profile?.email,
-                // @ts-ignore
+                phone: newPhoneNumber,
                 groups: newStatus,
-                // @ts-ignore
-                paymentAmount: this.profile?.paymentAmount,
-                // @ts-ignore
-                paymentDueDate: this.profile?.paymentDueDate
+                // TODO
+                // // @ts-ignore
+                // paymentAmount: this.profile?.paymentAmount,
+                // // @ts-ignore
+                // paymentDueDate: this.profile?.paymentDueDate
             };
 
             if (newSector !== null) {
@@ -281,8 +265,8 @@ export class UserInfoComponent implements OnInit {
                 this.backendGardenService.updateLeaseholderID(idToNull, null)
                 this.backendGardenService.updateLeaseholderID(gardenID, this.id)
             }
-            this.listOfUsersService.editProfile(newUser)
-            this.profile = newUser;
+            this.listOfUsersService.editProfile(newUser, this.id).subscribe(() => {});
+            // this.profile = newUser;
             this.disableFormFields()
         }
     }
@@ -290,7 +274,7 @@ export class UserInfoComponent implements OnInit {
     getMatchingSectors(profiles: Profile[], gardenPlots: GardenPlot[]): (string | null)[] {
         const availableGardenPlots = gardenPlots.filter((gardenPlot) => {
             return (
-                !profiles.some((profile) => profile.profileId === gardenPlot.leaseholderID) || (this.id === gardenPlot.leaseholderID));
+                !profiles.some((profile) => profile.id === gardenPlot.leaseholderID) || (this.id === gardenPlot.leaseholderID));
         });
 
         const sectorsSet = new Set(availableGardenPlots.map((gardenPlot) => gardenPlot.sector));
@@ -302,7 +286,7 @@ export class UserInfoComponent implements OnInit {
     getMatchingAvenues(profiles: Profile[], gardenPlots: GardenPlot[], sector: string | null): (string | null)[] {
         const availableGardenPlots = gardenPlots.filter((gardenPlot) => {
             return (
-                (!profiles.some((profile) => profile.profileId === gardenPlot.leaseholderID) || (this.id === gardenPlot.leaseholderID)) &&
+                (!profiles.some((profile) => profile.id === gardenPlot.leaseholderID) || (this.id === gardenPlot.leaseholderID)) &&
                 (gardenPlot.sector === sector)
             );
         });
@@ -317,7 +301,7 @@ export class UserInfoComponent implements OnInit {
         ((number | null)[]) {
         const availableGardenPlots = gardenPlots.filter((gardenPlot) => {
             return (
-                (!profiles.some((profile) => profile.profileId === gardenPlot.leaseholderID) || (this.id === gardenPlot.leaseholderID)) && (gardenPlot.sector === sector) && (gardenPlot.avenue === avenue));
+                (!profiles.some((profile) => profile.id === gardenPlot.leaseholderID) || (this.id === gardenPlot.leaseholderID)) && (gardenPlot.sector === sector) && (gardenPlot.avenue === avenue));
         });
 
         const sectors = availableGardenPlots.map((gardenPlot) => gardenPlot.number);

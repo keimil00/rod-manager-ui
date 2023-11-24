@@ -17,6 +17,7 @@ import {MatDialogRef} from "@angular/material/dialog";
 import {BackendGardenService} from "../backend-garden.service";
 import {ListOfUsersService} from "../../list-of-users/list-of-users.service";
 import {Profile} from "../../Profile";
+import {forkJoin} from "rxjs";
 
 
 @Component({
@@ -37,7 +38,7 @@ export class GardenPlotListAddGardenComponent {
     closeAddingGardenPlot() {
         this.dialogRef.close();
     }
-
+    // @ts-ignore
     addGardenForm: FormGroup;
 
     errorMessages = {
@@ -64,9 +65,8 @@ export class GardenPlotListAddGardenComponent {
         ]
     };
 
-    constructor(formBuilder: FormBuilder, public dialogRef: MatDialogRef<GardenPlotListAddGardenComponent>, private gardenPlotsDataService: BackendGardenService, private listOfUsersService: ListOfUsersService) {
-        this.initData()
-        this.addGardenForm = formBuilder.group({
+    constructor(private formBuilder: FormBuilder, public dialogRef: MatDialogRef<GardenPlotListAddGardenComponent>, private gardenPlotsDataService: BackendGardenService, private listOfUsersService: ListOfUsersService) {
+        this.addGardenForm = this.formBuilder.group({
             sector: ['', [
                 Validators.required,
             ]],
@@ -89,28 +89,49 @@ export class GardenPlotListAddGardenComponent {
             status: ['',
                 Validators.required]
         });
-        this.addGardenForm.updateValueAndValidity();
+        this.loadData()
+        // this.addGardenForm.updateValueAndValidity();
     }
+
+    loadData() {
+        forkJoin({
+            profiles: this.listOfUsersService.getAllProfiles(),
+            gardenPlots: this.gardenPlotsDataService.getAllGardenPlots(),
+        }).subscribe(data => {
+            this.profiles = data.profiles
+            this.gardenPlots = data.gardenPlots
+
+            this.initData()
+        });
+    }
+
 
     initData() {
-        this.listOfUsersService.sortProfiles()
-        this.initProfiles()
-        this.initGardenPlots()
-    }
-
-    initGardenPlots() {
-        this.gardenPlotsDataService.getAllGardenPlots().subscribe((gardenPlots: GardenPlot[]) => {
-            this.gardenPlots = gardenPlots;
+        this.addGardenForm = this.formBuilder.group({
+            sector: ['', [
+                Validators.required,
+            ]],
+            avenue: ['', [
+                Validators.required,
+            ]],
+            number: ['', [
+                Validators.required,
+            ]],
+            area: ['', [
+                Validators.required,
+                Validators.min(0.01),
+            ]],
+            leaseholderEmail: ['', [
+                // @ts-ignore
+                profileEmailValidator(this.profiles),
+                // @ts-ignore
+                uniqueLeaseholderIDValidator(this.gardenPlots, this.profiles, false)
+            ]],
+            status: ['',
+                Validators.required]
         });
-    }
 
-    initProfiles() {
-        this.listOfUsersService.getAllProfiles().subscribe((profiles: Profile[]) => {
-            this.profiles = profiles;
-        });
-    }
 
-    ngOnInit() {
         this.leaseHolderOptions = [{
             fullName: 'brak',
             email: 'brak'
