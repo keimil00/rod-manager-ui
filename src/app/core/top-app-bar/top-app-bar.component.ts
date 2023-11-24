@@ -5,6 +5,7 @@ import {AuthService} from "../auth/auth.service";
 import {Role} from "../../features/register/user.model";
 import {StorageService} from "../storage/storage.service";
 import {SocialAuthService} from "@abacritt/angularx-social-login";
+import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
 
 @Component({
   selector: 'app-top-app-bar',
@@ -18,7 +19,7 @@ export class TopAppBarComponent {
   constructor(private router: Router,
               private storageService: StorageService,
               private authService: AuthService,
-              private socialAuthService: SocialAuthService,) {
+              private socialAuthService: SocialAuthService,private breakpointObserver: BreakpointObserver) {
     this.router = router;
     this.authService = authService;
     this.storageService = storageService;
@@ -28,7 +29,14 @@ export class TopAppBarComponent {
         this.isInGardenInfoComponent = urlSegments.includes('garden-info');
       }
     });
+    this.breakpointObserver.observe('(max-width: 1250px)').subscribe(result => {
+      this.isWideScreen = result.matches;
+    });
   }
+
+  isWideScreen = false;
+
+
 
   navigate(path: string) {
     this.router.navigate([path]);

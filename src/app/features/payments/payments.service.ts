@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
-import {Fee, IndividualPayment, IndividualPayments, Payments, TypeOfFee} from "./payments";
+import {Fee, IndividualPayment, IndividualPayments, Payments, TypeOfFee, UtilityValues} from "./payments";
 import {HttpClient} from "@angular/common/http";
 import {GardenPlot} from "../list-of-garden-plot/garden-plot";
-import {EditingLeaseFeeComponent} from "./editing-lease-fee/editing-lease-fee.component";
 import {Observable, of} from "rxjs";
 
 @Injectable({
@@ -58,11 +57,18 @@ export class PaymentsService {
     },
   ];
 
+  private UtilityValues :UtilityValues = {
+    electricValue: 0.5,
+    waterValue: 2
+  }
+
   private payments: Payments = {
     leaseFees: this.leaseFees,
     utilityFees: this.utilityFees,
     additionalFees: this.additionalFees,
-    date: new Date(2024, 10, 30)
+    date: new Date(2024, 10, 30),
+    utilityValues : this.UtilityValues
+
   }
 
   private individualPayments: IndividualPayments[] = [
@@ -492,7 +498,16 @@ export class PaymentsService {
   }
   //   TODO
   editUtilityFee2(payments: Fee[]): Observable<any> {
-    return this.httpClient.put(this.paymentsUrl + '/utilityFees', payments);
+    return this.httpClient.put(this.paymentsUrl + '/utility-fees', payments);
+  }
+
+  editUtilityValues(values: UtilityValues): Observable<any> {
+    this.payments.utilityValues = values;
+    return of(null);
+  }
+  //   TODO
+  editUtilityValues2(values: UtilityValues): Observable<any> {
+    return this.httpClient.put(this.paymentsUrl + '/utility-value', values);
   }
 
   editAdditionalFee(payment: Fee | undefined): Observable<any> {
@@ -805,7 +820,7 @@ export class PaymentsService {
 // #### Endpoint
 //
 // - Method: `PUT`
-// - URL: `https://localhost:1337/api/payments/utilityFees`
+// - URL: `https://localhost:1337/api/payments/utility-fees`
 //
 // #### Request Body
 //
@@ -817,6 +832,28 @@ export class PaymentsService {
 // }
 // .
 // .
+// .
+// .
+// .
+// .
+// .
+// .
+// .### PUT request to edit Utility Values
+//
+// Edits the utility fees information.
+//
+// #### Endpoint
+//
+// - Method: `PUT`
+// - URL: `https://localhost:1337/api/payments/utility-values`
+//
+// #### Request Body
+//
+// The request body should contain an array of updated utility values details.
+// export interface UtilityValues {
+//   electricValue: number,
+//   waterValue: number
+// }
 // .
 // .
 // .
@@ -992,6 +1029,11 @@ export class PaymentsService {
 // export interface IndividualPayments {
 //   userID: string,
 //   paymentsList?: IndividualPayment[]
+// }
+//
+// export interface UtilityValues {
+//   electricValue: number,
+//   waterValue: number
 // }
 
 

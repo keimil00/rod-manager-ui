@@ -96,7 +96,7 @@ export class GardenPlotInfoService {
     [
       {
         name: 'Prąd',
-        mediaConsumption: '10 KW',
+        mediaConsumption: '10 kW',
         value: 200
       },
       {

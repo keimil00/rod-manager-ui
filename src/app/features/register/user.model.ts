@@ -12,8 +12,15 @@ export class LoginUser {
 
 export enum Role {
   ADMIN = 'ADMIN',
-  MANAGER = 'Zarządca',
-  GARDENER = 'Działkowicz',
-  TECHNICAL_EMPLOYEE = 'pracownik_techniczny',
-  NON_TECHNICAL_EMPLOYEE = 'pracownik_nie_techniczny',
+  MANAGER = 'MANAGER',
+  GARDENER = 'GARDENER',
+  TECHNICAL_EMPLOYEE = 'TECHNICAL_EMPLOYEE',
+  NON_TECHNICAL_EMPLOYEE = 'NON_TECHNICAL_EMPLOYEE',
 }
+// }export enum Role {
+//   ADMIN = 'ADMIN',
+//   MANAGER = 'Zarządca',
+//   GARDENER = 'Działkowicz',
+//   TECHNICAL_EMPLOYEE = 'pracownik_techniczny',
+//   NON_TECHNICAL_EMPLOYEE = 'pracownik_nie_techniczny',
+// }

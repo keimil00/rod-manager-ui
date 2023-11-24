@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
-import {Fee, IndividualPayments, Payments} from "./payments";
+import {Fee, IndividualPayments, Payments, UtilityValues} from "./payments";
 import {Role} from "../register/user.model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {getAvenues, getNumbers, getSectors} from "../list-of-garden-plot/GardenService";
@@ -15,6 +15,7 @@ import {EditingAdditionalFeesComponent} from "./editing-additional-fees/editing-
 import {EditDateComponent} from "./edit-date/edit-date.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Profile} from "../Profile";
+import {EditUtilityValuesComponent} from "./edit-utility-values/edit-utility-values.component";
 
 
 //TODO na tym ekranie od terminu płatności zrobic przysik zatwierdz z jakaś uwagą ze beda naliczone te koszty co wyzej i nie będzie mozna tego zmienić plus dane z obecnego stanu liczników
@@ -240,6 +241,18 @@ export class PaymentsComponent {
             if (selectedDate) {
                 this.payment.date = selectedDate;
                 this.paymentsService.updateDate(selectedDate)
+            }
+        });
+    }
+    openUtilityDialog(): void {
+        const dialogRef = this.dialog.open(EditUtilityValuesComponent, {
+            width: '400px',
+            data: {utilityValues: this.payment.utilityValues}
+        });
+
+        dialogRef.afterClosed().subscribe((Data: UtilityValues) => {
+            if (Data) {
+                this.payment.utilityValues= Data;
             }
         });
     }
