@@ -153,7 +153,7 @@ export class AddCounterDialogComponent implements OnInit {
 
             // const uniqueId = 'counter-' + new Date().getTime() + '-' + Math.floor(Math.random() * 1000);
 
-            let gardenPlotID: string | null = null;
+            let gardenPlotID: number | null = null;
             let finalAddress: string | null;
 
             if (this.showGardenAddress) {

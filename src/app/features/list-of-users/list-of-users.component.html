@@ -10,17 +10,17 @@
             <table mat-table [dataSource]="dataProfiles" class="mainTable">
                 <ng-container matColumnDef="firstName">
                     <th mat-header-cell *matHeaderCellDef>Imie</th>
-                    <td mat-cell *matCellDef="let profile">{{ profile.firstName }}</td>
+                    <td mat-cell *matCellDef="let profile">{{ profile.first_name }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="lastName">
                     <th mat-header-cell *matHeaderCellDef>Nazwisko</th>
-                    <td mat-cell *matCellDef="let profile">{{ profile.lastName }}</td>
+                    <td mat-cell *matCellDef="let profile">{{ profile.last_name }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="phoneNumber">
                     <th mat-header-cell *matHeaderCellDef>Numer telefonu</th>
-                    <td mat-cell *matCellDef="let profile">{{ profile.phoneNumber }}</td>
+                    <td mat-cell *matCellDef="let profile">{{ profile.phone }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="email">
@@ -31,7 +31,7 @@
                 <ng-container matColumnDef="accountStatus">
                     <th mat-header-cell *matHeaderCellDef>Rola</th>
                     <td mat-cell *matCellDef="let profile">
-                        {{ mapAccountStatusesToTranslated(profile.accountStatus) }}
+                        {{ mapAccountStatusesToTranslated(profile.groups) }}
                     </td>
 
                 </ng-container>

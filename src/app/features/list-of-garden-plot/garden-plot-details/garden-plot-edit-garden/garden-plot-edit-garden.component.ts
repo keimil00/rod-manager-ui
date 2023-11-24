@@ -31,7 +31,7 @@ export class GardenPlotEditGardenComponent implements OnInit {
     sectorsOptions: (string | null)[] = [];
     avenuesOptions: (string | null)[] = [];
     // @ts-ignore
-    leasholderID: string | null
+    leasholderID: number | null
 
     // @ts-ignore
     private profiles: Profile[]
@@ -181,7 +181,7 @@ export class GardenPlotEditGardenComponent implements OnInit {
             const newLeaseholderEmail: string | null = this.editGardenForm.get('leaseholderEmail')?.value;
             const newStatus: PlotStatus = this.editGardenForm.get('status')?.value;
 
-            let newLeaseholderID: string | null = null;
+            let newLeaseholderID: number | null = null;
 
             if (newLeaseholderEmail === '' || newLeaseholderEmail === null) {
                 newLeaseholderID = null
@@ -233,7 +233,7 @@ export class GardenPlotEditGardenComponent implements OnInit {
     protected readonly PlotStatus = PlotStatus;
 }
 
-function findProfileIdByEmail(emailToFind: string, profiles: Profile[]): string | null {
+function findProfileIdByEmail(emailToFind: string, profiles: Profile[]): number | null {
     const foundProfile = profiles.find((profile) => profile.email === emailToFind);
     return foundProfile ? foundProfile.profileId : null;
 }

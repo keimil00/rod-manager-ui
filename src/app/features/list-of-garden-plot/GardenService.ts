@@ -4,7 +4,7 @@ import {Profile} from "../Profile";
 import {AbstractControl, ValidatorFn} from "@angular/forms";
 
 
-export function findGardenByUserID(id: string | null, gardenPlots: GardenPlot[]): GardenPlot | null {
+export function findGardenByUserID(id: number | null, gardenPlots: GardenPlot[]): GardenPlot | null {
     let garden: GardenPlot;
     for (garden of gardenPlots) {
         if (garden.leaseholderID === id) {
@@ -14,7 +14,7 @@ export function findGardenByUserID(id: string | null, gardenPlots: GardenPlot[])
     return null
 }
 
-export function findGardenByID(id: string | null, gardenPlots: GardenPlot[]): GardenPlot | null {
+export function findGardenByID(id: number | null, gardenPlots: GardenPlot[]): GardenPlot | null {
     let garden: GardenPlot;
     for (garden of gardenPlots) {
         if (garden.gardenPlotID === id) {
@@ -34,7 +34,7 @@ export function getMatchingSectorsWithCounter(
         : counters.filter(counter => counter.type === CounterType.Electric);
 
     // @ts-ignore
-    const gardenPlotIdsWithCounters = new Set<string>(filteredCounters.map(counter => counter.gardenPlotID));
+    const gardenPlotIdsWithCounters = new Set<number>(filteredCounters.map(counter => counter.gardenPlotID));
 
     const availableGardenPlots = gardenPlots.filter(gardenPlot => {
         return !gardenPlotIdsWithCounters.has(gardenPlot.gardenPlotID);
@@ -55,7 +55,7 @@ export function getMatchingAvenuesWithCounter(counters: Counter[], gardenPlots: 
         ? counters.filter(counter => counter.type === CounterType.Water)
         : counters.filter(counter => counter.type === CounterType.Electric);
     // @ts-ignore
-    const gardenPlotIdsWithCounters = new Set<string>(filteredCounters.map((counter) => counter.gardenPlotID));
+    const gardenPlotIdsWithCounters = new Set<number>(filteredCounters.map((counter) => counter.gardenPlotID));
 
     const availableGardenPlots = gardenPlots.filter((gardenPlot) => {
         return (
@@ -79,7 +79,7 @@ export function getMatchingNumbersWithCounter(counters: Counter[], gardenPlots: 
         ? counters.filter(counter => counter.type === CounterType.Water)
         : counters.filter(counter => counter.type === CounterType.Electric);
     // @ts-ignore
-    const gardenPlotIdsWithCounters = new Set<string>(filteredCounters.map((counter) => counter.gardenPlotID));
+    const gardenPlotIdsWithCounters = new Set<number>(filteredCounters.map((counter) => counter.gardenPlotID));
 
     const availableGardenPlots = gardenPlots.filter((gardenPlot) => {
         return (
@@ -220,14 +220,14 @@ export function getNumbers(sector: string | null, avenue: string | null, gardenP
 }
 
 
-export function findGardenPlotIdByAddress(sector: string | null, avenue: string | null, number: number | null, gardenPlots: GardenPlot[]): string | null {
+export function findGardenPlotIdByAddress(sector: string | null, avenue: string | null, number: number | null, gardenPlots: GardenPlot[]): number| null {
     const matchingGardenPlot = gardenPlots.find((gardenPlot) =>
         gardenPlot.sector === sector && gardenPlot.avenue === avenue && gardenPlot.number === number
     );
     return matchingGardenPlot ? matchingGardenPlot.gardenPlotID : null;
 }
 
-export function uniqueLeaseholderIDValidator(gardenPlots: GardenPlot[], profiles: Profile[], showCurrentLeaseHolder: boolean, currentLeaseHolderID?: string | null): ValidatorFn {
+export function uniqueLeaseholderIDValidator(gardenPlots: GardenPlot[], profiles: Profile[], showCurrentLeaseHolder: boolean, currentLeaseHolderID?: number | null): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
         const leaseholderEmail = control.value;
 
@@ -255,7 +255,7 @@ export function uniqueLeaseholderIDValidator(gardenPlots: GardenPlot[], profiles
     };
 }
 
-export function uniqueGardenValidator(sector: string, avenue: string, gardenPlots: GardenPlot[], showCurrenGardenPlot: boolean, currentLeaseHolderID?: string | null): ValidatorFn {
+export function uniqueGardenValidator(sector: string, avenue: string, gardenPlots: GardenPlot[], showCurrenGardenPlot: boolean, currentLeaseHolderID?: number | null): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
         const gardenPlotNumber = control.value;
 
@@ -276,7 +276,7 @@ export function uniqueGardenValidator(sector: string, avenue: string, gardenPlot
     };
 }
 
-export function findProfileEmailByID(IdToFind: string | null, profiles: Profile[]): string | null {
+export function findProfileEmailByID(IdToFind: number | null, profiles: Profile[]): string | null {
     const foundProfile = profiles.find((profile) => profile.profileId === IdToFind);
     return foundProfile ? foundProfile.email : null;
 }

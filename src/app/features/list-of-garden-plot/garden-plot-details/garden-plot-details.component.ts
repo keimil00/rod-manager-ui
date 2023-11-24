@@ -91,7 +91,7 @@ export class GardenPlotDetailsComponent {
         }
     }
 
-    addPaymentBackend(leaseholderID: string | undefined, payment: Payment) {
+    addPaymentBackend(leaseholderID: number | undefined, payment: Payment) {
         //obizyc kwote do zaplaty
         this.gardenPlotsDataService.confirmPayment(leaseholderID, payment).subscribe(
             (response) => {

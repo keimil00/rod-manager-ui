@@ -6,7 +6,7 @@ export interface Payment {
 }
 
 export interface PaymentList {
-  id: string
-  idUser: string;
+  id: number
+  idUser: number;
   userPaymentList: Payment[];
 }

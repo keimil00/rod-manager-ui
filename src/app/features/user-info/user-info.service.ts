@@ -18,7 +18,7 @@ export class UserInfoService {
     // @ts-ignore
     profiles: Profile[];
 
-    getProfileById(id: string | null): Profile | undefined {
+    getProfileById(id: number | null): Profile | undefined {
         this.initProfiles()
         return this.profiles.find(profile => profile.profileId === id);
     }

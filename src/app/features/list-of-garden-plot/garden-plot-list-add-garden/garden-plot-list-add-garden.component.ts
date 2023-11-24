@@ -161,9 +161,9 @@ export class GardenPlotListAddGardenComponent {
             const newLeaseholderEmail: string | null = this.addGardenForm.get('leaseholderEmail')?.value;
             const newStatus: PlotStatus = this.addGardenForm.get('status')?.value;
 
-            let newLeaseholderID: string | null = null;
+            let newLeaseholderID: number | null = null;
 
-            const uniqueId = 'garden-' + new Date().getTime() + '-' + Math.floor(Math.random() * 1000);
+            const uniqueId : number = new Date().getTime() + Math.floor(Math.random() * 1000);
 
             if (newLeaseholderEmail === '' || newLeaseholderEmail === 'brak' || newLeaseholderEmail === null) {
                 newLeaseholderID = null

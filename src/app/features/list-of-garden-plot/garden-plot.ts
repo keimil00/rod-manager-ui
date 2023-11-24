@@ -1,20 +1,20 @@
 export interface GardenPlot {
-  gardenPlotID: string;
+  gardenPlotID: number;
   sector: string| null;
   avenue: string| null;
   number: number;
   area: number| null;
-  leaseholderID: string| null;
+  leaseholderID: number| null;
   gardenStatus: PlotStatus;
 }
 
 export interface GardenPlotBackend {
-  gardenPlotID: string;
+  gardenPlotID: number;
   sector: string| null;
   avenue: string| null;
   number: number;
   area: number| null;
-  leaseholder: string| null;
+  leaseholder: string|number| null;
   gardenStatus: PlotStatus;
 }
 

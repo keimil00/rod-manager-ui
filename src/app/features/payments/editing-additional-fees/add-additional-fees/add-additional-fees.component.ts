@@ -60,7 +60,7 @@ export class AddAdditionalFeesComponent {
             const newType: TypeOfFee = this.editFeeForm.get('type')?.value;
             const newValue: number = this.editFeeForm.get('value')?.value;
 
-            const uniqueId = 'payment-' + new Date().getTime() + '-' + Math.floor(Math.random() * 1000);
+            const uniqueId : number = new Date().getTime()+ Math.floor(Math.random() * 1000);
 
             let payment: Fee = {
                 feeID: uniqueId,

@@ -1,5 +1,5 @@
 export interface Fee {
-    feeID: string
+    feeID: number
     name: string;
     type: TypeOfFee,
     value: number
@@ -23,13 +23,13 @@ export interface Payments {
 }
 
 export interface IndividualPayment {
-    paymentID: string
+    paymentID: number
     name: string,
     value: number,
     date: Date
 }
 
 export interface IndividualPayments {
-    userID: string,
+    userID: number,
     paymentsList?: IndividualPayment[]
 }

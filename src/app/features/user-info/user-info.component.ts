@@ -20,7 +20,7 @@ import {StorageService} from "../../core/storage/storage.service";
     styleUrls: ['./user-info.component.scss']
 })
 export class UserInfoComponent implements OnInit {
-    id: string | null = null;
+    id: number | null = null;
     profile: Profile | undefined;
     userInfoForm: FormGroup;
     showGardenAddress: boolean = false;
@@ -74,7 +74,7 @@ export class UserInfoComponent implements OnInit {
 
     isAvailableToEditProfile() {
         // @ts-ignore
-        if ((this.profile?.accountStatus.includes(Role.ADMIN)) || (this.profile?.accountStatus.includes(Role.MANAGER))) {
+        if ((this.profile?.groups.includes(Role.ADMIN)) || (this.profile?.groups.includes(Role.MANAGER))) {
             if (this.storageService.getRoles().includes(Role.MANAGER)) {
                 this.isAvailableToEdit = false;
             }
@@ -116,22 +116,22 @@ export class UserInfoComponent implements OnInit {
     populateFormFromGardenPlot(profile: Profile | undefined) {
         const address = this.findPlotAddressTupleByUserId(this.gardenPlots, profile?.profileId);
         this.userInfoForm.patchValue({
-            firstName: profile?.firstName,
-            lastName: profile?.lastName,
-            phoneNumber: profile?.phoneNumber,
+            firstName: profile?.first_name,
+            lastName: profile?.last_name,
+            phoneNumber: profile?.phone,
             email: profile?.email,
             plotSector: address?.sector,
             plotAvenue: address?.avenue,
             plotNumber: address?.number,
-            accountStatus: profile?.accountStatus
+            accountStatus: profile?.groups
         });
     }
 
-    getProfileById(id: string | null) {
+    getProfileById(id: number | null) {
         return this.userInfoService.getProfileById(id)
     }
 
-    findPlotAddressTupleByUserId(gardenPlots: GardenPlot[], id: string | undefined): {
+    findPlotAddressTupleByUserId(gardenPlots: GardenPlot[], id: number | undefined): {
         sector: string | null;
         avenue: string | null;
         number: number
@@ -187,8 +187,8 @@ export class UserInfoComponent implements OnInit {
 
         this.showEditStatus = false
         if (
-            (this.profile?.accountStatus.some((status) => status === Role.ADMIN)) ||
-            (this.profile?.accountStatus.some((status) => status === Role.MANAGER))
+            (this.profile?.groups.some((status) => status === Role.ADMIN)) ||
+            (this.profile?.groups.some((status) => status === Role.MANAGER))
         ) {
             this.showEditFullStatus = true
         } else this.showEditFullStatus = false
@@ -261,15 +261,15 @@ export class UserInfoComponent implements OnInit {
                 // @ts-ignore
                 userID: this.profile?.userID,
                 // @ts-ignore
-                firstName: newFirstName,
+                first_name: newFirstName,
                 // @ts-ignore
-                lastName: newLastName,
+                last_name: newLastName,
                 // @ts-ignore
-                phoneNumber: newPhoneNumber,
+                phone: newPhoneNumber,
                 // @ts-ignore
                 email: this.profile?.email,
                 // @ts-ignore
-                accountStatus: newStatus,
+                groups: newStatus,
                 // @ts-ignore
                 paymentAmount: this.profile?.paymentAmount,
                 // @ts-ignore

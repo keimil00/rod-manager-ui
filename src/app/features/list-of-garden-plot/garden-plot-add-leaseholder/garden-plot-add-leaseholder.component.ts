@@ -20,7 +20,7 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
     addLeaseHolderForm: FormGroup;
 
     // @ts-ignore
-    leasholderID: string | null
+    leasholderID: number | null
 
     // @ts-ignore
     private profiles: Profile[]
