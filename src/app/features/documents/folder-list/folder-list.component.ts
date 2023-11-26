@@ -14,13 +14,23 @@ export class FolderListComponent {
   @Input() documents!: Document[];
   @Output() itemAdded: EventEmitter<void> = new EventEmitter<void>();
   addFileForm: FormGroup;
+  editFileForm: FormGroup;
   addListForm: FormGroup;
   showAddDocumentForm = false;
+  showEditDocumentForm = false;
   showAddListForm = false;
   selectedFile: File | null = null;
 
   constructor(formBuilder: FormBuilder, private documentsService: DocumentsService) {
     this.addFileForm = formBuilder.group({
+      name: ['', [
+        Validators.required,
+      ]],
+      file: ['', [
+        Validators.required,
+      ]]
+    })
+    this.editFileForm = formBuilder.group({
       name: ['', [
         Validators.required,
       ]],
@@ -72,8 +82,19 @@ export class FolderListComponent {
       // @ts-ignore
       item.items.push(newDocument);
       this.itemAdded.emit();
-      this.documentsService.uploadDocument(this.selectedFile, id)
+      this.documentsService.uploadDocument(this.selectedFile, id).subscribe()
       this.showAddDocumentForm = false
+    }
+  }
+  editDocument(item: Document) {
+    if (this.editFileForm.valid && this.selectedFile) {
+      const newTitle: string = this.editFileForm.get('name')?.value;
+      const id = item.id
+      const newDocument: Document = {id: id, title: newTitle};
+      // @ts-ignore
+      this.documentsService.editDocument(this.selectedFile, id).subscribe()
+
+      this.showEditDocumentForm = false
     }
   }
 
@@ -92,6 +113,13 @@ export class FolderListComponent {
   toggleAddDocumentForm() {
     this.showAddDocumentForm = !this.showAddDocumentForm;
     this.addFileForm.reset()
+  }
+  toggleEditDocumentForm(Document: Document) {
+    this.showEditDocumentForm = !this.showEditDocumentForm;
+    this.addFileForm.reset()
+    this.editFileForm.reset()
+    this.editFileForm.patchValue({name: Document.title})
+    this.selectedFile= null
   }
 
   toggleAddListForm() {

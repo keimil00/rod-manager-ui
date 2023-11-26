@@ -43,17 +43,21 @@ export class DocumentsService {
         return of()
     }
 
+    editDocument(file: File, idDocument: string): Observable<any> {
+        return of()
+    }
+
     uploadDocument2(file: File, idDocument: string): Observable<any> {
         const formData = new FormData();
         formData.append('file', file);
         return this.httpClient.post<any>(`${this.baseUrl}/${idDocument}`, formData);
     }
 
-    update(documents: Document[]): Observable<any> {
+    updateDocumentsList(documents: Document[]): Observable<any> {
         return of()
     }
 
-    update2(documents: Document[]): Observable<any> {
+    updateDocumentsList2(documents: Document[]): Observable<any> {
         return this.httpClient.put<any>(this.baseUrl, documents);
     }
 

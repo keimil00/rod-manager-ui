@@ -8,6 +8,35 @@
       </mat-expansion-panel-header>
       <ng-container *ngIf="!item.items">
         <a (click)="downloadFile(item.id)" target="_blank">Otwórz dokument</a>
+        <div>
+          <div class="left-button">
+            <div>
+              <app-text-button class="add-button" [text]="'Edytuj dokument'" [color]="'accent'"
+                               (click)="toggleEditDocumentForm(item)"></app-text-button>
+            </div>
+          </div>
+          <div *ngIf="showEditDocumentForm">
+            <form class [formGroup]="editFileForm">
+              <mat-form-field class="row-item">
+                <mat-label>Nazwa</mat-label>
+                <input matInput type="string" placeholder="Nazwa" formControlName="name">
+                <mat-error *ngFor="let error of validationErrors('name',addFileForm)">
+                  {{ error.message }}
+                </mat-error>
+              </mat-form-field>
+              <div class="row-item">
+                <input type="file" (change)="onFileSelected($event)" formControlName="file">
+                <mat-error *ngFor="let error of validationErrors('file',addFileForm)">
+                  {{ error.message }}
+                </mat-error>
+              </div>
+              <div class="left-button">
+                <app-text-button type="submit" class="add-button" [text]="'Edytuj'" [color]="'accent'"
+                                 (click)="editDocument(item)"></app-text-button>
+              </div>
+            </form>
+          </div>
+        </div>
       </ng-container>
       <ng-container *ngIf="item.items">
         <div>

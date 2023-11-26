@@ -619,6 +619,10 @@ export class PaymentsService {
 //     "value": 40
 //   }
 // ],
+// "UtilityValues" : {
+//   electricValue: 0.5,
+//   waterValue: 2
+// }
 //   "date": "2023-11-30T00:00:00.000Z"
 // }
 // interface Fee {
@@ -632,6 +636,7 @@ export class PaymentsService {
 //   leaseFees: Fee[];
 //   utilityFees: Fee[];
 //   additionalFees: Fee[];
+//   utilityValues: UtilityValues;
 //   date: Date;
 // }
 //
@@ -639,6 +644,15 @@ export class PaymentsService {
 //   PerMeter = 'PerMeter',
 //   PerGardenPlot = 'PerGardenPlot',
 // }
+//
+//interface UtilityValues {
+//     electricValue: number,
+//     waterValue: number
+// }
+//
+//
+//
+//
 //
 // type PaymentsResponse = Payments;
 // /

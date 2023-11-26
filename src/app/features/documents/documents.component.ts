@@ -149,7 +149,7 @@ export class DocumentsComponent {
       const id = generateRandomID();
       const newDocument: Document = {id: id, title: newTitle};
       this.documents.push(newDocument);
-      this.documentsService.update(this.documents).subscribe(response => {
+      this.documentsService.updateDocumentsList(this.documents).subscribe(response => {
         console.log('Zaktualizowano dane: ', response);
       });
       this.documentsService.uploadDocument(this.selectedFile, id)
@@ -163,7 +163,7 @@ export class DocumentsComponent {
       const id = generateRandomID();
       const newList: Document = {id: id, title: newTitle, items: []};
       this.documents.push(newList);
-      this.documentsService.update(this.documents).subscribe(response => {
+      this.documentsService.updateDocumentsList(this.documents).subscribe(response => {
         console.log('Zaktualizowano dane: ', response);
       });
       this.showAddListForm = false
@@ -190,7 +190,7 @@ export class DocumentsComponent {
 
   onItemAdded() {
     console.log(this.documents)
-    this.documentsService.update(this.documents).subscribe(response => {
+    this.documentsService.updateDocumentsList(this.documents).subscribe(response => {
       console.log('Zaktualizowano dane: ', response);
     });
   }
