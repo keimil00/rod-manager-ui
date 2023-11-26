@@ -83,25 +83,25 @@ export class VotingsService {
     constructor(private httpClient: HttpClient) {
     }
 
-    getCurrentVotes(): Observable<VotingItem[]> {
+    getCurrentVotes1(): Observable<VotingItem[]> {
         // Symulujemy pobieranie aktualnych głosowań
         return of(this.currentVotes);
     }
-    getCurrentVotes1(): Observable<VotingItem[]> {
+    getCurrentVotes(): Observable<VotingItem[]> {
       const curentUrl = `${this.url}/current/`;
       return this.httpClient.get<VotingItem[]>(curentUrl);
     }
 
-    getFinishedVotes(): Observable<VotingItem[]> {
+    getFinishedVotes1(): Observable<VotingItem[]> {
         // Symulujemy pobieranie skończonych głosowań
         return of(this.finishedVotes);
     }
-    getFinishedVotes1(): Observable<VotingItem[]> {
+    getFinishedVotes(): Observable<VotingItem[]> {
       const curentUrl = `${this.url}/completed/`;
       return this.httpClient.get<VotingItem[]>(curentUrl);
     }
 
-    addNewVoting(voting: VotingItem): Observable<string> {
+    addNewVoting1(voting: VotingItem): Observable<string> {
 
         this.currentVotes.push(voting);
 
@@ -109,14 +109,21 @@ export class VotingsService {
         console.log(voting);
         return of(`Dodano nowe głosowanie: ${voting.title}`);
     }
-    addNewVoting1(voting: VotingItem): Observable<any> {
+    addNewVoting(voting: VotingItem): Observable<any> {
       const curentUrl = `${this.url}/add/`;
       return this.httpClient.post(curentUrl, voting);
     }
 
-    voteOn(voteId: number, selectedOptionID: number, profileID?: number): Observable<any> {
-        return of(null)}
+    // voteOn(voteId: number, selectedOptionID: number, profileID?: number): Observable<any> {
+    //     return of(null)}
 
+    voteOn(voteId: number, selectedOptionID: number): Observable<any> {
+      const body={
+        "voteId": voteId,
+        "selectedOptionId": selectedOptionID,
+      }
+      const curentUrl = `${this.url}/vote/`;
+      return this.httpClient.post(curentUrl, body);}
 
 
     //potrzebne do dodawania głosowania
