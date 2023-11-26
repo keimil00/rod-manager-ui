@@ -10,12 +10,12 @@ import {
     findGardenPlotIdByAddress, uniqueLeaseholderIDValidator,
 } from "../list-of-garden-plot/GardenService";
 import {ListOfUsersService} from "../list-of-users/list-of-users.service";
-import {UserInfoService} from "./user-info.service";
 import {BackendGardenService} from "../list-of-garden-plot/backend-garden.service";
 import {StorageService} from "../../core/storage/storage.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {forkJoin} from "rxjs";
 import {getMatchingProfiles, profileEmailValidator} from "../list-of-users/ProfilesService";
+import {TopBarService} from "../../core/top-app-bar/top-bar.service";
 
 @Component({
     selector: 'app-user-info',
@@ -43,8 +43,8 @@ export class UserInfoComponent {
     isAvailableToEdit: boolean = true;
 
     constructor(private route: ActivatedRoute, formBuilder: FormBuilder, private router: Router,
-                private listOfUsersService: ListOfUsersService, private userInfoService: UserInfoService,
-                private backendGardenService: BackendGardenService, private storageService: StorageService) {
+                private listOfUsersService: ListOfUsersService,
+                private backendGardenService: BackendGardenService, private storageService: StorageService, private topBarService: TopBarService) {
         this.userInfoForm = formBuilder.group({
             firstName: [{value: '', disabled: true}],
             lastName: [{value: '', disabled: true}],
@@ -65,9 +65,10 @@ export class UserInfoComponent {
         forkJoin({
             profiles: this.listOfUsersService.getAllProfiles(),
             gardenPlots: this.backendGardenService.getAllGardenPlots(),
-            profile: this.listOfUsersService.getProfileById(this.id)
+            profile: this.listOfUsersService.getProfileById(this.id),
+            myProfile: this.topBarService.getMyProfile()
         }).subscribe(data => {
-            if (!(this.storageService.getRoles().includes(Role.ADMIN) || (this.storageService.getRoles().includes(Role.MANAGER)))) {
+            if ((!(this.storageService.getRoles().includes(Role.ADMIN) || (this.storageService.getRoles().includes(Role.MANAGER))))&&(this.id !== data.myProfile.id)) {
                 this.router.navigate(['/403']);
             }
             this.profiles = data.profiles;
