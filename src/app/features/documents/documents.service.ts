@@ -40,11 +40,11 @@ export class DocumentsService {
     }
 
     uploadDocument(file: File, idDocument: string): Observable<any> {
-        return of()
+        return of("test")
     }
 
     editDocument(file: File, idDocument: string): Observable<any> {
-        return of()
+        return of("test")
     }
 
     uploadDocument2(file: File, idDocument: string): Observable<any> {
@@ -54,7 +54,7 @@ export class DocumentsService {
     }
 
     updateDocumentsList(documents: Document[]): Observable<any> {
-        return of()
+        return of("test")
     }
 
     updateDocumentsList2(documents: Document[]): Observable<any> {

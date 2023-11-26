@@ -81,9 +81,13 @@ export class FolderListComponent {
       const newDocument: Document = {id: id, title: newTitle};
       // @ts-ignore
       item.items.push(newDocument);
-      this.itemAdded.emit();
-      this.documentsService.uploadDocument(this.selectedFile, id).subscribe()
-      this.showAddDocumentForm = false
+      // TODO nie wiadomo czy działa
+      this.documentsService.uploadDocument(this.selectedFile, id).subscribe((result: any)=>
+      {
+        this.itemAdded.emit();
+        this.showAddDocumentForm = false
+      });
+
     }
   }
   editDocument(item: Document) {
@@ -92,9 +96,9 @@ export class FolderListComponent {
       const id = item.id
       const newDocument: Document = {id: id, title: newTitle};
       // @ts-ignore
-      this.documentsService.editDocument(this.selectedFile, id).subscribe()
-
-      this.showEditDocumentForm = false
+      this.documentsService.editDocument(this.selectedFile, id).subscribe((result: any)=>{
+        this.showEditDocumentForm = false
+      })
     }
   }
 

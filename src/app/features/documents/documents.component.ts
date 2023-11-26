@@ -149,11 +149,12 @@ export class DocumentsComponent {
       const id = generateRandomID();
       const newDocument: Document = {id: id, title: newTitle};
       this.documents.push(newDocument);
-      this.documentsService.updateDocumentsList(this.documents).subscribe(response => {
-        console.log('Zaktualizowano dane: ', response);
+      this.documentsService.uploadDocument(this.selectedFile, id).subscribe((result: any) => {
+        this.documentsService.updateDocumentsList(this.documents).subscribe(response => {
+          console.log('Zaktualizowano dane: ', response);
+        });
+        this.showAddDocumentForm = false
       });
-      this.documentsService.uploadDocument(this.selectedFile, id)
-      this.showAddDocumentForm = false
     }
   }
 
@@ -164,9 +165,9 @@ export class DocumentsComponent {
       const newList: Document = {id: id, title: newTitle, items: []};
       this.documents.push(newList);
       this.documentsService.updateDocumentsList(this.documents).subscribe(response => {
+        this.showAddListForm = false
         console.log('Zaktualizowano dane: ', response);
       });
-      this.showAddListForm = false
     }
   }
 

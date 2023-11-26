@@ -71,7 +71,7 @@ export class AddVotingComponent {
       const options2: VotingOption[] = optionsFormArray.controls.map((control: AbstractControl) => {
         const label = control.get('label')?.value || '';
         const optionId =  new Date().getTime() + Math.floor(Math.random() * 1000);
-        const VotingOption: VotingOption = {optionId, label};
+        const VotingOption: VotingOption = {optionId, label, votes: 0};
         return VotingOption
       });
 
@@ -88,7 +88,7 @@ console.log(options2)
         finishDate: newDate,
         options: options2
       }
-      this.votingService.addNewVoting(voting)
+      this.votingService.addNewVoting(voting).subscribe()
       this.addVotingForm.reset();
       this.closeAddingVoting(true)
     }

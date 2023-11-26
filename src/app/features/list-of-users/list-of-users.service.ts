@@ -304,7 +304,7 @@ export class ListOfUsersService {
     //     return of(this.profiles);
     // }
     getAllProfiles(): Observable<Profile[]> {
-        const url = `api/accounts/?page=${1}&page_size=${10000}`;
+        const url = `api/accounts/?page=${1}&page_size=${100000}`;
         return this.httpClient.get<Page<Profile>>(url).pipe(
             map((page: Page<Profile>) => page.results)
         );

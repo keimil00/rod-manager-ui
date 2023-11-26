@@ -1,7 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Observable, of, Subject} from "rxjs";
-import {VotingItem, VotingItem2} from "./voting-item.model";
+import {VotingItem} from "./voting-item.model";
 import {HttpClient} from "@angular/common/http";
+import {Page} from "../../shared/paginator/page.model";
+import {Profile} from "../Profile";
 
 @Injectable({
     providedIn: 'root'
@@ -13,9 +15,9 @@ export class VotingsService {
             title: 'Temat 1',
             description: 'Opis tematu 1',
             options: [
-                {label: 'Opcja 1', optionId: 1},
-                {label: 'Opcja 2', optionId: 2},
-                {label: 'Opcja 3', optionId: 3}
+                {label: 'Opcja 1', optionId: 1, votes:0},
+                {label: 'Opcja 2', optionId: 2, votes:0},
+                {label: 'Opcja 3', optionId: 3, votes:0}
             ],
             finishDate: new Date(2024, 10, 10),
         },
@@ -24,16 +26,16 @@ export class VotingsService {
             title: 'Temat 2',
             description: 'Opis tematu 2',
             options: [
-                {label: 'Opcja 1', optionId: 1},
-                {label: 'Opcja 2', optionId: 2},
-                {label: 'Opcja 3', optionId: 3}
+                {label: 'Opcja 1', optionId: 1, votes:0},
+                {label: 'Opcja 2', optionId: 2, votes:0},
+                {label: 'Opcja 3', optionId: 3, votes:0}
             ],
             finishDate: new Date(2024, 10, 20),
         },
         // Dodaj inne przykładowe głosowania według potrzeb
     ];
 
-    private finishedVotes: VotingItem2[] = [
+    private finishedVotes: VotingItem[] = [
         {
             id: 1,
             title: 'Opinia na temat nowych zasad ogrodów działkowych',
@@ -77,20 +79,29 @@ export class VotingsService {
         }
     ];
 
+    url: string = 'api/votings';
     constructor(private httpClient: HttpClient) {
     }
 
-    getCurrentVotes(): Observable<VotingItem[]> {
+    getCurrentVotes2(): Observable<VotingItem[]> {
         // Symulujemy pobieranie aktualnych głosowań
         return of(this.currentVotes);
     }
+    getCurrentVotes(): Observable<VotingItem[]> {
+      const curentUrl = `${this.url}/current/`;
+      return this.httpClient.get<VotingItem[]>(curentUrl);
+    }
 
-    getFinishedVotes(): Observable<VotingItem2[]> {
+    getFinishedVotes2(): Observable<VotingItem[]> {
         // Symulujemy pobieranie skończonych głosowań
         return of(this.finishedVotes);
     }
+    getFinishedVotes(): Observable<VotingItem[]> {
+      const curentUrl = `${this.url}/completed/`;
+      return this.httpClient.get<VotingItem[]>(curentUrl);
+    }
 
-    addNewVoting(voting: VotingItem): Observable<string> {
+    addNewVoting2(voting: VotingItem): Observable<string> {
 
         this.currentVotes.push(voting);
 
@@ -98,12 +109,14 @@ export class VotingsService {
         console.log(voting);
         return of(`Dodano nowe głosowanie: ${voting.title}`);
     }
-
-    voteOn(voteId: number, selectedOption: string, profileID?: number): Observable<string> {
-        // Logika oddawania głosu na dany element (np. wysłanie zapytania do serwera)
-        console.log(`Oddano głos na element o ID: ${voteId}, wybrana opcja: ${selectedOption}`);
-        return of(`Oddano głos na element o ID: ${voteId}, wybrana opcja: ${selectedOption}`);
+    addNewVoting(voting: VotingItem): Observable<any> {
+      const curentUrl = `${this.url}/add/`;
+      return this.httpClient.post(curentUrl, voting);
     }
+
+    voteOn(voteId: number, selectedOptionID: number, profileID?: number): Observable<any> {
+        return of(null)}
+
 
 
     //potrzebne do dodawania głosowania
