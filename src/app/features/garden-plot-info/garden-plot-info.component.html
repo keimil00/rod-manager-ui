@@ -32,7 +32,7 @@
             </tr>
             <tr>
               <td>Powierzchnia</td>
-              <td>{{ gardenPlotInfo.area + ' m²'}}</td>
+              <td>{{ gardenPlotInfo.area !== null ? (gardenPlotInfo.area + ' m²') : '' }}</td>
             </tr>
           </table>
         </mat-card-content>

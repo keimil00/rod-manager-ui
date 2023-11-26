@@ -83,25 +83,25 @@ export class VotingsService {
     constructor(private httpClient: HttpClient) {
     }
 
-    getCurrentVotes2(): Observable<VotingItem[]> {
+    getCurrentVotes(): Observable<VotingItem[]> {
         // Symulujemy pobieranie aktualnych głosowań
         return of(this.currentVotes);
     }
-    getCurrentVotes(): Observable<VotingItem[]> {
+    getCurrentVotes1(): Observable<VotingItem[]> {
       const curentUrl = `${this.url}/current/`;
       return this.httpClient.get<VotingItem[]>(curentUrl);
     }
 
-    getFinishedVotes2(): Observable<VotingItem[]> {
+    getFinishedVotes(): Observable<VotingItem[]> {
         // Symulujemy pobieranie skończonych głosowań
         return of(this.finishedVotes);
     }
-    getFinishedVotes(): Observable<VotingItem[]> {
+    getFinishedVotes1(): Observable<VotingItem[]> {
       const curentUrl = `${this.url}/completed/`;
       return this.httpClient.get<VotingItem[]>(curentUrl);
     }
 
-    addNewVoting2(voting: VotingItem): Observable<string> {
+    addNewVoting(voting: VotingItem): Observable<string> {
 
         this.currentVotes.push(voting);
 
@@ -109,7 +109,7 @@ export class VotingsService {
         console.log(voting);
         return of(`Dodano nowe głosowanie: ${voting.title}`);
     }
-    addNewVoting(voting: VotingItem): Observable<any> {
+    addNewVoting1(voting: VotingItem): Observable<any> {
       const curentUrl = `${this.url}/add/`;
       return this.httpClient.post(curentUrl, voting);
     }
