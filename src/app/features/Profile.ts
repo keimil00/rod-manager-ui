@@ -1,12 +1,12 @@
 import {Role} from "./register/user.model";
 
 export interface Profile {
-  profileId: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
+  id: number;
+  first_name: string;
+  last_name: string;
+  phone: string;
   email: string;
-  accountStatus: Role[];
+  groups: Role[];
   paymentAmount: number | null;
   paymentDueDate: Date;
 }

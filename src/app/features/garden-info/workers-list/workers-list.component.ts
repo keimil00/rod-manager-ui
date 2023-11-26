@@ -18,7 +18,7 @@ export class WorkersListComponent {
   showEdit: boolean = false;
   showAddingWorker: boolean = false;
 
-  constructor(private dialog: MatDialog,private gardenInfoService: GardenInfoService) {
+  constructor(private dialog: MatDialog, private gardenInfoService: GardenInfoService) {
     this.initData()
   }
 
@@ -29,7 +29,9 @@ export class WorkersListComponent {
   }
 
   updateData() {
-    this.dataSource._updateChangeSubscription()
+    this.gardenInfoService.getEmployers().subscribe(employers => {
+      this.dataSource = new MatTableDataSource(employers);
+    });
   }
 
   selectEdit(employer: Employer) {
@@ -57,7 +59,7 @@ export class WorkersListComponent {
   showAddingWorkerDialog() {
     const dialogRef = this.dialog.open(EditWorkerComponent, {
       width: '4000px',
-      data: { isToAdd: true},
+      data: {isToAdd: true},
     });
     dialogRef.afterClosed().subscribe(() => {
       this.closeAddingWorker()

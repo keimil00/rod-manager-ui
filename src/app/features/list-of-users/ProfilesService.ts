@@ -3,29 +3,29 @@ import {GardenPlot} from "../list-of-garden-plot/garden-plot";
 import {AbstractControl, ValidatorFn} from "@angular/forms";
 import {Role} from "../register/user.model";
 
-export function getMatchingProfiles(value: string, profiles: Profile[], gardenPlots: GardenPlot[], showCurrentLeaseHolder: boolean, leaseHolderID?: string|null): {
+export function getMatchingProfiles(value: string, profiles: Profile[], gardenPlots: GardenPlot[], showCurrentLeaseHolder: boolean, leaseHolderID?: number|null): {
   email: string,
   fullName: string
 }[] {
   const lowerCaseValue = value.toLowerCase();
 
   const availableProfiles = profiles.filter((profile) => {
-    const fullName = profile.firstName + ' ' + profile.lastName
+    const fullName = profile.first_name + ' ' + profile.last_name
     return (
-      (fullName.toLowerCase().includes(lowerCaseValue) || profile.email.toLowerCase().includes(lowerCaseValue)) && (profile.accountStatus.some((role) => role === Role.GARDENER)) && (
-        !gardenPlots.some((plot) => plot.leaseholderID === profile.profileId) || (showCurrentLeaseHolder && leaseHolderID === profile.profileId))
+      (fullName.toLowerCase().includes(lowerCaseValue) || profile.email.toLowerCase().includes(lowerCaseValue)) && (profile.groups.some((role) => role === Role.GARDENER)) && (
+        !gardenPlots.some((plot) => plot.leaseholderID === profile.id) || (showCurrentLeaseHolder && leaseHolderID === profile.id))
     );
   });
 
   return availableProfiles.map((profile) => ({
     email: profile.email,
-    fullName: `${profile.firstName} ${profile.lastName}`
+    fullName: `${profile.first_name} ${profile.last_name}`
   }));
 }
 
-export function findProfileIdByEmail(emailToFind: string, profiles: Profile[]): string | null {
+export function findProfileIdByEmail(emailToFind: string, profiles: Profile[]): number | null {
   const foundProfile = profiles.find((profile) => profile.email === emailToFind);
-  return foundProfile ? foundProfile.profileId : null;
+  return foundProfile ? foundProfile.id : null;
 }
 
 export function profileEmailValidator(profiles: Profile[]): ValidatorFn {

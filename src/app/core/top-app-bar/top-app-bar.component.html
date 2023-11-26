@@ -139,7 +139,7 @@
                     <mat-divider></mat-divider>
                     <div mat-menu-item class="button-menu">
                         <app-text-button text="Profil" color="accent"
-                                         (click)="navigateToProfileComponent('1')"></app-text-button>
+                                         (click)="navigateToProfileComponent()"></app-text-button>
                     </div>
                 </div>
                 <ng-template #loggedOut2>
@@ -162,7 +162,7 @@
             <app-text-button text="Wyloguj" color="primary" (click)="logout()"></app-text-button>
             <!--      TODO-->
             <app-text-button text="Profil" color="accent"
-                             (click)="navigateToProfileComponent('1')"></app-text-button>
+                             (click)="navigateToProfileComponent()"></app-text-button>
         </div>
 
         <ng-template #loggedOut>

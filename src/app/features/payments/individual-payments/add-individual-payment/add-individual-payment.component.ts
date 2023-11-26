@@ -9,7 +9,7 @@ import {PaymentsService} from "../../payments.service";
     styleUrls: ['./add-individual-payment.component.scss']
 })
 export class AddIndividualPaymentComponent {
-    @Input() userID: string | undefined;
+    @Input() userID: number | undefined;
     @Input() address: string | undefined;
     @Output() closeDialog = new EventEmitter<void>();
 
@@ -52,7 +52,7 @@ export class AddIndividualPaymentComponent {
             const name: string = this.addIndividualPaymentForm.get('name')?.value;
             const value: number = this.addIndividualPaymentForm.get('value')?.value;
 
-            const uniqueId = 'payment-' + new Date().getTime() + '-' + Math.floor(Math.random() * 1000);
+            const uniqueId :number = new Date().getTime() + Math.floor(Math.random() * 1000);
 
             const newPayment: IndividualPayment = {paymentID: uniqueId, name: name, value: value, date: new Date(Date.now())}
 

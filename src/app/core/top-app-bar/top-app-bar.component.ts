@@ -6,6 +6,9 @@ import {Role} from "../../features/register/user.model";
 import {StorageService} from "../storage/storage.service";
 import {SocialAuthService} from "@abacritt/angularx-social-login";
 import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
+import {DocumentsService} from "../../features/documents/documents.service";
+import {TopBarService} from "./top-bar.service";
+import {Profile} from "../../features/Profile";
 
 @Component({
   selector: 'app-top-app-bar',
@@ -26,7 +29,7 @@ export class TopAppBarComponent {
   constructor(private router: Router,
               private storageService: StorageService,
               private authService: AuthService,
-              private socialAuthService: SocialAuthService,private breakpointObserver: BreakpointObserver) {
+              private socialAuthService: SocialAuthService,private breakpointObserver: BreakpointObserver, private topBarService: TopBarService) {
     this.router = router;
     this.authService = authService;
     this.storageService = storageService;
@@ -63,8 +66,12 @@ export class TopAppBarComponent {
     this.authService.logout();
   }
 
-  navigateToProfileComponent(id: string) {
-    this.router.navigate(['/user-info', id]);
+  navigateToProfileComponent() {
+    let id :number;
+    this.topBarService.getMyProfile().subscribe((result: Profile) => {
+      id = result.id;
+      this.router.navigate(['/user-info', id]);
+    });
   }
 
   protected readonly Role = Role;

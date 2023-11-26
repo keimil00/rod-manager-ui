@@ -3,7 +3,7 @@ export interface Counter {
   addressC: string| null;
   measurement: number;
   type: CounterType;
-  gardenPlotID: string| null;
+  gardenPlotID: number| null;
 }
 
 export enum CounterType {

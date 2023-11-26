@@ -95,7 +95,7 @@
                         <!--            mozliwe ze da sie to lepiej zrobić-->
                         <div class="row-item" *ngIf="showEditStatus">
                             <mat-form-field class="full-width">
-                                <mat-label>Status konta</mat-label>
+                                <mat-label>Rola</mat-label>
                                 <ng-container>
                                     <mat-select multiple formControlName="accountStatus">
                                         <mat-option *ngFor="let roleKey of Object.keys(Role_temp)" [value]="roleKey">
@@ -108,7 +108,7 @@
                         <div *ngIf="!showEditStatus">
                             <div class="row-item" *appHasRole="[Role.ADMIN]">
                                 <mat-form-field class="full-width">
-                                    <mat-label>Status konta</mat-label>
+                                    <mat-label>Rola</mat-label>
                                     <ng-container>
                                         <mat-select multiple formControlName="accountStatus">
                                             <mat-option *ngFor="let roleKey of Object.keys(Role_temp)" [value]="roleKey">
@@ -123,7 +123,7 @@
                             </div>
                             <div class="row-item" *appHasRole="[Role.MANAGER]">
                                 <mat-form-field class="full-width">
-                                    <mat-label>Status konta</mat-label>
+                                    <mat-label>Rola</mat-label>
                                     <ng-container>
                                         <mat-select multiple formControlName="accountStatus" *ngIf="showEditFullStatus">
                                             <mat-option *ngFor="let roleKey of Object.keys(Role_temp)" [value]="roleKey" [disabled]="roleKey === Role_temp.ADMIN || roleKey === Role_temp.MANAGER">

@@ -44,24 +44,24 @@ export class CurrentVotingsComponent {
         }
     }
 
-    selectOption(voteId: string, selectedOption: string) {
+    selectOption(voteId: number, selectedOption: number) {
         this.selectedOptions[voteId].setValue(selectedOption);
     }
 
-    isVoteValid(voteId: string): boolean {
+    isVoteValid(voteId: number): boolean {
         return !!this.selectedOptions[voteId].value;
     }
 
-    submitVote(voteId: string) {
+    submitVote(voteId: number) {
         if (this.isVoteValid(voteId)) {
             const selectedOption = this.selectedOptions[voteId].value;
             const currentVote = this.currentVotes.find(vote => vote.id === voteId);
             if (currentVote) {
-                const selectedOptionLabel = currentVote.options.find(option => option.optionId === selectedOption)?.label;
-                if (selectedOptionLabel) {
-                    this.votingService.voteOn(voteId, selectedOption).subscribe((result: string) => {
-                        console.log(result);
-                        this.showSuccessMessage(`${selectedOptionLabel}: ${currentVote.title}`);
+                const selectedOptionID = currentVote.options.find(option => option.optionId === selectedOption)?.optionId;
+                if (selectedOptionID) {
+                  console.log(voteId, selectedOptionID);
+                    this.votingService.voteOn(voteId, selectedOptionID).subscribe((result: string) => {
+                        this.showSuccessMessage(`${selectedOptionID}: ${currentVote.title}`);
                         this.selectedOptions[voteId].reset(); // Resetuj wartość wybranej opcji po zatwierdzeniu głosu
                     });
                 }

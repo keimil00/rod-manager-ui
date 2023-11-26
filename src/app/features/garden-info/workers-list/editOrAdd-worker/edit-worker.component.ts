@@ -89,7 +89,7 @@ export class EditWorkerComponent {
       const newNumber: string = this.workerForm.get('phoneNumber')?.value;
       const newEmail: string = this.workerForm.get('email')?.value;
 
-      const uniqueId = 'employer-' + new Date().getTime() + '-' + Math.floor(Math.random() * 1000);
+      const uniqueId = new Date().getTime() + Math.floor(Math.random() * 1000);
 
       let newEmployer: Employer
       if (this.isToAdd) {
@@ -113,9 +113,9 @@ export class EditWorkerComponent {
       //TODO Push do backendu
       this.employer = newEmployer
       if (this.isToAdd) {
-        this.gardenInfoService.addEmployer(newEmployer)
+        this.gardenInfoService.addEmployer(newEmployer).subscribe()
       } else {
-        this.gardenInfoService.updateEmployer(newEmployer)
+        this.gardenInfoService.updateEmployer(newEmployer, this.employer.id).subscribe()
       }
       this.closeEditingingEmployer()
     }

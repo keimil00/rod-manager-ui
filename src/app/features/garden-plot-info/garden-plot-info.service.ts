@@ -131,14 +131,14 @@ export class GardenPlotInfoService {
   constructor(private httpClient: HttpClient) {
   }
 
-  private readonly gardenPlotInfoUrl = 'https://localhost:1337/api/garden-plot-info';
+  private readonly gardenPlotInfoUrl = '/api/my-garden/';
 
 
-  getGardenPlotInfo(): Observable<GardenPlotInfo> {
+  getGardenPlotInfo2(): Observable<GardenPlotInfo> {
     return of (this.gardenPlotInfo)
   }
 
-  getGardenPlotInfo2(): Observable<GardenPlotInfo> {
+  getGardenPlotInfo(): Observable<GardenPlotInfo> {
     return this.httpClient.get<GardenPlotInfo>(this.gardenPlotInfoUrl);
   }
 }

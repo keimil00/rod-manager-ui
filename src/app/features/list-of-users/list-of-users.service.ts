@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Profile} from "../Profile";
 import {Page} from "../../shared/paginator/page.model";
-import {Observable, of} from "rxjs";
+import {map, Observable, of} from "rxjs";
 import {Role} from "../register/user.model";
 
 @Injectable({
@@ -12,272 +12,272 @@ export class ListOfUsersService {
 
     private profiles: Profile[] = [
         {
-            profileId: '1',
-            firstName: 'John',
-            lastName: 'Doe',
-            phoneNumber: '123-456-7890',
+            id: 1,
+            first_name: 'John',
+            last_name: 'Doe',
+            phone: '123-456-7890',
             email: 'johndoe@example.com',
-            accountStatus: [Role.GARDENER],
+            groups: [Role.GARDENER],
             paymentAmount: 567,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: '2',
-            firstName: 'Jane',
-            lastName: 'Smith',
-            phoneNumber: '987-654-3210',
+            id: 2,
+            first_name: 'Jane',
+            last_name: 'Smith',
+            phone: '987-654-3210',
             email: 'janesmith@example.com',
-            accountStatus: [Role.GARDENER],
+            groups: [Role.GARDENER],
             paymentAmount: 756,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: '3',
-            firstName: 'David',
-            lastName: 'Johnson',
-            phoneNumber: '555-555-5555',
+            id: 3,
+            first_name: 'David',
+            last_name: 'Johnson',
+            phone: '555-555-5555',
             email: 'davidjohnson@example.com',
-            accountStatus: [Role.GARDENER],
+            groups: [Role.GARDENER],
             paymentAmount: 657,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: '4',
-            firstName: 'Mary',
-            lastName: 'Williams',
-            phoneNumber: '777-777-7777',
+            id: 4,
+            first_name: 'Mary',
+            last_name: 'Williams',
+            phone: '777-777-7777',
             email: 'marywilliams@example.com',
-            accountStatus: [Role.GARDENER],
+            groups: [Role.GARDENER],
             paymentAmount: 675,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: '5',
-            firstName: 'Robert',
-            lastName: 'Brown',
-            phoneNumber: '111-111-1111',
+            id: 5,
+            first_name: 'Robert',
+            last_name: 'Brown',
+            phone: '111-111-1111',
             email: 'robertbrown@example.com',
-            accountStatus: [Role.GARDENER],
+            groups: [Role.GARDENER],
             paymentAmount: 6765,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: '6',
-            firstName: 'Linda',
-            lastName: 'Jones',
-            phoneNumber: '222-222-2222',
+            id: 6,
+            first_name: 'Linda',
+            last_name: 'Jones',
+            phone: '222-222-2222',
             email: 'lindajones@example.com',
-            accountStatus: [Role.GARDENER],
+            groups: [Role.GARDENER],
             paymentAmount: 576,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: '7',
-            firstName: 'Michael',
-            lastName: 'Davis',
-            phoneNumber: '333-333-3333',
+            id: 7,
+            first_name: 'Michael',
+            last_name: 'Davis',
+            phone: '333-333-3333',
             email: 'michaeldavis@example.com',
-            accountStatus: [Role.GARDENER],
+            groups: [Role.GARDENER],
             paymentAmount: 57,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: '8',
-            firstName: 'Susan',
-            lastName: 'Wilson',
-            phoneNumber: '444-444-4444',
+            id: 8,
+            first_name: 'Susan',
+            last_name: 'Wilson',
+            phone: '444-444-4444',
             email: 'susanwilson@example.com',
-            accountStatus: [Role.GARDENER],
+            groups: [Role.GARDENER],
             paymentAmount: 576,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: '9',
-            firstName: 'William',
-            lastName: 'Evans',
-            phoneNumber: '666-666-6666',
+            id: 9,
+            first_name: 'William',
+            last_name: 'Evans',
+            phone: '666-666-6666',
             email: 'williamevans@example.com',
-            accountStatus: [Role.GARDENER],
+            groups: [Role.GARDENER],
             paymentAmount: 6757,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: '10',
-            firstName: 'Karen',
-            lastName: 'Taylor',
-            phoneNumber: '999-999-9999',
+            id: 10,
+            first_name: 'Karen',
+            last_name: 'Taylor',
+            phone: '999-999-9999',
             email: 'karentaylor@example.com',
-            accountStatus: [Role.GARDENER],
+            groups: [Role.GARDENER],
             paymentAmount: 876,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: '11',
-            firstName: 'Richard',
-            lastName: 'Anderson',
-            phoneNumber: '222-222-2222',
+            id: 11,
+            first_name: 'Richard',
+            last_name: 'Anderson',
+            phone: '222-222-2222',
             email: 'richardanderson@example.com',
-            accountStatus: [Role.GARDENER],
+            groups: [Role.GARDENER],
             paymentAmount: 1654,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: '12',
-            firstName: 'Patricia',
-            lastName: 'White',
-            phoneNumber: '333-333-3333',
+            id: 12,
+            first_name: 'Patricia',
+            last_name: 'White',
+            phone: '333-333-3333',
             email: 'patriciawhite@example.com',
-            accountStatus: [Role.GARDENER],
+            groups: [Role.GARDENER],
             paymentAmount: 6785,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: '13',
-            firstName: 'David',
-            lastName: 'Thomas',
-            phoneNumber: '777-777-7777',
+            id: 13,
+            first_name: 'David',
+            last_name: 'Thomas',
+            phone: '777-777-7777',
             email: 'davidthomas@example.com',
-            accountStatus: [Role.GARDENER],
+            groups: [Role.GARDENER],
             paymentAmount: 456,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: '14',
-            firstName: 'Susan',
-            lastName: 'Jackson',
-            phoneNumber: '123-123-1234',
+            id: 14,
+            first_name: 'Susan',
+            last_name: 'Jackson',
+            phone: '123-123-1234',
             email: 'susanjackson@example.com',
-            accountStatus: [Role.GARDENER],
+            groups: [Role.GARDENER],
             paymentAmount: 8658,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: '15',
-            firstName: 'Michael',
-            lastName: 'Harris',
-            phoneNumber: '456-456-4567',
+            id: 15,
+            first_name: 'Michael',
+            last_name: 'Harris',
+            phone: '456-456-4567',
             email: 'michaelharris@example.com',
-            accountStatus: [Role.GARDENER],
+            groups: [Role.GARDENER],
             paymentAmount: 654,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: '16',
-            firstName: 'Karen',
-            lastName: 'Martin',
-            phoneNumber: '111-111-1111',
+            id: 16,
+            first_name: 'Karen',
+            last_name: 'Martin',
+            phone: '111-111-1111',
             email: 'karenmartin@example.com',
-            accountStatus: [Role.GARDENER],
+            groups: [Role.GARDENER],
             paymentAmount: 6546,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: '17',
-            firstName: 'William',
-            lastName: 'Garcia',
-            phoneNumber: '555-555-5555',
+            id: 17,
+            first_name: 'William',
+            last_name: 'Garcia',
+            phone: '555-555-5555',
             email: 'williamgarcia@example.com',
-            accountStatus: [Role.GARDENER],
+            groups: [Role.GARDENER],
             paymentAmount: 453,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: '18',
-            firstName: 'Linda',
-            lastName: 'Brown',
-            phoneNumber: '333-333-3333',
+            id: 18,
+            first_name: 'Linda',
+            last_name: 'Brown',
+            phone: '333-333-3333',
             email: 'lindabrown@example.com',
-            accountStatus: [Role.GARDENER],
+            groups: [Role.GARDENER],
             paymentAmount: 5345,
             paymentDueDate: new Date(2024, 10, 31),
         },
         {
-            profileId: '19',
-            firstName: 'Michael',
-            lastName: 'Lewis',
-            phoneNumber: '777-777-7777',
+            id: 19,
+            first_name: 'Michael',
+            last_name: 'Lewis',
+            phone: '777-777-7777',
             email: 'michaellewis@example.com',
-            accountStatus: [Role.GARDENER],
+            groups: [Role.GARDENER],
             paymentAmount: 7680,
             paymentDueDate: new Date(2023, 12, 31),
         },
         {
-            profileId: '20',
-            firstName: 'Susan',
-            lastName: 'Clark',
-            phoneNumber: '123-123-1234',
+            id: 20,
+            first_name: 'Susan',
+            last_name: 'Clark',
+            phone: '123-123-1234',
             email: 'susanclark@example.com',
-            accountStatus: [Role.GARDENER],
+            groups: [Role.GARDENER],
             paymentAmount: 340,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
-            profileId: '21',
-            firstName: 'John',
-            lastName: 'Doe',
-            phoneNumber: '456-456-4567',
+            id: 21,
+            first_name: 'John',
+            last_name: 'Doe',
+            phone: '456-456-4567',
             email: 'johndoe@example.com',
-            accountStatus: [],
+            groups: [],
             paymentAmount: null,
             paymentDueDate: new Date(2023, 9, 15),
         },
         {
-            profileId: '22',
-            firstName: 'Alice',
-            lastName: 'Johnson',
-            phoneNumber: '789-789-7890',
+            id: 22,
+            first_name: 'Alice',
+            last_name: 'Johnson',
+            phone: '789-789-7890',
             email: 'alicejohnson@example.com',
-            accountStatus: [Role.MANAGER],
+            groups: [Role.MANAGER],
             paymentAmount: 420,
             paymentDueDate: new Date(2023, 8, 28),
         },
         {
-            profileId: '23',
-            firstName: 'Bob',
-            lastName: 'Smith',
-            phoneNumber: '234-234-2345',
+            id: 23,
+            first_name: 'Bob',
+            last_name: 'Smith',
+            phone: '234-234-2345',
             email: 'bobsmith@example.com',
-            accountStatus: [Role.ADMIN],
+            groups: [Role.ADMIN],
             paymentAmount: null,
             paymentDueDate: new Date(2023, 11, 15),
         },
         {
-            profileId: '24',
-            firstName: 'Eva',
-            lastName: 'Brown',
-            phoneNumber: '567-567-5678',
+            id: 24,
+            first_name: 'Eva',
+            last_name: 'Brown',
+            phone: '567-567-5678',
             email: 'evabrown@example.com',
-            accountStatus: [Role.NON_TECHNICAL_EMPLOYEE],
+            groups: [Role.NON_TECHNICAL_EMPLOYEE],
             paymentAmount: null,
             paymentDueDate: new Date(2023, 7, 22),
         },
         {
-            profileId: '25',
-            firstName: 'Michael',
-            lastName: 'Miller',
-            phoneNumber: '890-890-8901',
+            id: 25,
+            first_name: 'Michael',
+            last_name: 'Miller',
+            phone: '890-890-8901',
             email: 'michaelmiller@example.com',
-            accountStatus: [],
+            groups: [],
             paymentAmount: null,
             paymentDueDate: new Date(2023, 6, 10),
         },
         {
-            profileId: '26',
-            firstName: 'Sophia',
-            lastName: 'Wilson',
-            phoneNumber: '123-456-7890',
+            id: 26,
+            first_name: 'Sophia',
+            last_name: 'Wilson',
+            phone: '123-456-7890',
             email: 'sophiawilson@example.com',
-            accountStatus: [Role.ADMIN],
+            groups: [Role.ADMIN],
             paymentAmount: null,
             paymentDueDate: new Date(2023, 5, 18),
         },
         {
-            profileId: '27',
-            firstName: 'David',
-            lastName: 'Jones',
-            phoneNumber: '456-789-0123',
+            id: 27,
+            first_name: 'David',
+            last_name: 'Jones',
+            phone: '456-789-0123',
             email: 'davidjones@example.com',
-            accountStatus: [Role.MANAGER, Role.TECHNICAL_EMPLOYEE],
+            groups: [Role.MANAGER, Role.TECHNICAL_EMPLOYEE],
             paymentAmount: null,
             paymentDueDate: new Date(2023, 4, 27),
         },
@@ -286,7 +286,7 @@ export class ListOfUsersService {
     constructor(private httpClient: HttpClient) {
     }
 
-    getProfiles(index: number, size: number): Observable<Page<Profile>> {
+    getProfiles2(index: number, size: number): Observable<Page<Profile>> {
         const profilesOnPage = this.profiles.slice((index - 1) * size, (index - 1) * size + size);
         const count = this.profiles.length;
         const page: Page<Profile> = {count, results: profilesOnPage};
@@ -294,32 +294,33 @@ export class ListOfUsersService {
         return of(page);
     }
 
-    // TODO endPoint
-    getProfiles2(index: number, size: number): Observable<Page<Profile>> {
-        const url = `https://localhost:1337/api/profiles?page=${index}&size=${size}`;
+    // DZIAŁA !!!!!!
+    getProfiles(index: number, size: number): Observable<Page<Profile>> {
+        const url = `api/accounts/?page=${index}&page_size=${size}`;
         return this.httpClient.get<Page<Profile>>(url);
     }
 
+    // getAllProfiles(): Observable<Profile[]> {
+    //     return of(this.profiles);
+    // }
     getAllProfiles(): Observable<Profile[]> {
-        return of(this.profiles);
+        const url = `api/accounts/?page=${1}&page_size=${100000}`;
+        return this.httpClient.get<Page<Profile>>(url).pipe(
+            map((page: Page<Profile>) => page.results)
+        );
     }
 
-    // TODO endPoint
-    getAllProfiles2(): Observable<Profile[]> {
-        const url = 'https://localhost:1337/api/all-profiles';
-        return this.httpClient.get<Profile[]>(url);
-    }
 
 
     sortProfiles() {
         this.profiles.sort((a, b) => {
 
-                const lastNameComparison = a.lastName.localeCompare(b.lastName);
+                const lastNameComparison = a.last_name.localeCompare(b.last_name);
                 if (lastNameComparison !== 0) {
                     return lastNameComparison;
                 }
 
-                const firstNameComparison = a.firstName.localeCompare(b.firstName);
+                const firstNameComparison = a.first_name.localeCompare(b.first_name);
                 if (firstNameComparison !== 0) {
                     return firstNameComparison;
                 }
@@ -329,15 +330,23 @@ export class ListOfUsersService {
         );
     }
 
-    editProfile(profile: Profile): Observable<any>{
-        const index = this.profiles.findIndex(p => p.profileId === profile.profileId);
-        this.profiles[index] = profile;
-        return of(null)
+    getProfileById(id: number | null): Observable<Profile | undefined> {
+        const url = `api/accounts/${id}/`;
+        return this.httpClient.get<Profile>(url);
     }
-    editProfile2(profile: Profile) {
-        const url = 'https://localhost:1337/api/profiles'+'profile.profileId';
-        this.httpClient.put(url, profile);
+
+    // editProfile(profile: any): Observable<any>{
+    //     const index = this.profiles.findIndex(p => p.id === profile.id);
+    //     this.profiles[index] = profile;
+    //     return of(null)
+    // }
+    editProfile(profile: any,id: number | null) {
+        const url = `api/accounts/${id}/`;
+        console.log(profile);
+
+        return this.httpClient.put(url, profile);
     }
+
 }
 
 // .

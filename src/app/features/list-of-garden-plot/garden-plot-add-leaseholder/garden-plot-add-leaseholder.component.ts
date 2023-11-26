@@ -7,6 +7,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {BackendGardenService} from "../backend-garden.service";
 import {ListOfUsersService} from "../../list-of-users/list-of-users.service";
 import {Profile} from "../../Profile";
+import {forkJoin} from "rxjs";
 
 
 @Component({
@@ -20,7 +21,7 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
     addLeaseHolderForm: FormGroup;
 
     // @ts-ignore
-    leasholderID: string | null
+    leasholderID: number | null
 
     // @ts-ignore
     private profiles: Profile[]
@@ -44,39 +45,31 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
                 public dialogRef: MatDialogRef<GardenPlotAddLeaseholderComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: { gardenPlot: GardenPlotBackend }
     ) {
-        this.initData()
         this.gardenPlot = data.gardenPlot
         this.addLeaseHolderForm = formBuilder.group({
             leaseholderEmail: [''],
         });
+        this.loadData();
+    }
+
+    loadData() {
+        forkJoin({
+            profiles: this.listOfUsersService.getAllProfiles(),
+            gardenPlots: this.gardenPlotsDataService.getAllGardenPlots(),
+            leaseholder: this.gardenPlotsDataService.getLeaseholder(this.gardenPlot?.gardenPlotID)
+        }).subscribe(data => {
+            this.profiles = data.profiles;
+            this.gardenPlots = data.gardenPlots;
+            let leaseHolder: Profile | null
+            leaseHolder = data.leaseholder
+            if (leaseHolder) {
+                this.leasholderID = leaseHolder.id
+            } else this.leasholderID = null
+            this.initData();
+        });
     }
 
     initData() {
-        this.listOfUsersService.sortProfiles()
-        this.initProfiles()
-        this.initGardenPlots()
-    }
-
-    initGardenPlots() {
-        this.gardenPlotsDataService.getAllGardenPlots().subscribe((gardenPlots: GardenPlot[]) => {
-            this.gardenPlots = gardenPlots;
-        });
-    }
-
-    initProfiles() {
-        this.listOfUsersService.getAllProfiles().subscribe((profiles: Profile[]) => {
-            this.profiles = profiles;
-        });
-    }
-
-    ngOnInit() {
-        // @ts-ignore
-        let leaseHolder : Profile
-         this.gardenPlotsDataService.getLeaseholder(this.gardenPlot?.gardenPlotID).subscribe((leaseholder) => {leaseHolder = leaseholder});
-        // @ts-ignore
-        if (leaseHolder) {
-            this.leasholderID = leaseHolder.profileId
-        } else this.leasholderID = null
         this.addLeaseHolderForm.get('leaseholderEmail')?.setValidators([Validators.required, profileEmailValidator(this.profiles), uniqueLeaseholderIDValidator(this.gardenPlots, this.profiles, true, this.leasholderID)])
 
         this.leaseHolderOptions = [{
@@ -92,6 +85,10 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
         });
 
         this.populateFormFromGardenPlot(this.gardenPlot);
+    }
+
+    ngOnInit() {
+
     }
 
     accept() {
@@ -111,9 +108,9 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
 
                 if (selectedProfile) {
                     // @ts-ignore
-                    this.gardenPlot.leaseholderID = selectedProfile.profileId;
-                    this.gardenPlotsDataService.editLeaseholder(this.gardenPlot?.gardenPlotID, selectedProfile.profileId)
-                    this.gardenPlotsDataService.editLeaseholder2(this.gardenPlot?.gardenPlotID, selectedProfile.profileId, this.gardenPlots)
+                    this.gardenPlot.leaseholderID = selectedProfile.id;
+                    this.gardenPlotsDataService.editLeaseholder(this.gardenPlot?.gardenPlotID, selectedProfile.id)
+                    this.gardenPlotsDataService.editLeaseholder2(this.gardenPlot?.gardenPlotID, selectedProfile.id, this.gardenPlots)
                     // this.gardenPlotsDataService.editLeaseholder3(this.gardenPlot?.gardenPlotID, selectedProfile.profileId)
 
                     this.closeAddingLeaseHolder();
