@@ -1,5 +1,5 @@
 export interface VotingItem {
-  id: string;
+  id: number;
   title: string;
   description: string;
   options: VotingOption[];
@@ -8,7 +8,7 @@ export interface VotingItem {
 
 
 export interface VotingItem2 {
-  id: string;
+  id: number;
   title: string;
   description: string;
   options: VotingOption2[];
@@ -17,13 +17,13 @@ export interface VotingItem2 {
 
 
 export interface VotingOption {
-  optionId: string;
+  optionId: number;
   label: string;
 }
 
 
 export interface VotingOption2 {
-  optionId: string;
+  optionId: number;
   label: string;
   votes: number;
 }

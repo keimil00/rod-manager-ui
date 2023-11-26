@@ -44,15 +44,15 @@ export class CurrentVotingsComponent {
         }
     }
 
-    selectOption(voteId: string, selectedOption: string) {
+    selectOption(voteId: number, selectedOption: number) {
         this.selectedOptions[voteId].setValue(selectedOption);
     }
 
-    isVoteValid(voteId: string): boolean {
+    isVoteValid(voteId: number): boolean {
         return !!this.selectedOptions[voteId].value;
     }
 
-    submitVote(voteId: string) {
+    submitVote(voteId: number) {
         if (this.isVoteValid(voteId)) {
             const selectedOption = this.selectedOptions[voteId].value;
             const currentVote = this.currentVotes.find(vote => vote.id === voteId);
