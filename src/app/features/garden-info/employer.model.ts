@@ -1,11 +1,11 @@
 export class Employer {
-  id: string
+  id: number
   position: string;
   name: string;
   phoneNumber: string;
   email: string;
 
-  constructor(id: string, position: string, name: string, phoneNumber: string, email: string) {
+  constructor(id: number, position: string, name: string, phoneNumber: string, email: string) {
     this.id = id
     this.position = position;
     this.name = name;

@@ -9,21 +9,21 @@ import {Observable, of} from "rxjs";
 export class GardenInfoService {
   private employers: Employer[] = [
     {
-      id: '1',
+      id: 1,
       position: 'Manager',
       name: 'John Doe',
       phoneNumber: '123-456-7890',
       email: 'john.doe@example.com'
     },
     {
-      id: '2',
+      id: 2,
       position: 'Developer',
       name: 'Jane Smith',
       phoneNumber: '987-654-3210',
       email: 'jane.smith@example.com'
     },
     {
-      id: '3',
+      id: 3,
       position: 'Designer',
       name: 'Mike Johnson',
       phoneNumber: '555-555-5555',
@@ -34,36 +34,36 @@ export class GardenInfoService {
   constructor(private httpClient: HttpClient) {
   }
 
-  private readonly employersUrl = 'https://localhost:1337/api/employers';
+  private readonly employersUrl = '/api/garden-info/';
 
-  getEmployers() :Observable<Employer[]> {
+  getEmployers2() :Observable<Employer[]> {
     return of( this.employers)
   }
 
   // TODO
-  getEmployers2(): Observable<Employer[]> {
+  getEmployers(): Observable<Employer[]> {
     return this.httpClient.get<Employer[]>(this.employersUrl);
   }
 
-  updateEmployer(newEmployer: Employer) {
-    for (let i = 0; i < this.employers.length; i++) {
-      if (this.employers[i].id === newEmployer.id) {
-        this.employers[i] = newEmployer;
-        break;
-      }
-    }
-  }
+  // updateEmployer(newEmployer: Employer, id: number) {
+  //   for (let i = 0; i < this.employers.length; i++) {
+  //     if (this.employers[i].id === id) {
+  //       this.employers[i] = newEmployer;
+  //       break;
+  //     }
+  //   }
+  // }
 
-  updateEmployer2(newEmployer: Employer): Observable<any> {
-    const url = `${this.employersUrl}/${newEmployer.id}`;
+  updateEmployer(newEmployer: Employer, id: number): Observable<any> {
+    const url = `${this.employersUrl}/${id}/`;
     return this.httpClient.put(url, newEmployer);
   }
 
-  addEmployer(newEmployer: Employer) {
-    this.employers.push(newEmployer)
-  }
+  // addEmployer(newEmployer: Employer) {
+  //   this.employers.push(newEmployer)
+  // }
 
-  addEmployer2(newEmployer: Employer): Observable<any> {
+  addEmployer(newEmployer: Employer): Observable<any> {
     return this.httpClient.post(this.employersUrl, newEmployer);
   }
 }
