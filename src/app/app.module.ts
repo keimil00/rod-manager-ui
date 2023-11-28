@@ -117,6 +117,7 @@ import {registerLocaleData} from "@angular/common";
 import {LOCALE_ID} from '@angular/core';
 import {EditUtilityValuesComponent} from "./features/payments/edit-utility-values/edit-utility-values.component";
 import { EditDescriptionDialogComponent } from './features/garden-info/edit-description-dialog/edit-description-dialog.component';
+import { ListOfGardeneirsComponent } from './features/list-of-gardeneirs/list-of-gardeneirs.component';
 
 registerLocaleData(localePl);
 
@@ -219,7 +220,8 @@ registerLocaleData(localePl);
     CalendarComponent,
     EventDetailsComponent,
     EditUtilityValuesComponent,
-    EditDescriptionDialogComponent
+    EditDescriptionDialogComponent,
+    ListOfGardeneirsComponent
   ],
 
   imports: [
