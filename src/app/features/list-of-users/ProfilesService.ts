@@ -12,8 +12,28 @@ export function getMatchingProfiles(value: string, profiles: Profile[], gardenPl
   const availableProfiles = profiles.filter((profile) => {
     const fullName = profile.first_name + ' ' + profile.last_name
     return (
-      (fullName.toLowerCase().includes(lowerCaseValue) || profile.email.toLowerCase().includes(lowerCaseValue)) && (profile.groups.some((role) => role === Role.GARDENER)) && (
+      (fullName.toLowerCase().includes(lowerCaseValue) || profile.email.toLowerCase().includes(lowerCaseValue)) && (profile.groups.some((role) => role.includes(Role.GARDENER))) && (
         !gardenPlots.some((plot) => plot.leaseholderID === profile.id) || (showCurrentLeaseHolder && leaseHolderID === profile.id))
+    );
+  });
+
+  return availableProfiles.map((profile) => ({
+    email: profile.email,
+    fullName: `${profile.first_name} ${profile.last_name}`
+  }));
+}
+
+
+export function getMatchingProfilesEX(value: string, profiles: Profile[]): {
+  email: string,
+  fullName: string
+}[] {
+  const lowerCaseValue = value.toLowerCase();
+
+  const availableProfiles = profiles.filter((profile) => {
+    const fullName = profile.first_name + ' ' + profile.last_name
+    return (
+      (fullName.toLowerCase().includes(lowerCaseValue) || profile.email.toLowerCase().includes(lowerCaseValue)) && (profile.groups.some((role) => role.includes(Role.GARDENER)))
     );
   });
 

@@ -89,23 +89,24 @@ export class ListOfGardenPlotComponent {
     }
 
     selectDetails(gardenPlot: GardenPlot) {
-
-
             forkJoin({
-                leaseHolder:this.gardenPlotsDataService.getLeaseholder(gardenPlot.gardenPlotID)
+                leaseHolder:this.gardenPlotsDataService.getLeaseholder(gardenPlot.gardenPlotID),
+                exLeaseHolder:this.gardenPlotsDataService.getExLeaseholder(gardenPlot.gardenPlotID)
             }).subscribe(data => {
                 let leaseHolder : Profile | null
                 leaseHolder = data.leaseHolder
                 this.showDetails = true;
+                let exLeaseHolder : Profile | null
+                exLeaseHolder = data.exLeaseHolder
                 // @ts-ignore
-                this.showDetailsDialog(gardenPlot, leaseHolder)
+                this.showDetailsDialog(gardenPlot, leaseHolder, exLeaseHolder);
             });
     }
 
-    showDetailsDialog(gardenPlot: GardenPlot, leaseholder: Profile | undefined) {
+    showDetailsDialog(gardenPlot: GardenPlot, leaseholder: Profile | undefined, exleaseholder: Profile | undefined) {
         const dialogRef = this.dialog.open(GardenPlotDetailsComponent, {
             width: '4000px',
-            data: {gardenPlot, leaseholder},
+            data: {gardenPlot, leaseholder, exleaseholder},
         });
 
         dialogRef.afterClosed().subscribe(() => {

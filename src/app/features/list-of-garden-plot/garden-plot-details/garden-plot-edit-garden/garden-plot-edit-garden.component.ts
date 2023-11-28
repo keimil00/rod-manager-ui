@@ -11,7 +11,11 @@ import {
   uniqueLeaseholderIDValidator
 } from "../../GardenService";
 
-import {getMatchingProfiles, profileEmailValidator} from "../../../list-of-users/ProfilesService";
+import {
+  getMatchingProfiles,
+  getMatchingProfilesEX,
+  profileEmailValidator
+} from "../../../list-of-users/ProfilesService";
 import {BackendGardenService} from "../../backend-garden.service";
 import {ListOfUsersService} from "../../../list-of-users/list-of-users.service";
 import {forkJoin} from "rxjs";
@@ -26,6 +30,7 @@ export class GardenPlotEditGardenComponent {
   @Output() closeEditingingGardenPlot = new EventEmitter<void>();
 
   leaseHolderOptions: { email: string; fullName: string }[] = [];
+  exLeaseHolderOptions: { email: string; fullName: string }[] = [];
 
   editGardenForm: FormGroup;
 
@@ -33,6 +38,8 @@ export class GardenPlotEditGardenComponent {
   avenuesOptions: (string | null)[] = [];
   // @ts-ignore
   leasholderID: number | null
+  // @ts-ignore
+  exLeasholderID: number | null
 
   // @ts-ignore
   private profiles: Profile[]
@@ -58,6 +65,9 @@ export class GardenPlotEditGardenComponent {
       {type: 'invalidProfileEmail', message: 'Proszę wybrać poprawny profil'},
       {type: 'nonUniqueLeaseholderID', message: 'Profil jest już przypisany do innej działki'},
     ],
+    exLeaseholderEmail: [
+      {type: 'invalidProfileEmail', message: 'Proszę wybrać poprawny profil'},
+    ],
     status: [
       {type: 'required', message: 'Proszę podać status'}
     ]
@@ -78,25 +88,50 @@ export class GardenPlotEditGardenComponent {
         Validators.required,
         Validators.min(0.01),
       ]],
-      leaseholderEmail: ['', [
-        // @ts-ignore
-        profileEmailValidator(this.profiles),
-        // uniqueLeaseholderIDValidator(gardenPlots, profiles,true,this.gardenPlot)
-      ]],
+      leaseholderEmail: [''],
+      exLeaseholderEmail: [''],
       status: ['',
         Validators.required]
     });
   }
 
+
+  //Usunąłęm to wczesniej ale okazało sie ze bez tego nie działa
+  async loadData2() {
+    try {
+      const result = await this.asyncOperation(); // Tu wywołaj swoją asynchroniczną funkcję
+      console.log('Wynik operacji asynchronicznej:', result);
+    } catch (error) {
+      console.error('Wystąpił błąd:', error);
+    }
+  }
+
+  async asyncOperation(): Promise<string> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        // @ts-ignore
+        this.populateFormFromGardenPlot(this.gardenPlot);
+        resolve('Dane załadowane asynchronicznie');
+      }, 200);
+    });
+  }
+
   async ngOnInit(): Promise<void> {
     this.loadData()
+    // TODO WIEM to jest na siłe bardzo ale już się poddałem po paru godzinach
+    await this.loadData2()
   }
+
+  // async ngOnInit(): Promise<void> {
+  //   this.loadData()
+  // }
 
   loadData() {
     forkJoin({
       profiles: this.listOfUsersService.getAllProfiles(),
       gardenPlots: this.gardenPlotsDataService.getAllGardenPlots(),
-      leaseHolder: this.gardenPlotsDataService.getLeaseholder(this.gardenPlot?.gardenPlotID)
+      leaseHolder: this.gardenPlotsDataService.getLeaseholder(this.gardenPlot?.gardenPlotID),
+      exleaseHolder: this.gardenPlotsDataService.getExLeaseholder(this.gardenPlot?.gardenPlotID)
     }).subscribe(async data => {
       this.profiles = data.profiles;
       this.gardenPlots = data.gardenPlots;
@@ -105,6 +140,12 @@ export class GardenPlotEditGardenComponent {
         this.leasholderID = leaseHolder.id;
       } else {
         this.leasholderID = null;
+      }
+      let exleaseHolder: Profile | null = data.exleaseHolder;
+      if (exleaseHolder) {
+        this.exLeasholderID = exleaseHolder.id;
+      } else {
+        this.exLeasholderID = null;
       }
 
       this.initData();
@@ -122,6 +163,7 @@ export class GardenPlotEditGardenComponent {
       number: gardenPlot.number,
       area: gardenPlot.area,
       leaseholderEmail: gardenPlot.leaseholder !== null ? findProfileEmailByID(this.leasholderID, this.profiles) : 'brak',
+      exLeaseholderEmail: this.exLeasholderID !== null? findProfileEmailByID(this.exLeasholderID, this.profiles) : 'brak',
       status: gardenPlot.gardenStatus,
     });
   }
@@ -140,6 +182,18 @@ export class GardenPlotEditGardenComponent {
       }, ...getMatchingProfiles(value, this.profiles, this.gardenPlots, true, this.leasholderID)];
     });
 
+    this.exLeaseHolderOptions = [{
+      fullName: 'brak',
+      email: 'brak'
+    }, ...getMatchingProfilesEX(this.editGardenForm.get('exLeaseholderEmail')?.value, this.profiles)];
+
+    this.editGardenForm.get('exLeaseholderEmail')?.valueChanges.subscribe((value) => {
+      this.exLeaseHolderOptions = [{
+        fullName: 'brak',
+        email: 'brak'
+      }, ...getMatchingProfilesEX(value, this.profiles)];
+    });
+
     this.sectorsOptions = getMatchingSectors(this.editGardenForm.get('sector')?.value, this.gardenPlots);
     this.editGardenForm.get('sector')?.valueChanges.subscribe((value) => {
       this.sectorsOptions = getMatchingSectors(this.editGardenForm.get('sector')?.value, this.gardenPlots);
@@ -150,7 +204,9 @@ export class GardenPlotEditGardenComponent {
     this.editGardenForm.get('avenue')?.valueChanges.subscribe((value) => {
       this.updateAvenousAndNumberValidator()
     });
+    this.editGardenForm.get('leaseholderEmail')?.setValidators(profileEmailValidator(this.profiles));
     this.editGardenForm.get('leaseholderEmail')?.setValidators(uniqueLeaseholderIDValidator(this.gardenPlots, this.profiles, true, this.leasholderID));
+    this.editGardenForm.get('exLeaseholderEmail')?.setValidators(profileEmailValidator(this.profiles));
   }
 
   updateAvenousAndNumberValidator() {
@@ -204,6 +260,8 @@ export class GardenPlotEditGardenComponent {
         gardenPlotID: newGarden?.gardenPlotID,
         // @ts-ignore
         leaseholderID: newLeaseholderID,
+        // @ts-ignore
+        exLeaseholderID: newExLeaseholderID,
         // @ts-ignore
         sector: newGarden?.sector,
         // @ts-ignore

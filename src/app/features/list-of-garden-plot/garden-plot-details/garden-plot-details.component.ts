@@ -17,6 +17,7 @@ import {VotingItem} from "../../votings/voting-item.model";
 export class GardenPlotDetailsComponent {
     gardenPlot: GardenPlotBackend | undefined;
     leaseholder: Profile | undefined;
+    exleaseholder: Profile | undefined;
 
     showPaymentHistory = false;
     showNewPaymentForm = false;
@@ -41,10 +42,11 @@ export class GardenPlotDetailsComponent {
 
     constructor(formBuilder: FormBuilder, private gardenPlotsDataService: BackendGardenService,
                 public dialogRef: MatDialogRef<GardenPlotDetailsComponent>,
-                @Inject(MAT_DIALOG_DATA) public data: { gardenPlot: GardenPlotBackend; leaseholder: Profile }
+                @Inject(MAT_DIALOG_DATA) public data: { gardenPlot: GardenPlotBackend; leaseholder: Profile; exLeaseHolder: Profile}
     ) {
         this.gardenPlot = data.gardenPlot;
         this.leaseholder = data.leaseholder;
+        this.exleaseholder = data.exLeaseHolder;
         this.initData();
         this.paymentForm = formBuilder.group({
             value: ['', [

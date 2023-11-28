@@ -398,6 +398,7 @@ export class BackendGardenService {
       number: 101,
       area: 500,
       leaseholderID: null,
+      exLeaseholderID: null,
       gardenStatus: PlotStatus.Available
     },
     {
@@ -407,6 +408,7 @@ export class BackendGardenService {
       number: 201,
       area: 600,
       leaseholderID: null,
+      exLeaseholderID: 10,
       gardenStatus: PlotStatus.Available
     },
     {
@@ -416,6 +418,7 @@ export class BackendGardenService {
       number: 301,
       area: 750,
       leaseholderID: 1,
+      exLeaseholderID: 10,
       gardenStatus: PlotStatus.Available
     },
     {
@@ -425,6 +428,7 @@ export class BackendGardenService {
       number: 401,
       area: 550,
       leaseholderID: null,
+      exLeaseholderID: 10,
       gardenStatus: PlotStatus.Available
     },
     {
@@ -434,6 +438,7 @@ export class BackendGardenService {
       number: 501,
       area: 700,
       leaseholderID: 6,
+      exLeaseholderID: 10,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -443,6 +448,7 @@ export class BackendGardenService {
       number: 601,
       area: 600,
       leaseholderID: 3,
+      exLeaseholderID: 10,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -452,6 +458,7 @@ export class BackendGardenService {
       number: 701,
       area: 800,
       leaseholderID: 8,
+      exLeaseholderID: 10,
       gardenStatus: PlotStatus.Available
     },
     {
@@ -461,6 +468,7 @@ export class BackendGardenService {
       number: 801,
       area: 900,
       leaseholderID: 10,
+      exLeaseholderID: 10,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -470,6 +478,7 @@ export class BackendGardenService {
       number: 901,
       area: 450,
       leaseholderID: 11,
+      exLeaseholderID: 10,
       gardenStatus: PlotStatus.Available
     },
     {
@@ -479,6 +488,7 @@ export class BackendGardenService {
       number: 1001,
       area: 600,
       leaseholderID: 16,
+      exLeaseholderID: 10,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -488,6 +498,7 @@ export class BackendGardenService {
       number: 1101,
       area: 700,
       leaseholderID: 19,
+      exLeaseholderID: 10,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -497,6 +508,7 @@ export class BackendGardenService {
       number: 1201,
       area: 800,
       leaseholderID: null,
+      exLeaseholderID: 10,
       gardenStatus: PlotStatus.Available
     },
     {
@@ -506,6 +518,7 @@ export class BackendGardenService {
       number: 1301,
       area: 750,
       leaseholderID: 20,
+      exLeaseholderID: 10,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -515,6 +528,7 @@ export class BackendGardenService {
       number: 1401,
       area: 600,
       leaseholderID: 14,
+      exLeaseholderID: 10,
       gardenStatus: PlotStatus.Available
     },
     {
@@ -524,6 +538,7 @@ export class BackendGardenService {
       number: 1501,
       area: 850,
       leaseholderID: 17,
+      exLeaseholderID: 10,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -533,6 +548,7 @@ export class BackendGardenService {
       number: 1601,
       area: 700,
       leaseholderID: null,
+      exLeaseholderID: 10,
       gardenStatus: PlotStatus.Available
     },
     {
@@ -542,6 +558,7 @@ export class BackendGardenService {
       number: 1701,
       area: 600,
       leaseholderID: 12,
+      exLeaseholderID: 10,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -551,6 +568,7 @@ export class BackendGardenService {
       number: 1801,
       area: 750,
       leaseholderID: null,
+      exLeaseholderID: 10,
       gardenStatus: PlotStatus.Available
     },
     {
@@ -560,6 +578,7 @@ export class BackendGardenService {
       number: 1901,
       area: 500,
       leaseholderID: 2,
+      exLeaseholderID: 10,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -569,6 +588,7 @@ export class BackendGardenService {
       number: 2001,
       area: 600,
       leaseholderID: 4,
+      exLeaseholderID: 10,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -578,6 +598,7 @@ export class BackendGardenService {
       number: 102,
       area: 600,
       leaseholderID: null,
+      exLeaseholderID: 10,
       gardenStatus: PlotStatus.Unavailable
     },
   ];
@@ -681,6 +702,17 @@ export class BackendGardenService {
     );
   }
 
+  getExLeaseholder(gardenPlotID: number | undefined): Observable<Profile | null> {
+    return this.initProfiles().pipe(
+      switchMap((profiles: Profile[]) => {
+        this.profiles = profiles;
+        const id = this.gardenPlots.find(gardenPlot => gardenPlot.gardenPlotID === gardenPlotID)?.exLeaseholderID;
+        const foundProfile = this.profiles.find(profile => profile.id === id);
+        return of(foundProfile || null);
+      })
+    );
+  }
+
   editGarden(gardenId: number | undefined, newGarden: GardenPlotBackend | undefined): Observable<any> {
     const index = this.gardenPlotsBackend.findIndex(garden => garden.gardenPlotID === gardenId);
 
@@ -745,6 +777,7 @@ export class BackendGardenService {
     const index = gardenPlots.findIndex(garden => garden.gardenPlotID === gardenId);
 
     if (index !== -1) {
+      gardenPlots[index].exLeaseholderID = gardenPlots[index].leaseholderID;
       gardenPlots[index].leaseholderID = newLeaseholderID;
     } else {
       console.error('Garden not found with ID:', gardenId);
@@ -781,6 +814,7 @@ export class BackendGardenService {
     //to zastapi push
     for (let garden of this.gardenPlots) {
       if (garden.gardenPlotID === targetID) {
+        garden.exLeaseholderID = garden.leaseholderID
         garden.leaseholderID = newLeaseholderID
       }
     }
