@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,14 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'rod-manager-ui';
+
+  constructor(private router: Router) {}
+
+  isHomeComponentActive(): boolean {
+    return this.router.url.includes('home') || this.router.url.includes('garden-offers');
+  }
+
+  isCalendarComponentActive(): boolean {
+    return this.router.url.includes('calendar');
+  }
 }

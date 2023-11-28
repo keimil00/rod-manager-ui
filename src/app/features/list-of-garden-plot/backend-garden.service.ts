@@ -415,7 +415,7 @@ export class BackendGardenService {
       avenue: 'Avenue 3',
       number: 301,
       area: 750,
-      leaseholderID: 101,
+      leaseholderID: 1,
       gardenStatus: PlotStatus.Available
     },
     {
@@ -433,7 +433,7 @@ export class BackendGardenService {
       avenue: 'Avenue 5',
       number: 501,
       area: 700,
-      leaseholderID: 106,
+      leaseholderID: 6,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -442,7 +442,7 @@ export class BackendGardenService {
       avenue: 'Avenue 6',
       number: 601,
       area: 600,
-      leaseholderID: 103,
+      leaseholderID: 3,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -451,7 +451,7 @@ export class BackendGardenService {
       avenue: 'Avenue 7',
       number: 701,
       area: 800,
-      leaseholderID: 108,
+      leaseholderID: 8,
       gardenStatus: PlotStatus.Available
     },
     {
@@ -460,7 +460,7 @@ export class BackendGardenService {
       avenue: 'Avenue 8',
       number: 801,
       area: 900,
-      leaseholderID: 110,
+      leaseholderID: 10,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -469,7 +469,7 @@ export class BackendGardenService {
       avenue: 'Avenue 9',
       number: 901,
       area: 450,
-      leaseholderID: 111,
+      leaseholderID: 11,
       gardenStatus: PlotStatus.Available
     },
     {
@@ -478,7 +478,7 @@ export class BackendGardenService {
       avenue: 'Avenue 10',
       number: 1001,
       area: 600,
-      leaseholderID: 116,
+      leaseholderID: 16,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -487,7 +487,7 @@ export class BackendGardenService {
       avenue: 'Avenue 11',
       number: 1101,
       area: 700,
-      leaseholderID: 119,
+      leaseholderID: 19,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -505,7 +505,7 @@ export class BackendGardenService {
       avenue: 'Avenue 13',
       number: 1301,
       area: 750,
-      leaseholderID: 120,
+      leaseholderID: 20,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -514,7 +514,7 @@ export class BackendGardenService {
       avenue: 'Avenue 14',
       number: 1401,
       area: 600,
-      leaseholderID: 114,
+      leaseholderID: 14,
       gardenStatus: PlotStatus.Available
     },
     {
@@ -523,7 +523,7 @@ export class BackendGardenService {
       avenue: 'Avenue 15',
       number: 1501,
       area: 850,
-      leaseholderID: 117,
+      leaseholderID: 17,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -541,7 +541,7 @@ export class BackendGardenService {
       avenue: 'Avenue 17',
       number: 1701,
       area: 600,
-      leaseholderID: 112,
+      leaseholderID: 12,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -559,7 +559,7 @@ export class BackendGardenService {
       avenue: 'Avenue 19',
       number: 1901,
       area: 500,
-      leaseholderID: 102,
+      leaseholderID: 2,
       gardenStatus: PlotStatus.Unavailable
     },
     {
@@ -568,7 +568,7 @@ export class BackendGardenService {
       avenue: 'Avenue 20',
       number: 2001,
       area: 600,
-      leaseholderID: 104,
+      leaseholderID: 4,
       gardenStatus: PlotStatus.Unavailable
     },
     {

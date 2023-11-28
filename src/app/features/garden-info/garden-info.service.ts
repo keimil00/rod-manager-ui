@@ -66,6 +66,14 @@ export class GardenInfoService {
   addEmployer(newEmployer: Employer): Observable<any> {
     return this.httpClient.post(this.employersUrl, newEmployer);
   }
+
+  getDescription(): Observable<any> {
+    return this.httpClient.get(this.employersUrl + 'description/');
+  }
+
+  setDescription(description: string): Observable<any> {
+    return this.httpClient.put(this.employersUrl + 'description/', {description});
+  }
 }
 
 // .

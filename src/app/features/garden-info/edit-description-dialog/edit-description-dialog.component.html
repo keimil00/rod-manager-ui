@@ -1,0 +1,8 @@
+<!-- garden-info-dialog.component.html -->
+<div class="page-container">
+  <h2 class="full-width" class="title">Edytuj opis ogrodu</h2>
+  <mat-form-field class="full-width">
+    <textarea matInput [(ngModel)]="currentDescription" rows="12"></textarea>
+  </mat-form-field>
+  <app-text-button color="primary" (click)="saveDescription()" [text]="'Zapisz'" class="edit-button"></app-text-button>
+</div>

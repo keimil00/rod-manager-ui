@@ -1,6 +1,7 @@
 .rest {
   padding-top: 62px;
 }
+
 /* Resetowanie marginesów dla body i html */
 body,
 html {
@@ -25,4 +26,30 @@ footer {
   flex-shrink: 0; /* Zapobieganie zbytniemu kurczeniu stopki */
 }
 
+.test {
+  filter: brightness(80%);
+  opacity: 25%;
+}
 
+.background-home{
+  filter: brightness(100%);
+  opacity: 10%;
+}
+
+.background-calendar{
+display: none;
+}
+
+@media only screen and (max-width: 1000px) {
+  .test {
+    display: none;
+  }
+
+  .background-home{
+    display: none;
+  }
+
+  .background-calendar{
+    display: none;
+  }
+}

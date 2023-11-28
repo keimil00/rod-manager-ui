@@ -25,7 +25,7 @@
   box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
   align-content: center;
   margin-top: 5%;
-  margin-bottom: 15%;
+  margin-bottom: 2%;
 }
 
 .employers-card-size {
@@ -37,6 +37,16 @@
   align-content: center;
   margin-top: 5%;
   margin-bottom: 10%;
+}
+
+.description-card-size{
+  width: 80%;
+  align-self: center;
+  -webkit-box-shadow: 0px 3px 15px -1px rgba(200, 200, 200, 1);
+  -moz-box-shadow: 0px 3px 15px -1px rgba(200, 200, 200, 1);
+  box-shadow: 0px 3px 15px -1px rgba(200, 200, 200, 1);
+  align-content: center;
+  margin-top: 5%;
 }
 
 .center-item {
@@ -96,6 +106,23 @@
   color: #ffffff;
 }
 
+a:hover {
+  cursor: pointer;
+}
+
+.description{
+  font-size: 14px;
+  text-align: center;
+}
+
+.editButton {
+  position: absolute;
+  right: -60px;
+  bottom: 0;
+  scale: 0.7;
+}
+
+
 
 @media only screen and (max-width: 500px){
   .large-card-size {
@@ -126,6 +153,9 @@
 
   .mat-mdc-card-header {
     padding: 0px 0px 0;
+  }
+  .editButton {
+    right: -30px;
   }
 }
 @media only screen and (min-width: 500px) and (max-width: 800px){
@@ -160,10 +190,6 @@
     padding: 0px 0px 0;
   }
 }
-a:hover {
-  cursor: pointer;
-}
-
 @media only screen and (min-width: 800px)  and (max-width: 1100px){
   .large-card-size, .employers-card-size{
     width: 90%;

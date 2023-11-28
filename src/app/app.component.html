@@ -4,9 +4,26 @@
 </header>
 
 <main>
-  <div class="rest">
-    <router-outlet></router-outlet>
+  <div style="position: fixed; bottom: 1vw; left: 57vw; z-index: 0">
+    <img src="assets/tlo2.png" width="7000000vw" [ngClass]="{
+  'background-home': isHomeComponentActive(),
+  'background-calendar': isCalendarComponentActive(),
+  'test': !isHomeComponentActive() && !isCalendarComponentActive()
+}">
   </div>
+  <div style="position: fixed; bottom: 1vw; right: 57vw; z-index: 0">
+    <img src="assets/tlo1.png" width="7000000vw" [ngClass]="{
+  'background-home': isHomeComponentActive(),
+  'background-calendar': isCalendarComponentActive(),
+    'test': !isHomeComponentActive() && !isCalendarComponentActive()
+}">>
+  </div>
+
+  <div class="rest" >
+    <router-outlet>
+    </router-outlet>
+  </div>
+
 </main>
 
 <footer class="footer"><app-footer-app></app-footer-app></footer>
