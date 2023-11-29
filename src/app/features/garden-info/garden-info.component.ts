@@ -58,12 +58,13 @@ export class GardenInfoComponent {
   }
 
   downloadFile(idDocument: string) {
-    let filePath: string = ''
-    const subscription: Subscription = this.documentsService.downloadDocumentSimulate(idDocument)
-      .subscribe((result: string) => {
-        filePath = result;
-        window.open(filePath, '_blank');
-      });
+    // TODO
+    // let filePath: string = ''
+    // const subscription: Subscription = this.documentsService.downloadDocumentSimulate(idDocument)
+    //   .subscribe((result: string) => {
+    //     filePath = result;
+    //     window.open(filePath, '_blank');
+    //   });
   }
 
   ngOnInit() {

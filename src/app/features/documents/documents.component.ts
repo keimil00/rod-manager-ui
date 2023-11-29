@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 
 import {DocumentsService} from "./documents.service";
-import {Document} from "./document";
+import {Document, Leaf} from "./document";
 import {Subscription} from "rxjs";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
@@ -73,6 +73,13 @@ export class DocumentsComponent {
       });
   }
 
+  updateDocumentsList() {
+    this.documentsService.getDocuments()
+      .subscribe((result: Document[]) => {
+        this.documents=result
+      });
+  }
+
 
   errorMessages = {
     name: [
@@ -103,13 +110,16 @@ export class DocumentsComponent {
     this.downloadFile('statue')
   }
 
-  downloadFile(idDocument: string) {
-    let filePath: string = ''
-    const subscription: Subscription = this.documentsService.downloadDocumentSimulate(idDocument)
-      .subscribe((result: string) => {
-        filePath = result;
-        window.open(filePath, '_blank');
-      });
+  downloadFile(link: string) {
+    window.open(link, '_blank');
+
+
+    // let filePath: string = ''
+    // const subscription: Subscription = this.documentsService.downloadDocumentSimulate(idDocument)
+    //   .subscribe((result: string) => {
+    //     filePath = result;
+    //     window.open(filePath, '_blank');
+    //   });
   }
 
   toggleAddDocumentForm() {
@@ -146,54 +156,97 @@ export class DocumentsComponent {
   addNewDocument() {
     if (this.addFileForm.valid && this.selectedFile) {
       const newTitle: string = this.addFileForm.get('name')?.value;
-      const id = generateRandomID();
-      const newDocument: Document = {id: id, title: newTitle};
-      this.documents.push(newDocument);
-      this.documentsService.uploadDocument(this.selectedFile, id).subscribe((result: any) => {
-        this.documentsService.updateDocumentsList(this.documents).subscribe(response => {
-          console.log('Zaktualizowano dane: ', response);
-        });
-        this.showAddDocumentForm = false
+      const newDocument: Leaf = {name: newTitle, file: this.selectedFile};
+      this.documentsService.postDocuments(newDocument).subscribe((res) => {
+        this.documentsService.getDocuments()
+          .subscribe((result: Document[]) => {
+            this.documents=result
+            this.showAddDocumentForm = false
+          });
+        // this.updateDocumentsList()
+
       });
     }
+
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    // if (this.addFileForm.valid && this.selectedFile) {
+    //   const newTitle: string = this.addFileForm.get('name')?.value;
+    //   const id = generateRandomID();
+    //   const newDocument: Document = {id: id, name: newTitle};
+    //   this.documents.push(newDocument);
+    //   this.documentsService.uploadDocument(this.selectedFile, id).subscribe((result: any) => {
+    //     this.documentsService.updateDocumentsList(this.documents).subscribe(response => {
+    //       console.log('Zaktualizowano dane: ', response);
+    //     });
+    //     this.showAddDocumentForm = false
+    //   });
+    // }
   }
 
   addNewList() {
+
     if (this.addListForm.valid) {
       const newTitle: string = this.addListForm.get('name')?.value;
-      const id = generateRandomID();
-      const newList: Document = {id: id, title: newTitle, items: []};
-      this.documents.push(newList);
-      this.documentsService.updateDocumentsList(this.documents).subscribe(response => {
-        this.showAddListForm = false
-        console.log('Zaktualizowano dane: ', response);
+      const newLeaf: Leaf = {name: newTitle};
+      this.documentsService.postDocuments(newLeaf).subscribe((res) => {
+        // this.updateDocumentsList()
+        this.documentsService.getDocuments()
+          .subscribe((result: Document[]) => {
+            this.documents=result
+            this.showAddDocumentForm = false
+            this.showAddListForm = false
+          });
+
       });
     }
+
+
+    // if (this.addListForm.valid) {
+    //   const newTitle: string = this.addListForm.get('name')?.value;
+    //   const id = generateRandomID();
+    //   const newList: Document = {id: id, name: newTitle, items: []};
+    //   this.documents.push(newList);
+    //   this.documentsService.updateDocumentsList(this.documents).subscribe(response => {
+    //     this.showAddListForm = false
+    //     console.log('Zaktualizowano dane: ', response);
+    //   });
+    // }
   }
 
   addMapDocument() {
-    if (this.selectedMapFile) {
-      this.documentsService.uploadMapDocument(this.selectedMapFile).subscribe(response => {
-        console.log('File uploaded successfully!', response);
-      });
-      this.isMapAvailable = true
-    }
+    // if (this.selectedMapFile) {
+    //   this.documentsService.uploadMapDocument(this.selectedMapFile).subscribe(response => {
+    //     console.log('File uploaded successfully!', response);
+    //   });
+    //   this.isMapAvailable = true
+    // }
   }
 
   addStatuteDocument() {
-    if (this.selectedStatuteFile) {
-      this.documentsService.uploadStatuteDocument(this.selectedStatuteFile).subscribe(response => {
-        console.log('File uploaded successfully!', response);
-      });
-      this.isStatuteAvailable = true
-    }
+    // if (this.selectedStatuteFile) {
+    //   this.documentsService.uploadStatuteDocument(this.selectedStatuteFile).subscribe(response => {
+    //     console.log('File uploaded successfully!', response);
+    //   });
+    //   this.isStatuteAvailable = true
+    // }
   }
 
   onItemAdded() {
-    console.log(this.documents)
-    this.documentsService.updateDocumentsList(this.documents).subscribe(response => {
-      console.log('Zaktualizowano dane: ', response);
-    });
+    this.documentsService.getDocuments()
+      .subscribe((result: Document[]) => {
+        this.documents=result
+      });
+    // console.log(this.documents)
+    // this.documentsService.updateDocumentsList(this.documents).subscribe(response => {
+    //   console.log('Zaktualizowano dane: ', response);
+    // });
   }
 
 

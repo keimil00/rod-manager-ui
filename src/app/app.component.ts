@@ -16,6 +16,6 @@ export class AppComponent {
   }
 
   isCalendarComponentActive(): boolean {
-    return this.router.url.includes('calendar');
+    return this.router.url.includes('calendar')|| this.router.url.includes('404')|| this.router.url.includes('403');
   }
 }

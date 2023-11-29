@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {Document} from "../document";
+import {Document, Leaf} from "../document";
 import {generateRandomID} from '../documents.component';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DocumentsService} from "../documents.service";
@@ -11,7 +11,7 @@ import {Subscription} from "rxjs";
   styleUrls: ['./folder-list.component.scss']
 })
 export class FolderListComponent {
-  @Input() documents!: Document[];
+  @Input() documents!: Document[] | undefined;
   @Output() itemAdded: EventEmitter<void> = new EventEmitter<void>();
   addFileForm: FormGroup;
   editFileForm: FormGroup;
@@ -65,36 +65,48 @@ export class FolderListComponent {
     return errors;
   }
 
-  downloadFile(idDocument: string) {
-    let filePath: string = ''
-    const subscription: Subscription = this.documentsService.downloadDocumentSimulate(idDocument)
-      .subscribe((result: string) => {
-        filePath = result;
-        window.open(filePath, '_blank');
-      });
-  }
+  downloadFile(link: string|undefined) {
+    window.open(link, '_blank');}
+
+  // downloadFile(idDocument: string) {
+  //   let filePath: string = ''
+  //   const subscription: Subscription = this.documentsService.downloadDocumentSimulate(idDocument)
+  //     .subscribe((result: string) => {
+  //       filePath = result;
+  //       window.open(filePath, '_blank');
+  //     });
+  // }
 
   addNewDocument(item: Document) {
     if (this.addFileForm.valid && this.selectedFile) {
       const newTitle: string = this.addFileForm.get('name')?.value;
-      const id = generateRandomID();
-      const newDocument: Document = {id: id, title: newTitle};
-      // @ts-ignore
-      item.items.push(newDocument);
-      // TODO nie wiadomo czy działa
-      this.documentsService.uploadDocument(this.selectedFile, id).subscribe((result: any)=>
-      {
+      const newDocument: Leaf = {name: newTitle, file: this.selectedFile, parent: item.id};
+      this.documentsService.postDocuments(newDocument).subscribe((res) => {
         this.itemAdded.emit();
         this.showAddDocumentForm = false
       });
-
     }
+    //
+    // if (this.addFileForm.valid && this.selectedFile) {
+    //   const newTitle: string = this.addFileForm.get('name')?.value;
+    //   const id = generateRandomID();
+    //   const newDocument: Document = {id: id, name: newTitle};
+    //   // @ts-ignore
+    //   item.items.push(newDocument);
+    //   // TODO nie wiadomo czy działa
+    //   this.documentsService.uploadDocument(this.selectedFile, id).subscribe((result: any)=>
+    //   {
+    //     this.itemAdded.emit();
+    //     this.showAddDocumentForm = false
+    //   });
+    //
+    // }
   }
   editDocument(item: Document) {
     if (this.editFileForm.valid && this.selectedFile) {
       const newTitle: string = this.editFileForm.get('name')?.value;
       const id = item.id
-      const newDocument: Document = {id: id, title: newTitle};
+      const newDocument: Document = {id: id, name: newTitle};
       // @ts-ignore
       this.documentsService.editDocument(this.selectedFile, id).subscribe((result: any)=>{
         this.showEditDocumentForm = false
@@ -105,13 +117,23 @@ export class FolderListComponent {
   addNewList(item: Document) {
     if (this.addListForm.valid) {
       const newTitle: string = this.addListForm.get('name')?.value;
-      const id = generateRandomID();
-      const newList: Document = {id: id, title: newTitle, items: []};
-      // @ts-ignore
-      item.items.push(newList);
-      this.itemAdded.emit();
-      this.showAddListForm = false
+      const newDocument: Leaf = {name: newTitle, parent: item.id};
+      this.documentsService.postDocuments(newDocument).subscribe((res) => {
+        this.itemAdded.emit();
+        this.showAddListForm = false
+      });
     }
+
+
+    // if (this.addListForm.valid) {
+    //   const newTitle: string = this.addListForm.get('name')?.value;
+    //   const id = generateRandomID();
+    //   const newList: Document = {id: id, name: newTitle, items: []};
+    //   // @ts-ignore
+    //   item.items.push(newList);
+    //   this.itemAdded.emit();
+    //   this.showAddListForm = false
+    // }
   }
 
   toggleAddDocumentForm() {
@@ -122,7 +144,7 @@ export class FolderListComponent {
     this.showEditDocumentForm = !this.showEditDocumentForm;
     this.addFileForm.reset()
     this.editFileForm.reset()
-    this.editFileForm.patchValue({name: Document.title})
+    this.editFileForm.patchValue({name: Document.name})
     this.selectedFile= null
   }
 

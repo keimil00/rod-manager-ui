@@ -3,11 +3,11 @@
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
-          {{ item.title }}
+          {{ item.name }}
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <ng-container *ngIf="!item.items">
-        <a (click)="downloadFile(item.id)" target="_blank">Otwórz dokument</a>
+      <ng-container *ngIf="item.file_url">
+        <a (click)="downloadFile(item.file_url)" target="_blank">Otwórz dokument</a>
         <div>
           <div class="left-button">
             <div>
@@ -38,7 +38,7 @@
           </div>
         </div>
       </ng-container>
-      <ng-container *ngIf="item.items">
+      <ng-container *ngIf="!item.file_url">
         <div>
           <!-- Rekurencyjnie wywołaj ten sam szablon dla elementów w podfolderach -->
           <app-folder-list [documents]="item.items" (itemAdded)="onItemAdded()"></app-folder-list>
