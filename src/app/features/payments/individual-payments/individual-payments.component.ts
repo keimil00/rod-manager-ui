@@ -10,7 +10,7 @@ import {PaymentsService} from "../payments.service";
     styleUrls: ['./individual-payments.component.scss']
 })
 export class IndividualPaymentsComponent {
-    displayedColumns: string[] = ['name', 'value', 'delete'];
+    displayedColumns: string[] = ['name', 'value', 'date','delete'];
 
     dataSource: MatTableDataSource<IndividualPayment>;
     address: string;
@@ -28,13 +28,19 @@ export class IndividualPaymentsComponent {
         this.address = this.data.address
     }
 
+    updatePayments() {
+        this.paymentsService.findUserPaymentsByID(this.userID).subscribe((data ) => {
+            this.dataSource = new MatTableDataSource(data?.paymentsList);
+        });
+    }
+
     showAddPayment() {
         this.isShowAddPayment = true;
     }
 
     delete(fee: IndividualPayment) {
-        this.paymentsService.deleteIndividualPayment(this.userID, fee.paymentID)
-        this.dataSource._updateChangeSubscription();
+        this.paymentsService.deleteIndividualPayment(this.userID, fee.paymentID).subscribe()
+        this.updatePayments()
     }
 
     closeDialog() {

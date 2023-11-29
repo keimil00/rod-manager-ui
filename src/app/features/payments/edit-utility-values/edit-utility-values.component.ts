@@ -73,7 +73,7 @@ export class EditUtilityValuesComponent {
         waterValue: waterValue,
       }
 
-      this.paymentsService.editUtilityValues(payments)
+      this.paymentsService.editUtilityValues(payments).subscribe()
       this.editUtilityValuesForm.reset()
       this.closeDialog()
     }

@@ -89,7 +89,7 @@ export class EditingUtilityFeeComponent {
             payments[1].value = waterValue;
 
             this.utilityFees = payments
-            this.paymentsService.editUtilityFee(payments)
+            this.paymentsService.editUtilityFee(payments).subscribe()
             this.editUtilityFeesForm.reset()
             this.closeDialog()
         }

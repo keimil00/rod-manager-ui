@@ -286,7 +286,7 @@ export class ListOfUsersService {
     constructor(private httpClient: HttpClient) {
     }
 
-    getProfiles2(index: number, size: number): Observable<Page<Profile>> {
+    getProfiles(index: number, size: number): Observable<Page<Profile>> {
         const profilesOnPage = this.profiles.slice((index - 1) * size, (index - 1) * size + size);
         const count = this.profiles.length;
         const page: Page<Profile> = {count, results: profilesOnPage};
@@ -295,15 +295,15 @@ export class ListOfUsersService {
     }
 
     // DZIAŁA !!!!!!
-    getProfiles(index: number, size: number): Observable<Page<Profile>> {
+    getProfiles2(index: number, size: number): Observable<Page<Profile>> {
         const url = `api/accounts/?page=${index}&page_size=${size}`;
         return this.httpClient.get<Page<Profile>>(url);
     }
 
-    // getAllProfiles(): Observable<Profile[]> {
-    //     return of(this.profiles);
-    // }
     getAllProfiles(): Observable<Profile[]> {
+        return of(this.profiles);
+    }
+    getAllProfiles2(): Observable<Profile[]> {
         const url = `api/accounts/?page=${1}&page_size=${100000}`;
         return this.httpClient.get<Page<Profile>>(url).pipe(
             map((page: Page<Profile>) => page.results)

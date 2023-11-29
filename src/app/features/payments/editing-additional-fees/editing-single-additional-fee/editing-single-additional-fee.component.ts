@@ -74,8 +74,6 @@ export class EditingSingleAdditionalFeeComponent {
 
             let payment: Fee | undefined = this.payment
 
-            this.payment = payment
-
             // @ts-ignore
             payment.name = newName;
             // @ts-ignore
@@ -83,7 +81,7 @@ export class EditingSingleAdditionalFeeComponent {
             // @ts-ignore
             payment.value = newValue;
 
-            this.paymentsService.editAdditionalFee(payment)
+            this.paymentsService.editAdditionalFee(payment).subscribe()
 
             this.editFeeForm.reset()
             this.closeDialog()
