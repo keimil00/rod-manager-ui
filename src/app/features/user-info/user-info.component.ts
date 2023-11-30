@@ -1,21 +1,15 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {Profile} from "../Profile";
-import {GardenPlot, GardenPlotBackend} from "../list-of-garden-plot/garden-plot";
+import {GardenPlot} from "../list-of-garden-plot/garden-plot";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {getTranslatedRole, Role} from "../register/user.model";
-import {
-    findGardenByID,
-    findGardenByUserID,
-    findGardenPlotIdByAddress, uniqueLeaseholderIDValidator,
-} from "../list-of-garden-plot/GardenService";
+import {findGardenByID, findGardenByUserID, findGardenPlotIdByAddress,} from "../list-of-garden-plot/GardenService";
 import {ListOfUsersService} from "../list-of-users/list-of-users.service";
 import {BackendGardenService} from "../list-of-garden-plot/backend-garden.service";
 import {StorageService} from "../../core/storage/storage.service";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {forkJoin} from "rxjs";
-import {getMatchingProfiles, profileEmailValidator} from "../list-of-users/ProfilesService";
-import {TopBarService} from "../../core/top-app-bar/top-bar.service";
+import {UserInfoService} from "./user-info.service";
 
 @Component({
     selector: 'app-user-info',
@@ -44,7 +38,7 @@ export class UserInfoComponent {
 
     constructor(private route: ActivatedRoute, formBuilder: FormBuilder, private router: Router,
                 private listOfUsersService: ListOfUsersService,
-                private backendGardenService: BackendGardenService, private storageService: StorageService, private topBarService: TopBarService) {
+                private backendGardenService: BackendGardenService, private storageService: StorageService, private userInfoService: UserInfoService) {
         this.userInfoForm = formBuilder.group({
             firstName: [{value: '', disabled: true}],
             lastName: [{value: '', disabled: true}],
@@ -66,7 +60,7 @@ export class UserInfoComponent {
             profiles: this.listOfUsersService.getAllProfiles(),
             gardenPlots: this.backendGardenService.getAllGardenPlots(),
             profile: this.listOfUsersService.getProfileById(this.id),
-            myProfile: this.topBarService.getMyProfile()
+            myProfile: this.userInfoService.getMyProfile()
         }).subscribe(data => {
             if ((!(this.storageService.getRoles().includes(Role.ADMIN) || (this.storageService.getRoles().includes(Role.MANAGER))))&&(this.id !== data.myProfile.id)) {
                 this.router.navigate(['/403']);

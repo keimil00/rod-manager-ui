@@ -1,12 +1,12 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Profile} from "../../features/Profile";
+import {Profile} from "../Profile";
 
 @Injectable({
   providedIn: 'root'
 })
-export class TopBarService {
+export class UserInfoService {
 
   constructor(private httpClient: HttpClient) { }
 

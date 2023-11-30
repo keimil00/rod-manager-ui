@@ -5,10 +5,9 @@ import {AuthService} from "../auth/auth.service";
 import {Role} from "../../features/register/user.model";
 import {StorageService} from "../storage/storage.service";
 import {SocialAuthService} from "@abacritt/angularx-social-login";
-import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
-import {DocumentsService} from "../../features/documents/documents.service";
-import {TopBarService} from "./top-bar.service";
+import {BreakpointObserver} from "@angular/cdk/layout";
 import {Profile} from "../../features/Profile";
+import {UserInfoService} from "../../features/user-info/user-info.service";
 
 @Component({
   selector: 'app-top-app-bar',
@@ -29,7 +28,7 @@ export class TopAppBarComponent {
   constructor(private router: Router,
               private storageService: StorageService,
               private authService: AuthService,
-              private socialAuthService: SocialAuthService,private breakpointObserver: BreakpointObserver, private topBarService: TopBarService) {
+              private socialAuthService: SocialAuthService,private breakpointObserver: BreakpointObserver, private userInfoService: UserInfoService) {
     this.router = router;
     this.authService = authService;
     this.storageService = storageService;
@@ -68,7 +67,7 @@ export class TopAppBarComponent {
 
   navigateToProfileComponent() {
     let id :number;
-    this.topBarService.getMyProfile().subscribe((result: Profile) => {
+    this.userInfoService.getMyProfile().subscribe((result: Profile) => {
       id = result.id;
       this.router.navigate(['/user-info', id]);
     });
