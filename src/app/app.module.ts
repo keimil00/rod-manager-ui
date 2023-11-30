@@ -119,6 +119,8 @@ import {EditUtilityValuesComponent} from "./features/payments/edit-utility-value
 import { EditDescriptionDialogComponent } from './features/garden-info/edit-description-dialog/edit-description-dialog.component';
 import { ListOfGardeneirsComponent } from './features/list-of-gardeneirs/list-of-gardeneirs.component';
 
+import { NgxSpinnerModule } from "ngx-spinner";
+
 registerLocaleData(localePl);
 
 @NgModule({
@@ -265,7 +267,9 @@ registerLocaleData(localePl);
     MatTabsModule,
     MatSnackBarModule,
     MatSliderModule,
-    CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory})
+    CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
+
+    NgxSpinnerModule,
   ],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'pl-PL'},

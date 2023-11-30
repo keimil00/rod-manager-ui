@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable, of} from "rxjs";
 import {Document, Leaf} from "./document";
-import {Payments} from "../payments/payments";
 
 @Injectable({
   providedIn: 'root'
@@ -31,48 +30,60 @@ export class DocumentsService {
     return this.httpClient.get<Document[]>(this.baseUrl);
   }
 
-  putDocuments(documents: Document[]): Observable<Document[]> {
-    return this.httpClient.put<Document[]>(this.baseUrl, documents);
+  putDocuments(leaf: Leaf, id: number): Observable<any> {
+    const url = this.baseUrl + id + '/';
+    if (leaf.file || leaf.file === null) {
+      const formData = new FormData();
+
+      if (leaf.file) {
+        formData.append('name', leaf.name);
+        formData.append('file', leaf.file);
+        if (leaf.parent) {
+          formData.append('parent', leaf.parent.toString());
+          return this.httpClient.put(url, formData);
+        }
+        return this.httpClient.put(url, formData);
+      } else {
+        if (leaf.parent) {
+          let body = {
+            name: leaf.name,
+          }
+          return this.httpClient.put(url, body);
+        } else {
+          let body = {
+            name: leaf.name,
+            parent: leaf.parent
+          }
+          return this.httpClient.put(url, body);
+        }
+      }
+    } else {
+      return this.httpClient.put(url, leaf)
+    }
   }
 
   postDocuments(leaf: Leaf): Observable<any> {
-    return this.httpClient.post(this.baseUrl, leaf);
+    if (leaf.file) {
+      const formData = new FormData();
+
+      formData.append('name', leaf.name);
+      formData.append('file', leaf.file);
+      if (leaf.parent) {
+        formData.append('parent', leaf.parent.toString());
+        return this.httpClient.post(this.baseUrl, formData);
+      }
+
+      return this.httpClient.post(this.baseUrl, formData);
+    } else {
+      return this.httpClient.post(this.baseUrl, leaf)
+    }
+    ;
   }
 
+  deleteDocument(id: number): Observable<any> {
+    return this.httpClient.delete(`${this.baseUrl}${id}/`);
+  }
 
-  // getDocuments(): Observable<Document[]> {
-  //     return of(this.documents)
-  // }
-  //
-  // uploadMapDocument(file: File): Observable<any> {
-  //     return this.uploadDocument(file, 'map')
-  // }
-  //
-  // uploadStatuteDocument(file: File): Observable<any> {
-  //     return this.uploadDocument(file, 'statute')
-  // }
-  //
-  // uploadDocument(file: File, idDocument: string): Observable<any> {
-  //     return of("test")
-  // }
-  //
-  // editDocument(file: File, idDocument: string): Observable<any> {
-  //     return of("test")
-  // }
-
-  // uploadDocument2(file: File, idDocument: string): Observable<any> {
-  //     const formData = new FormData();
-  //     formData.append('file', file);
-  //     return this.httpClient.post<any>(`${this.baseUrl}/${idDocument}`, formData);
-  // }
-  //
-  // updateDocumentsList(documents: Document[]): Observable<any> {
-  //     return of("test")
-  // }
-  //
-  // updateDocumentsList2(documents: Document[]): Observable<any> {
-  //     return this.httpClient.put<any>(this.baseUrl, documents);
-  // }
 
   isMapAvailable(): Observable<boolean> {
     return of(true)
@@ -91,12 +102,4 @@ export class DocumentsService {
     return this.httpClient.get<boolean>(`${this.baseUrl}/statute`);
   }
 
-
-  downloadDocument(idDocument: string): Observable<string> {
-    return this.httpClient.get<string>(`${this.baseUrl}/${idDocument}`);
-  }
-
-  // downloadDocumentSimulate(idDocument: string): Observable<string> {
-  //     return of('assets/Potwierdzenie_wykonania_operacji.pdf')
-  // }
 }

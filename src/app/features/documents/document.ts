@@ -13,6 +13,6 @@ export interface Document {
 
 export interface Leaf {
   name: string;
-  parent?: number;
-  file?: File
+  parent?: number|null;
+  file?: File|null;
 }
