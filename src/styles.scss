@@ -43,7 +43,8 @@ $rod-manager-ui-theme: mat.define-light-theme((
 }
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
+  }
 img {
   max-width: 100%; height: auto
 }
@@ -69,3 +70,16 @@ img {
 
 /* Importing Datepicker SCSS file. */
 @import "node_modules/ngx-bootstrap/datepicker/bs-datepicker";
+
+:root{
+  --main-font: 1rem;
+}
+
+body{
+  font-size: var(--main-font);
+}
+
+.mainTable th, .mainTable td {
+  font-size: var(--main-font);
+}
+

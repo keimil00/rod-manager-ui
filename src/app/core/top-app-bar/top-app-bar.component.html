@@ -168,6 +168,7 @@
     </mat-menu>
 
     <div class="auth-buttons">
+        <div> <button mat-button (click)="changeFont()"> <mat-icon> format_size</mat-icon> </button></div>
         <div class="login-buttons" *ngIf="isLoggedIn(); else loggedOut">
             <app-text-button text="Wyloguj" color="primary" (click)="logout()"></app-text-button>
             <!--      TODO-->

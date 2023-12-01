@@ -8,6 +8,7 @@ import {SocialAuthService} from "@abacritt/angularx-social-login";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {Profile} from "../../features/Profile";
 import {UserInfoService} from "../../features/user-info/user-info.service";
+import {FontService} from "../font.service";
 
 @Component({
   selector: 'app-top-app-bar',
@@ -21,6 +22,7 @@ export class TopAppBarComponent {
   isInVotingComponent: boolean = false;
   isInMyGardenPlotInfoComponent: boolean = false;
   isInGardenOffers: boolean = false;
+  isBigFont: boolean = false;
 
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
 
@@ -28,7 +30,7 @@ export class TopAppBarComponent {
   constructor(private router: Router,
               private storageService: StorageService,
               private authService: AuthService,
-              private socialAuthService: SocialAuthService,private breakpointObserver: BreakpointObserver, private userInfoService: UserInfoService) {
+              private socialAuthService: SocialAuthService,private breakpointObserver: BreakpointObserver, private userInfoService: UserInfoService, private fontService:FontService) {
     this.router = router;
     this.authService = authService;
     this.storageService = storageService;
@@ -74,4 +76,13 @@ export class TopAppBarComponent {
   }
 
   protected readonly Role = Role;
+
+  changeFont() {
+    this.isBigFont = !this.isBigFont;
+    if(this.isBigFont){
+      this.fontService.setBigSize();
+    }else{
+      this.fontService.setNormalSize();
+    }
+  }
 }
