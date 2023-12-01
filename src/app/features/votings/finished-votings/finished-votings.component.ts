@@ -19,6 +19,7 @@ export class FinishedVotingsComponent {
   }
 
   ngOnInit() {
+    this.scheduleMidnightRefresh();
     this.getFinishedVotes();
   }
 
@@ -47,8 +48,35 @@ export class FinishedVotingsComponent {
     });
   }
 
-  hasVotes(options: any[]): boolean {
-    return options.some(option => option.vote_count > 0);
+  // Teoretycznie to powinno odwieżać głosowania po północy, ale nie testowałem tego XD
+  scheduleMidnightRefresh() {
+    const now = new Date();
+    const currentHour = now.getHours();
+
+    // Oblicz czas do północy
+    const midnight = new Date(now); // Tworzymy kopię obecnego czasu
+    midnight.setHours(24, 0, 0, 0); // Ustawiamy na północ kolejnego dnia
+
+    const timeUntilMidnight = midnight.getTime() - now.getTime();
+
+    // Ustawienie timera na pobranie danych po północy
+    setTimeout(() => {
+      this.tryGenerateCharts2();
+      this.scheduleMidnightRefresh(); // Zaplanowanie kolejnego pobrania danych po północy
+    }, timeUntilMidnight);
+  }
+
+  tryGenerateCharts2() {
+    let stop =0
+    while (stop<10) {
+      setTimeout(() => {
+        console.log("Trying to regenerate charts")
+        this.generateCharts();
+        stop++;
+        if(this.chartElements){stop=1000}
+      }, 100);
+      return;
+    }
   }
 
   getVote(vote: VotedItem, optionId: number) {

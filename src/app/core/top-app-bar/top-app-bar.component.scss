@@ -23,7 +23,7 @@
 
     button {
       color: gray; // Set the text color to gray
-      font-size: 16px;
+      font-size: var(--16-font);
     }
 
     button:hover {
@@ -61,6 +61,9 @@
     margin: 0 10px; /* Adjust the horizontal spacing between buttons as needed */
   }
 
+  overflow-x: auto; /* Dodaje pasek przewijania poziomego */
+  white-space: nowrap; /* Zapobiega zawijaniu zawartości */
+
 }
 
 .button-menu {
@@ -89,7 +92,7 @@
 }
 
 .mat-toolbar {
-  @media only screen and (max-width: 1250px) {
+  @media only screen and (max-width: 1000px) {
     flex-direction: column;
     text-align: center;
     .title {

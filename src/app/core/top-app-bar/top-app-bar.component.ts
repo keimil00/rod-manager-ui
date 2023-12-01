@@ -79,10 +79,31 @@ export class TopAppBarComponent {
 
   changeFont() {
     this.isBigFont = !this.isBigFont;
-    if(this.isBigFont){
+    if (this.isBigFont) {
       this.fontService.setBigSize();
-    }else{
+      this.adjustStylesForBigFont();
+    } else {
       this.fontService.setNormalSize();
+      this.adjustStylesForNormalFont();
     }
   }
+
+  adjustStylesForBigFont() {
+    const toolbar = document.querySelector('.mat-toolbar');
+    if (toolbar) {
+      toolbar.classList.add('big-font-styles');
+      if (window.innerWidth <= 800) {
+        toolbar.classList.add('responsive-big-font-styles');
+      }
+    }
+  }
+
+  adjustStylesForNormalFont() {
+    const toolbar = document.querySelector('.mat-toolbar');
+    if (toolbar) {
+      toolbar.classList.remove('big-font-styles');
+      toolbar.classList.remove('responsive-big-font-styles');
+    }
+  }
+
 }

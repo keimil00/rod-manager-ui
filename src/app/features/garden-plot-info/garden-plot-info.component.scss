@@ -36,12 +36,12 @@
 
 .title {
   text-align: center;
-  font-size: 30px;
+  font-size: var(--30-font);
 }
 
 .small-title {
   text-align: left;
-  font-size: 25px;
+  font-size: var(--25-font);
 }
 
 .tabel-card {
@@ -106,7 +106,7 @@ tr::after {
 
 .date {
   color: red;
-  font-size: 20px;
+  font-size: var(--20-font);
   padding: 5px;
 }
 

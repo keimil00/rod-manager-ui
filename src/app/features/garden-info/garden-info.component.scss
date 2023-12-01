@@ -70,7 +70,7 @@
 .document {
   margin-bottom: 10px;
   text-align: center;
-  font-size: 30px;
+  font-size: var(--30-font);
 }
 
 .full-width {
@@ -82,7 +82,7 @@
 
 .title-managment {
   font-weight: bold;
-  font-size: 25px;
+  font-size: var(--25-font);
   text-align: center;
   margin-bottom: 10px;
 }
@@ -111,7 +111,7 @@ a:hover {
 }
 
 .description{
-  font-size: 14px;
+  font-size: var(--14-font);
   text-align: center;
 }
 
@@ -143,11 +143,11 @@ a:hover {
     right: 20px;
   }
   .title {
-    font-size: 20px;
+    font-size: var(--20-font);
   }
 
   .title-managment, .document {
-    font-size: 18px;
+    font-size: var(--18-font);
     margin-bottom: 5px;
   }
 
@@ -176,13 +176,13 @@ a:hover {
     right: 20px;
   }
   .title {
-    font-size: 22px;
+    font-size: var(--22-font);
   }
   .document {
-    font-size: 20px;
+    font-size: var(--20-font);
   }
   .title-managment {
-    font-size: 20px;
+    font-size: var(--20-font);
     margin-bottom: 5px;
   }
 
@@ -199,13 +199,13 @@ a:hover {
   }
 
   .title {
-    font-size: 24px;
+    font-size: var(--24-font);
   }
   .document {
-    font-size: 22px;
+    font-size: var(--22-font);
   }
   .title-managment {
-    font-size: 20px;
+    font-size: var(--20-font);
   }
   .floating-button {
     bottom: 20px;

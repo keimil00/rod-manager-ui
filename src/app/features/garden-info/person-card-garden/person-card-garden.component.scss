@@ -9,13 +9,13 @@
 
 .position {
   font-weight: bold;
-  font-size: 20px;
+  font-size: var(--20-font);
   text-align: center;
   margin-bottom: 5px;
 }
 
 .text {
-  font-size: 16px;
+  font-size: var(--16-font);
 }
 
 mat-grid-tile {
@@ -27,11 +27,11 @@ mat-grid-tile {
     margin: 5px;
   }
   .position {
-    font-size: 16px;
+    font-size: var(--16-font);
     margin-bottom: 1px;
   }
   .text {
-    font-size: 12px;
+    font-size: var(--12-font);
   }
 }
 @media only screen and (min-width: 400px) and (max-width: 551px) {
@@ -40,11 +40,11 @@ mat-grid-tile {
     margin: 5px;
   }
   .position {
-    font-size: 18px;
+    font-size: var(--18-font);
     margin-bottom: 1px;
   }
   .text {
-    font-size: 14px;
+    font-size: var(--14-font);
   }
 }
 @media only screen and (min-width: 551px) and (max-width: 700px) {
@@ -53,11 +53,11 @@ mat-grid-tile {
     margin: 5px;
   }
   .position {
-    font-size: 14px;
+    font-size: var(--14-font);
     margin-bottom: 1px;
   }
   .text {
-    font-size: 10px;
+    font-size: var(--10-font);
   }
 }
 @media only screen and (min-width: 700px) and (max-width: 850px) {
@@ -66,10 +66,10 @@ mat-grid-tile {
     margin: 5px;
   }
   .position {
-    font-size: 16px;
+    font-size: var(--16-font);
     margin-bottom: 1px;
   }
   .text {
-    font-size: 12px;
+    font-size: var(--12-font);
   }
 }

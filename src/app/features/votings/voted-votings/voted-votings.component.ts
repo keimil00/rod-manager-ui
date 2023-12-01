@@ -22,6 +22,7 @@ export class VotedVotingsComponent {
   }
 
   ngOnInit() {
+    this.scheduleMidnightRefresh();
     this.getVotedVotes();
     this.addVoteFinishedSubscription = this.votingService.addVoteFinished$.subscribe(() => {
       this.votingService.getVotedVoting().subscribe((votes: VotedItem[]) => {
@@ -40,8 +41,25 @@ export class VotedVotingsComponent {
     this.tryGenerateCharts()
   }
 
+  // Teoretycznie to powinno odwieżać głosowania po północy, ale nie testowałem tego XD
+  scheduleMidnightRefresh() {
+    const now = new Date();
+    const currentHour = now.getHours();
+
+    // Oblicz czas do północy
+    const midnight = new Date(now); // Tworzymy kopię obecnego czasu
+    midnight.setHours(24, 0, 0, 0); // Ustawiamy na północ kolejnego dnia
+
+    const timeUntilMidnight = midnight.getTime() - now.getTime();
+
+    // Ustawienie timera na pobranie danych po północy
+    setTimeout(() => {
+      this.tryGenerateCharts2();
+      this.scheduleMidnightRefresh(); // Zaplanowanie kolejnego pobrania danych po północy
+    }, timeUntilMidnight);
+  }
+
   tryGenerateCharts2() {
-    // Check if we have all the necessary data
     let stop =0
     while (stop<10) {
       setTimeout(() => {
@@ -49,12 +67,9 @@ export class VotedVotingsComponent {
         this.generateCharts();
         stop++;
         if(this.chartElements){stop=1000}
-      }, 100); // Wait for 100ms before the next attempt
+      }, 100);
       return;
     }
-
-    // We have all the data, generate the charts
-
   }
 
 

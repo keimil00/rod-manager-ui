@@ -25,6 +25,7 @@ export class CurrentVotingsComponent {
         this.addVotingFinishedSubscription = this.votingService.addVotingFinished$.subscribe(() => {
             this.getCurrentVoting();
         });
+        this.scheduleMidnightRefresh();
     }
 
     ngOnDestroy() {
@@ -42,6 +43,24 @@ export class CurrentVotingsComponent {
         for (const vote of this.currentVotes) {
             this.selectedOptions[vote.id] = new FormControl();
         }
+    }
+
+    // Teoretycznie to powinno odwieżać głosowania po północy, ale nie testowałem tego XD
+    scheduleMidnightRefresh() {
+      const now = new Date();
+      const currentHour = now.getHours();
+
+      // Oblicz czas do północy
+      const midnight = new Date(now); // Tworzymy kopię obecnego czasu
+      midnight.setHours(24, 0, 0, 0); // Ustawiamy na północ kolejnego dnia
+
+      const timeUntilMidnight = midnight.getTime() - now.getTime();
+
+      // Ustawienie timera na pobranie danych po północy
+      setTimeout(() => {
+        this.getCurrentVoting();
+        this.scheduleMidnightRefresh(); // Zaplanowanie kolejnego pobrania danych po północy
+      }, timeUntilMidnight);
     }
 
     selectOption(voteId: number, selectedOption: number) {

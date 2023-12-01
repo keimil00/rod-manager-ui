@@ -104,16 +104,16 @@ tr::after {
 
 .title {
   text-align: center;
-  font-size: 30px;
+  font-size: var(--30-font);
 }
 
 .small-title {
   text-align: left;
-  font-size: 22px;
+  font-size: var(--22-font);
 }
 .very-small-title {
   text-align: left;
-  font-size: 13px;
+  font-size: var(--13-font);
 }
 
 .editButton {
@@ -137,7 +137,7 @@ tr::after {
 
 .date {
   color: red;
-  font-size: 20px;
+  font-size: var(--20-font);
   padding: 5px;
 }
 
@@ -168,7 +168,7 @@ tr::after {
 }
 
 .small-text{
-  font-size: 11px;
+  font-size: var(--11-font);
 }
 
 .individual-payments-button{
@@ -178,7 +178,7 @@ tr::after {
   align-items: center; /* Wyśrodkowanie zawartości w pionie */
   justify-content: center; /* Wyśrodkowanie zawartości w poziomie */
 
-  font-size: 14px; /* Set the font size */
+  font-size: var(--14-font);; /* Set the font size */
   font-weight: 500; /* Set the font weight */
   text-transform: uppercase; /* Make text uppercase */
   font-family: 'Roboto', sans-serif;

@@ -21,11 +21,11 @@ img {
 }
 
 h1 {
-  font-size: 36px;
+  font-size: var(--36-font);
   color: #333;
 }
 
 p {
-  font-size: 18px;
+  font-size: var(--18-font);
   color: #666;
 }

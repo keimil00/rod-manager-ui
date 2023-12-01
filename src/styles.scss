@@ -73,6 +73,23 @@ img {
 
 :root{
   --main-font: 1rem;
+  --10-font: 10px;
+  --11-font: 11px;
+  --12-font: 12px;
+  --13-font: 13px;
+  --14-font: 14px;
+  --16-font: 16px;
+  --17-font: 17px;
+  --18-font: 18px;
+  --20-font: 20px;
+  --22-font: 22px;
+  --25-font: 25px;
+  --30-font: 30px;
+  --32-font: 32px;
+  --36-font: 36px;
+  --h2-font: 1.8em;
+
+
 }
 
 body{
@@ -80,6 +97,23 @@ body{
 }
 
 .mainTable th, .mainTable td {
+  font-size: var(--16-font);
+}
+
+h2{
+  font-size: var(--h2-font);
+}
+
+mat-label{
   font-size: var(--main-font);
 }
+
+input{
+  font-size: var(--main-font);
+}
+
+
+
+
+
 
