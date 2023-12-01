@@ -2,24 +2,34 @@ import {Component, ElementRef, QueryList, ViewChildren} from '@angular/core';
 import * as ApexCharts from 'apexcharts';
 import {VotingItem} from "../voting-item.model";
 import {VotingsService} from "../votings.service";
-
+import {Subscription} from "rxjs";
 @Component({
-  selector: 'app-finished-votings',
-  templateUrl: './finished-votings.component.html',
-  styleUrls: ['./finished-votings.component.scss']
+  selector: 'app-voted-votings',
+  templateUrl: './voted-votings.component.html',
+  styleUrls: ['./voted-votings.component.scss']
 })
-export class FinishedVotingsComponent {
+export class VotedVotingsComponent {
 
   // @ts-ignore
   finishedVotes: VotingItem[]
   // @ts-ignore
   @ViewChildren('chart') chartElements: QueryList<ElementRef>;
 
+  // @ts-ignore
+  private addVoteFinishedSubscription: Subscription;
+
   constructor(private votingService: VotingsService) {
   }
 
   ngOnInit() {
     this.getFinishedVotes();
+    this.addVoteFinishedSubscription = this.votingService.addVoteFinished$.subscribe(() => {
+      this.getFinishedVotes();
+    });
+  }
+
+  ngOnDestroy() {
+    this.addVoteFinishedSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {

@@ -1,0 +1,48 @@
+<div class="page-container">
+  <mat-card class="large-card-size">
+    <mat-card-header class="row-container">
+      <div class="center-item">
+        <h2 class="title">Zagłosowano w głosowaniach:</h2>
+      </div>
+
+    </mat-card-header>
+    <mat-card-content>
+
+      <div *ngFor="let vote of finishedVotes">
+
+        <div class="page-container">
+          <mat-card class="vote-card-size">
+            <mat-card-header class="row-container">
+              <div class="left-item">
+                <h2 class="title2">{{ vote.title }}</h2>
+                <h2 class="title3">{{ vote.description }}</h2>
+              </div>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="page-container">
+                <div *ngIf="hasVotes(vote.options)" #chart>
+                  <!-- Jeśli są jakiekolwiek głosy -->
+                  <!-- Tutaj dodaj kod wyświetlający wykres lub inne dane -->
+                </div>
+                <div *ngIf="!hasVotes(vote.options)">
+                  <!-- Jeśli nie ma żadnych głosów -->
+                  <p>Nie oddano głosów.</p>
+                  <p>opcje:</p>
+                  <ul>
+                    <li *ngFor="let option of vote.options">{{ option.label }}</li>
+                  </ul>
+                </div>
+                <hr>
+              </div>
+            </mat-card-content>
+            <mat-card-footer>
+              <h2 class="title4">
+                {{vote.end_date | date:'dd.MM.yyyy'}}
+              </h2>
+            </mat-card-footer>
+          </mat-card>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

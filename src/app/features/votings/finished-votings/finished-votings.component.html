@@ -20,13 +20,24 @@
                         </mat-card-header>
                         <mat-card-content>
                             <div class="page-container">
-                                <div #chart></div>
-                                <hr>
+                              <div *ngIf="hasVotes(vote.options)" #chart>
+                                <!-- Jeśli są jakiekolwiek głosy -->
+                                <!-- Tutaj dodaj kod wyświetlający wykres lub inne dane -->
+                              </div>
+                              <div *ngIf="!hasVotes(vote.options)">
+                                <!-- Jeśli nie ma żadnych głosów -->
+                                <p>Nie oddano głosów.</p>
+                                <p>opcje:</p>
+                                <ul>
+                                  <li *ngFor="let option of vote.options">{{ option.label }}</li>
+                                </ul>
+                              </div>
+                              <hr>
                             </div>
                         </mat-card-content>
                         <mat-card-footer>
                             <h2 class="title4">
-                                {{vote.finishDate | date:'dd.MM.yyyy'}}
+                                {{vote.end_date | date:'dd.MM.yyyy'}}
                             </h2>
                         </mat-card-footer>
                     </mat-card>

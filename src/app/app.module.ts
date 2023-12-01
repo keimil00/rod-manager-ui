@@ -120,6 +120,7 @@ import { EditDescriptionDialogComponent } from './features/garden-info/edit-desc
 import { ListOfGardeneirsComponent } from './features/list-of-gardeneirs/list-of-gardeneirs.component';
 
 import { NgxSpinnerModule } from "ngx-spinner";
+import { VotedVotingsComponent } from './features/votings/voted-votings/voted-votings.component';
 
 registerLocaleData(localePl);
 
@@ -223,7 +224,8 @@ registerLocaleData(localePl);
     EventDetailsComponent,
     EditUtilityValuesComponent,
     EditDescriptionDialogComponent,
-    ListOfGardeneirsComponent
+    ListOfGardeneirsComponent,
+    VotedVotingsComponent
   ],
 
   imports: [

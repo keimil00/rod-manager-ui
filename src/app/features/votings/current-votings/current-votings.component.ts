@@ -21,9 +21,9 @@ export class CurrentVotingsComponent {
     }
 
     ngOnInit() {
-        this.getCurrentVotes();
+        this.getCurrentVoting();
         this.addVotingFinishedSubscription = this.votingService.addVotingFinished$.subscribe(() => {
-            this.getCurrentVotes();
+            this.getCurrentVoting();
         });
     }
 
@@ -31,7 +31,7 @@ export class CurrentVotingsComponent {
         this.addVotingFinishedSubscription.unsubscribe();
     }
 
-    getCurrentVotes() {
+    getCurrentVoting() {
         this.votingService.getCurrentVotes().subscribe((votes: VotingItem[]) => {
             this.currentVotes = votes;
             this.initializeFormControls();
@@ -57,12 +57,14 @@ export class CurrentVotingsComponent {
             const selectedOption = this.selectedOptions[voteId].value;
             const currentVote = this.currentVotes.find(vote => vote.id === voteId);
             if (currentVote) {
-                const selectedOptionID = currentVote.options.find(option => option.optionId === selectedOption)?.optionId;
+                const selectedOptionID = currentVote.options.find(option => option.option_id === selectedOption)?.option_id;
                 if (selectedOptionID) {
                   console.log(voteId, selectedOptionID);
                     this.votingService.voteOn(voteId, selectedOptionID).subscribe((result: string) => {
                         this.showSuccessMessage(`${selectedOptionID}: ${currentVote.title}`);
                         this.selectedOptions[voteId].reset(); // Resetuj wartość wybranej opcji po zatwierdzeniu głosu
+                        this.getCurrentVoting();
+                        this.votingService.notifyAddVoteFinished()
                     });
                 }
             }
