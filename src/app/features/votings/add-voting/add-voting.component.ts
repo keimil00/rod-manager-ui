@@ -63,14 +63,14 @@ export class AddVotingComponent {
       }
 
       const newTitle: string = this.addVotingForm.get('title')?.value;
-      let newDescription: string | null = this.addVotingForm.get('title')?.value;
+      let newDescription: string | null = this.addVotingForm.get('description')?.value;
       let newDate: Date = this.addVotingForm.get('date')?.value;
       const uniqueId = new Date().getTime()+ Math.floor(Math.random() * 1000);
 
       const optionsFormArray = this.addVotingForm.get('options') as FormArray;
       const options2: VotingOption[] = optionsFormArray.controls.map((control: AbstractControl) => {
         const label = control.get('label')?.value || '';
-        const optionId =  optionsFormArray.controls.indexOf(control);
+        const optionId =  optionsFormArray.controls.indexOf(control)+1;
         const VotingOption: VotingOption = {option_id: optionId, label, vote_count: 0};
         return VotingOption
       });

@@ -1,6 +1,6 @@
 import {Component, ElementRef, QueryList, ViewChildren} from '@angular/core';
 import * as ApexCharts from 'apexcharts';
-import {VotingItem} from "../voting-item.model";
+import {VotedItem, VotingItem} from "../voting-item.model";
 import {VotingsService} from "../votings.service";
 import {Subscription} from "rxjs";
 @Component({
@@ -11,7 +11,7 @@ import {Subscription} from "rxjs";
 export class VotedVotingsComponent {
 
   // @ts-ignore
-  finishedVotes: VotingItem[]
+  finishedVotes: VotedItem[]
   // @ts-ignore
   @ViewChildren('chart') chartElements: QueryList<ElementRef>;
 
@@ -22,9 +22,12 @@ export class VotedVotingsComponent {
   }
 
   ngOnInit() {
-    this.getFinishedVotes();
+    this.getVotedVotes();
     this.addVoteFinishedSubscription = this.votingService.addVoteFinished$.subscribe(() => {
-      this.getFinishedVotes();
+      this.votingService.getVotedVoting().subscribe((votes: VotedItem[]) => {
+        this.finishedVotes = votes;
+        this.tryGenerateCharts2();
+      });
     });
   }
 
@@ -36,6 +39,24 @@ export class VotedVotingsComponent {
     // TODO - this is a workaround for a bug in ApexCharts
     this.tryGenerateCharts()
   }
+
+  tryGenerateCharts2() {
+    // Check if we have all the necessary data
+    let stop =0
+    while (stop<10) {
+      setTimeout(() => {
+        console.log("Trying to regenerate charts")
+        this.generateCharts();
+        stop++;
+        if(this.chartElements){stop=1000}
+      }, 100); // Wait for 100ms before the next attempt
+      return;
+    }
+
+    // We have all the data, generate the charts
+
+  }
+
 
   tryGenerateCharts() {
     // Check if we have all the necessary data
@@ -51,16 +72,15 @@ export class VotedVotingsComponent {
     this.generateCharts();
   }
 
-  getFinishedVotes() {
-    this.votingService.getFinishedVotes().subscribe((votes: VotingItem[]) => {
+  getVotedVotes() {
+    this.votingService.getVotedVoting().subscribe((votes: VotedItem[]) => {
       this.finishedVotes = votes;
     });
   }
 
-  hasVotes(options: any[]): boolean {
-    return options.some(option => option.vote_count > 0);
+  getVote(vote: VotedItem, optionId: number) {
+    return vote.options.find(option => option.option_id === optionId)?.label;
   }
-
 
 
   generateCharts() {

@@ -16,21 +16,12 @@
               <div class="left-item">
                 <h2 class="title2">{{ vote.title }}</h2>
                 <h2 class="title3">{{ vote.description }}</h2>
+                <h2 class="title3">{{"Zagłosowano na: "}}<span class="red-text">{{getVote(vote, vote.user_vote)}}</span></h2>
               </div>
             </mat-card-header>
             <mat-card-content>
               <div class="page-container">
-                <div *ngIf="hasVotes(vote.options)" #chart>
-                  <!-- Jeśli są jakiekolwiek głosy -->
-                  <!-- Tutaj dodaj kod wyświetlający wykres lub inne dane -->
-                </div>
-                <div *ngIf="!hasVotes(vote.options)">
-                  <!-- Jeśli nie ma żadnych głosów -->
-                  <p>Nie oddano głosów.</p>
-                  <p>opcje:</p>
-                  <ul>
-                    <li *ngFor="let option of vote.options">{{ option.label }}</li>
-                  </ul>
+                <div #chart>
                 </div>
                 <hr>
               </div>

@@ -23,6 +23,16 @@ export interface VotingOption {
 }
 
 
+export interface VotedItem {
+  id: number;
+  title: string;
+  description: string;
+  options: VotingOption[];
+  end_date: Date;
+  user_vote: number;
+}
+
+
 // export interface VotingOption2 {
 //   optionId: number;
 //   label: string;

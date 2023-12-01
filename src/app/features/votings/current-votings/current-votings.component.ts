@@ -54,14 +54,15 @@ export class CurrentVotingsComponent {
 
     submitVote(voteId: number) {
         if (this.isVoteValid(voteId)) {
-            const selectedOption = this.selectedOptions[voteId].value;
+            const selectedOptionID = this.selectedOptions[voteId].value;
             const currentVote = this.currentVotes.find(vote => vote.id === voteId);
             if (currentVote) {
-                const selectedOptionID = currentVote.options.find(option => option.option_id === selectedOption)?.option_id;
+              const selectedOption = currentVote.options.find(option => option.option_id === selectedOptionID)?.label;
+                // @ts-ignore
                 if (selectedOptionID) {
                   console.log(voteId, selectedOptionID);
                     this.votingService.voteOn(voteId, selectedOptionID).subscribe((result: string) => {
-                        this.showSuccessMessage(`${selectedOptionID}: ${currentVote.title}`);
+                        this.showSuccessMessage(`${selectedOption}: w głosowaniu: ${currentVote.title}`);
                         this.selectedOptions[voteId].reset(); // Resetuj wartość wybranej opcji po zatwierdzeniu głosu
                         this.getCurrentVoting();
                         this.votingService.notifyAddVoteFinished()

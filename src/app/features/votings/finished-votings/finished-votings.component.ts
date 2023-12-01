@@ -1,6 +1,6 @@
 import {Component, ElementRef, QueryList, ViewChildren} from '@angular/core';
 import * as ApexCharts from 'apexcharts';
-import {VotingItem} from "../voting-item.model";
+import {VotedItem, VotingItem} from "../voting-item.model";
 import {VotingsService} from "../votings.service";
 
 @Component({
@@ -11,7 +11,7 @@ import {VotingsService} from "../votings.service";
 export class FinishedVotingsComponent {
 
   // @ts-ignore
-  finishedVotes: VotingItem[]
+  finishedVotes: VotedItem[]
   // @ts-ignore
   @ViewChildren('chart') chartElements: QueryList<ElementRef>;
 
@@ -42,7 +42,7 @@ export class FinishedVotingsComponent {
   }
 
   getFinishedVotes() {
-    this.votingService.getFinishedVotes().subscribe((votes: VotingItem[]) => {
+    this.votingService.getFinishedVotes().subscribe((votes: VotedItem[]) => {
       this.finishedVotes = votes;
     });
   }
@@ -51,12 +51,17 @@ export class FinishedVotingsComponent {
     return options.some(option => option.vote_count > 0);
   }
 
+  getVote(vote: VotedItem, optionId: number) {
+    return vote.options.find(option => option.option_id === optionId)?.label;
+  }
 
 
   generateCharts() {
     this.chartElements.forEach((element, index) => {
       const vote = this.finishedVotes[index];
+      const totalVotes = vote.options.reduce((acc: number, option: { vote_count: number }) => acc + option.vote_count, 0);
 
+      if (totalVotes > 0) {
       const chartOptions: ApexCharts.ApexOptions = {
         theme: {
           mode: 'light',
@@ -99,7 +104,23 @@ export class FinishedVotingsComponent {
         ]
       };
       const chart = new ApexCharts(element.nativeElement, chartOptions);
-      chart.render();
+      chart.render();}
+      else {
+        const noVotesText = document.createElement('p');
+        noVotesText.textContent = "Nie oddano żadnego głosu.";
+        element.nativeElement.appendChild(noVotesText);
+        const optionText = document.createElement('p');
+        optionText.textContent = "Dostępne opcje:";
+        element.nativeElement.appendChild(optionText);
+
+        const optionsList = document.createElement('ul');
+        vote.options.forEach((option: { label: string }) => {
+          const optionItem = document.createElement('li');
+          optionItem.textContent = option.label;
+          optionsList.appendChild(optionItem);
+        });
+        element.nativeElement.appendChild(optionsList);
+      }
     });
   }
 }

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable, of, Subject} from "rxjs";
-import {VotingItem} from "./voting-item.model";
+import {VotedItem, VotingItem} from "./voting-item.model";
 import {HttpClient} from "@angular/common/http";
 import {Page} from "../../shared/paginator/page.model";
 import {Profile} from "../Profile";
@@ -96,12 +96,18 @@ export class VotingsService {
         // Symulujemy pobieranie skończonych głosowań
         return of(this.finishedVotes);
     }
-    getFinishedVotes(): Observable<VotingItem[]> {
+    getFinishedVotes(): Observable<VotedItem[]> {
       const curentUrl = `${this.url}completed/`;
-      return this.httpClient.get<VotingItem[]>(curentUrl);
+      return this.httpClient.get<VotedItem[]>(curentUrl);
     }
 
-    addNewVoting1(voting: VotingItem): Observable<string> {
+    getVotedVoting(): Observable<VotedItem[]> {
+      const curentUrl = `${this.url}voted/`;
+      return this.httpClient.get<VotedItem[]>(curentUrl);
+    }
+
+
+  addNewVoting1(voting: VotingItem): Observable<string> {
 
         this.currentVotes.push(voting);
 
