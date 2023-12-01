@@ -19,6 +19,7 @@ import {AccesDeniedComponent} from "./features/acces-denied/acces-denied.compone
 import {VotingsComponent} from "./features/votings/votings.component";
 import {GardenOffersComponent} from "./features/garden-offers/garden-offers.component";
 import {CalendarComponent} from "./features/calendar/calendar.component";
+import {ListOfGardeneirsComponent} from "./features/list-of-gardeneirs/list-of-gardeneirs.component";
 
 
 const routes: Routes = [
@@ -31,6 +32,7 @@ const routes: Routes = [
   { path: 'garden-info', component: GardenInfoComponent },
   { path: 'documents', component: DocumentsComponent},
   { path: 'list-of-garden-plot', component: ListOfGardenPlotComponent},
+  { path: 'list-of-gardeneirs', component: ListOfGardeneirsComponent},
   { path: 'list-of-users', component: ListOfUsersComponent},
   { path: 'counters', component: CountersComponent},
   { path: 'user-info/:id', component: UserInfoComponent},
