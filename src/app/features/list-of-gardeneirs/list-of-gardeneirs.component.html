@@ -1,8 +1,11 @@
-<div class="page-container">
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.9)" size = "large" color = "#009688" type = "square-jelly-box" [fullScreen] = "true"><p style="color: white" ></p></ngx-spinner>
+
+<div class="page-container"
+     [ngClass]="{'blurred-background': isInEdit}">>
   <mat-card class="large-card-size">
     <mat-card-header class="row-container">
       <div class="center-item row-item">
-        <h2 class="title">Lista użytkowników</h2>
+        <h2 class="title">Lista zaległości</h2>
       </div>
 
     </mat-card-header>
@@ -24,17 +27,20 @@
         </ng-container>
 
         <ng-container matColumnDef="email">
-          <th mat-header-cell *matHeaderCellDef>email</th>
+          <th mat-header-cell *matHeaderCellDef>Email</th>
           <td mat-cell *matCellDef="let profile">{{ profile.email}}</td>
         </ng-container>
 
+        <ng-container matColumnDef="value">
+          <th mat-header-cell *matHeaderCellDef>Zadłużenie</th>
+          <td mat-cell *matCellDef="let profile" class="red">{{ profile.paymentAmount+' zł'}}</td>
+        </ng-container>
 
         <ng-container matColumnDef="info">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let profile" class="icon-size">
             <button mat-icon-button class="icon-button"
-                    (click)="navigateToProfileComponent(profile.id)"
-                    *appHasRole="[Role.MANAGER, Role.ADMIN]">
+                    (click)="selectEditPayments(profile.id)">
               <mat-icon>info</mat-icon>
             </button>
           </td>
@@ -47,7 +53,7 @@
       <app-paginator
         #paginator
         [loadDataFunction]="fetchData.bind(this)"
-        [totalItemsCount]="this.totalUsersCount"
+        [totalItemsCount]="this.totalGardeneirsCount"
         [pageSize]="this.DefoultpageSize"
       ></app-paginator>
     </mat-card-content>

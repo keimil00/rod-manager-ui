@@ -1,11 +1,12 @@
 import {ChangeDetectorRef, Component, ViewChild} from '@angular/core';
-import {getTranslatedRole, Role} from "../register/user.model";
+import {Role} from "../register/user.model";
 import {MatTableDataSource} from "@angular/material/table";
 import {Profile} from "../Profile";
 import {MatPaginator} from "@angular/material/paginator";
-import {Router} from "@angular/router";
 import {ListOfUsersService} from "../list-of-users/list-of-users.service";
 import {Page} from "../../shared/paginator/page.model";
+import {MatDialog} from "@angular/material/dialog";
+import {UserPaymentsComponent} from "./payments/user-payments.component";
 
 @Component({
   selector: 'app-list-of-gardeneirs',
@@ -14,12 +15,12 @@ import {Page} from "../../shared/paginator/page.model";
 })
 export class ListOfGardeneirsComponent {
 
-  displayedColumns: string[] = ['firstName', 'lastName', 'phoneNumber', 'email', 'accountStatus', 'edit'];
+  displayedColumns: string[] = ['firstName', 'lastName', 'phoneNumber', 'email','value', 'info'];
 
   dataProfiles = new MatTableDataSource<Profile>();
+  isInEdit = false;
 
-  profilesLoaded: Profile[] = [];
-  totalUsersCount: number = 0;
+  totalGardeneirsCount: number = 0;
   DefoultpageSize = 10;
 
   currentPageIndex = 1;
@@ -27,7 +28,7 @@ export class ListOfGardeneirsComponent {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private router: Router, private listOfUsersService: ListOfUsersService, private changeDetectorRef: ChangeDetectorRef) {
+  constructor( private listOfUsersService: ListOfUsersService, private changeDetectorRef: ChangeDetectorRef,private dialog: MatDialog) {
     this.initData();
     this.dataProfiles.paginator = this.paginator;
   }
@@ -37,8 +38,8 @@ export class ListOfGardeneirsComponent {
   }
 
   loadProfiles(index: number, size: number): void {
-    this.listOfUsersService.getProfiles(index, size).subscribe((page: Page<Profile>) => {
-      this.totalUsersCount = page.count;
+    this.listOfUsersService.getALLGardeiners(index, size).subscribe((page: Page<Profile>) => {
+      this.totalGardeneirsCount = page.count;
       this.dataProfiles = new MatTableDataSource<Profile>(page.results);
     });
   }
@@ -47,9 +48,9 @@ export class ListOfGardeneirsComponent {
     this.currentPageIndex = pageIndex;
     this.currentPageSize = pageSize;
 
-    this.listOfUsersService.getProfiles(pageIndex, pageSize).subscribe(
+    this.listOfUsersService.getALLGardeiners(pageIndex, pageSize).subscribe(
       data => {
-        this.totalUsersCount = data.count;
+        this.totalGardeneirsCount = data.count;
         this.dataProfiles = new MatTableDataSource<Profile>(data.results);
       },
       error => {
@@ -61,9 +62,42 @@ export class ListOfGardeneirsComponent {
     );
   }
 
-  navigateToProfileComponent(id: string) {
+  selectEditPayments(id: number) {
+    this.isInEdit=true
+    this.showDetailsDialog(id);
   }
 
+
+  showDetailsDialog(profileID:number) {
+    const dialogRef = this.dialog.open(UserPaymentsComponent, {
+      width: '4000px',
+      data: {profileID},
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.updateData()
+    });
+  }
+
+  closeEdit(){
+    this.isInEdit = false
+  }
+
+  updateData() {
+    this.listOfUsersService.getALLGardeiners(this.currentPageIndex, this.currentPageSize).subscribe(
+        data => {
+          this.totalGardeneirsCount = data.count;
+          this.dataProfiles = new MatTableDataSource<Profile>(data.results);
+        },
+        error => {
+          console.error(error);
+        },
+        () => {
+          this.changeDetectorRef.detectChanges();
+          this.closeEdit()
+        }
+    );
+  }
 
   protected readonly Role = Role;
 }

@@ -6,7 +6,6 @@ import {Payment} from "./PaymentList";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {BackendGardenService} from "../backend-garden.service";
-import {VotingItem} from "../../votings/voting-item.model";
 import {PaymentsService} from "../../payments/payments.service";
 
 
@@ -33,11 +32,11 @@ export class GardenPlotDetailsComponent {
   errorMessages = {
     value: [
       {type: 'required', message: 'Proszę podać kwote'},
-      {type: 'min', message: 'Kwota musi być większa od zera'},
       {type: 'pattern', message: 'Podaj odpowiednią kwote'}
     ],
     date: [
-      {type: 'required', message: 'Proszę podać poprawną date'}
+      {type: 'required', message: 'Proszę podać poprawną date'},
+      {type: 'notFuture', message: 'Nie można podać daty z przyszłości'},
     ]
   };
 
@@ -56,12 +55,9 @@ export class GardenPlotDetailsComponent {
     this.paymentForm = formBuilder.group({
       value: ['', [
         Validators.required,
-        Validators.pattern(/^\d+(\.\d{1,2})?/),
-        Validators.min(0.01)
+        Validators.pattern(/^-?\d+(\.\d{1,2})?$/)
       ]],
-      date: ['', [
-        Validators.required,
-      ]]
+      date: ['', [Validators.required, this.pastDateValidator()]],
     });
   }
 
@@ -114,11 +110,6 @@ export class GardenPlotDetailsComponent {
     }
   }
 
-  addPaymentBackend(leaseholderID: number | undefined, payment: Payment) {
-    //obizyc kwote do zaplaty
-
-  }
-
   validationErrors(controlName: string): any[] {
     let errors = []
     // @ts-ignore
@@ -128,5 +119,12 @@ export class GardenPlotDetailsComponent {
       }
     }
     return errors;
+  }
+  pastDateValidator() {
+    return (control: { value: Date }) => {
+      const currentDate = new Date();
+      const inputDate = control.value;
+      return inputDate <= currentDate ? null : {notFuture: true};
+    };
   }
 }

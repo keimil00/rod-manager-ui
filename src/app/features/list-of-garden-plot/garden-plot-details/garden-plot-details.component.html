@@ -101,8 +101,8 @@
                   <div class="row-item">
                     <mat-form-field class="full-width">
                       <mat-label>Kwota</mat-label>
-                      <input matInput type="text" placeholder="Kwota" formControlName="value" required
-                             pattern="[0-9]+(\.[0-9]+)?">
+                      <input matInput type="text" placeholder="Kwota" formControlName="value">
+                      <mat-hint>Wprowadź liczbę, np. -123.45</mat-hint>
                       <mat-error *ngFor="let error of validationErrors('value')">
                         {{ error.message }}
                       </mat-error>

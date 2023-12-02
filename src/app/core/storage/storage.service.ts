@@ -28,7 +28,7 @@ export class StorageService {
     const rolesFromLocalStorage = JSON.parse(localStorage.getItem('roles') || '[]');
 
     if (rolesFromLocalStorage.length === 0) {
-      return [Role.MANAGER];
+      return [];
     } else {
       return rolesFromLocalStorage;
     }

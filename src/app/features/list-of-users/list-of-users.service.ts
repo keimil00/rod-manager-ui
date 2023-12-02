@@ -310,7 +310,14 @@ export class ListOfUsersService {
         );
     }
 
+    getALLGardeiners(index: number, size: number): Observable<Page<Profile>> {
+        const gardeneirs = this.profiles.filter((profile) => profile.groups.some((role) => role.includes(Role.GARDENER)));
 
+        const profilesOnPage = gardeneirs.slice((index - 1) * size, (index - 1) * size + size);
+        const count = gardeneirs.length;
+        const page: Page<Profile> = {count, results: profilesOnPage};
+        return of(page);
+    }
 
     sortProfiles() {
         this.profiles.sort((a, b) => {

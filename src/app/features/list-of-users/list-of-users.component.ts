@@ -18,7 +18,6 @@ export class ListOfUsersComponent {
 
     dataProfiles = new MatTableDataSource<Profile>();
 
-    profilesLoaded: Profile[] = [];
     totalUsersCount: number = 0;
     DefoultpageSize = 10;
 

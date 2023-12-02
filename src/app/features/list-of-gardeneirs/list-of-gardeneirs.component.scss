@@ -63,6 +63,15 @@
 .mainTable {
   margin-top: 20px;
 }
+.red {
+  color: red;
+}
+
+.blurred-background {
+  filter: blur(5px);
+  pointer-events: none;
+  user-select: none;
+}
 
 @media only screen and (max-width: 600px) {
   .large-card-size {

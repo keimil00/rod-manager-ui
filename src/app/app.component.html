@@ -6,16 +6,16 @@
 <main>
   <div style="position: fixed; bottom: 1vw; left: 57vw; z-index: 0">
     <img src="assets/tlo2.png" width="7000000vw" [ngClass]="{
-  'background-home': isHomeComponentActive(),
-  'background-calendar': isCalendarComponentActive(),
-  'test': !isHomeComponentActive() && !isCalendarComponentActive()
+  'background-home': isLessColorsComponentActive(),
+  'background-calendar': isNotShowComponentActive(),
+  'test': !isLessColorsComponentActive() && !isNotShowComponentActive()
 }">
   </div>
   <div style="position: fixed; bottom: 1vw; right: 57vw; z-index: 0">
     <img src="assets/tlo1.png" width="7000000vw" [ngClass]="{
-  'background-home': isHomeComponentActive(),
-  'background-calendar': isCalendarComponentActive(),
-    'test': !isHomeComponentActive() && !isCalendarComponentActive()
+  'background-home': isLessColorsComponentActive(),
+  'background-calendar': isNotShowComponentActive(),
+    'test': !isLessColorsComponentActive() && !isNotShowComponentActive()
 }">
   </div>
 

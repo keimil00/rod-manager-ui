@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 import {RegisterComponent} from "./features/register/register.component";
 import {LoginComponent} from "./features/login/login.component";
 import {HomeComponent} from "./features/home/home.component";
@@ -20,6 +20,9 @@ import {VotingsComponent} from "./features/votings/votings.component";
 import {GardenOffersComponent} from "./features/garden-offers/garden-offers.component";
 import {CalendarComponent} from "./features/calendar/calendar.component";
 import {ListOfGardeneirsComponent} from "./features/list-of-gardeneirs/list-of-gardeneirs.component";
+import {authGuard} from "./core/guards/auth.guard";
+import {Role} from "./features/register/user.model";
+import {AppComponent, AuthGuard} from "./app.component";
 
 
 const routes: Routes = [
@@ -29,21 +32,20 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'garden-offers', component: GardenOffersComponent},
   { path: 'calendar', component: CalendarComponent},
-  { path: 'garden-info', component: GardenInfoComponent },
-  { path: 'documents', component: DocumentsComponent},
-  { path: 'list-of-garden-plot', component: ListOfGardenPlotComponent},
-  { path: 'list-of-gardeneirs', component: ListOfGardeneirsComponent},
-  { path: 'list-of-users', component: ListOfUsersComponent},
-  { path: 'counters', component: CountersComponent},
-  { path: 'user-info/:id', component: UserInfoComponent},
-  { path: 'workers-list', component: WorkersListComponent},
-  { path: 'payments', component: PaymentsComponent},
-  { path: 'my-garden-plot-info', component: GardenPlotInfoComponent},
   { path: 'voting', component: VotingsComponent},
+  { path: 'garden-info', component: GardenInfoComponent },
+  { path: 'workers-list', component: WorkersListComponent, canActivate: [AuthGuard], data: { expectedRoles: [Role.ADMIN,Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE] } },
+  { path: 'documents', component: DocumentsComponent, canActivate: [AuthGuard], data: { expectedRoles: [Role.ADMIN,Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE] } },
+  { path: 'list-of-garden-plot', component: ListOfGardenPlotComponent, canActivate: [AuthGuard], data: { expectedRoles: [Role.ADMIN,Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE] } },
+  { path: 'list-of-gardeneirs', component: ListOfGardeneirsComponent, canActivate: [AuthGuard], data: { expectedRoles: [Role.ADMIN,Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE] } },
+  { path: 'list-of-users', component: ListOfUsersComponent, canActivate: [AuthGuard], data: { expectedRoles: [Role.ADMIN,Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE] } },
+  { path: 'user-info/:id', component: UserInfoComponent},
+  { path: 'counters', component: CountersComponent, canActivate: [AuthGuard], data: { expectedRoles: [Role.ADMIN,Role.MANAGER, Role.TECHNICAL_EMPLOYEE] } },
+  { path: 'my-garden-plot-info', component: GardenPlotInfoComponent},
+  { path: 'payments', component: PaymentsComponent, canActivate: [AuthGuard], data: { expectedRoles: [Role.ADMIN,Role.MANAGER] } },
   { path: '404', component: PageNotFoundComponent },
   { path: '403', component: AccesDeniedComponent },
-  { path: '**', redirectTo: '/404' }
-  // { path: 'admin', component: AdminComponent, canActivate: [authGuard([Role.ADMIN] TODO: gdy będą role trzeba to pododawać
+  { path: '**', redirectTo: '/404' },
 ];
 
 @NgModule({

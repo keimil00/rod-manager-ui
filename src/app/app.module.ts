@@ -121,6 +121,7 @@ import { ListOfGardeneirsComponent } from './features/list-of-gardeneirs/list-of
 
 import { NgxSpinnerModule } from "ngx-spinner";
 import { VotedVotingsComponent } from './features/votings/voted-votings/voted-votings.component';
+import {UserPaymentsComponent} from "./features/list-of-gardeneirs/payments/user-payments.component";
 
 registerLocaleData(localePl);
 
@@ -225,7 +226,8 @@ registerLocaleData(localePl);
     EditUtilityValuesComponent,
     EditDescriptionDialogComponent,
     ListOfGardeneirsComponent,
-    VotedVotingsComponent
+    VotedVotingsComponent,
+    UserPaymentsComponent
   ],
 
   imports: [
