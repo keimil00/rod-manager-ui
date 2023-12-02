@@ -2,11 +2,11 @@ import {Component} from '@angular/core';
 
 import {DocumentsService} from "./documents.service";
 import {Document, Leaf} from "./document";
-import {forkJoin, Subscription} from "rxjs";
+import {forkJoin} from "rxjs";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {NgxSpinnerService} from "ngx-spinner";
 
-
+// TODO ogarnąć mape i regulamin
 @Component({
   selector: 'app-documents',
   templateUrl: './documents.component.html',
