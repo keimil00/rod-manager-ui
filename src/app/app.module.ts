@@ -122,6 +122,8 @@ import { ListOfGardeneirsComponent } from './features/list-of-gardeneirs/list-of
 import { NgxSpinnerModule } from "ngx-spinner";
 import { VotedVotingsComponent } from './features/votings/voted-votings/voted-votings.component';
 import {UserPaymentsComponent} from "./features/list-of-gardeneirs/payments/user-payments.component";
+import { ForgetPasswordComponent } from './features/forget-password/forget-password.component';
+import { ResetPasswordComponent } from './features/reset-password/reset-password.component';
 
 registerLocaleData(localePl);
 
@@ -227,7 +229,9 @@ registerLocaleData(localePl);
     EditDescriptionDialogComponent,
     ListOfGardeneirsComponent,
     VotedVotingsComponent,
-    UserPaymentsComponent
+    UserPaymentsComponent,
+    ForgetPasswordComponent,
+    ResetPasswordComponent
   ],
 
   imports: [

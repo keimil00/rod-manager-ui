@@ -20,9 +20,10 @@ import {VotingsComponent} from "./features/votings/votings.component";
 import {GardenOffersComponent} from "./features/garden-offers/garden-offers.component";
 import {CalendarComponent} from "./features/calendar/calendar.component";
 import {ListOfGardeneirsComponent} from "./features/list-of-gardeneirs/list-of-gardeneirs.component";
-import {authGuard} from "./core/guards/auth.guard";
 import {Role} from "./features/register/user.model";
-import {AppComponent, AuthGuard} from "./app.component";
+import {AuthGuard} from "./app.component";
+import {ForgetPasswordComponent} from "./features/forget-password/forget-password.component";
+import {ResetPasswordComponent} from "./features/reset-password/reset-password.component";
 
 
 const routes: Routes = [
@@ -43,6 +44,8 @@ const routes: Routes = [
   { path: 'counters', component: CountersComponent, canActivate: [AuthGuard], data: { expectedRoles: [Role.ADMIN,Role.MANAGER, Role.TECHNICAL_EMPLOYEE] } },
   { path: 'my-garden-plot-info', component: GardenPlotInfoComponent},
   { path: 'payments', component: PaymentsComponent, canActivate: [AuthGuard], data: { expectedRoles: [Role.ADMIN,Role.MANAGER] } },
+  { path: 'forget-password', component: ForgetPasswordComponent},
+  { path: 'reset-password/:id', component: ResetPasswordComponent},
   { path: '404', component: PageNotFoundComponent },
   { path: '403', component: AccesDeniedComponent },
   { path: '**', redirectTo: '/404' },
