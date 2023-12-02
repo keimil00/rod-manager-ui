@@ -9,6 +9,7 @@ import {forkJoin, Subscription} from "rxjs";
 import {Profile} from "../Profile";
 import {EditDescriptionDialogComponent} from "./edit-description-dialog/edit-description-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: 'app-garden-info',
@@ -27,7 +28,8 @@ export class GardenInfoComponent {
 
   description: string = ""
 
-  constructor(private breakpointObserver: BreakpointObserver, private router: Router, private gardenInfoService: GardenInfoService, private documentsService: DocumentsService,private dialog: MatDialog) {
+  constructor(private breakpointObserver: BreakpointObserver, private router: Router, private gardenInfoService: GardenInfoService, private documentsService: DocumentsService,private dialog: MatDialog, private spinner: NgxSpinnerService) {
+    this.spinner.show()
     this.router = router
     this.initData()
   }
@@ -39,12 +41,12 @@ export class GardenInfoComponent {
       map: this.documentsService.isMapAvailable(),
       statute: this.documentsService.isStatuteAvailable(),
       description: this.gardenInfoService.getDescription()
-
     }).subscribe(async data => {
       this.employers = data.employers;
       this.isMapAvailable = data.map;
       this.isStatuteAvailable = data.statute;
       this.description = data.description;
+      this.spinner.hide()
     });
   }
 

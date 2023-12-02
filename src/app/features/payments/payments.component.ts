@@ -17,6 +17,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Profile} from "../Profile";
 import {EditUtilityValuesComponent} from "./edit-utility-values/edit-utility-values.component";
 import {forkJoin} from "rxjs";
+import {NgxSpinnerService} from "ngx-spinner";
 
 
 //TODO na tym ekranie od terminu płatności zrobic przysik zatwierdz z jakaś uwagą ze beda naliczone te koszty co wyzej i nie będzie mozna tego zmienić plus dane z obecnego stanu liczników
@@ -51,7 +52,8 @@ export class PaymentsComponent {
   avenuesOptions: (string | null)[] = [];
   numbersOptions: (number | null)[] = [];
 
-  constructor(private dialog: MatDialog, private formBuilder: FormBuilder, private paymentsService: PaymentsService, private gardenPlotsDataService: BackendGardenService, private _snackBar: MatSnackBar) {
+  constructor(private dialog: MatDialog, private formBuilder: FormBuilder, private paymentsService: PaymentsService, private gardenPlotsDataService: BackendGardenService, private _snackBar: MatSnackBar,private spinner: NgxSpinnerService) {
+    this.spinner.show()
     this.initData()
   }
 
@@ -63,12 +65,8 @@ export class PaymentsComponent {
       this.gardenPlots = data.gardenPlots;
       this.payment = data.payments;
       this.init1()
+      this.spinner.hide()
     });
-  }
-
-
-  private updateAdditionalPayments() {
-    this.dataAdditionalFees._updateChangeSubscription();
   }
 
   init1() {
@@ -137,11 +135,13 @@ export class PaymentsComponent {
   }
 
   updateData() {
+    this.spinner.show()
     this.paymentsService.getPayments().subscribe((payments: Payments) => {
       this.payment = payments;
       this.dataLeaseFees = new MatTableDataSource(this.payment.leaseFees);
       this.dataUtilityFees = new MatTableDataSource(this.payment.utilityFees);
       this.dataAdditionalFees = new MatTableDataSource(this.payment.additionalFees);
+      this.spinner.hide()
     });
   }
 

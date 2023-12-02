@@ -10,6 +10,7 @@ import {BackendGardenService} from "../list-of-garden-plot/backend-garden.servic
 import {StorageService} from "../../core/storage/storage.service";
 import {forkJoin} from "rxjs";
 import {UserInfoService} from "./user-info.service";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
     selector: 'app-user-info',
@@ -38,7 +39,7 @@ export class UserInfoComponent {
 
     constructor(private route: ActivatedRoute, formBuilder: FormBuilder, private router: Router,
                 private listOfUsersService: ListOfUsersService,
-                private backendGardenService: BackendGardenService, private storageService: StorageService, private userInfoService: UserInfoService) {
+                private backendGardenService: BackendGardenService, private storageService: StorageService, private userInfoService: UserInfoService, private spinner: NgxSpinnerService) {
         this.userInfoForm = formBuilder.group({
             firstName: [{value: '', disabled: true}],
             lastName: [{value: '', disabled: true}],
@@ -52,6 +53,7 @@ export class UserInfoComponent {
         this.route.params.subscribe(params => {
             this.id = parseInt(params['id'], 10)
         });
+        this.spinner.show()
         this.loadData()
     }
 
@@ -69,6 +71,7 @@ export class UserInfoComponent {
             this.gardenPlots = data.gardenPlots;
             this.profile = data.profile;
             this.initData()
+            this.spinner.hide()
         });
     }
 

@@ -1,7 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {Payment} from "../../list-of-garden-plot/garden-plot-details/PaymentList";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {BackendGardenService} from "../../list-of-garden-plot/backend-garden.service";
 import {PaymentsService} from "../../payments/payments.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {NgxSpinnerService} from "ngx-spinner";
@@ -35,7 +34,7 @@ export class UserPaymentsComponent {
 
   spinerMassage = "Ładowanie Płatności"
 
-  constructor(private formBuilder: FormBuilder, private gardenPlotsDataService: BackendGardenService, private paymentsService: PaymentsService,private spinner: NgxSpinnerService,
+  constructor(private formBuilder: FormBuilder, private paymentsService: PaymentsService,private spinner: NgxSpinnerService,
               public dialogRef: MatDialogRef<UserPaymentsComponent>,
               @Inject(MAT_DIALOG_DATA) public data: {
                 profileID: number;

@@ -31,6 +31,7 @@ export class DocumentsComponent {
   selectedStatuteFile: File | null = null;
 
   constructor(formBuilder: FormBuilder, private documentsService: DocumentsService, private spinner: NgxSpinnerService) {
+    this.spinner.show()
     this.initData()
     this.addFileForm = formBuilder.group({
       name: ['', [
@@ -53,10 +54,10 @@ export class DocumentsComponent {
       map: this.documentsService.isMapAvailable(),
       statute: this.documentsService.isStatuteAvailable(),
     }).subscribe(async data => {
-      this.documents = data.documents,
+        this.documents = data.documents,
         this.isMapAvailable = data.map,
-        this.isStatuteAvailable = data.statute
-      console.log(this.documents)
+        this.isStatuteAvailable = data.statute,
+        this.spinner.hide()
     });
   }
 

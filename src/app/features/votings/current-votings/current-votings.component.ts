@@ -4,6 +4,7 @@ import {VotingItem} from "../voting-item.model";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormControl} from "@angular/forms";
 import {Subscription} from "rxjs";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
     selector: 'app-current-votings',
@@ -17,7 +18,7 @@ export class CurrentVotingsComponent {
     // @ts-ignore
     private addVotingFinishedSubscription: Subscription;
 
-    constructor(private votingService: VotingsService, private _snackBar: MatSnackBar) {
+    constructor(private votingService: VotingsService, private _snackBar: MatSnackBar, private spinner: NgxSpinnerService) {
     }
 
     ngOnInit() {
@@ -33,9 +34,11 @@ export class CurrentVotingsComponent {
     }
 
     getCurrentVoting() {
+        this.spinner.show()
         this.votingService.getCurrentVotes().subscribe((votes: VotingItem[]) => {
             this.currentVotes = votes;
             this.initializeFormControls();
+            this.spinner.hide()
         });
     }
 

@@ -1,3 +1,4 @@
+// TODO zmienic id na nazwe
 export interface Counter {
   id: string;
   addressC: string| null;
