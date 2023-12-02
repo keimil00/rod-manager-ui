@@ -27,6 +27,11 @@
               </mat-error>
             </mat-form-field>
           </div>
+          <div *ngIf="showError">
+            <mat-error>
+              Podano błędne dane
+            </mat-error>
+          </div>
           <div class="row-item forgot-password-link">
             <a (click)="navigate('forgetPassword')">Zapomniałeś hasła?</a>
           </div>

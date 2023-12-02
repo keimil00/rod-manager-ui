@@ -14,7 +14,7 @@ import {NgxSpinnerService} from "ngx-spinner";
 })
 export class LoginComponent implements OnInit{
   loginForm: FormGroup;
-
+  showError:Boolean = false;
   errorMessages = {
     email: [
       {type: 'required', message: 'Email jest wymagany'},
@@ -74,6 +74,7 @@ export class LoginComponent implements OnInit{
       },
       error: error => {
         console.error(error);
+        this.showError=true;
         this.spinner.hide();
       }
     });
