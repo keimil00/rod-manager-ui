@@ -9,6 +9,7 @@ import {GardenPlotListAddGardenComponent} from "./garden-plot-list-add-garden/ga
 import {MatPaginator} from "@angular/material/paginator";
 import {BackendGardenService} from "./backend-garden.service";
 import {Page} from "../../shared/paginator/page.model";
+import {forkJoin} from "rxjs";
 
 @Component({
     selector: 'app-list-of-garden-plot',
@@ -43,7 +44,7 @@ export class ListOfGardenPlotComponent {
     }
 
     loadProfiles(index: number, size: number): void {
-        this.gardenPlotsDataService.getGardenPlots2(this.currentPageIndex, size).subscribe((page: Page<GardenPlotBackend>) => {
+        this.gardenPlotsDataService.getGardenPlots(this.currentPageIndex, size).subscribe((page: Page<GardenPlotBackend>) => {
             this.totalGardenCount = page.count;
             this.dataSource = new MatTableDataSource<GardenPlotBackend>(page.results);
         });
@@ -53,7 +54,7 @@ export class ListOfGardenPlotComponent {
         this.currentPageIndex = pageIndex;
         this.currentPageSize = pageSize;
 
-        this.gardenPlotsDataService.getGardenPlots2(pageIndex, pageSize).subscribe(
+        this.gardenPlotsDataService.getGardenPlots(pageIndex, pageSize).subscribe(
             data => {
                 this.totalGardenCount = data.count;
                 this.dataSource = new MatTableDataSource<GardenPlotBackend>(data.results);
@@ -69,7 +70,7 @@ export class ListOfGardenPlotComponent {
 
     updateData() {//to backend
         this.gardenPlotsDataService.sortData()
-        this.gardenPlotsDataService.getGardenPlots2(this.currentPageIndex, this.currentPageSize).subscribe(
+        this.gardenPlotsDataService.getGardenPlots(this.currentPageIndex, this.currentPageSize).subscribe(
             data => {
                 this.totalGardenCount = data.count;
                 this.dataSource = new MatTableDataSource<GardenPlotBackend>(data.results);
@@ -88,9 +89,17 @@ export class ListOfGardenPlotComponent {
     }
 
     selectDetails(gardenPlot: GardenPlot) {
-        const leaseholder = this.gardenPlotsDataService.getLeaseholder(gardenPlot.gardenPlotID)
-        this.showDetails = true;
-        this.showDetailsDialog(gardenPlot, leaseholder)
+
+
+            forkJoin({
+                leaseHolder:this.gardenPlotsDataService.getLeaseholder(gardenPlot.gardenPlotID)
+            }).subscribe(data => {
+                let leaseHolder : Profile | null
+                leaseHolder = data.leaseHolder
+                this.showDetails = true;
+                // @ts-ignore
+                this.showDetailsDialog(gardenPlot, leaseHolder)
+            });
     }
 
     showDetailsDialog(gardenPlot: GardenPlot, leaseholder: Profile | undefined) {

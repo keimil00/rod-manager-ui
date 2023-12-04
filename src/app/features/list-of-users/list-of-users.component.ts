@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {MatPaginator} from "@angular/material/paginator";
 import {ListOfUsersService} from "./list-of-users.service";
 import {Page} from "../../shared/paginator/page.model";
+import {Role,getTranslatedRole} from "../register/user.model";
 
 @Component({
     selector: 'app-list-of-users',
@@ -13,7 +14,7 @@ import {Page} from "../../shared/paginator/page.model";
     styleUrls: ['./list-of-users.component.scss']
 })
 export class ListOfUsersComponent {
-    displayedColumns: string[] = ['firstName', 'lastName', 'phoneNumber', 'email', 'accountStatus', 'add'];
+    displayedColumns: string[] = ['firstName', 'lastName', 'phoneNumber', 'email', 'accountStatus', 'info'];
 
     dataProfiles = new MatTableDataSource<Profile>();
 
@@ -27,13 +28,8 @@ export class ListOfUsersComponent {
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
     constructor(private router: Router, private listOfUsersService: ListOfUsersService, private changeDetectorRef: ChangeDetectorRef) {
-        this.sortData()
         this.initData();
         this.dataProfiles.paginator = this.paginator;
-    }
-
-    private sortData() {
-        this.listOfUsersService.sortProfiles()
     }
 
     private initData() {
@@ -68,4 +64,14 @@ export class ListOfUsersComponent {
     navigateToProfileComponent(id: string) {
         this.router.navigate(['/user-info', id]);
     }
+
+    mapAccountStatusesToTranslated(status: Role[] | undefined): string | undefined {
+        if (!status ) {
+            return status;
+        }
+
+        return status.map((role: Role) => getTranslatedRole(role) || 'Nieznana rola').join(', ');
+    }
+
+    protected readonly Role = Role;
 }

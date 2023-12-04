@@ -49,7 +49,7 @@ export class TechnicalIssueDialogComponent {
             const title: string = this.addTechnicalIsueForm.get('title')?.value;
             const description: string = this.addTechnicalIsueForm.get('description')?.value;
 
-            this.technicalIsueService.sendIssue(title, description)
+            this.technicalIsueService.sendIssue(title, description).subscribe()
 
             this.addTechnicalIsueForm.reset()
             this.closeDialog()

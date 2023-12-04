@@ -18,7 +18,7 @@
               <table class="property-table">
                 <tr>
                   <td>Dzierżawca</td>
-                  <td>{{ leaseholder?.firstName }} {{ leaseholder?.lastName }}</td>
+                  <td>{{ leaseholder?.first_name }} {{ leaseholder?.last_name }}</td>
                 </tr>
                 <tr>
                   <td>Email</td>
@@ -26,7 +26,7 @@
                 </tr>
                 <tr>
                   <td>Numer telefonu</td>
-                  <td>{{ leaseholder?.phoneNumber }}</td>
+                  <td>{{ leaseholder?.phone }}</td>
                 </tr>
                 <tr>
                   <td>Sektor</td>
@@ -104,7 +104,7 @@
                     <mat-form-field class="full-width">
                       <mat-label>Data</mat-label>
                       <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="date" required>
-                      <mat-hint>DD/MM/YYYY</mat-hint>
+                      <mat-hint>DD.MM.YYYY</mat-hint>
                       <mat-error *ngFor="let error of validationErrors('date')">
                         {{ error.message }}
                       </mat-error>

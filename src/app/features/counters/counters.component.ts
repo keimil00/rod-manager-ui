@@ -5,6 +5,7 @@ import {MeasurementDialogComponent} from "./measurement-dialog/measurement-dialo
 import {MatDialog} from "@angular/material/dialog";
 import {AddCounterDialogComponent} from "./add-counter-dialog/add-counter-dialog.component";
 import {CountersService} from "./counters.service";
+import {VotingItem} from "../votings/voting-item.model";
 
 @Component({
     selector: 'app-counters',
@@ -32,7 +33,7 @@ export class CountersComponent {
         // @ts-ignore
         const dataSourceElectric: MatTableDataSource<Counter> = new MatTableDataSource([]);
 
-        this.counters = this.countersService.getAllCounters()
+        this.initData()
         this.sortCounters()
 
         this.counters.forEach((counter) => {
@@ -46,6 +47,11 @@ export class CountersComponent {
         this.dataSourceElectric = dataSourceElectric;
     }
 
+    initData() {
+        this.countersService.getAllCounters().subscribe((votcounters1: Counter[]) => {
+            this.counters = votcounters1;
+        });
+    }
 
     sortCounters() {
         this.counters.sort((a, b) => {

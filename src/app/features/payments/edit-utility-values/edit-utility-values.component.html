@@ -1,0 +1,31 @@
+<mat-dialog-content>
+  <h1 mat-dialog-title class="title">Zmień ceny za media</h1>
+  <div mat-dialog-content>
+    <form class [formGroup]="editUtilityValuesForm">
+      <mat-form-field class="full-width">
+        <mat-label>Cena za Prąd (kW)</mat-label>
+        <input matInput type="text" placeholder="Cena za Prąd (kW)" formControlName="electricCurrentValue" required
+               pattern="[0-9]+(\.[0-9]+)?">
+        <mat-error *ngFor="let error of validationErrors('electricCurrentValue')">
+          {{ error.message }}
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Cena za wodę (m³)</mat-label>
+        <input matInput type="text" placeholder="Cena za wodę (m³)" formControlName="waterValue" required
+               pattern="[0-9]+(\.[0-9]+)?">
+        <mat-error *ngFor="let error of validationErrors('waterValue')">
+          {{ error.message }}
+        </mat-error>
+      </mat-form-field>
+      </form>
+  </div>
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="center" class="mat-actions col-container">
+  <app-text-button mat-dialog-close class="cancel-button" className="action-button" [text]="'Anuluj'"
+                   [color]="'accent'"></app-text-button>
+  <app-text-button class="submit-button" className="action-button"
+                   [text]="'Zapisz'" [color]="'primary'" (click)="editUtilityValues()"></app-text-button>
+</mat-dialog-actions>

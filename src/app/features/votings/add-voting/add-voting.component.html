@@ -1,0 +1,82 @@
+<mat-card class="details-card">
+    <mat-card-header>
+        <div class="center-item">
+            <h2 class="title">Dodaj Głosowanie</h2>
+        </div>
+        <button mat-icon-button class="close-button" (click)="closeAddingVoting()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-card class="form-card">
+            <mat-card-content>
+                <form class [formGroup]="addVotingForm" (ngSubmit)="addVoting()">
+                    <div>
+                        <mat-form-field class="full-width">
+                            <mat-label>Nazwa</mat-label>
+                            <input matInput type="string" placeholder="Nazwa" formControlName="title">
+                            <mat-error *ngFor="let error of validationErrors('title')">
+                                {{ error.message }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field class="full-width">
+                            <mat-label>Data</mat-label>
+                            <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="date" required>
+                            <mat-hint>DD.MM.YYYY</mat-hint>
+                            <mat-error *ngFor="let error of validationErrors('date')">
+                                {{ error.message }}
+                            </mat-error>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field class="full-width">
+                            <mat-label>Opis</mat-label>
+                            <input matInput type="string" placeholder="Opis" formControlName="description">
+                        </mat-form-field>
+                    </div>
+                    <div formArrayName="options">
+                        <div *ngFor="let option of options.controls; let i = index">
+
+                            <div [formGroupName]="i">
+                                <div class="full-width">
+                                    <div class="option-row">
+                                        <mat-form-field class="option-input">
+                                            <mat-label>Opcja</mat-label>
+                                            <input matInput placeholder="Opcja" formControlName="label">
+                                            <mat-error *ngIf="option.get('label')?.invalid">
+                                                Opcja musi być wypełniona
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <button mat-icon-button color="warn" (click)="removeOption(i)"
+                                                class="delete-button">
+                                            <mat-icon>delete</mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                                <mat-error *ngIf="options.controls.length<2">
+                                    Wymagane są przynajmniej dwie opcje
+                                </mat-error>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="center-button">
+                        <app-text-button (click)="addOption()"
+                                         [text]="'Dodaj kolejną opcję'"
+                                         [color]="'primary'" type="button"></app-text-button>
+
+                    </div>
+
+                    <div class="center-button">
+                        <app-text-button
+                                [text]="'Dodaj głosowanie'"
+                                [color]="'primary'" type="submit"></app-text-button>
+                    </div>
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </mat-card-content>
+</mat-card>

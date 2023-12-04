@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {LoginComponent} from './features/login/login.component';
@@ -19,10 +18,10 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatSelectModule} from "@angular/material/select";
 import {MatDividerModule} from "@angular/material/divider";
 import {
-  GoogleLoginProvider,
-  GoogleSigninButtonModule,
-  SocialAuthServiceConfig,
-  SocialLoginModule
+    GoogleLoginProvider,
+    GoogleSigninButtonModule,
+    SocialAuthServiceConfig,
+    SocialLoginModule
 } from "@abacritt/angularx-social-login";
 import {AuthInterceptor} from "./core/interceptors/auth.interceptor";
 import {HasRoleDirective} from './core/has-role/has-role.directive';
@@ -36,25 +35,25 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {ListOfGardenPlotComponent} from './features/list-of-garden-plot/list-of-garden-plot.component';
 import {MatTableModule} from "@angular/material/table";
 import {
-  GardenPlotDetailsComponent
+    GardenPlotDetailsComponent
 } from './features/list-of-garden-plot/garden-plot-details/garden-plot-details.component';
 import {
-  GardenPlotDetailsPaymentHistoryComponent
+    GardenPlotDetailsPaymentHistoryComponent
 } from './features/list-of-garden-plot/garden-plot-details/garden-plot-details-payment-history/garden-plot-details-payment-history.component';
 import {MatSortModule} from "@angular/material/sort";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MAT_DATE_LOCALE, MatNativeDateModule} from "@angular/material/core";
 import {
-  GardenPlotAddLeaseholderComponent
+    GardenPlotAddLeaseholderComponent
 } from './features/list-of-garden-plot/garden-plot-add-leaseholder/garden-plot-add-leaseholder.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {
-  GardenPlotListAddGardenComponent
+    GardenPlotListAddGardenComponent
 } from './features/list-of-garden-plot/garden-plot-list-add-garden/garden-plot-list-add-garden.component';
 import {
-  GardenPlotEditGardenComponent
+    GardenPlotEditGardenComponent
 } from './features/list-of-garden-plot/garden-plot-details/garden-plot-edit-garden/garden-plot-edit-garden.component';
 import {FlexModule} from "@angular/flex-layout";
 import {MatPaginatorIntl, MatPaginatorModule} from "@angular/material/paginator";
@@ -76,24 +75,34 @@ import {EditWorkerComponent} from './features/garden-info/workers-list/editOrAdd
 import {PaymentsComponent} from './features/payments/payments.component';
 import {IndividualPaymentsComponent} from './features/payments/individual-payments/individual-payments.component';
 import {
-  AddIndividualPaymentComponent
+    AddIndividualPaymentComponent
 } from './features/payments/individual-payments/add-individual-payment/add-individual-payment.component';
 import {EditingLeaseFeeComponent} from './features/payments/editing-lease-fee/editing-lease-fee.component';
 import {EditingUtilityFeeComponent} from './features/payments/editing-utility-fee/editing-utility-fee.component';
 import {
-  EditingAdditionalFeesComponent
+    EditingAdditionalFeesComponent
 } from './features/payments/editing-additional-fees/editing-additional-fees.component';
 import {
-  AddAdditionalFeesComponent
+    AddAdditionalFeesComponent
 } from './features/payments/editing-additional-fees/add-additional-fees/add-additional-fees.component';
 import {
-  EditingSingleAdditionalFeeComponent
+    EditingSingleAdditionalFeeComponent
 } from './features/payments/editing-additional-fees/editing-single-additional-fee/editing-single-additional-fee.component';
 import {EditDateComponent} from './features/payments/edit-date/edit-date.component';
+
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {GardenPlotInfoComponent} from './features/garden-plot-info/garden-plot-info.component';
 import {FooterAppComponent} from './core/footer-app/footer-app.component';
 import {TechnicalIssueDialogComponent} from './core/footer-app/technical-issue-dialog/technical-issue-dialog.component';
+import {AccesDeniedComponent} from './features/acces-denied/acces-denied.component';
+import {FolderListComponent} from './features/documents/folder-list/folder-list.component';
+import {VotingsComponent} from './features/votings/votings.component';
+import {CurrentVotingsComponent} from './features/votings/current-votings/current-votings.component';
+import {FinishedVotingsComponent} from './features/votings/finished-votings/finished-votings.component';
+import {MatRadioModule} from "@angular/material/radio";
+import {NgApexchartsModule} from "ng-apexcharts";
+import {AddVotingComponent} from './features/votings/add-voting/add-voting.component';
+
 import {GardenOffersComponent} from './features/garden-offers/garden-offers.component';
 import {MatSliderModule} from "@angular/material/slider";
 import {GardenOfferComponent} from './features/garden-offers/garden-offer/garden-offer.component';
@@ -106,6 +115,7 @@ import {EventDetailsComponent} from './features/calendar/event-details/event-det
 import localePl from '@angular/common/locales/pl';
 import {registerLocaleData} from "@angular/common";
 import {LOCALE_ID} from '@angular/core';
+import {EditUtilityValuesComponent} from "./features/payments/edit-utility-values/edit-utility-values.component";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 registerLocaleData(localePl);
@@ -154,12 +164,61 @@ registerLocaleData(localePl);
     GardenPlotInfoComponent,
     FooterAppComponent,
     TechnicalIssueDialogComponent,
+    AccesDeniedComponent,
+    FolderListComponent,
+    VotingsComponent,
+    CurrentVotingsComponent,
+    FinishedVotingsComponent,
+    AddVotingComponent,
+    AppComponent,
+    LoginComponent,
+    RegisterComponent,
+    TopAppBarComponent,
+    TextButtonComponent,
+    HomeComponent,
+    HasRoleDirective,
+    PageNotFoundComponent,
+    GardenInfoComponent,
+    PersonCardGardenComponent,
+    DocumentsComponent,
+    ListOfGardenPlotComponent,
+    GardenPlotDetailsComponent,
+    GardenPlotDetailsPaymentHistoryComponent,
+    GardenPlotAddLeaseholderComponent,
+    GardenPlotListAddGardenComponent,
+    GardenPlotEditGardenComponent,
+    HasRoleDirective,
+    PaginatorComponent,
+    PaginatorComponent,
+    PostComponent,
+    PostEditComponent,
+    TagDialogComponent,
+    CountersComponent,
+    MeasurementDialogComponent,
+    AddCounterDialogComponent,
+    ListOfUsersComponent,
+    UserInfoComponent,
+    WorkersListComponent,
+    EditWorkerComponent,
+    PaymentsComponent,
+    IndividualPaymentsComponent,
+    AddIndividualPaymentComponent,
+    EditingLeaseFeeComponent,
+    EditingUtilityFeeComponent,
+    EditingAdditionalFeesComponent,
+    AddAdditionalFeesComponent,
+    EditingSingleAdditionalFeeComponent,
+    EditDateComponent,
+    GardenPlotInfoComponent,
+    FooterAppComponent,
+    TechnicalIssueDialogComponent,
     GardenOffersComponent,
     GardenOfferComponent,
     ContactComponent,
     OfferDetailsComponent,
     CalendarComponent,
-    EventDetailsComponent
+    EventDetailsComponent,
+    EditUtilityValuesComponent
   ],
     imports: [
         BrowserModule,
@@ -194,7 +253,9 @@ registerLocaleData(localePl);
         MatChipsModule,
         FormsModule,
         QuillModule.forRoot(),
-        MatDialogModule,
+    MatDialogModule, MatTabsModule,
+    MatSnackBarModule, MatRadioModule,
+    NgApexchartsModule,    MatDialogModule,
         MatTabsModule,
         MatSnackBarModule,
         MatSliderModule,
@@ -228,7 +289,11 @@ registerLocaleData(localePl);
       useValue: 'pl-PL'
     }
   ],
+  exports: [
+    TextButtonComponent
+  ],
   bootstrap: [AppComponent]
+
 })
 export class AppModule {
 }

@@ -54,6 +54,19 @@
   padding-bottom: 30px;
 }
 
+.payment-Utility-Values-card {
+  max-width: 300px;
+  width: 55%;
+  -webkit-box-shadow: 0 3px 15px -1px rgba(66, 68, 90, 1);
+  -moz-box-shadow: 0 3px 15px -1px rgba(66, 68, 90, 1);
+  box-shadow: 0 3px 15px -1px rgba(66, 68, 90, 1);
+  margin-top: 2%;
+  margin-bottom: 1%;
+  padding-left: 2%;
+  padding-right: 2%;
+  padding-bottom: 30px;
+}
+
 .individual-payments-card {
   max-width: 400px;
   width: 70%;
@@ -128,6 +141,12 @@ tr::after {
   padding: 5px;
 }
 
+.value-in-red {
+  color: red;
+  font-weight: bold; /* Opcjonalnie: pogrubienie tekstu */
+  margin-left: 10px;
+}
+
 .payments {
   display: flex;
   flex-direction: column;
@@ -184,7 +203,7 @@ tr::after {
     padding-left: 0;
     padding-right: 0;
   }
-  .small-card-size, .payment-date-card, .individual-payments-card {
+  .small-card-size, .payment-date-card, .individual-payments-card, .payment-Utility-Values-card {
     width: 99%;
 
   }

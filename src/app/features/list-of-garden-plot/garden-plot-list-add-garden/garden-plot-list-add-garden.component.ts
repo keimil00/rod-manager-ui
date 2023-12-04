@@ -17,6 +17,7 @@ import {MatDialogRef} from "@angular/material/dialog";
 import {BackendGardenService} from "../backend-garden.service";
 import {ListOfUsersService} from "../../list-of-users/list-of-users.service";
 import {Profile} from "../../Profile";
+import {forkJoin} from "rxjs";
 
 
 @Component({
@@ -37,7 +38,7 @@ export class GardenPlotListAddGardenComponent {
     closeAddingGardenPlot() {
         this.dialogRef.close();
     }
-
+    // @ts-ignore
     addGardenForm: FormGroup;
 
     errorMessages = {
@@ -64,9 +65,8 @@ export class GardenPlotListAddGardenComponent {
         ]
     };
 
-    constructor(formBuilder: FormBuilder, public dialogRef: MatDialogRef<GardenPlotListAddGardenComponent>, private gardenPlotsDataService: BackendGardenService, private listOfUsersService: ListOfUsersService) {
-        this.initData()
-        this.addGardenForm = formBuilder.group({
+    constructor(private formBuilder: FormBuilder, public dialogRef: MatDialogRef<GardenPlotListAddGardenComponent>, private gardenPlotsDataService: BackendGardenService, private listOfUsersService: ListOfUsersService) {
+        this.addGardenForm = this.formBuilder.group({
             sector: ['', [
                 Validators.required,
             ]],
@@ -89,16 +89,49 @@ export class GardenPlotListAddGardenComponent {
             status: ['',
                 Validators.required]
         });
-        this.addGardenForm.updateValueAndValidity();
+        this.loadData()
+        // this.addGardenForm.updateValueAndValidity();
     }
+
+    loadData() {
+        forkJoin({
+            profiles: this.listOfUsersService.getAllProfiles(),
+            gardenPlots: this.gardenPlotsDataService.getAllGardenPlots(),
+        }).subscribe(data => {
+            this.profiles = data.profiles
+            this.gardenPlots = data.gardenPlots
+
+            this.initData()
+        });
+    }
+
 
     initData() {
-        this.listOfUsersService.sortProfiles()
-        this.profiles = this.listOfUsersService.getAllProfiles()
-        this.gardenPlots = this.gardenPlotsDataService.getAllGardenPlots()
-    }
+        this.addGardenForm = this.formBuilder.group({
+            sector: ['', [
+                Validators.required,
+            ]],
+            avenue: ['', [
+                Validators.required,
+            ]],
+            number: ['', [
+                Validators.required,
+            ]],
+            area: ['', [
+                Validators.required,
+                Validators.min(0.01),
+            ]],
+            leaseholderEmail: ['', [
+                // @ts-ignore
+                profileEmailValidator(this.profiles),
+                // @ts-ignore
+                uniqueLeaseholderIDValidator(this.gardenPlots, this.profiles, false)
+            ]],
+            status: ['',
+                Validators.required]
+        });
 
-    ngOnInit() {
+
         this.leaseHolderOptions = [{
             fullName: 'brak',
             email: 'brak'
@@ -149,9 +182,9 @@ export class GardenPlotListAddGardenComponent {
             const newLeaseholderEmail: string | null = this.addGardenForm.get('leaseholderEmail')?.value;
             const newStatus: PlotStatus = this.addGardenForm.get('status')?.value;
 
-            let newLeaseholderID: string | null = null;
+            let newLeaseholderID: number | null = null;
 
-            const uniqueId = 'garden-' + new Date().getTime() + '-' + Math.floor(Math.random() * 1000);
+            const uniqueId : number = new Date().getTime() + Math.floor(Math.random() * 1000);
 
             if (newLeaseholderEmail === '' || newLeaseholderEmail === 'brak' || newLeaseholderEmail === null) {
                 newLeaseholderID = null
