@@ -23,7 +23,7 @@ export class HomeComponent {
 
   postsLoaded: Post[] = [];
   totalPostsCount: number = 0;
-  readonly defaultPageSize = 2;
+  readonly defaultPageSize = 10;
   currentPageIndex = 1;
   currentPageSize = this.defaultPageSize;
 

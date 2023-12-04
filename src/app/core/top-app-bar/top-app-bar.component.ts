@@ -54,6 +54,10 @@ export class TopAppBarComponent {
 
 
 
+  // isAuthenticated(requiredRoles) {
+  //
+  // }
+
   navigate(path: string) {
     this.router.navigate([path]);
   }
@@ -63,7 +67,7 @@ export class TopAppBarComponent {
   }
 
   logout(): void {
-    this.socialAuthService.signOut();
+    // this.socialAuthService.signOut();
     this.authService.logout();
   }
 

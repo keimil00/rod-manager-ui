@@ -1,10 +1,7 @@
 <h1 mat-dialog-title>Powiązane ogłoszenie</h1>
 <div mat-dialog-content>
   <ng-template #loading>
-    <div class="text-center">
-      <i class="fas fa-spin fa-spinner fa-5x"></i> <br/>
-      Loading events...
-    </div>
+    <mat-spinner></mat-spinner>
   </ng-template>
   <div *ngIf="post$ | async; else loading; let post" class="post-container">
     <app-post [post]="post"></app-post>

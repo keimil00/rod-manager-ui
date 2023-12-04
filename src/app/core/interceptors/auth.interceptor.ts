@@ -21,16 +21,7 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    console.log('Request url: ' + request.url);
     const accessToken = this.storage.getAccessToken();
-    console.log('Access token: ' + accessToken);
-
-    console.log('Diff: ' + (this.storage.getTimestamp() - new Date().getTime()) / (1000 * 60));
-    console.log('Is token expired: ' + (new Date().getTime() > this.storage.getTimestamp()));
-    console.log('Calls authenticated url: ' + this.callsAuthenticatedUrls(request));
-    console.log('Is logged in: ' + this.storage.getLoggedIn());
-    const fullCondition = this.callsAuthenticatedUrls(request) && new Date().getTime() > this.storage.getTimestamp() && this.storage.getLoggedIn()
-    console.log('Full condition: ' + fullCondition);
     if (this.callsAuthenticatedUrls(request) && new Date().getTime() > this.storage.getTimestamp() && this.storage.getLoggedIn()) {
       if (!this.refreshTokenInProgress) {
         this.refreshTokenInProgress = true;

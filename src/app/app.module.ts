@@ -116,6 +116,7 @@ import localePl from '@angular/common/locales/pl';
 import {registerLocaleData} from "@angular/common";
 import {LOCALE_ID} from '@angular/core';
 import {EditUtilityValuesComponent} from "./features/payments/edit-utility-values/edit-utility-values.component";
+
 import { EditDescriptionDialogComponent } from './features/garden-info/edit-description-dialog/edit-description-dialog.component';
 import { ListOfGardeneirsComponent } from './features/list-of-gardeneirs/list-of-gardeneirs.component';
 
@@ -124,6 +125,9 @@ import { VotedVotingsComponent } from './features/votings/voted-votings/voted-vo
 import {UserPaymentsComponent} from "./features/list-of-gardeneirs/payments/user-payments.component";
 import { ForgetPasswordComponent } from './features/forget-password/forget-password.component';
 import { ResetPasswordComponent } from './features/reset-password/reset-password.component';
+
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+
 
 registerLocaleData(localePl);
 
@@ -233,52 +237,51 @@ registerLocaleData(localePl);
     ForgetPasswordComponent,
     ResetPasswordComponent
   ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        BrowserAnimationsModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatMenuModule,
+        MatCardModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        MatSelectModule,
+        MatDividerModule,
+        SocialLoginModule,
+        GoogleSigninButtonModule,
+        MatIconModule,
+        MatGridListModule,
+        MatExpansionModule,
+        FormsModule,
+        MatTableModule,
+        MatSortModule,
+        MatDatepickerModule,
+        MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule, MatCheckboxModule,
 
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatMenuModule,
-    MatCardModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatSelectModule,
-    MatDividerModule,
-    SocialLoginModule,
-    GoogleSigninButtonModule,
-    MatIconModule,
-    MatGridListModule,
-    MatExpansionModule,
-    FormsModule,
-    MatTableModule,
-    MatSortModule,
-    MatDatepickerModule,
-    MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule, MatCheckboxModule,
+        GoogleSigninButtonModule,
+        MatChipsModule,
+        MatIconModule,
+        MatAutocompleteModule,
+        FlexModule,
+        MatPaginatorModule,
+        MatChipsModule,
+        FormsModule,
+        QuillModule.forRoot(),
+        MatDialogModule,
+        MatTabsModule,
+        MatSnackBarModule,
+        MatRadioModule,
+        NgApexchartsModule,
 
-    GoogleSigninButtonModule,
-    MatChipsModule,
-    MatIconModule,
-    MatAutocompleteModule,
-    FlexModule,
-    MatPaginatorModule,
-    MatChipsModule,
-    FormsModule,
-    QuillModule.forRoot(),
-
-    MatDialogModule, MatTabsModule,
-    MatSnackBarModule, MatRadioModule,
-    NgApexchartsModule,
-    MatDialogModule,
-    MatTabsModule,
-    MatSnackBarModule,
-    MatSliderModule,
-    CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
-
-    NgxSpinnerModule,
+        MatSliderModule,
+        CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
+        NgxSpinnerModule,
+        MatProgressSpinnerModule
   ],
+
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'pl-PL'},
     {

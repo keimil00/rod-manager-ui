@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {FormControl} from "@angular/forms";
-import {GardenOffer} from "./garden-offer.model";
+import {Filters, GardenOffer, GardenOfferCreate, GardenOfferExternal, MinMax} from "./garden-offer.model";
+import {GardenOffersService} from "./garden-offers.service";
+import {map, Observable} from "rxjs";
+import {MatSelectChange} from "@angular/material/select";
 
 @Component({
   selector: 'app-garden-offers',
@@ -9,21 +12,112 @@ import {GardenOffer} from "./garden-offer.model";
 })
 export class GardenOffersComponent {
   isCreatingOffer: boolean = false;
-  defaultPageSize: number = 10;
+  currentPageSize: number = 10;
+  currentPageIndex: number = 1;
   totalOffersCount: number = 0;
-  gardenOffersNames: string[] = [];
   searchControl: FormControl = new FormControl();
-  gardenOffers: GardenOffer[] = [];
+  // @ts-ignore
+  gardenOffers$: Observable<GardenOffer[]>;
+  minMax?: MinMax;
+  isCreating: boolean = false;
+  panelOpenState: boolean = false;
+  filters = new Filters();
+  defaultSort = 'newest';
 
-  createOffer() {
 
+  constructor(private gardenOffersService: GardenOffersService) {
+    this.gardenOffersService.fetchMinMax().subscribe({
+      next: value => {
+        this.minMax = value;
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+    this.fetchData(this.currentPageIndex, this.currentPageSize);
   }
 
-  fetchData() {
+  createOffer() {
+    this.isCreating = true;
+  }
 
+  fetchData(index: number, size: number) {
+    this.currentPageIndex = index;
+    this.currentPageSize = size;
+    this.gardenOffers$ = this.gardenOffersService.fetchGardenOffers(this.currentPageIndex, this.currentPageSize)
+      .pipe(
+        map((value) => {
+          this.totalOffersCount = value.count;
+          return value.results.map(garden => this.populateID(garden));
+        })
+      );
+  }
+
+  private populateID(garden: GardenOfferExternal): GardenOffer {
+    console.log(JSON.stringify(garden));
+    return {
+      title: garden.title,
+      body: garden.body,
+      contact: garden.contact,
+      gardenInfo: {
+        postNumber: garden.id,
+        address: garden.garden_info.address,
+        area: garden.garden_info.area,
+        price: garden.garden_info.price,
+        predictedRent: garden.garden_info.predicted_rent
+      },
+      createdAt: garden.created_at
+    };
   }
 
   updateSearchControl($event: Event) {
     this.searchControl.setValue(($event.target as HTMLInputElement).value);
+  }
+
+  onCancel() {
+    this.isCreating = false;
+  }
+
+  onOfferCreated(offer: GardenOfferCreate) {
+    this.gardenOffersService.createGardenOffer(offer)
+      .subscribe({
+        next: data => {
+        },
+        error: error => {
+          console.error(error);
+        }
+      });
+    this.isCreating = false;
+  }
+
+  onSortChange(event: MatSelectChange) {
+    switch (event.value) {
+      case 'newest':
+        this.filters.sort_by = 'created_at';
+        this.filters.sort_order = 'desc';
+        break;
+      case 'oldest':
+        this.filters.sort_by = 'created_at';
+        this.filters.sort_order = 'asc';
+        break;
+      case 'cheapest':
+        this.filters.sort_by = 'price';
+        this.filters.sort_order = 'asc';
+        break;
+      case 'expensive':
+        this.filters.sort_by = 'price';
+        this.filters.sort_order = 'desc';
+        break;
+    }
+  }
+
+  fetchWithFilters() {
+    this.gardenOffers$ = this.gardenOffersService.fetchGardenOffersWithFilters(this.currentPageIndex, this.currentPageSize, this.filters)
+      .pipe(
+        map((value) => {
+          this.totalOffersCount = value.count;
+          return value.results.map(garden => this.populateID(garden));
+        })
+      )
   }
 }
