@@ -1,3 +1,6 @@
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.9)" size = "large" color = "#009688" type = "square-jelly-box" [fullScreen] = "true"><p style="color: white" > Logowanie </p></ngx-spinner>
+
+
 <div class="page-container">
   <mat-card appearance="outlined" class="large-card large-card-size row-container">
     <mat-card-header class="row-item">
@@ -24,8 +27,13 @@
               </mat-error>
             </mat-form-field>
           </div>
+          <div *ngIf="showError">
+            <mat-error>
+              Podano błędne dane
+            </mat-error>
+          </div>
           <div class="row-item forgot-password-link">
-            <a (click)="navigate('forgetPassword')">Zapomniałeś hasła?</a>
+            <a (click)="navigate('forget-password')">Zapomniałeś hasła?</a>
           </div>
           <div class="row-item login-section">
             <button mat-raised-button class="login-button" color="primary" type="submit" (click)="login()">Zaloguj się</button>

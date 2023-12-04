@@ -116,7 +116,18 @@ import localePl from '@angular/common/locales/pl';
 import {registerLocaleData} from "@angular/common";
 import {LOCALE_ID} from '@angular/core';
 import {EditUtilityValuesComponent} from "./features/payments/edit-utility-values/edit-utility-values.component";
+
+import { EditDescriptionDialogComponent } from './features/garden-info/edit-description-dialog/edit-description-dialog.component';
+import { ListOfGardeneirsComponent } from './features/list-of-gardeneirs/list-of-gardeneirs.component';
+
+import { NgxSpinnerModule } from "ngx-spinner";
+import { VotedVotingsComponent } from './features/votings/voted-votings/voted-votings.component';
+import {UserPaymentsComponent} from "./features/list-of-gardeneirs/payments/user-payments.component";
+import { ForgetPasswordComponent } from './features/forget-password/forget-password.component';
+import { ResetPasswordComponent } from './features/reset-password/reset-password.component';
+
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+
 
 registerLocaleData(localePl);
 
@@ -218,7 +229,13 @@ registerLocaleData(localePl);
     OfferDetailsComponent,
     CalendarComponent,
     EventDetailsComponent,
-    EditUtilityValuesComponent
+    EditUtilityValuesComponent,
+    EditDescriptionDialogComponent,
+    ListOfGardeneirsComponent,
+    VotedVotingsComponent,
+    UserPaymentsComponent,
+    ForgetPasswordComponent,
+    ResetPasswordComponent
   ],
     imports: [
         BrowserModule,
@@ -253,14 +270,18 @@ registerLocaleData(localePl);
         MatChipsModule,
         FormsModule,
         QuillModule.forRoot(),
-    MatDialogModule, MatTabsModule,
-    MatSnackBarModule, MatRadioModule,
-    NgApexchartsModule,    MatDialogModule,
+        MatDialogModule,
         MatTabsModule,
         MatSnackBarModule,
+        MatRadioModule,
+        NgApexchartsModule,
+
         MatSliderModule,
-        CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}), MatProgressSpinnerModule
-    ],
+        CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
+        NgxSpinnerModule,
+        MatProgressSpinnerModule
+  ],
+
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'pl-PL'},
     {

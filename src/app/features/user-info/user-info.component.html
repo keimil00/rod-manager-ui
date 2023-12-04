@@ -1,3 +1,5 @@
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.3)" size="large" color="#009688" type="square-jelly-box" [fullScreen]="true"><p
+        style="color: white"> Ładowanie </p></ngx-spinner>
 <div class="page-container">
     <mat-card class="large-card-size">
         <mat-card-header>
@@ -31,9 +33,6 @@
                             <mat-form-field class="full-width">
                                 <mat-label>Numer telefonu</mat-label>
                                 <input matInput placeholder="Numer telefonu" formControlName="phoneNumber">
-                                <mat-error *ngFor="let error of validationErrors('phoneNumber')">
-                                    {{ error.message }}
-                                </mat-error>
                             </mat-form-field>
                         </div>
                         <div class="row-item">
@@ -41,55 +40,6 @@
                                 <mat-label>Email</mat-label>
                                 <input matInput placeholder="Email" formControlName="email" readonly>
                             </mat-form-field>
-                        </div>
-
-                        <div *ngIf="showGardenAddress">
-                            <div class="row-item">
-                                <mat-form-field class="full-width">
-                                    <mat-label>Sektor</mat-label>
-                                    <ng-container>
-                                        <mat-select formControlName="plotSector">
-                                            <mat-option *ngFor="let option of sectorsOptions" [value]="option">
-                                                {{ option}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </ng-container>
-                                    <mat-error *ngFor="let error of validationErrors('plotSector')">
-                                        {{ error.message }}
-                                    </mat-error>
-                                </mat-form-field>
-                            </div>
-
-                            <div class="row-item">
-                                <mat-form-field class="full-width">
-                                    <mat-label>Aleja</mat-label>
-                                    <ng-container>
-                                        <mat-select formControlName="plotAvenue">
-                                            <mat-option *ngFor="let option of avenuesOptions" [value]="option">
-                                                {{ option}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </ng-container>
-                                    <mat-error *ngFor="let error of validationErrors('plotAvenue')">
-                                        {{ error.message }}
-                                    </mat-error>
-                                </mat-form-field>
-                            </div>
-                            <div class="row-item">
-                                <mat-form-field class="full-width">
-                                    <mat-label>Numer</mat-label>
-                                    <ng-container>
-                                        <mat-select formControlName="plotNumber">
-                                            <mat-option *ngFor="let option of numbersOptions" [value]="option">
-                                                {{ option}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </ng-container>
-                                    <mat-error *ngFor="let error of validationErrors('plotNumber')">
-                                        {{ error.message }}
-                                    </mat-error>
-                                </mat-form-field>
-                            </div>
                         </div>
 
                         <!--            mozliwe ze da sie to lepiej zrobić-->
@@ -111,9 +61,20 @@
                                     <mat-label>Rola</mat-label>
                                     <ng-container>
                                         <mat-select multiple formControlName="accountStatus">
-                                            <mat-option *ngFor="let roleKey of Object.keys(Role_temp)" [value]="roleKey">
-                                                {{ getTranslatedRole(roleKey) }}
-                                            </mat-option>
+                                            <div *ngIf="showGardener">
+                                                <mat-option *ngFor="let roleKey of Object.keys(Role_temp)"
+                                                            [value]="roleKey">
+                                                    {{ getTranslatedRole(roleKey) }}
+                                                </mat-option>
+                                            </div>
+                                            <div *ngIf="!showGardener">
+                                                <mat-option *ngFor="let roleKey of Object.keys(Role_temp)"
+                                                            [value]="roleKey"
+                                                            [disabled]="roleKey === Role_temp.GARDENER">
+                                                    {{ getTranslatedRole(roleKey) }}
+                                                </mat-option>
+                                            </div>
+
                                         </mat-select>
                                     </ng-container>
                                     <mat-error *ngFor="let error of validationErrors('accountStatus')">
@@ -126,15 +87,36 @@
                                     <mat-label>Rola</mat-label>
                                     <ng-container>
                                         <mat-select multiple formControlName="accountStatus" *ngIf="showEditFullStatus">
-                                            <mat-option *ngFor="let roleKey of Object.keys(Role_temp)" [value]="roleKey" [disabled]="roleKey === Role_temp.ADMIN || roleKey === Role_temp.MANAGER">
-                                                {{ getTranslatedRole(roleKey) }}
-                                            </mat-option>
+                                            <div *ngIf="showGardener">
+                                                <mat-option *ngFor="let roleKey of Object.keys(Role_temp)"
+                                                            [value]="roleKey"
+                                                            [disabled]="roleKey === Role_temp.ADMIN || roleKey === Role_temp.MANAGER">
+                                                    {{ getTranslatedRole(roleKey) }}
+                                                </mat-option>
+                                            </div>
+                                            <div *ngIf="!showGardener">
+                                                <mat-option *ngFor="let roleKey of Object.keys(Role_temp)"
+                                                            [value]="roleKey"
+                                                            [disabled]="roleKey === Role_temp.ADMIN || roleKey === Role_temp.MANAGER || roleKey === Role_temp.GARDENER">
+                                                    {{ getTranslatedRole(roleKey) }}
+                                                </mat-option>
+                                            </div>
                                         </mat-select>
                                         <mat-select multiple formControlName="accountStatus"
                                                     *ngIf="!showEditFullStatus">
-                                            <mat-option *ngFor="let roleKey of Object.keys(Role_temp2)" [value]="roleKey">
-                                                {{ getTranslatedRole(roleKey) }}
-                                            </mat-option>
+                                            <div *ngIf="showGardener">
+                                                <mat-option *ngFor="let roleKey of Object.keys(Role_temp2)"
+                                                            [value]="roleKey">
+                                                    {{ getTranslatedRole(roleKey) }}
+                                                </mat-option>
+                                            </div>
+                                            <div *ngIf="!showGardener">
+                                                <mat-option *ngFor="let roleKey of Object.keys(Role_temp2)"
+                                                            [value]="roleKey"
+                                                            [disabled]="roleKey === Role_temp2.GARDENER">
+                                                    {{ getTranslatedRole(roleKey) }}
+                                                </mat-option>
+                                            </div>
                                         </mat-select>
                                     </ng-container>
                                     <mat-error *ngFor="let error of validationErrors('accountStatus')">

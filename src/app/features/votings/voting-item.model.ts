@@ -3,7 +3,7 @@ export interface VotingItem {
   title: string;
   description: string;
   options: VotingOption[];
-  finishDate: Date;
+  end_date: Date;
 }
 
 
@@ -17,9 +17,19 @@ export interface VotingItem {
 
 
 export interface VotingOption {
-  optionId: number;
+  option_id: number;
   label: string;
-  votes: number;
+  vote_count: number;
+}
+
+
+export interface VotedItem {
+  id: number;
+  title: string;
+  description: string;
+  options: VotingOption[];
+  end_date: Date;
+  user_vote: number;
 }
 
 

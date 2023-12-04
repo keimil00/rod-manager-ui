@@ -1,89 +1,105 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable, of} from "rxjs";
-import {Document} from "./document";
+import {Document, Leaf} from "./document";
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class DocumentsService {
 
-    private documents: Document[] = [
-        {id: '1', title: 'Dokument 1'},
-        {id: '2', title: 'Dokument 2'},
-        {
-            id: '3',
-            title: 'Lista Dokumentów',
-            items: [
-                {id: '4', title: 'Pod-Dokument 1'},
-                {id: '5', title: 'Pod-Dokument 2'}
-            ]
+  // private documents: Document[] = [
+  //     {id: '1', name: 'Dokument 1'},
+  //     {id: '2', name: 'Dokument 2'},
+  //     {
+  //         id: '3',
+  //         name: 'Lista Dokumentów',
+  //         items: [
+  //             {id: '4', name: 'Pod-Dokument 1'},
+  //             {id: '5', name: 'Pod-Dokument 2'}
+  //         ]
+  //     }
+  // ];
+
+  private baseUrl = '/api/documents/';
+
+  constructor(private httpClient: HttpClient) {
+  }
+
+  getDocuments(): Observable<Document[]> {
+    return this.httpClient.get<Document[]>(this.baseUrl);
+  }
+
+  putDocuments(leaf: Leaf, id: number): Observable<any> {
+    const url = this.baseUrl + id + '/';
+    if (leaf.file || leaf.file === null) {
+      const formData = new FormData();
+
+      if (leaf.file) {
+        formData.append('name', leaf.name);
+        formData.append('file', leaf.file);
+        if (leaf.parent) {
+          formData.append('parent', leaf.parent.toString());
+          return this.httpClient.put(url, formData);
         }
-    ];
-
-
-    private baseUrl = '/api/documents';
-
-    constructor(private httpClient: HttpClient) {
+        return this.httpClient.put(url, formData);
+      } else {
+        if (leaf.parent) {
+          let body = {
+            name: leaf.name,
+          }
+          return this.httpClient.put(url, body);
+        } else {
+          let body = {
+            name: leaf.name,
+            parent: leaf.parent
+          }
+          return this.httpClient.put(url, body);
+        }
+      }
+    } else {
+      return this.httpClient.put(url, leaf)
     }
+  }
 
-    getDocuments(): Observable<Document[]> {
-        return of(this.documents)
+  postDocuments(leaf: Leaf): Observable<any> {
+    if (leaf.file) {
+      const formData = new FormData();
+
+      formData.append('name', leaf.name);
+      formData.append('file', leaf.file);
+      if (leaf.parent) {
+        formData.append('parent', leaf.parent.toString());
+        return this.httpClient.post(this.baseUrl, formData);
+      }
+
+      return this.httpClient.post(this.baseUrl, formData);
+    } else {
+      return this.httpClient.post(this.baseUrl, leaf)
     }
+    ;
+  }
 
-    uploadMapDocument(file: File): Observable<any> {
-        return this.uploadDocument(file, 'map')
-    }
-
-    uploadStatuteDocument(file: File): Observable<any> {
-        return this.uploadDocument(file, 'statute')
-    }
-
-    uploadDocument(file: File, idDocument: string): Observable<any> {
-        return of("test")
-    }
-
-    editDocument(file: File, idDocument: string): Observable<any> {
-        return of("test")
-    }
-
-    uploadDocument2(file: File, idDocument: string): Observable<any> {
-        const formData = new FormData();
-        formData.append('file', file);
-        return this.httpClient.post<any>(`${this.baseUrl}/${idDocument}`, formData);
-    }
-
-    updateDocumentsList(documents: Document[]): Observable<any> {
-        return of("test")
-    }
-
-    updateDocumentsList2(documents: Document[]): Observable<any> {
-        return this.httpClient.put<any>(this.baseUrl, documents);
-    }
-
-    isMapAvailable(): Observable<boolean> {
-        return of(true)
-    }
-
-    isStatuteAvailable(): Observable<boolean> {
-        return of(true)
-    }
+  deleteDocument(id: number): Observable<any> {
+    return this.httpClient.delete(`${this.baseUrl}${id}/`);
+  }
 
 
-    isMapAvailable2(): Observable<boolean> {
-        return this.httpClient.get<boolean>(`${this.baseUrl}/map`);
-    }
+  isMapAvailable(): Observable<boolean> {
+    return of(true)
+  }
 
-    isStatuteAvailable2(): Observable<boolean> {
-        return this.httpClient.get<boolean>(`${this.baseUrl}/statute`);
-    }
+  isStatuteAvailable(): Observable<boolean> {
+    return of(true)
+  }
 
 
-    downloadDocument(idDocument: string): Observable<string> {
-        return this.httpClient.get<string>(`${this.baseUrl}/${idDocument}`);
-    }
+  isMapAvailable2(): Observable<boolean> {
+    return this.httpClient.get<boolean>(`${this.baseUrl}/map`);
+  }
 
-    downloadDocumentSimulate(idDocument: string): Observable<string> {
-        return of('assets/Potwierdzenie_wykonania_operacji.pdf')
-    }
+  isStatuteAvailable2(): Observable<boolean> {
+    return this.httpClient.get<boolean>(`${this.baseUrl}/statute`);
+  }
+
 }

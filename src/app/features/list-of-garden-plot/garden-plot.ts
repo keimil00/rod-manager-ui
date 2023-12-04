@@ -5,6 +5,7 @@ export interface GardenPlot {
   number: number;
   area: number| null;
   leaseholderID: number| null;
+  exLeaseholderID: number| null;
   gardenStatus: PlotStatus;
 }
 

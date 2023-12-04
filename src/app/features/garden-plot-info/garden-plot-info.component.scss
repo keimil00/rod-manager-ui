@@ -6,7 +6,7 @@
 }
 
 .large-card-size {
-  width: 70%;
+  width: 60%;
   align-self: center;
   -webkit-box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
   -moz-box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
@@ -17,6 +17,7 @@
   padding-left: 2%;
   padding-right: 2%;
   padding-bottom: 30px;
+  background-color: rgba(255, 255, 255, 0.8)
 }
 
 .center-item {
@@ -35,16 +36,16 @@
 
 .title {
   text-align: center;
-  font-size: 30px;
+  font-size: var(--30-font);
 }
 
 .small-title {
   text-align: left;
-  font-size: 25px;
+  font-size: var(--25-font);
 }
 
 .tabel-card {
-  width: 60%;
+  width: 80%;
   align-self: center;
   -webkit-box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
   -moz-box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
@@ -105,7 +106,7 @@ tr::after {
 
 .date {
   color: red;
-  font-size: 20px;
+  font-size: var(--20-font);
   padding: 5px;
 }
 
@@ -143,7 +144,17 @@ tr::after {
 }
 @media only screen and (min-width: 800px) and (max-width: 1200px) {
   .large-card-size {
-    width: 95%;
+    width: 85%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .tabel-card, .payment-date-card {
+    width: 90%;
+  }
+}
+@media only screen and (min-width: 1200px) and (max-width: 1400px) {
+  .large-card-size {
+    width: 75%;
     padding-left: 0;
     padding-right: 0;
   }
@@ -151,14 +162,15 @@ tr::after {
     width: 80%;
   }
 }
-@media only screen and (min-width: 1200px) and (max-width: 1400px) {
+
+@media only screen and (min-width: 1400px) and (max-width: 1600px) {
   .large-card-size {
-    width: 95%;
+    width: 70%;
     padding-left: 0;
     padding-right: 0;
   }
   .tabel-card, .payment-date-card {
-    width: 70%;
+    width: 75%;
   }
 }
 @media only screen and (max-width: 600px) {

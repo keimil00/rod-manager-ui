@@ -7,6 +7,7 @@ import {MatPaginator} from "@angular/material/paginator";
 import {ListOfUsersService} from "./list-of-users.service";
 import {Page} from "../../shared/paginator/page.model";
 import {Role,getTranslatedRole} from "../register/user.model";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
     selector: 'app-list-of-users',
@@ -18,7 +19,6 @@ export class ListOfUsersComponent {
 
     dataProfiles = new MatTableDataSource<Profile>();
 
-    profilesLoaded: Profile[] = [];
     totalUsersCount: number = 0;
     DefoultpageSize = 10;
 
@@ -27,7 +27,8 @@ export class ListOfUsersComponent {
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-    constructor(private router: Router, private listOfUsersService: ListOfUsersService, private changeDetectorRef: ChangeDetectorRef) {
+    constructor(private router: Router, private listOfUsersService: ListOfUsersService, private changeDetectorRef: ChangeDetectorRef,private spinner: NgxSpinnerService) {
+        this.spinner.show()
         this.initData();
         this.dataProfiles.paginator = this.paginator;
     }
@@ -40,6 +41,7 @@ export class ListOfUsersComponent {
         this.listOfUsersService.getProfiles(index, size).subscribe((page: Page<Profile>) => {
             this.totalUsersCount = page.count;
             this.dataProfiles = new MatTableDataSource<Profile>(page.results);
+            this.spinner.hide()
         });
     }
 

@@ -69,7 +69,7 @@ export class AddAdditionalFeesComponent {
                 value: newValue
             }
 
-            this.paymentsService.addAdditionalFee(payment)
+            this.paymentsService.addAdditionalFee(payment).subscribe()
 
             this.editFeeForm.reset()
             this.closeDialog()

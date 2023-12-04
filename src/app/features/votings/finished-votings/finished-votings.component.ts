@@ -1,8 +1,7 @@
-import {AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {Component, ElementRef, QueryList, ViewChildren} from '@angular/core';
 import * as ApexCharts from 'apexcharts';
-import {VotingItem} from "../voting-item.model";
+import {VotedItem, VotingItem} from "../voting-item.model";
 import {VotingsService} from "../votings.service";
-import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-finished-votings',
@@ -12,7 +11,7 @@ import {Subject} from "rxjs";
 export class FinishedVotingsComponent {
 
   // @ts-ignore
-  finishedVotes: VotingItem[]
+  finishedVotes: VotedItem[]
   // @ts-ignore
   @ViewChildren('chart') chartElements: QueryList<ElementRef>;
 
@@ -20,6 +19,7 @@ export class FinishedVotingsComponent {
   }
 
   ngOnInit() {
+    this.scheduleMidnightRefresh();
     this.getFinishedVotes();
   }
 
@@ -43,22 +43,59 @@ export class FinishedVotingsComponent {
   }
 
   getFinishedVotes() {
-    this.votingService.getFinishedVotes().subscribe((votes: VotingItem[]) => {
+    this.votingService.getFinishedVotes().subscribe((votes: VotedItem[]) => {
       this.finishedVotes = votes;
     });
+  }
+
+  // Teoretycznie to powinno odwieżać głosowania po północy, ale nie testowałem tego XD
+  scheduleMidnightRefresh() {
+    const now = new Date();
+    const currentHour = now.getHours();
+
+    // Oblicz czas do północy
+    const midnight = new Date(now); // Tworzymy kopię obecnego czasu
+    midnight.setHours(24, 0, 0, 0); // Ustawiamy na północ kolejnego dnia
+
+    const timeUntilMidnight = midnight.getTime() - now.getTime();
+
+    // Ustawienie timera na pobranie danych po północy
+    setTimeout(() => {
+      this.tryGenerateCharts2();
+      this.scheduleMidnightRefresh(); // Zaplanowanie kolejnego pobrania danych po północy
+    }, timeUntilMidnight);
+  }
+
+  tryGenerateCharts2() {
+    let stop =0
+    while (stop<10) {
+      setTimeout(() => {
+        console.log("Trying to regenerate charts")
+        this.generateCharts();
+        stop++;
+        if(this.chartElements){stop=1000}
+      }, 100);
+      return;
+    }
+  }
+
+  getVote(vote: VotedItem, optionId: number) {
+    return vote.options.find(option => option.option_id === optionId)?.label;
   }
 
 
   generateCharts() {
     this.chartElements.forEach((element, index) => {
       const vote = this.finishedVotes[index];
+      const totalVotes = vote.options.reduce((acc: number, option: { vote_count: number }) => acc + option.vote_count, 0);
 
+      if (totalVotes > 0) {
       const chartOptions: ApexCharts.ApexOptions = {
         theme: {
           mode: 'light',
           palette: 'palette4',
         },
-        series: vote.options.map((option: { votes: any; }) => option.votes),
+        series: vote.options.map((option: { vote_count: any; }) => option.vote_count),
         chart: {
           type: 'donut',
           width: 550
@@ -95,7 +132,23 @@ export class FinishedVotingsComponent {
         ]
       };
       const chart = new ApexCharts(element.nativeElement, chartOptions);
-      chart.render();
+      chart.render();}
+      else {
+        const noVotesText = document.createElement('p');
+        noVotesText.textContent = "Nie oddano żadnego głosu.";
+        element.nativeElement.appendChild(noVotesText);
+        const optionText = document.createElement('p');
+        optionText.textContent = "Dostępne opcje:";
+        element.nativeElement.appendChild(optionText);
+
+        const optionsList = document.createElement('ul');
+        vote.options.forEach((option: { label: string }) => {
+          const optionItem = document.createElement('li');
+          optionItem.textContent = option.label;
+          optionsList.appendChild(optionItem);
+        });
+        element.nativeElement.appendChild(optionsList);
+      }
     });
   }
 }

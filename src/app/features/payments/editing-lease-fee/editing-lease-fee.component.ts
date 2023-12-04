@@ -107,7 +107,7 @@ export class EditingLeaseFeeComponent {
             payments[2].value = investmentFeeValue;
 
             this.leaseFees = payments
-            this.paymentsService.editLeaseFee(payments)
+            this.paymentsService.editLeaseFee(payments).subscribe()
             this.editLeaseFeesForm.reset()
             this.closeDialog()
         }

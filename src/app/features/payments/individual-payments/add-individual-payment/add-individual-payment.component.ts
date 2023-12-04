@@ -56,7 +56,7 @@ export class AddIndividualPaymentComponent {
 
             const newPayment: IndividualPayment = {paymentID: uniqueId, name: name, value: value, date: new Date(Date.now())}
 
-            this.paymentsService.addNewIndividualPayment(this.userID, newPayment)
+            this.paymentsService.addNewIndividualPayment(this.userID, newPayment).subscribe()
 
             this.addIndividualPaymentForm.reset();
             this.closeDialog.emit()

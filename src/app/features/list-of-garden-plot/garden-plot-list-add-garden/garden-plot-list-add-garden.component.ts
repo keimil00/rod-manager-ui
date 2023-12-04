@@ -198,6 +198,7 @@ export class GardenPlotListAddGardenComponent {
                 number: newNumber,
                 area: newArea,
                 leaseholderID: newLeaseholderID,
+                exLeaseholderID: null,
                 gardenStatus: newStatus
             };
 

@@ -10,6 +10,7 @@ import {MatPaginator} from "@angular/material/paginator";
 import {BackendGardenService} from "./backend-garden.service";
 import {Page} from "../../shared/paginator/page.model";
 import {forkJoin} from "rxjs";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
     selector: 'app-list-of-garden-plot',
@@ -32,7 +33,8 @@ export class ListOfGardenPlotComponent {
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-    constructor(private dialog: MatDialog, private gardenPlotsDataService: BackendGardenService, private changeDetectorRef: ChangeDetectorRef) {
+    constructor(private dialog: MatDialog, private gardenPlotsDataService: BackendGardenService, private changeDetectorRef: ChangeDetectorRef,private spinner: NgxSpinnerService) {
+        this.spinner.show()
         this.sortData()
 
         this.initData();
@@ -47,6 +49,7 @@ export class ListOfGardenPlotComponent {
         this.gardenPlotsDataService.getGardenPlots(this.currentPageIndex, size).subscribe((page: Page<GardenPlotBackend>) => {
             this.totalGardenCount = page.count;
             this.dataSource = new MatTableDataSource<GardenPlotBackend>(page.results);
+            this.spinner.hide()
         });
     }
 
@@ -89,23 +92,24 @@ export class ListOfGardenPlotComponent {
     }
 
     selectDetails(gardenPlot: GardenPlot) {
-
-
             forkJoin({
-                leaseHolder:this.gardenPlotsDataService.getLeaseholder(gardenPlot.gardenPlotID)
+                leaseHolder:this.gardenPlotsDataService.getLeaseholder(gardenPlot.gardenPlotID),
+                exLeaseHolder:this.gardenPlotsDataService.getExLeaseholder(gardenPlot.gardenPlotID)
             }).subscribe(data => {
                 let leaseHolder : Profile | null
                 leaseHolder = data.leaseHolder
                 this.showDetails = true;
+                let exLeaseHolder : Profile | null
+                exLeaseHolder = data.exLeaseHolder
                 // @ts-ignore
-                this.showDetailsDialog(gardenPlot, leaseHolder)
+                this.showDetailsDialog(gardenPlot, leaseHolder, exLeaseHolder);
             });
     }
 
-    showDetailsDialog(gardenPlot: GardenPlot, leaseholder: Profile | undefined) {
+    showDetailsDialog(gardenPlot: GardenPlot, leaseholder: Profile | undefined, exleaseholder: Profile | undefined) {
         const dialogRef = this.dialog.open(GardenPlotDetailsComponent, {
             width: '4000px',
-            data: {gardenPlot, leaseholder},
+            data: {gardenPlot, leaseholder, exleaseholder},
         });
 
         dialogRef.afterClosed().subscribe(() => {

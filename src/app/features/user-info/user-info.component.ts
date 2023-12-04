@@ -1,21 +1,16 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {Profile} from "../Profile";
-import {GardenPlot, GardenPlotBackend} from "../list-of-garden-plot/garden-plot";
+import {GardenPlot} from "../list-of-garden-plot/garden-plot";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {getTranslatedRole, Role} from "../register/user.model";
-import {
-    findGardenByID,
-    findGardenByUserID,
-    findGardenPlotIdByAddress, uniqueLeaseholderIDValidator,
-} from "../list-of-garden-plot/GardenService";
+import {findGardenByUserID,} from "../list-of-garden-plot/GardenService";
 import {ListOfUsersService} from "../list-of-users/list-of-users.service";
 import {BackendGardenService} from "../list-of-garden-plot/backend-garden.service";
 import {StorageService} from "../../core/storage/storage.service";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {forkJoin} from "rxjs";
-import {getMatchingProfiles, profileEmailValidator} from "../list-of-users/ProfilesService";
-import {TopBarService} from "../../core/top-app-bar/top-bar.service";
+import {UserInfoService} from "./user-info.service";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
     selector: 'app-user-info',
@@ -26,17 +21,12 @@ export class UserInfoComponent {
     id: number | null = null;
     profile: Profile | undefined;
     userInfoForm: FormGroup;
-    showGardenAddress: boolean = false;
     showUserEdit: boolean = true;
     showEditStatus: boolean = true;
     showEditFullStatus: boolean = true;
+    showGardener: boolean = true;
 
-    sectorsOptions: (string | null)[] = [];
-    avenuesOptions: (string | null)[] = [];
-    numbersOptions: (number | null)[] = [];
 
-    // @ts-ignore
-    profiles: Profile[];
     // @ts-ignore
     gardenPlots: GardenPlot[];
 
@@ -44,57 +34,39 @@ export class UserInfoComponent {
 
     constructor(private route: ActivatedRoute, formBuilder: FormBuilder, private router: Router,
                 private listOfUsersService: ListOfUsersService,
-                private backendGardenService: BackendGardenService, private storageService: StorageService, private topBarService: TopBarService) {
+                private backendGardenService: BackendGardenService, private storageService: StorageService, private userInfoService: UserInfoService, private spinner: NgxSpinnerService) {
         this.userInfoForm = formBuilder.group({
             firstName: [{value: '', disabled: true}],
             lastName: [{value: '', disabled: true}],
             phoneNumber: [{value: '', disabled: true}],
             email: [{value: '', disabled: true}],
-            plotSector: [{value: '', disabled: true}],
-            plotAvenue: [{value: '', disabled: true}],
-            plotNumber: [{value: 0, disabled: true}],
             accountStatus: [{value: '', disabled: true}],
         });
         this.route.params.subscribe(params => {
             this.id = parseInt(params['id'], 10)
         });
+        this.spinner.show()
         this.loadData()
     }
 
     loadData() {
         forkJoin({
-            profiles: this.listOfUsersService.getAllProfiles(),
             gardenPlots: this.backendGardenService.getAllGardenPlots(),
             profile: this.listOfUsersService.getProfileById(this.id),
-            myProfile: this.topBarService.getMyProfile()
+            myProfile: this.userInfoService.getMyProfile()
         }).subscribe(data => {
-            if ((!(this.storageService.getRoles().includes(Role.ADMIN) || (this.storageService.getRoles().includes(Role.MANAGER))))&&(this.id !== data.myProfile.id)) {
+            if ((!(this.storageService.getRoles().includes(Role.ADMIN) || (this.storageService.getRoles().includes(Role.MANAGER)))) && (this.id !== data.myProfile.id)) {
                 this.router.navigate(['/403']);
             }
-            this.profiles = data.profiles;
             this.gardenPlots = data.gardenPlots;
             this.profile = data.profile;
             this.initData()
+            this.spinner.hide()
         });
     }
 
     initData() {
         this.isAvailableToEditProfile()
-
-
-        if (findGardenByUserID(this.id, this.gardenPlots)) {
-            this.showGardenAddress = true
-        }
-        this.sectorsOptions = this.getMatchingSectors(this.profiles, this.gardenPlots);
-
-        this.userInfoForm.get('plotSector')?.valueChanges.subscribe((value) => {
-            this.avenuesOptions = this.getMatchingAvenues(this.profiles, this.gardenPlots, this.userInfoForm.get('plotSector')?.value)
-            this.numbersOptions = []
-        });
-
-        this.userInfoForm.get('plotAvenue')?.valueChanges.subscribe((value) => {
-            this.numbersOptions = this.getMatchingNumbers(this.profiles, this.gardenPlots, this.userInfoForm.get('plotSector')?.value, this.userInfoForm.get('plotAvenue')?.value)
-        });
         this.populateFormFromGardenPlot(this.profile);
     }
 
@@ -107,33 +79,14 @@ export class UserInfoComponent {
         }
     }
 
-
     populateFormFromGardenPlot(profile: Profile | undefined) {
-        const address = this.findPlotAddressTupleByUserId(this.gardenPlots, profile?.id);
         this.userInfoForm.patchValue({
             firstName: profile?.first_name,
             lastName: profile?.last_name,
             phoneNumber: profile?.phone,
             email: profile?.email,
-            plotSector: address?.sector,
-            plotAvenue: address?.avenue,
-            plotNumber: address?.number,
             accountStatus: profile?.groups
         });
-    }
-
-    findPlotAddressTupleByUserId(gardenPlots: GardenPlot[], id: number | undefined): {
-        sector: string | null;
-        avenue: string | null;
-        number: number
-    } | null {
-        const foundPlot = gardenPlots.find(plot => plot.leaseholderID === id);
-
-        if (foundPlot) {
-            const {sector, avenue, number} = foundPlot;
-            return {sector, avenue, number};
-        }
-        return null;
     }
 
     validationErrors(controlName: string): any[] {
@@ -154,19 +107,6 @@ export class UserInfoComponent {
         lastName: [
             {type: 'required', message: 'Proszę podać nazwisko'},
         ],
-        phoneNumber: [
-            {type: 'required', message: 'Proszę podać numer telefonu'},
-        ],
-        plotSector: [
-            {type: 'required', message: 'Proszę podać sektor'},
-        ],
-        plotAvenue: [
-            {type: 'required', message: 'Proszę podać poprawną aleje'}
-        ],
-        plotNumber: [
-            {type: 'required', message: 'Proszę podać numer'},
-            {type: 'goodAdress', message: 'Proszę podać poprawny numer'}
-        ],
         accountStatus: [
             {type: 'required', message: 'Proszę podać status'}
         ]
@@ -174,9 +114,11 @@ export class UserInfoComponent {
     protected readonly Role = Role;
 
     enableFormFields() {
-        this.showGardenAddress = true;
-
         this.showEditStatus = false
+        // TODO zobaczyc czy jest endpoint jak jest do zamienic i usunac pobieranie dzialek
+        if (findGardenByUserID(this.profile?.id, this.gardenPlots)) {
+            this.showGardener = false
+        }
         if (
             (this.profile?.groups.some((status) => status === Role.ADMIN)) ||
             (this.profile?.groups.some((status) => status === Role.MANAGER))
@@ -192,12 +134,18 @@ export class UserInfoComponent {
                 control.updateValueAndValidity();
             }
         });
+        //TODO do konca nie jestem pewien czy tak powinienem robic ale taka sytuacja teoretycznie nie powinna wogle sie wydarzyc
+        if (!this.showGardener) {
+            let tempGroups = this.profile?.groups;
+            if(!tempGroups?.includes(Role.GARDENER))
+            tempGroups?.push(Role.GARDENER)
+            this.userInfoForm.patchValue({
+                accountStatus: tempGroups
+            })
+        }
 
         this.userInfoForm.get('phoneNumber')?.setValidators([])
         this.userInfoForm.get('accountStatus')?.setValidators([])
-        this.userInfoForm.get('plotSector')?.setValidators([])
-        this.userInfoForm.get('plotAvenue')?.setValidators([])
-        this.userInfoForm.get('plotNumber')?.setValidators([])
 
         this.userInfoForm.get('email')?.disable();
         this.userInfoForm.updateValueAndValidity();
@@ -205,11 +153,6 @@ export class UserInfoComponent {
     }
 
     disableFormFields() {
-        if (findGardenByUserID(this.id, this.gardenPlots)) {
-            this.showGardenAddress = true
-        } else {
-            this.showGardenAddress = false
-        }
         this.showEditStatus = false;
         this.showUserEdit = true
         Object.keys(this.userInfoForm.controls).forEach(controlName => {
@@ -224,24 +167,7 @@ export class UserInfoComponent {
 
 
     editProfile() {
-        const newSector: string = this.userInfoForm.get('plotSector')?.value;
-        const newAvenue: string = this.userInfoForm.get('plotAvenue')?.value;
-        const newNumber: number = this.userInfoForm.get('plotNumber')?.value;
-        let goodAdress: boolean = false
-
-        let gardenID = findGardenPlotIdByAddress(newSector, newAvenue, newNumber, this.gardenPlots)
-        let garden;
-        if (gardenID) {
-            garden = findGardenByID(gardenID, this.gardenPlots)
-            if (garden) {
-                goodAdress = true
-            }
-        }
-
-        if (newSector === null || newSector === undefined)
-            goodAdress = true
-
-        if (this.userInfoForm.valid && goodAdress) {
+        if (this.userInfoForm.valid) {
             const newFirstName: string = this.userInfoForm.get('firstName')?.value;
             const newLastName: string = this.userInfoForm.get('lastName')?.value;
             const newPhoneNumber: string = this.userInfoForm.get('phoneNumber')?.value;
@@ -261,12 +187,8 @@ export class UserInfoComponent {
                 // paymentDueDate: this.profile?.paymentDueDate
             };
 
-            if (newSector !== null) {
-                let idToNull = findGardenByUserID(this.id, this.gardenPlots)?.gardenPlotID
-                this.backendGardenService.updateLeaseholderID(idToNull, null)
-                this.backendGardenService.updateLeaseholderID(gardenID, this.id)
-            }
-            this.listOfUsersService.editProfile(newUser, this.id).subscribe(() => {});
+            this.listOfUsersService.editProfile(newUser, this.id).subscribe(() => {
+            });
             // this.profile = newUser;
             this.disableFormFields()
         }

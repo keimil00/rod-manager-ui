@@ -3,6 +3,7 @@ import {GardenPlotInfoService} from "./garden-plot-info.service";
 import {GardenPlotInfo, GardenPlotInfoFee, IndividualPaymentGardenPlot, MediaIndividualFee} from "./gardenPlotInfo";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
     selector: 'app-garden-plot-info',
@@ -28,7 +29,8 @@ export class GardenPlotInfoComponent implements AfterViewInit {
     // @ts-ignore
     individualFees: MatTableDataSource<IndividualPaymentGardenPlot>;
 
-    constructor(private gardenPlotInfoService: GardenPlotInfoService) {
+    constructor(private gardenPlotInfoService: GardenPlotInfoService,private spinner: NgxSpinnerService) {
+        this.spinner.show()
         gardenPlotInfoService.getGardenPlotInfo().subscribe((data: GardenPlotInfo) => {
             this.gardenPlotInfo = data;
             this.setMatTableDataSources()
@@ -41,6 +43,7 @@ export class GardenPlotInfoComponent implements AfterViewInit {
         this.dataUtilityFees = new MatTableDataSource(this.gardenPlotInfo.utilityFees);
         this.dataAdditionalFees = new MatTableDataSource(this.gardenPlotInfo.additionalFees);
         this.individualFees = new MatTableDataSource(this.gardenPlotInfo.individualFees);
+        this.spinner.hide()
     }
 
     @ViewChild('firstTableSort') public firstTableSort: MatSort | undefined;

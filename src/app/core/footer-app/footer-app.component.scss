@@ -17,7 +17,7 @@
 
     button {
       color: gray; // Set the text color to gray
-      font-size: 16px;
+      font-size: var(--16-font);
     }
 
     button:hover {
@@ -32,7 +32,7 @@
 
   .autor {
     color: gray;
-    font-size: 12px;
+    font-size: var(--12-font);
     padding-left: 10px;
     padding-right: 10px;
   }

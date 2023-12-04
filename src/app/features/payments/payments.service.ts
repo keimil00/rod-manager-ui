@@ -3,6 +3,7 @@ import {Fee, IndividualPayment, IndividualPayments, Payments, TypeOfFee, Utility
 import {HttpClient} from "@angular/common/http";
 import {GardenPlot} from "../list-of-garden-plot/garden-plot";
 import {Observable, of} from "rxjs";
+import {Payment, PaymentList} from "../list-of-garden-plot/garden-plot-details/PaymentList";
 
 @Injectable({
   providedIn: 'root'
@@ -57,7 +58,7 @@ export class PaymentsService {
     },
   ];
 
-  private UtilityValues :UtilityValues = {
+  private UtilityValues: UtilityValues = {
     electricValue: 0.5,
     waterValue: 2
   }
@@ -67,7 +68,7 @@ export class PaymentsService {
     utilityFees: this.utilityFees,
     additionalFees: this.additionalFees,
     date: new Date(2024, 10, 30),
-    utilityValues : this.UtilityValues
+    utilityValues: this.UtilityValues
 
   }
 
@@ -415,41 +416,56 @@ export class PaymentsService {
     },
   ];
 
-  private readonly individualPaymentsUrl = 'https://localhost:1337/api/individualPayments';
-  private readonly paymentsUrl = 'https://localhost:1337/api/payments';
-  private readonly confirmPaymentsURL = 'https://localhost:1337/api/confirm-payments'
+  private readonly URLpayments = '/api/payments/';
+  private readonly URIuserConfirm = 'confirm-userspayments/';
+  private readonly URIuserPayments = 'userspayments/';
+  private readonly URIeditLeasefee = 'edit-lease-fee/';
+  private readonly URIeditUtilityfee = 'edit-utility-fee/';
+  private readonly URIeditAdditionalfee = 'edit-additional-fee/';
+  private readonly URIeditUtilityValues = 'edit-utility-values/';
+  private readonly URIeditDate = 'edit-date/';
 
   constructor(private httpClient: HttpClient) {
   }
 
-  getPayments(): Observable<Payments> {
-    return of (this.payments)
+  getPayments2(): Observable<Payments> {
+    return of(this.payments)
   }
 
-  // TODO Backend
-  getPayments2(): Observable<Payments> {
-    return this.httpClient.get<Payments>(this.paymentsUrl);
+  getPayments(): Observable<Payments> {
+    return this.httpClient.get<Payments>(this.URLpayments);
   }
 
   //   TODO pamietac ze przy rejestracji trzeba dodawac to do listy
-  findUserPaymentsByAddress(sector: string | null, avenue: string | null, number: number | null, gardenPlots: GardenPlot[]): Observable<IndividualPayments | null> {
+  findUserPaymentsByAddress2(sector: string | null, avenue: string | null, number: number | null, gardenPlots: GardenPlot[]): Observable<IndividualPayments | null> {
     const matchingGardenPlot = gardenPlots.find((gardenPlot) =>
       gardenPlot.sector === sector && gardenPlot.avenue === avenue && gardenPlot.number === number
     );
     const leaseholderID = matchingGardenPlot ? matchingGardenPlot.leaseholderID : null;
     const individualPayment = this.individualPayments.find((payment) => payment.userID === leaseholderID)
     if (individualPayment) {
-      return of( individualPayment)
-    } else return of( null)
+      return of(individualPayment)
+    } else return of(null)
   }
 
-  //   TODO
-  findUserPaymentsByAddress2(sector: number| null, avenue: string | null, number: number | null): Observable<IndividualPayments | null> {
-    const url = `${this.individualPaymentsUrl}?sector=${sector}&avenue=${avenue}&number=${number}`;
+  findUserPaymentsByAddress(sector: string | null, avenue: string | null, number: number | null): Observable<IndividualPayments | null> {
+    const url = `${this.URLpayments}${this.URIuserPayments}?sector=${sector}&avenue=${avenue}&number=${number}`;
     return this.httpClient.get<IndividualPayments | null>(url);
   }
 
-  addNewIndividualPayment(userId: number | undefined, individualPayment: IndividualPayment): Observable<any> {
+  findUserPaymentsByID2(userID: number | undefined): Observable<IndividualPayments | null> {
+    const individualPayment = this.individualPayments.find((payment) => payment.userID === userID)
+    if (individualPayment) {
+      return of(individualPayment)
+    } else return of(null)
+  }
+
+  findUserPaymentsByID(userID: number | undefined): Observable<IndividualPayments | null> {
+    const url = `${this.URLpayments}${this.URIuserPayments}${userID}/`;
+    return this.httpClient.get<IndividualPayments | null>(url);
+  }
+
+  addNewIndividualPayment2(userId: number | undefined, individualPayment: IndividualPayment): Observable<any> {
     const foundUserIndex = this.individualPayments.findIndex(payment => payment.userID === userId);
     if (foundUserIndex !== -1) {
       // @ts-ignore
@@ -458,13 +474,12 @@ export class PaymentsService {
     return of(null);
   }
 
-  //   TODO
-  addNewIndividualPayment2(userId: number | undefined, individualPayment: IndividualPayment): Observable<any> {
-    const url = `${this.individualPaymentsUrl}/${userId}/addPayment`;
-    return this.httpClient.post(url, individualPayment);
+  addNewIndividualPayment(userID: number | undefined, individualPayment: IndividualPayment): Observable<any> {
+    const url = `${this.URLpayments}${this.URIuserPayments}${userID}/`;
+    return this.httpClient.patch(url, individualPayment);
   }
 
-  deleteIndividualPayment(userID: number, paymentID: number): Observable<any> {
+  deleteIndividualPayment2(userID: number, paymentID: number): Observable<any> {
     const foundUserIndex = this.individualPayments.findIndex(payments => payments.userID === userID);
     if (foundUserIndex !== -1) {
       // @ts-ignore
@@ -477,40 +492,42 @@ export class PaymentsService {
     return of(null);
   }
 
-  //   TODO
-  deleteIndividualPayment2(userID: number, paymentID: number): Observable<any> {
-    const url = `${this.individualPaymentsUrl}/${userID}/deletePayment/${paymentID}`;
+  deleteIndividualPayment(userID: number, paymentID: number): Observable<any> {
+    const url = `${this.URLpayments}${this.URIuserPayments}/?paymentID=${paymentID}&userID=${userID}`;
     return this.httpClient.delete(url);
   }
 
-  editLeaseFee(payments: Fee[]): Observable<any> {
+  editLeaseFee2(payments: Fee[]): Observable<any> {
     this.payments.leaseFees = payments;
     return of(null);
   }
-  //   TODO
-  editLeaseFee2(payments: Fee[]): Observable<any> {
-    return this.httpClient.put(this.paymentsUrl + '/leaseFees', payments);
+
+  editLeaseFee(payments: Fee[]): Observable<any> {
+    const url = `${this.URLpayments}${this.URIeditLeasefee}`;
+    return this.httpClient.patch(url, payments);
   }
 
-  editUtilityFee(payments: Fee[]): Observable<any> {
+  editUtilityFee2(payments: Fee[]): Observable<any> {
     this.payments.utilityFees = payments;
     return of(null);
   }
-  //   TODO
-  editUtilityFee2(payments: Fee[]): Observable<any> {
-    return this.httpClient.put(this.paymentsUrl + '/utility-fees', payments);
+
+  editUtilityFee(payments: Fee[]): Observable<any> {
+    const url = `${this.URLpayments}${this.URIeditUtilityfee}`;
+    return this.httpClient.patch(url, payments);
   }
 
-  editUtilityValues(values: UtilityValues): Observable<any> {
+  editUtilityValues2(values: UtilityValues): Observable<any> {
     this.payments.utilityValues = values;
     return of(null);
   }
-  //   TODO
-  editUtilityValues2(values: UtilityValues): Observable<any> {
-    return this.httpClient.put(this.paymentsUrl + '/utility-value', values);
+
+  editUtilityValues(values: UtilityValues): Observable<any> {
+    const url = `${this.URLpayments}${this.URIeditUtilityValues}`;
+    return this.httpClient.patch(url, values);
   }
 
-  editAdditionalFee(payment: Fee | undefined): Observable<any> {
+  editAdditionalFee2(payment: Fee | undefined): Observable<any> {
     // @ts-ignore
     const foundIndex = this.payments.additionalFees.findIndex(curentPayment => curentPayment.feeID === payment.feeID);
     if (foundIndex !== -1) {
@@ -520,35 +537,249 @@ export class PaymentsService {
     }
     return of(null);
   }
-  //   TODO
-  editAdditionalFee2(payment: Fee | undefined): Observable<any> {
-    const url = `${this.paymentsUrl}/additionalFees/${payment?.feeID}`;
-    return this.httpClient.put(url, payment);
+
+  editAdditionalFee(payment: Fee | undefined): Observable<any> {
+    const url = `${this.URLpayments}${this.URIeditAdditionalfee}`;
+    return this.httpClient.patch(url, payment);
   }
 
-  addAdditionalFee(payment: Fee): Observable<any> {
+  addAdditionalFee2(payment: Fee): Observable<any> {
     this.payments.additionalFees.push(payment)
     return of(null);
   }
 
-  //   TODO
-  addAdditionalFee2(payment: Fee): Observable<any> {
-    return this.httpClient.post(this.paymentsUrl + '/additionalFees', payment);
+  // TODO
+  addAdditionalFee(payment: Fee): Observable<any> {
+    const url = `${this.URLpayments}${this.URIeditAdditionalfee}`;
+    return this.httpClient.post(url, payment);
+  }
+  // TODO
+  deleteAdditionalFee(feeID: number) {
+    const url = `${this.URLpayments}${this.URIeditAdditionalfee}/?feeID=${feeID}`;
+    return this.httpClient.delete(url);
   }
 
-  updateDate(date: Date): Observable<any> {
+  updateDate2(date: Date): Observable<any> {
     this.payments.date = date
     return of(null);
   }
 
-  updateDate2(date: Date): Observable<any> {
-    return this.httpClient.put(this.paymentsUrl + '/date', { date });
+  updateDate(date: Date): Observable<any> {
+    const url = `${this.URLpayments}${this.URIeditDate}`;
+    return this.httpClient.patch(url, date);
   }
 
-  confirmALLPayments():Observable<any> {
-    return this.httpClient.post<any>(this.confirmPaymentsURL,{});
+  confirmALLPayments(): Observable<any> {
+    const url = `${this.URLpayments}`;
+    return this.httpClient.put(url, null);
   }
 
+
+  getConfirmPayments(userId: number | undefined): Observable<Payment[]> {
+    const url = `${this.URLpayments}${this.URIuserConfirm}${userId}/`;
+    return this.httpClient.get<Payment[]>(url);
+  }
+
+  getConfirmPayments2(user_id: number | undefined): Observable<Payment[]> {
+    return of(this.confirmpaymentLists.find((user) => user.idUser === user_id)?.userPaymentList || []);
+  }
+
+  confirmPayment(userId: number | undefined, payment: Payment): Observable<any> {
+    //obizyc kwote do zaplaty
+    const url = `${this.URLpayments}${this.URIuserConfirm}${userId}/`;
+    return this.httpClient.patch<any>(url, payment);
+  }
+
+  confirmPayment2(userId: number | undefined, payment: Payment): Observable<any> {
+    //obizyc kwote do zaplaty
+    return of(this.confirmpaymentLists.find((user) => user.idUser === userId)?.userPaymentList.push(payment));
+  }
+
+  private confirmpaymentLists: PaymentList[] = [
+    {
+      id: 1,
+      idUser: 1,
+      userPaymentList: [
+        {value: 325, date: new Date(2023, 10, 31)},
+        {value: 230, date: new Date(2026, 10, 20)},
+        {value: 280, date: new Date(2024, 10, 20)}
+      ]
+    },
+    {
+      id: 2,
+      idUser: 2,
+      userPaymentList: [
+        {value: 2340, date: new Date(2023, 10, 31)},
+        {value: 2340, date: new Date(2023, 10, 31)},
+        {value: 2450, date: new Date(2024, 10, 20)}
+      ]
+    },
+    {
+      id: 3,
+      idUser: 3,
+      userPaymentList: [
+        {value: 145, date: new Date(2023, 10, 31)},
+        {value: 234, date: new Date(2024, 10, 20)}
+      ]
+    },
+    {
+      id: 4,
+      idUser: 4,
+      userPaymentList: [
+        {value: 145, date: new Date(2023, 10, 31)},
+        {value: 145, date: new Date(2023, 10, 31)},
+        {value: 432, date: new Date(2024, 10, 20)}
+      ]
+    },
+    {
+      id: 5,
+      idUser: 5,
+      userPaymentList: [
+        {value: 547, date: new Date(2023, 10, 31)},
+        {value: 547, date: new Date(2023, 10, 31)},
+        {value: 547, date: new Date(2023, 10, 31)},
+        {value: 76, date: new Date(2024, 10, 20)}
+      ]
+    },
+    {
+      id: 6,
+      idUser: 6,
+      userPaymentList: [
+        {value: 863, date: new Date(2023, 10, 31)},
+        {value: 200, date: new Date(2024, 10, 20)}
+      ]
+    },
+    {
+      id: 7,
+      idUser: 7,
+      userPaymentList: [
+        {value: 754, date: new Date(2023, 10, 31)},
+        {value: 200, date: new Date(2024, 10, 20)}
+      ]
+    },
+    {
+      id: 8,
+      idUser: 8,
+      userPaymentList: [
+        {value: 435, date: new Date(2023, 10, 31)},
+        {value: 434, date: new Date(2023, 10, 31)},
+        {value: 34, date: new Date(2023, 10, 31)},
+        {value: 200, date: new Date(2024, 10, 20)}
+      ]
+    },
+    {
+      id: 9,
+      idUser: 9,
+      userPaymentList: [
+        {value: 342, date: new Date(2023, 10, 31)},
+        {value: 543, date: new Date(2026, 10, 31)},
+        {value: 435, date: new Date(2023, 10, 31)},
+        {value: 435, date: new Date(2028, 10, 31)},
+        {value: 2435, date: new Date(2029, 10, 20)}
+      ]
+    },
+    {
+      id: 10,
+      idUser: 10,
+      userPaymentList: [
+        {value: 2340, date: new Date(2023, 10, 31)},
+        {value: 200, date: new Date(2024, 10, 20)}
+      ]
+    },
+    {
+      id: 11,
+      idUser: 11,
+      userPaymentList: [
+        {value: 200, date: new Date(2023, 10, 31)},
+        {value: 200, date: new Date(2024, 10, 20)}
+      ]
+    },
+    {
+      id: 12,
+      idUser: 12,
+      userPaymentList: [
+        {value: 200, date: new Date(2023, 10, 31)},
+        {value: 200, date: new Date(2024, 10, 20)}
+      ]
+    },
+    {
+      id: 13,
+      idUser: 13,
+      userPaymentList: [
+        {value: 45345, date: new Date(2023, 10, 31)},
+        {value: 200, date: new Date(2023, 10, 31)},
+        {value: 200, date: new Date(2023, 10, 31)},
+        {value: 200, date: new Date(2023, 10, 31)},
+        {value: 200, date: new Date(2024, 10, 20)}
+      ]
+    },
+    {
+      id: 14,
+      idUser: 14,
+      userPaymentList: [
+        {value: 55, date: new Date(2023, 10, 31)},
+        {value: 656, date: new Date(2021, 5, 31)},
+        {value: 565, date: new Date(2020, 10, 31)},
+        {value: 5464, date: new Date(2023, 10, 31)},
+        {value: 465, date: new Date(2021, 17, 31)},
+        {value: 654, date: new Date(2023, 10, 31)},
+        {value: 2546, date: new Date(2020, 3, 31)},
+        {value: 546, date: new Date(2021, 6, 31)},
+        {value: 200, date: new Date(2024, 10, 20)}
+      ]
+    },
+    {
+      id: 15,
+      idUser: 15,
+      userPaymentList: [
+        {value: 200, date: new Date(2023, 10, 31)},
+        {value: 200, date: new Date(2024, 10, 20)}
+      ]
+    },
+    {
+      id: 16,
+      idUser: 16,
+      userPaymentList: [
+        {value: 200, date: new Date(2023, 10, 31)},
+        {value: 200, date: new Date(2024, 10, 20)}
+      ]
+    },
+    {
+      id: 17,
+      idUser: 17,
+      userPaymentList: [
+        {value: 200, date: new Date(2023, 10, 31)},
+        {value: 200, date: new Date(2023, 10, 31)},
+        {value: 200, date: new Date(2024, 10, 20)}
+      ]
+    },
+    {
+      id: 18,
+      idUser: 18,
+      userPaymentList: [
+        {value: 200, date: new Date(2023, 10, 31)},
+        {value: 200, date: new Date(2023, 10, 31)},
+        {value: 200, date: new Date(2023, 10, 31)},
+        {value: 200, date: new Date(2023, 10, 31)},
+        {value: 200, date: new Date(2024, 10, 20)}
+      ]
+    },
+    {
+      id: 19,
+      idUser: 19,
+      userPaymentList: [
+        {value: 200, date: new Date(2023, 10, 31)},
+        {value: 200, date: new Date(2024, 10, 20)}
+      ]
+    },
+    {
+      id: 20,
+      idUser: 20,
+      userPaymentList: [
+        {value: 200, date: new Date(2023, 10, 31)},
+        {value: 200, date: new Date(2024, 10, 20)}
+      ]
+    }];
 }
 
 // przerwa
@@ -1009,8 +1240,6 @@ export class PaymentsService {
 //   const confirmPaymentsURL = 'https://localhost:1337/api/confirm-payments';
 //   return this.httpClient.post<any>(confirmPaymentsURL, {});
 // }
-
-
 
 
 // typy w razie jakby nie były rozpisane

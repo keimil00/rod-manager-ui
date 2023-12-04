@@ -1,3 +1,5 @@
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.1)" size = "large" color = "#009688" type = "square-jelly-box" [fullScreen] = "true"><p style="color: white" > Ładowanie </p></ngx-spinner>
+
 <div class="page-container">
   <mat-card class="large-card-size">
     <mat-card-header>
@@ -74,7 +76,7 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <div>
-            <app-folder-list [documents]="documents" (itemAdded)="onItemAdded()"></app-folder-list>
+            <app-folder-list [parent]="null" [level]="1" [documents]="documents" (itemAdded)="onItemAdded()"></app-folder-list>
             <div>
               <div>
                 <div class="left-button">
@@ -94,13 +96,13 @@
                       </mat-error>
                     </mat-form-field>
                     <div class="row-item">
-                      <input type="file" (change)="onFileSelected($event)" formControlName="file">
+                      <input type="file" (change)="onFileSelected($event)" type="file" formControlName="file">
                       <mat-error *ngFor="let error of validationErrors('file',addFileForm)">
                         {{ error.message }}
                       </mat-error>
                     </div>
                     <div class="left-button">
-                      <app-text-button type="submit" class="add-button" [text]="'Dodaj'" [color]="'accent'"
+                      <app-text-button type="submit" class="add-button" [text]="'Dodaj'" [color]="'primary'"
                                        (click)="addNewDocument()"></app-text-button>
                     </div>
                   </form>
@@ -124,7 +126,7 @@
                       </mat-error>
                     </mat-form-field>
                     <div class="left-button">
-                      <app-text-button type="submit" class="add-button" [text]="'Dodaj'" [color]="'accent'"
+                      <app-text-button type="submit" class="add-button" [text]="'Dodaj'" [color]="'primary'"
                                        (click)="addNewList()"></app-text-button>
                     </div>
                   </form>

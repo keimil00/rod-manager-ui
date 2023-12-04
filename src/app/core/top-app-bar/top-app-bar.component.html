@@ -71,6 +71,11 @@
                 <button mat-menu-item class="button-menu" (click)="navigate('list-of-users')">Lista użytkowników
                 </button>
             </div>
+            <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
+              <mat-divider></mat-divider>
+              <button mat-menu-item class="button-menu" (click)="navigate('list-of-gardeneirs')">Lista zaległości
+              </button>
+            </div>
             <!-- Add more menu items as needed -->
         </mat-menu>
     </div>
@@ -130,6 +135,11 @@
                         <button mat-menu-item class="button-menu" (click)="navigate('list-of-users')">Lista użytkowników
                         </button>
                     </div>
+                    <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
+                        <mat-divider></mat-divider>
+                        <button mat-menu-item class="button-menu" (click)="navigate('list-of-gardeneirs')">Lista zaległości
+                        </button>
+                    </div>
                 </div>
             </div>
             <div>
@@ -161,6 +171,7 @@
     </mat-menu>
 
     <div class="auth-buttons">
+        <div> <button mat-button (click)="changeFont()"> <mat-icon> format_size</mat-icon> </button></div>
         <div class="login-buttons" *ngIf="isLoggedIn(); else loggedOut">
             <app-text-button text="Wyloguj" color="primary" (click)="logout()"></app-text-button>
             <!--      TODO-->

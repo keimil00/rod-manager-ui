@@ -16,6 +16,8 @@ import {EditDateComponent} from "./edit-date/edit-date.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Profile} from "../Profile";
 import {EditUtilityValuesComponent} from "./edit-utility-values/edit-utility-values.component";
+import {forkJoin} from "rxjs";
+import {NgxSpinnerService} from "ngx-spinner";
 
 
 //TODO na tym ekranie od terminu płatności zrobic przysik zatwierdz z jakaś uwagą ze beda naliczone te koszty co wyzej i nie będzie mozna tego zmienić plus dane z obecnego stanu liczników
@@ -23,254 +25,248 @@ import {EditUtilityValuesComponent} from "./edit-utility-values/edit-utility-val
 //dane z licznika to po prostu bedzie zapisywało te dane licznikow po kliknieciu tego przycisku
 
 @Component({
-    selector: 'app-payments',
-    templateUrl: './payments.component.html',
-    styleUrls: ['./payments.component.scss']
+  selector: 'app-payments',
+  templateUrl: './payments.component.html',
+  styleUrls: ['./payments.component.scss']
 })
 export class PaymentsComponent {
 
-    displayedColumns: string[] = ['name', 'type', 'value'];
-    dataLeaseFees: MatTableDataSource<Fee>;
-    dataUtilityFees: MatTableDataSource<Fee>;
-    dataAdditionalFees: MatTableDataSource<Fee>;
+  displayedColumns: string[] = ['name', 'type', 'value'];
+  // @ts-ignore
+  dataLeaseFees: MatTableDataSource<Fee>;
+  // @ts-ignore
+  dataUtilityFees: MatTableDataSource<Fee>;
+  // @ts-ignore
+  dataAdditionalFees: MatTableDataSource<Fee>;
 
-    showDetails = false
+  showDetails = false
 
+  // @ts-ignore
+  payment: Payments
+  // @ts-ignore
+  private gardenPlots: GardenPlot[]
+  // @ts-ignore
+  individualPaymentsForm: FormGroup;
+
+  sectorsOptions: (string | null)[] = [];
+  avenuesOptions: (string | null)[] = [];
+  numbersOptions: (number | null)[] = [];
+
+  constructor(private dialog: MatDialog, private formBuilder: FormBuilder, private paymentsService: PaymentsService, private gardenPlotsDataService: BackendGardenService, private _snackBar: MatSnackBar,private spinner: NgxSpinnerService) {
+    this.spinner.show()
+    this.initData()
+  }
+
+  initData() {
+    forkJoin({
+      gardenPlots: this.gardenPlotsDataService.getAllGardenPlots(),
+      payments: this.paymentsService.getPayments()
+    }).subscribe(async data => {
+      this.gardenPlots = data.gardenPlots;
+      this.payment = data.payments;
+      this.init1()
+      this.spinner.hide()
+    });
+  }
+
+  init1() {
     // @ts-ignore
-    payment: Payments
+    this.dataLeaseFees = new MatTableDataSource(this.payment.leaseFees);
     // @ts-ignore
-    private gardenPlots: GardenPlot[]
+    this.dataUtilityFees = new MatTableDataSource(this.payment.utilityFees);
+    // @ts-ignore
+    this.dataAdditionalFees = new MatTableDataSource(this.payment.additionalFees);
+    this.individualPaymentsForm = this.formBuilder.group({
+      sector: ['', [
+        Validators.required,
+      ]],
+      avenue: ['', [
+        Validators.required,
+      ]],
+      number: ['', [
+        Validators.required,
+      ]],
+    });
+    this.init2()
+  }
 
-    individualPaymentsForm: FormGroup;
+  init2() {
+    this.sectorsOptions = getSectors(this.gardenPlots);
+    this.individualPaymentsForm.get('sector')?.valueChanges.subscribe((value) => {
+      this.updateAvenous()
+      this.individualPaymentsForm.get('number')?.reset()
+    });
+    this.individualPaymentsForm.get('avenue')?.valueChanges.subscribe((value) => {
+      this.updateNumbers()
+    });
+  }
 
-    sectorsOptions: (string | null)[] = [];
-    avenuesOptions: (string | null)[] = [];
-    numbersOptions: (number | null)[] = [];
+  private updateAvenous() {
+    this.avenuesOptions = getAvenues(this.individualPaymentsForm.get('sector')?.value, this.gardenPlots);
+    this.individualPaymentsForm.get('avenue')?.reset()
+  }
 
-    constructor(private dialog: MatDialog, formBuilder: FormBuilder, private paymentsService: PaymentsService, private gardenPlotsDataService: BackendGardenService, private _snackBar: MatSnackBar) {
-        this.initData()
-        // @ts-ignore
-        this.dataLeaseFees = new MatTableDataSource(this.payment.leaseFees);
-        // @ts-ignore
-        this.dataUtilityFees = new MatTableDataSource(this.payment.utilityFees);
-        // @ts-ignore
-        this.dataAdditionalFees = new MatTableDataSource(this.payment.additionalFees);
-        this.individualPaymentsForm = formBuilder.group({
-            sector: ['', [
-                Validators.required,
-            ]],
-            avenue: ['', [
-                Validators.required,
-            ]],
-            number: ['', [
-                Validators.required,
-            ]],
-        });
+  private updateNumbers() {
+    this.numbersOptions = getNumbers(this.individualPaymentsForm.get('sector')?.value, this.individualPaymentsForm.get('avenue')?.value, this.gardenPlots);
+    this.individualPaymentsForm.get('number')?.reset()
+  }
+
+  private errorMessages = {
+    sector: [
+      {type: 'required', message: 'Proszę podać sektor'},
+    ],
+    avenue: [
+      {type: 'required', message: 'Proszę podać poprawną aleje'}
+    ],
+    number: [
+      {type: 'required', message: 'Proszę podać poprawny numer'}
+    ],
+  };
+
+  validationErrors(controlName: string): any[] {
+    let errors = []
+    // @ts-ignore
+    for (let error of this.errorMessages[controlName]) {
+      if (this.individualPaymentsForm.get(controlName)?.hasError(error.type)) {
+        errors.push(error);
+      }
     }
+    return errors;
+  }
 
-    initData() {
-        this.initPayments()
-        this.initGardenPlots()
-    }
+  updateData() {
+    this.spinner.show()
+    this.paymentsService.getPayments().subscribe((payments: Payments) => {
+      this.payment = payments;
+      this.dataLeaseFees = new MatTableDataSource(this.payment.leaseFees);
+      this.dataUtilityFees = new MatTableDataSource(this.payment.utilityFees);
+      this.dataAdditionalFees = new MatTableDataSource(this.payment.additionalFees);
+      this.spinner.hide()
+    });
+  }
 
-    initGardenPlots() {
-        this.gardenPlotsDataService.getAllGardenPlots().subscribe((gardenPlots: GardenPlot[]) => {
-            this.gardenPlots = gardenPlots;
-        });
-    }
-
-    initPayments() {
-        this.paymentsService.getPayments().subscribe((payments: Payments) => {
-            this.payment = payments;
-        });
-    }
-
-    private updateAdditionalPayments() {
-        this.dataAdditionalFees._updateChangeSubscription();
-    }
-
-    // TODO backend
-    // private initData() {
-    //   this.gardenPlotsDataService.getAllGardenPlots().subscribe(
-    //     (data: GardenPlot[]) => {
-    //       this.gardenPlots = data
-    //     },
-    //     (error) => {
-    //       console.error('There was an error!', error);
-    //     }
-    //   );
-    //   this.paymentsService.getPayments().subscribe(
-    //     (data: Payments) => {
-    //       this.payment = data
-    //     },
-    //     (error) => {
-    //       console.error('There was an error!', error);
-    //     }
-    //   );
-    // }
-
-    ngOnInit() {
-        this.sectorsOptions = getSectors(this.gardenPlots);
-        this.individualPaymentsForm.get('sector')?.valueChanges.subscribe((value) => {
-            this.updateAvenous()
-            this.individualPaymentsForm.get('number')?.reset()
-        });
-        this.individualPaymentsForm.get('avenue')?.valueChanges.subscribe((value) => {
-            this.updateNumbers()
-        });
-    }
-
-    private updateAvenous() {
-        this.avenuesOptions = getAvenues(this.individualPaymentsForm.get('sector')?.value, this.gardenPlots);
-        this.individualPaymentsForm.get('avenue')?.reset()
-    }
-
-    private updateNumbers() {
-        this.numbersOptions = getNumbers(this.individualPaymentsForm.get('sector')?.value, this.individualPaymentsForm.get('avenue')?.value, this.gardenPlots);
-        this.individualPaymentsForm.get('number')?.reset()
-    }
-
-    private errorMessages = {
-        sector: [
-            {type: 'required', message: 'Proszę podać sektor'},
-        ],
-        avenue: [
-            {type: 'required', message: 'Proszę podać poprawną aleje'}
-        ],
-        number: [
-            {type: 'required', message: 'Proszę podać poprawny numer'}
-        ],
-    };
-
-    validationErrors(controlName: string): any[] {
-        let errors = []
-        // @ts-ignore
-        for (let error of this.errorMessages[controlName]) {
-            if (this.individualPaymentsForm.get(controlName)?.hasError(error.type)) {
-                errors.push(error);
-            }
-        }
-        return errors;
-    }
-
-    selectShowIndividualPayments() {
-        if (this.individualPaymentsForm.valid) {
-            const sector: string = this.individualPaymentsForm.get('sector')?.value;
-            const avenue: string = this.individualPaymentsForm.get('avenue')?.value;
-            const number: number = this.individualPaymentsForm.get('number')?.value;
-            let individualPayments: IndividualPayments | null
-            this.paymentsService.findUserPaymentsByAddress(sector, avenue, number, this.gardenPlots).subscribe((individualPayments2: IndividualPayments | null) => {
-                individualPayments = individualPayments2
-            });
-            const address = `${sector}, ${avenue}, ${number}`
-            this.showDetails = true;
-
-            //TODO nie wiem czy to jest dobrze
-            // @ts-ignore
-            this.showDetailsDialog(individualPayments, address)
-        }
-    }
-
-    private showDetailsDialog(individualPayments: IndividualPayments | null, address: string) {
-        const dialogRef = this.dialog.open(IndividualPaymentsComponent, {
-            width: '4000px',
-            data: {payments: individualPayments, address: address},
-        });
-
-        dialogRef.afterClosed().subscribe(() => {
-            this.closeDetails()
-        });
-    }
-
-    selectShowEditingLeasePayments() {
+  selectShowIndividualPayments() {
+    if (this.individualPaymentsForm.valid) {
+      const sector: string = this.individualPaymentsForm.get('sector')?.value;
+      const avenue: string = this.individualPaymentsForm.get('avenue')?.value;
+      const number: number = this.individualPaymentsForm.get('number')?.value;
+      let individualPayments: IndividualPayments | null
+      this.paymentsService.findUserPaymentsByAddress(sector, avenue, number).subscribe((individualPayments2: IndividualPayments | null) => {
+        individualPayments = individualPayments2
+        const address = `${sector}, ${avenue}, ${number}`
         this.showDetails = true;
-        this.showEditingLeasePayments()
+
+        this.showDetailsDialog(individualPayments, address)
+      });
     }
+  }
 
-    private showEditingLeasePayments() {
-        const dialogRef = this.dialog.open(EditingLeaseFeeComponent, {
-            width: '4000px',
-            data: {leaseFees: this.payment.leaseFees},
-        });
+  private showDetailsDialog(individualPayments: IndividualPayments | null, address: string) {
+    const dialogRef = this.dialog.open(IndividualPaymentsComponent, {
+      width: '4000px',
+      data: {payments: individualPayments, address: address},
+    });
 
-        dialogRef.afterClosed().subscribe(() => {
-            this.closeDetails()
-        });
-    }
+    dialogRef.afterClosed().subscribe(() => {
+      this.closeDetails()
+    });
+  }
 
-    selectShowEditingUtilityPayments() {
-        this.showDetails = true;
-        this.showEditingUtilityPayments()
-    }
+  selectShowEditingLeasePayments() {
+    this.showDetails = true;
+    this.showEditingLeasePayments()
+  }
 
-    private showEditingUtilityPayments() {
-        const dialogRef = this.dialog.open(EditingUtilityFeeComponent, {
-            width: '4000px',
-            data: {utilityFees: this.payment.utilityFees},
-        });
+  private showEditingLeasePayments() {
+    const dialogRef = this.dialog.open(EditingLeaseFeeComponent, {
+      width: '4000px',
+      data: {leaseFees: this.payment.leaseFees},
+    });
 
-        dialogRef.afterClosed().subscribe(() => {
-            this.closeDetails()
-        });
-    }
+    dialogRef.afterClosed().subscribe(() => {
+      this.closeDetails()
+      this.updateData()
+    });
+  }
 
-    selectShowAdditionalPayments() {
-        this.showDetails = true;
-        this.ShowAdditionalPayments()
-    }
+  selectShowEditingUtilityPayments() {
+    this.showDetails = true;
+    this.showEditingUtilityPayments()
+  }
 
-    private ShowAdditionalPayments() {
-        const dialogRef = this.dialog.open(EditingAdditionalFeesComponent, {
-            width: '4000px',
-            data: {payments: this.payment.additionalFees},
-        });
+  private showEditingUtilityPayments() {
+    const dialogRef = this.dialog.open(EditingUtilityFeeComponent, {
+      width: '4000px',
+      data: {utilityFees: this.payment.utilityFees},
+    });
 
-        dialogRef.afterClosed().subscribe(() => {
-            this.closeDetails()
-            this.updateAdditionalPayments()
-        });
-    }
+    dialogRef.afterClosed().subscribe(() => {
+      this.closeDetails()
+      this.updateData()
+    });
+  }
 
-    openDateDialog(): void {
-        const dialogRef = this.dialog.open(EditDateComponent, {
-            width: '400px',
-            data: {currentDate: this.payment.date}
-        });
+  selectShowAdditionalPayments() {
+    this.showDetails = true;
+    this.ShowAdditionalPayments()
+  }
 
-        dialogRef.afterClosed().subscribe((selectedDate: Date) => {
-            if (selectedDate) {
-                this.payment.date = selectedDate;
-                this.paymentsService.updateDate(selectedDate)
-            }
-        });
-    }
-    openUtilityDialog(): void {
-        const dialogRef = this.dialog.open(EditUtilityValuesComponent, {
-            width: '400px',
-            data: {utilityValues: this.payment.utilityValues}
-        });
+  private ShowAdditionalPayments() {
+    const dialogRef = this.dialog.open(EditingAdditionalFeesComponent, {
+      width: '4000px',
+      data: {payments: this.payment.additionalFees},
+    });
 
-        dialogRef.afterClosed().subscribe((Data: UtilityValues) => {
-            if (Data) {
-                this.payment.utilityValues= Data;
-            }
-        });
-    }
+    dialogRef.afterClosed().subscribe(() => {
+      this.closeDetails()
+      // this.updateAdditionalPayments()
+      this.updateData()
+    });
+  }
 
-    addPayments() {
-        this.paymentsService.confirmALLPayments()
-        this.showSuccessMessage()
-    }
+  openDateDialog(): void {
+    const dialogRef = this.dialog.open(EditDateComponent, {
+      width: '400px',
+      data: {currentDate: this.payment.date}
+    });
 
-    private showSuccessMessage(): void {
-        this._snackBar.open('Pomyślnie dodano opłaty! (tak naprawde to nie)', 'Zamknij', {duration: 4000});
-    }
+    dialogRef.afterClosed().subscribe((selectedDate: Date) => {
+      if (selectedDate) {
+        this.payment.date = selectedDate;
+        this.paymentsService.updateDate(selectedDate).subscribe()
+      }
+    });
+  }
 
-    closeDetails() {
-        this.showDetails = false;
-    }
+  openUtilityDialog(): void {
+    const dialogRef = this.dialog.open(EditUtilityValuesComponent, {
+      width: '400px',
+      data: {utilityValues: this.payment.utilityValues}
+    });
 
-    protected readonly Role = Role;
+    dialogRef.afterClosed().subscribe((Data: UtilityValues) => {
+      if (Data) {
+        // this.payment.utilityValues = Data;
+        this.updateData()
+      }
+    });
+  }
+
+  addPayments() {
+    this.paymentsService.confirmALLPayments().subscribe(result => {
+      this.showSuccessMessage()
+    })
+  }
+
+  private showSuccessMessage(): void {
+    this._snackBar.open('Pomyślnie dodano opłaty! (tak naprawde to nie)', 'Zamknij', {duration: 4000});
+  }
+
+  closeDetails() {
+    this.showDetails = false;
+  }
+
+  protected readonly Role = Role;
 }
 
 

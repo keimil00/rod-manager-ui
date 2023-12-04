@@ -17,6 +17,7 @@ export class EditDateComponent {
     }
 
     onConfirm(): void {
+      this.selectedDate= new Date(this.selectedDate)
         this.dialogRef.close(this.selectedDate);
     }
 }

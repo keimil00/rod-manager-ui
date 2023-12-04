@@ -25,7 +25,7 @@
   box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
   align-content: center;
   margin-top: 5%;
-  margin-bottom: 15%;
+  margin-bottom: 2%;
 }
 
 .employers-card-size {
@@ -37,6 +37,16 @@
   align-content: center;
   margin-top: 5%;
   margin-bottom: 10%;
+}
+
+.description-card-size{
+  width: 80%;
+  align-self: center;
+  -webkit-box-shadow: 0px 3px 15px -1px rgba(200, 200, 200, 1);
+  -moz-box-shadow: 0px 3px 15px -1px rgba(200, 200, 200, 1);
+  box-shadow: 0px 3px 15px -1px rgba(200, 200, 200, 1);
+  align-content: center;
+  margin-top: 5%;
 }
 
 .center-item {
@@ -60,7 +70,7 @@
 .document {
   margin-bottom: 10px;
   text-align: center;
-  font-size: 30px;
+  font-size: var(--30-font);
 }
 
 .full-width {
@@ -72,7 +82,7 @@
 
 .title-managment {
   font-weight: bold;
-  font-size: 25px;
+  font-size: var(--25-font);
   text-align: center;
   margin-bottom: 10px;
 }
@@ -96,6 +106,23 @@
   color: #ffffff;
 }
 
+a:hover {
+  cursor: pointer;
+}
+
+.description{
+  font-size: var(--14-font);
+  text-align: center;
+}
+
+.editButton {
+  position: absolute;
+  right: -60px;
+  bottom: 0;
+  scale: 0.7;
+}
+
+
 
 @media only screen and (max-width: 500px){
   .large-card-size {
@@ -116,16 +143,19 @@
     right: 20px;
   }
   .title {
-    font-size: 20px;
+    font-size: var(--20-font);
   }
 
   .title-managment, .document {
-    font-size: 18px;
+    font-size: var(--18-font);
     margin-bottom: 5px;
   }
 
   .mat-mdc-card-header {
     padding: 0px 0px 0;
+  }
+  .editButton {
+    right: -30px;
   }
 }
 @media only screen and (min-width: 500px) and (max-width: 800px){
@@ -146,13 +176,13 @@
     right: 20px;
   }
   .title {
-    font-size: 22px;
+    font-size: var(--22-font);
   }
   .document {
-    font-size: 20px;
+    font-size: var(--20-font);
   }
   .title-managment {
-    font-size: 20px;
+    font-size: var(--20-font);
     margin-bottom: 5px;
   }
 
@@ -160,10 +190,6 @@
     padding: 0px 0px 0;
   }
 }
-a:hover {
-  cursor: pointer;
-}
-
 @media only screen and (min-width: 800px)  and (max-width: 1100px){
   .large-card-size, .employers-card-size{
     width: 90%;
@@ -173,13 +199,13 @@ a:hover {
   }
 
   .title {
-    font-size: 24px;
+    font-size: var(--24-font);
   }
   .document {
-    font-size: 22px;
+    font-size: var(--22-font);
   }
   .title-managment {
-    font-size: 20px;
+    font-size: var(--20-font);
   }
   .floating-button {
     bottom: 20px;

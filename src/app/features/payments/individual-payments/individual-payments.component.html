@@ -23,6 +23,10 @@
               <th mat-header-cell *matHeaderCellDef>Kwota</th>
               <td mat-cell *matCellDef="let fee" [textContent]="fee.value+' zł'"></td>
             </ng-container>
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef>Data utworzenia</th>
+              <td mat-cell *matCellDef="let fee" [textContent]="fee.date| date:'dd.MM.yyyy' "></td>
+            </ng-container>
             <ng-container matColumnDef="delete">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let fee">

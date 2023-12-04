@@ -4,7 +4,7 @@ import {Profile} from "../Profile";
 import {AbstractControl, ValidatorFn} from "@angular/forms";
 
 
-export function findGardenByUserID(id: number | null, gardenPlots: GardenPlot[]): GardenPlot | null {
+export function findGardenByUserID(id: number | null|undefined, gardenPlots: GardenPlot[]): GardenPlot | null {
     let garden: GardenPlot;
     for (garden of gardenPlots) {
         if (garden.leaseholderID === id) {

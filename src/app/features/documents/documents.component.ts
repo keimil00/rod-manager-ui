@@ -1,11 +1,12 @@
 import {Component} from '@angular/core';
 
 import {DocumentsService} from "./documents.service";
-import {Document} from "./document";
-import {Subscription} from "rxjs";
+import {Document, Leaf} from "./document";
+import {forkJoin} from "rxjs";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {NgxSpinnerService} from "ngx-spinner";
 
-
+// TODO ogarnąć mape i regulamin
 @Component({
   selector: 'app-documents',
   templateUrl: './documents.component.html',
@@ -29,7 +30,8 @@ export class DocumentsComponent {
   selectedMapFile: File | null = null;
   selectedStatuteFile: File | null = null;
 
-  constructor(formBuilder: FormBuilder, private documentsService: DocumentsService) {
+  constructor(formBuilder: FormBuilder, private documentsService: DocumentsService, private spinner: NgxSpinnerService) {
+    this.spinner.show()
     this.initData()
     this.addFileForm = formBuilder.group({
       name: ['', [
@@ -47,29 +49,22 @@ export class DocumentsComponent {
   }
 
   initData() {
-    this.documentsInit()
-    this.mapInit()
-    this.statueInit()
+    forkJoin({
+      documents: this.documentsService.getDocuments(),
+      map: this.documentsService.isMapAvailable(),
+      statute: this.documentsService.isStatuteAvailable(),
+    }).subscribe(async data => {
+        this.documents = data.documents,
+        this.isMapAvailable = data.map,
+        this.isStatuteAvailable = data.statute,
+        this.spinner.hide()
+    });
   }
 
-  documentsInit(){
+  updateDocumentsList() {
     this.documentsService.getDocuments()
       .subscribe((result: Document[]) => {
-        this.documents=result
-      });
-  }
-
-  mapInit() {
-    this.documentsService.isMapAvailable()
-      .subscribe((result: boolean) => {
-        this.isMapAvailable = result;
-      });
-  }
-
-  statueInit() {
-    this.documentsService.isStatuteAvailable()
-      .subscribe((result: boolean) => {
-        this.isStatuteAvailable = result;
+        this.documents = result
       });
   }
 
@@ -103,13 +98,16 @@ export class DocumentsComponent {
     this.downloadFile('statue')
   }
 
-  downloadFile(idDocument: string) {
-    let filePath: string = ''
-    const subscription: Subscription = this.documentsService.downloadDocumentSimulate(idDocument)
-      .subscribe((result: string) => {
-        filePath = result;
-        window.open(filePath, '_blank');
-      });
+  downloadFile(link: string) {
+    window.open(link, '_blank');
+
+
+    // let filePath: string = ''
+    // const subscription: Subscription = this.documentsService.downloadDocumentSimulate(idDocument)
+    //   .subscribe((result: string) => {
+    //     filePath = result;
+    //     window.open(filePath, '_blank');
+    //   });
   }
 
   toggleAddDocumentForm() {
@@ -139,21 +137,22 @@ export class DocumentsComponent {
   }
 
   onStatuteFileSelected(event: any) {
-    this.selectedStatuteFile = event.target.files[0];
+    this.selectedStatuteFile = event.target.files[0]
   }
 
 
   addNewDocument() {
     if (this.addFileForm.valid && this.selectedFile) {
       const newTitle: string = this.addFileForm.get('name')?.value;
-      const id = generateRandomID();
-      const newDocument: Document = {id: id, title: newTitle};
-      this.documents.push(newDocument);
-      this.documentsService.uploadDocument(this.selectedFile, id).subscribe((result: any) => {
-        this.documentsService.updateDocumentsList(this.documents).subscribe(response => {
-          console.log('Zaktualizowano dane: ', response);
-        });
-        this.showAddDocumentForm = false
+      const newDocument: Leaf = {name: newTitle, file: this.selectedFile};
+      this.spinner.show()
+      this.documentsService.postDocuments(newDocument).subscribe((res) => {
+        this.documentsService.getDocuments()
+          .subscribe((result: Document[]) => {
+            this.documents = result
+            this.showAddDocumentForm = false
+            this.spinner.hide()
+          });
       });
     }
   }
@@ -161,60 +160,49 @@ export class DocumentsComponent {
   addNewList() {
     if (this.addListForm.valid) {
       const newTitle: string = this.addListForm.get('name')?.value;
-      const id = generateRandomID();
-      const newList: Document = {id: id, title: newTitle, items: []};
-      this.documents.push(newList);
-      this.documentsService.updateDocumentsList(this.documents).subscribe(response => {
-        this.showAddListForm = false
-        console.log('Zaktualizowano dane: ', response);
+      const newLeaf: Leaf = {name: newTitle};
+      this.spinner.show()
+      this.documentsService.postDocuments(newLeaf).subscribe((res) => {
+        // this.updateDocumentsList()
+        this.documentsService.getDocuments()
+          .subscribe((result: Document[]) => {
+            this.documents = result
+            this.showAddDocumentForm = false
+            this.showAddListForm = false
+            this.spinner.hide()
+          });
       });
     }
   }
 
   addMapDocument() {
-    if (this.selectedMapFile) {
-      this.documentsService.uploadMapDocument(this.selectedMapFile).subscribe(response => {
-        console.log('File uploaded successfully!', response);
-      });
-      this.isMapAvailable = true
-    }
+    // if (this.selectedMapFile) {
+    //   this.documentsService.uploadMapDocument(this.selectedMapFile).subscribe(response => {
+    //     console.log('File uploaded successfully!', response);
+    //   });
+    //   this.isMapAvailable = true
+    // }
   }
 
   addStatuteDocument() {
-    if (this.selectedStatuteFile) {
-      this.documentsService.uploadStatuteDocument(this.selectedStatuteFile).subscribe(response => {
-        console.log('File uploaded successfully!', response);
-      });
-      this.isStatuteAvailable = true
-    }
+    // if (this.selectedStatuteFile) {
+    //   this.documentsService.uploadStatuteDocument(this.selectedStatuteFile).subscribe(response => {
+    //     console.log('File uploaded successfully!', response);
+    //   });
+    //   this.isStatuteAvailable = true
+    // }
   }
 
+  // Chwilowo nic nie robi
   onItemAdded() {
-    console.log(this.documents)
-    this.documentsService.updateDocumentsList(this.documents).subscribe(response => {
-      console.log('Zaktualizowano dane: ', response);
-    });
+    this.documentsService.getDocuments()
+      .subscribe((result: Document[]) => {
+        this.documents = result
+      });
   }
 
 
   title: any;
-}
-
-export function generateRandomID(): string {
-  const length = 15;
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-  let result = '';
-
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-
-  // Dodanie czasu do ID dla zwiększenia unikalności
-  const timestamp = new Date().getTime().toString();
-  result += timestamp;
-
-  return result;
 }
 
 

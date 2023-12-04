@@ -5,6 +5,7 @@ import {LoginUser} from "../register/user.model";
 import {SocialAuthService, SocialUser} from "@abacritt/angularx-social-login";
 import {StorageService} from "../../core/storage/storage.service";
 import {Router} from "@angular/router";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ import {Router} from "@angular/router";
 })
 export class LoginComponent implements OnInit{
   loginForm: FormGroup;
-
+  showError:Boolean = false;
   errorMessages = {
     email: [
       {type: 'required', message: 'Email jest wymagany'},
@@ -28,7 +29,8 @@ export class LoginComponent implements OnInit{
               private authService: AuthService,
               private storageService: StorageService,
               private router: Router,
-              formBuilder: FormBuilder) {
+              formBuilder: FormBuilder,
+              private spinner: NgxSpinnerService) {
     this.socialAuthService = socialAuthService;
     this.authService = authService;
     this.storageService = storageService;
@@ -61,15 +63,19 @@ export class LoginComponent implements OnInit{
     let user = new LoginUser();
     user.email = this.loginForm.get('email')?.value;
     user.password = this.loginForm.get('password')?.value;
+    this.spinner.show();
     this.authService.login(user).subscribe({
       next: data => {
         console.log(data);
         this.storageService.setTokens(data.access, data.refresh);
         this.storageService.setRoles(data.roles);
+        this.spinner.hide();
         this.router.navigate(['home'])
       },
       error: error => {
         console.error(error);
+        this.showError=true;
+        this.spinner.hide();
       }
     });
   }

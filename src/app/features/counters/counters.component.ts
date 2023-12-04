@@ -6,6 +6,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {AddCounterDialogComponent} from "./add-counter-dialog/add-counter-dialog.component";
 import {CountersService} from "./counters.service";
 import {VotingItem} from "../votings/voting-item.model";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
     selector: 'app-counters',
@@ -23,33 +24,34 @@ export class CountersComponent {
     // @ts-ignore
     counters: Counter[]
 
-    constructor(private dialog: MatDialog, private countersService: CountersService) {
+    constructor(private dialog: MatDialog, private countersService: CountersService,private spinner: NgxSpinnerService) {
+        this.spinner.show()
         this.setData()
     }
 
     setData() {
-        // @ts-ignore
-        const dataSourceWater: MatTableDataSource<Counter> = new MatTableDataSource([]);
-        // @ts-ignore
-        const dataSourceElectric: MatTableDataSource<Counter> = new MatTableDataSource([]);
-
         this.initData()
-        this.sortCounters()
-
-        this.counters.forEach((counter) => {
-            if (counter.type === CounterType.Water) {
-                dataSourceWater.data.push(counter);
-            } else if (counter.type === CounterType.Electric) {
-                dataSourceElectric.data.push(counter);
-            }
-        });
-        this.dataSourceWater = dataSourceWater;
-        this.dataSourceElectric = dataSourceElectric;
     }
 
     initData() {
         this.countersService.getAllCounters().subscribe((votcounters1: Counter[]) => {
+            // @ts-ignore
+            const dataSourceWater: MatTableDataSource<Counter> = new MatTableDataSource([]);
+            // @ts-ignore
+            const dataSourceElectric: MatTableDataSource<Counter> = new MatTableDataSource([]);
             this.counters = votcounters1;
+            this.sortCounters()
+
+            this.counters.forEach((counter) => {
+                if (counter.type === CounterType.Water) {
+                    dataSourceWater.data.push(counter);
+                } else if (counter.type === CounterType.Electric) {
+                    dataSourceElectric.data.push(counter);
+                }
+            });
+            this.dataSourceWater = dataSourceWater;
+            this.dataSourceElectric = dataSourceElectric;
+            this.spinner.hide()
         });
     }
 

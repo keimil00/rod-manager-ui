@@ -95,7 +95,7 @@
 .register-button {
   flex: 1;
   width: 80%;
-  font-size: 14px; /* Set the font size */
+  font-size: var(--14-font); /* Set the font size */
   font-weight: 500; /* Set the font weight */
   text-transform: uppercase; /* Make text uppercase */
   font-family: 'Roboto', sans-serif;
@@ -123,7 +123,7 @@
   color: #1f1f1f;
   cursor: pointer;
   font-family: 'Roboto', arial, sans-serif;
-  font-size: 14px;
+  font-size: var(--14-font);
   height: 40px;
   letter-spacing: 0.25px;
   outline: none;
@@ -213,7 +213,7 @@
 }
 
 .or-label {
-  font-size: 14px; /* Set the font size */
+  font-size: var(--14-font); /* Set the font size */
   font-weight: 500; /* Set the font weight */
   text-transform: uppercase; /* Make text uppercase */
   font-family: 'Roboto', sans-serif;

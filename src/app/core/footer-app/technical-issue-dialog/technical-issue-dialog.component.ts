@@ -49,17 +49,17 @@ export class TechnicalIssueDialogComponent {
             const title: string = this.addTechnicalIsueForm.get('title')?.value;
             const description: string = this.addTechnicalIsueForm.get('description')?.value;
 
-            this.technicalIsueService.sendIssue(title, description).subscribe()
+            this.technicalIsueService.sendIssue(title, description).subscribe((result: any) => {
+              this.showSuccessMessage()
+            });
 
             this.addTechnicalIsueForm.reset()
             this.closeDialog()
-
-            this.showSuccessMessage()
         }
     }
 
     private showSuccessMessage(): void {
-        this._snackBar.open('Pomyślnie dodano zgłoszenie (tak naprawde to nie)', 'Zamknij', {duration: 4000});
+        this._snackBar.open('Pomyślnie dodano zgłoszenie', 'Zamknij', {duration: 4000});
     }
 
     closeDialog(): void {

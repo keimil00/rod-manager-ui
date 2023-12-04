@@ -4,6 +4,7 @@ import {VotingItem} from "../voting-item.model";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormControl} from "@angular/forms";
 import {Subscription} from "rxjs";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
     selector: 'app-current-votings',
@@ -17,24 +18,27 @@ export class CurrentVotingsComponent {
     // @ts-ignore
     private addVotingFinishedSubscription: Subscription;
 
-    constructor(private votingService: VotingsService, private _snackBar: MatSnackBar) {
+    constructor(private votingService: VotingsService, private _snackBar: MatSnackBar, private spinner: NgxSpinnerService) {
     }
 
     ngOnInit() {
-        this.getCurrentVotes();
+        this.getCurrentVoting();
         this.addVotingFinishedSubscription = this.votingService.addVotingFinished$.subscribe(() => {
-            this.getCurrentVotes();
+            this.getCurrentVoting();
         });
+        this.scheduleMidnightRefresh();
     }
 
     ngOnDestroy() {
         this.addVotingFinishedSubscription.unsubscribe();
     }
 
-    getCurrentVotes() {
+    getCurrentVoting() {
+        this.spinner.show()
         this.votingService.getCurrentVotes().subscribe((votes: VotingItem[]) => {
             this.currentVotes = votes;
             this.initializeFormControls();
+            this.spinner.hide()
         });
     }
 
@@ -42,6 +46,24 @@ export class CurrentVotingsComponent {
         for (const vote of this.currentVotes) {
             this.selectedOptions[vote.id] = new FormControl();
         }
+    }
+
+    // Teoretycznie to powinno odwieżać głosowania po północy, ale nie testowałem tego XD
+    scheduleMidnightRefresh() {
+      const now = new Date();
+      const currentHour = now.getHours();
+
+      // Oblicz czas do północy
+      const midnight = new Date(now); // Tworzymy kopię obecnego czasu
+      midnight.setHours(24, 0, 0, 0); // Ustawiamy na północ kolejnego dnia
+
+      const timeUntilMidnight = midnight.getTime() - now.getTime();
+
+      // Ustawienie timera na pobranie danych po północy
+      setTimeout(() => {
+        this.getCurrentVoting();
+        this.scheduleMidnightRefresh(); // Zaplanowanie kolejnego pobrania danych po północy
+      }, timeUntilMidnight);
     }
 
     selectOption(voteId: number, selectedOption: number) {
@@ -54,15 +76,18 @@ export class CurrentVotingsComponent {
 
     submitVote(voteId: number) {
         if (this.isVoteValid(voteId)) {
-            const selectedOption = this.selectedOptions[voteId].value;
+            const selectedOptionID = this.selectedOptions[voteId].value;
             const currentVote = this.currentVotes.find(vote => vote.id === voteId);
             if (currentVote) {
-                const selectedOptionID = currentVote.options.find(option => option.optionId === selectedOption)?.optionId;
+              const selectedOption = currentVote.options.find(option => option.option_id === selectedOptionID)?.label;
+                // @ts-ignore
                 if (selectedOptionID) {
                   console.log(voteId, selectedOptionID);
                     this.votingService.voteOn(voteId, selectedOptionID).subscribe((result: string) => {
-                        this.showSuccessMessage(`${selectedOptionID}: ${currentVote.title}`);
+                        this.showSuccessMessage(`${selectedOption}: w głosowaniu: ${currentVote.title}`);
                         this.selectedOptions[voteId].reset(); // Resetuj wartość wybranej opcji po zatwierdzeniu głosu
+                        this.getCurrentVoting();
+                        this.votingService.notifyAddVoteFinished()
                     });
                 }
             }
