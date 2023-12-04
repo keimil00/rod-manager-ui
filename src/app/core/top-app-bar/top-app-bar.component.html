@@ -12,7 +12,7 @@
     <button mat-button (click)="navigate('garden-offers')">Dostępne działki</button>
     <span>/</span>
     <button mat-button (click)="navigate('calendar')">Kalendarz</button>
-<!--    TODO zmiana bo to do testu-->
+    <!--    TODO zmiana bo to do testu-->
     <div *appHasRole="[Role.GARDENER, Role.ADMIN]">
       <span>/</span>
       <button mat-button (click)="navigate('my-garden-plot-info')">Moja działka</button>
@@ -30,10 +30,13 @@
       <!--    <button mat-button (click)="navigate('garden-info')" class="garden-info-text">-->
       O Ogrodzie
     </button>
-    <div *appHasRole="[Role.MANAGER, Role.TECHNICAL_EMPLOYEE, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]">
-      <span>/</span>
-      <button mat-button [matMenuTriggerFor]="menu">Więcej</button>
+    <div *ngIf="isLoggedIn()">
+      <div *appHasRole="[Role.MANAGER, Role.TECHNICAL_EMPLOYEE, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]">
+        <span>/</span>
+        <button mat-button [matMenuTriggerFor]="menu">Więcej</button>
+      </div>
     </div>
+
 
     <!-- Define the menu -->
     <mat-menu #menu="matMenu" class="mat-menu-custom-style">
@@ -60,7 +63,8 @@
     </mat-menu>
   </div>
 
-<!--  TODO mozna poprawic bo cos na iphone SE nie miesci sie a nie umialem zmniejszyc menu-item-->
+  <!--  TODO mozna poprawic bo cos na iphone SE nie miesci sie a nie umialem zmniejszyc menu-item-->
+
   <mat-menu #menu1="matMenu" class="mat-menu-custom-style">
     <button mat-menu-item class="button-menu" (click)="navigate('home')">Strona główna</button>
     <mat-divider></mat-divider>

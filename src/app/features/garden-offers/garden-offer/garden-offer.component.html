@@ -1,20 +1,55 @@
-<mat-card appearance="outlined" class="card">
-  <mat-card-header class="mat-header col-container">
-    <mat-card-title class="title">
-      <div class="col-item">{{ offer.title }}</div>
-    </mat-card-title>
-  </mat-card-header>
-  <mat-card-content class="row-container">
-    <div class="row-item">
-      <div [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(offer.content)"></div>
-    </div>
-    <div class="row-item">
-      <app-contact [edit]="false" [contact]="offer.contact"></app-contact>
-    </div>
-    <div class="row-item">
-      <app-offer-details [edit]="false" [gardenInfo]="offer.gardenInfo"></app-offer-details>
-    </div>
-  </mat-card-content>
-</mat-card>
+<div *ngIf="edit; else view">
+  <mat-card appearance="outlined" class="card">
+    <form [formGroup]="offerForm">
+      <mat-card-header class="mat-header col-container">
+        <mat-card-title class="title">
+          <mat-form-field class="title-field">
+            <input matInput formControlName="title" placeholder="Tytuł">
+          </mat-form-field>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="row-container">
+        <div class="row-item">
+          <quill-editor class="content-editor" formControlName="body"
+                        [modules]="modules"
+                        [placeholder]="''"></quill-editor>
+        </div>
+        <div class="row-item">
+          <app-contact [edit]="true" (contactEmitter)="updateContact($event)"></app-contact>
+        </div>
+        <div class="row-item">
+          <app-offer-details [edit]="true"></app-offer-details>
+        </div>
+      </mat-card-content>
+    </form>
+    <mat-card-actions class="mat-actions col-container">
+      <app-text-button class="cancel-button" className="action-button" [text]="'Anuluj'"
+                       [color]="'accent'" (click)="onCancel()"></app-text-button>
+      <app-text-button class="submit-button" className="action-button" [text]="'Zapisz'"
+                       [color]="'primary'" (click)="onSubmit()"></app-text-button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+<ng-template #view>
+  <mat-card appearance="outlined" class="card">
+    <mat-card-header class="mat-header col-container">
+      <mat-card-title class="title">
+        <div class="col-item">{{ offer?.title }}</div>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="row-container">
+      <div class="row-item">
+        <div [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(offer ? offer.body : '')"></div>
+      </div>
+      <div class="row-item">
+        <app-contact [edit]="false" [contact]="offer?.contact"></app-contact>
+      </div>
+      <div class="row-item">
+        <app-offer-details [edit]="false" [gardenInfo]="offer?.gardenInfo"></app-offer-details>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</ng-template>
+
 
 

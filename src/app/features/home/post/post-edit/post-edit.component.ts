@@ -34,7 +34,7 @@ export class PostEditComponent {
       body: [''],
       tags: this.fb.array([]),
       event: this.fb.group({
-        title: [''],
+        name: [''],
         date: [''],
       }),
     });

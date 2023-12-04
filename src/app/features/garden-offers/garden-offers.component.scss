@@ -65,3 +65,26 @@ mat-slider {
   bottom: 20px;
   z-index: 100;
 }
+
+.sort {
+  display: flex;
+  align-items: center; /* Vertical centering */
+  justify-content: center; /* Horizontal centering, optional */
+}
+
+.parent-container {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically, if needed */
+}
+
+.find-button {
+  margin: 0 auto; /* Center the button horizontally */
+  width: 50%;
+  font-size: 14px; /* Set the font size */
+  font-weight: 500; /* Set the font weight */
+  text-transform: uppercase; /* Make text uppercase */
+  font-family: 'Roboto', sans-serif;
+  letter-spacing: 1px;
+}
+

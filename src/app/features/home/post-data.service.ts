@@ -25,6 +25,7 @@ export class PostDataService {
   }
 
   savePost(post: Post) {
+    console.log(JSON.stringify(post));
     this.httpClient.post<Post>(API_ENDPOINTS.authenticated.createAnnouncement, post).subscribe(
       {
         next: data => {

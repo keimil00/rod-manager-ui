@@ -1,44 +1,122 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable, of} from "rxjs";
 import {Page} from "../../shared/paginator/page.model";
 import {Post} from "../home/post/post.model";
-import {HttpParams} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {API_ENDPOINTS} from "../../shared/config/api-endpoints.config";
-import {GardenOffer} from "./garden-offer.model";
+import {
+  Contact,
+  Filters,
+  GardenData,
+  GardenOffer,
+  GardenOfferCreate,
+  GardenOfferExternal,
+  MinMax
+} from "./garden-offer.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class GardenOffersService {
-  gardenOffers: GardenOffer[] = [];
-
-  constructor() {
-  for (let i = 1; i <= 10; i++) {
-    const randomGardenOffer: GardenOffer = {
-      title: `Garden Offer ${i}`,
-      content: `This is a garden property offer ${i} with various features.`,
+  private gardenOffers: GardenOfferExternal[] = [
+    {
+      id: 1,
+      title: 'Lovely Urban Garden',
+      body: 'A small, yet charming garden located in the city center.',
       contact: {
-        name: `Contact Person ${i}`,
-        phone: `Phone ${i}`,
-        email: `email${i}@example.com`,
+        name: 'John Doe',
+        phone: '1234567890',
+        email: 'johndoe@example.com'
       },
-      gardenInfo: {
-        postNumber: Math.floor(Math.random() * 10000) + 1,
-        address: `Address ${i}`,
-        area: Math.floor(Math.random() * 5000) + 500, // Random area between 500 and 5500 square meters
-        price: Math.floor(Math.random() * 500000) + 50000, // Random price between 50,000 and 550,000 dollars
-        predictedRent: Math.floor(Math.random() * 2000) + 800, // Random predicted rent between 800 and 2800 dollars
+      garden_info: {
+        address: '123 Main St, Anytown',
+        area: 150,
+        price: 2000,
+        predicted_rent: 250
       },
-      createdAt: new Date(),
-    };
-    this.gardenOffers.push(randomGardenOffer);
-  }
-}
+      created_at: new Date('2023-01-01')
+    },
+    {
+      id: 2,
+      title: 'Spacious Country Garden',
+      body: 'Perfect for large gatherings and events, located in the countryside.',
+      contact: {
+        name: 'Jane Smith',
+        phone: '0987654321',
+        email: 'janesmith@example.com'
+      },
+      garden_info: {
+        address: '456 Country Rd, Somewhere',
+        area: 300,
+        price: 3500,
+        predicted_rent: 400
+      },
+      created_at: new Date('2023-02-15')
+    }
+    // Add more items as needed
+  ];
 
-  fetchGardenOffers(index: number, size: number): Observable<Page<GardenOffer>> {
-    const page = new Page<GardenOffer>();
-    page.results = this.gardenOffers.slice(index, size);
-    page.count = this.gardenOffers.length;
-    return of(page);
+  constructor(private httpClient: HttpClient) {
+
+  }
+
+  fetchGardenOffers(index: number, size: number): Observable<Page<GardenOfferExternal>> {
+    // return of({count: 2, results: this.gardenOffers});
+    const params = new HttpParams()
+      .set('page_size', size)
+      .set('page', index);
+    return this.httpClient.get<Page<GardenOfferExternal>>(API_ENDPOINTS.public.getGardenOffers, {params});
+  }
+
+  fetchGardenOffersWithFilters(index: number, size: number, filters: Filters): Observable<Page<GardenOfferExternal>> {
+    // return of({count: 2, results: this.gardenOffers});
+    let params = new HttpParams();
+
+    if (filters.area_max != null) {
+      params = params.append('area_max', filters.area_max.toString());
+    }
+    if (filters.area_min != null) {
+      params = params.append('area_min', filters.area_min.toString());
+    }
+    if (filters.predicted_rent_max != null) {
+      params = params.append('predicted_rent_max', filters.predicted_rent_max.toString());
+    }
+    if (filters.predicted_rent_min != null) {
+      params = params.append('predicted_rent_min', filters.predicted_rent_min.toString());
+    }
+    if (filters.price_max != null) {
+      params = params.append('price_max', filters.price_max.toString());
+    }
+    if (filters.price_min != null) {
+      params = params.append('price_min', filters.price_min.toString());
+    }
+    if (filters.sort_by != null) {
+      params = params.append('sort_by', filters.sort_by);
+    }
+    if (filters.sort_order != null) {
+      params = params.append('sort_order', filters.sort_order);
+    }
+    params = params.append('page_size', size);
+    params = params.append('page', index);
+
+// Now you can use 'params' in your HTTP request
+
+    return this.httpClient.get<Page<GardenOfferExternal>>(API_ENDPOINTS.public.getGardenOffers, {params});
+  }
+
+  fetchManagers(): Observable<Contact[]> {
+    return this.httpClient.get<Contact[]>(API_ENDPOINTS.public.getContacts);
+  }
+
+  fetchAvailableGardens(): Observable<GardenData[]> {
+    return this.httpClient.get<GardenData[]>(API_ENDPOINTS.public.getAvailableOffers);
+  }
+
+  createGardenOffer(offer: GardenOfferCreate): Observable<any> {
+    return this.httpClient.post<any>(API_ENDPOINTS.authenticated.createGardenOffer, offer);
+  }
+
+  fetchMinMax(): Observable<MinMax> {
+    return this.httpClient.get<MinMax>(API_ENDPOINTS.public.getMinMax)
   }
 }

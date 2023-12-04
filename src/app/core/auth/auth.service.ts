@@ -45,9 +45,9 @@ export class AuthService {
   }
 
   logout(): void {
-    this.storageService.setLoggedIn(false);
     this.storageService.clearTokens();
     this.storageService.clearRoles();
+    this.storageService.setLoggedIn(false);
     // this.httpClient.post<any>(API_ENDPOINTS.mixed.logout, {}).subscribe(
     //   {
     //     next: data => {

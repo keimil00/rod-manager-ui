@@ -5,7 +5,7 @@ import {FormControl, FormGroup} from "@angular/forms";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
-import {map, Observable, startWith} from "rxjs";
+import {finalize, map, Observable, startWith} from "rxjs";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {PostDataService} from "../../../post-data.service";
 
@@ -39,7 +39,15 @@ export class TagDialogComponent {
   }
 
   fetchTags() {
-    this.postDataService.getTags().subscribe(
+    this.postDataService.getTags()
+      .pipe(
+        finalize(() => {
+          this.filteredTags = this.tagCtrl.valueChanges.pipe(
+            startWith(null),
+            map((tag: string | null) => (tag ? this._filter(tag) : this.allTags.slice())),
+          );
+        })
+      ).subscribe(
       {
         next: data => {
           this.allTags = data.map(tag => tag.name);

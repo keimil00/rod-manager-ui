@@ -1,0 +1,64 @@
+@import "../../../../styles.scss";
+
+.card {
+  box-shadow: 0 3px 15px -1px rgb(156, 158, 171);
+  display: flex;
+  width: 60%;
+  margin: 1rem auto 20px;
+}
+
+.custom-chip {
+  background-color: map-get($rod-manager-ui-primary, 500); /* Set the background color to indicate selection */
+  color: white !important; /* Set the text color to make it readable on the background */
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  background-color: map-get($rod-manager-ui-primary, 500);
+  color: whitesmoke;
+  padding: 4px 8px;
+  border-radius: 16px;
+  margin: 4px;
+  font-size: 14px;
+}
+
+.chip-text {
+  font-family: 'Roboto', sans-serif;
+  letter-spacing: 1px;
+}
+
+.col-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.col-item {
+  flex: 1;
+}
+
+.tag-container {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.mat-header {
+  width: 100%;
+}
+
+.title {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+iframe.ql-video {
+  width: 200px;
+  height: 200px;
+}
+
+.row-item {
+  padding: 1rem;
+}
+

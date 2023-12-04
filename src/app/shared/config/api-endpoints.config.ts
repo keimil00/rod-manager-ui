@@ -7,7 +7,11 @@ export const API_ENDPOINTS = {
     register: '/api/register/',
     getAnnouncements: '/api/announcements/',
     getTags: '/api/announcements/tag/',
-    getEvents: '/api/announcements/event/'
+    getEvents: '/api/announcements/event/',
+    getGardenOffers: '/api/garden-offers/',
+    getContacts: '/api/garden-offers/contact/',
+    getAvailableOffers: '/api/garden-offers/available-gardens/',
+    getMinMax: '/api/garden-offers/min-max/'
   },
 
   mixed: {
@@ -18,6 +22,7 @@ export const API_ENDPOINTS = {
   authenticated: {
     createTag: '/api/announcements/tag/', // TODO: think how to handle partly public endpoints
     createAnnouncement: '/api/announcements/',
+    createGardenOffer: '/api/garden-offers/',
     // Add more authenticated endpoints as needed
   },
 };

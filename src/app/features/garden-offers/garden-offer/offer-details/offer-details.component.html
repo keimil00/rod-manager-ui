@@ -1,1 +1,72 @@
-<p>offer-details works!</p>
+<div *ngIf="edit; else view">
+  <form [formGroup]="gardenForm">
+    <mat-form-field>
+      <mat-label>Sektor:</mat-label>
+      <mat-select formControlName="sector" (selectionChange)="updateAvenues()">
+        <mat-option *ngFor="let sector of sectors" [value]="sector">{{ sector }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Aleja:</mat-label>
+      <mat-select formControlName="avenue" (selectionChange)="updateNumbers()" [disabled]="avenues.length === 0">
+        <mat-option *ngFor="let avenue of avenues" [value]="avenue">{{ avenue }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Numer:</mat-label>
+      <mat-select formControlName="number" (selectionChange)="selectGarden()" [disabled]="numbers.length === 0">
+        <mat-option *ngFor="let number of numbers" [value]="number">{{ number }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+  <form [formGroup]="detailsForm" class="details-form">
+    <mat-form-field>
+      <mat-label>Wprowadź cenę:</mat-label>
+      <input matInput type="number" formControlName="price" placeholder="Wprowadź cenę:">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Wprowadź przewidywane koszta dzierżawy:</mat-label>
+      <input matInput type="number" formControlName="predicted_rent" placeholder="Wprowadź przewidywane koszta dzierżawy:">
+    </mat-form-field>
+  </form>
+</div>
+<ng-template #view>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="postNumber">
+      <th mat-header-cell *matHeaderCellDef> Numer Ogłoszenia</th>
+      <td mat-cell *matCellDef="let element"> {{element.postNumber}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="address">
+      <th mat-header-cell *matHeaderCellDef> Adres działki</th>
+      <td mat-cell *matCellDef="let element"> {{element.address}} </td>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="area">
+      <th mat-header-cell *matHeaderCellDef> Wielkość działki</th>
+      <td mat-cell *matCellDef="let element"> {{element.area}} </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="price">
+      <th mat-header-cell *matHeaderCellDef> Cena</th>
+      <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+    </ng-container>
+    <ng-container matColumnDef="predictedRent">
+      <th mat-header-cell *matHeaderCellDef> Przewidywana roczna kwota dzierżawy</th>
+      <td mat-cell *matCellDef="let element"> {{element.predictedRent}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</ng-template>
+
