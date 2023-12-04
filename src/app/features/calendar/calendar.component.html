@@ -18,10 +18,7 @@
     </button>
   </div>
   <ng-template #loading>
-    <div class="text-center">
-      <i class="fas fa-spin fa-spinner fa-5x"></i> <br/>
-      Loading events...
-    </div>
+    <mat-spinner></mat-spinner>
   </ng-template>
   <div *ngIf="events$ | async; else loading; let events">
     <mwl-calendar-month-view

@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import {AuthResponse} from "../auth/auth-response.model";
 import {Role} from "../../features/register/user.model";
+import {BehaviorSubject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
+  // private userRolesSubject = new BehaviorSubject<Role[]>([]);
 
   constructor() { }
 
@@ -21,20 +23,27 @@ export class StorageService {
   }
 
   setRoles(roles: Role[]): void {
+    // console.log('Subject next: ' + roles)
+    // this.userRolesSubject.next(roles);
     localStorage.setItem('roles', JSON.stringify(roles));
   }
+
+  // getRolesSubject() {
+  //   return this.userRolesSubject;
+  // }
 
   getRoles() {
     const rolesFromLocalStorage = JSON.parse(localStorage.getItem('roles') || '[]');
 
     if (rolesFromLocalStorage.length === 0) {
-      return [Role.MANAGER];
+      return [];
     } else {
       return rolesFromLocalStorage;
     }
   }
 
   clearRoles(): void {
+    // this.userRolesSubject.next([]);
     localStorage.removeItem('roles');
   }
 

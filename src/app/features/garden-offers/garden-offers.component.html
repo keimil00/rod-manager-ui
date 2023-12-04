@@ -5,65 +5,83 @@
     </div>
   </mat-card-header>
   <div class="">
-    <div class="search-field">
-      <mat-form-field>
-        <input
-          matInput
-          placeholder="Szukaj"
-          [formControl]="searchControl"
-          [matAutocomplete]="auto"
-          (input)="updateSearchControl($event)"
-        />
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let option of gardenOffersNames" [value]="option">
-            {{ option }}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
-    </div>
-    <div class="row-item column-container">
-      <div class="column-item">
-        <mat-label>Cena</mat-label>
-        <mat-slider discrete min="200" max="800">
-          <input value="300" matSliderStartThumb>
-          <input value="400" matSliderEndThumb>
-        </mat-slider>
+    <mat-expansion-panel (opened)="panelOpenState = true"
+                         (closed)="panelOpenState = false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Kryteria wyszukiwania
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="row-item column-container">
+        <div class="column-item">
+          <mat-label>Cena</mat-label>
+          <mat-slider discrete [disabled]="!minMax || minMax.max_price === minMax.min_price" [min]="minMax ? minMax.min_price : 0" [max]="minMax ? minMax.max_price : 0">
+            <input [value]="minMax ? minMax.min_price : 0" [(ngModel)]="filters.price_min" matSliderStartThumb>
+            <input [value]="minMax ? minMax.max_price : 0" [(ngModel)]="filters.price_max" matSliderEndThumb>
+          </mat-slider>
+        </div>
+        <div class="column-item">
+          <mat-label>Powierzchnia</mat-label>
+          <mat-slider discrete [disabled]="!minMax || minMax.max_area === minMax.min_area" [min]="minMax ? minMax.min_area : 0" [max]="minMax ? minMax.max_area : 0">
+            <input [value]="minMax ? minMax.min_area : 0" [(ngModel)]="filters.area_min" matSliderStartThumb>
+            <input [value]="minMax ? minMax.max_area : 0" [(ngModel)]="filters.area_max" matSliderEndThumb>
+          </mat-slider>
+        </div>
+        <div class="column-item">
+          <mat-label>Koszt dzierżawy</mat-label>
+          <mat-slider discrete [disabled]="!minMax || minMax.max_predicted_rent === minMax.min_predicted_rent" [min]="minMax ? minMax.min_predicted_rent : 0" [max]="minMax ? minMax.max_predicted_rent : 0">
+            <input [value]="minMax ? minMax.min_predicted_rent : 0" [(ngModel)]="filters.predicted_rent_min" matSliderStartThumb>
+            <input [value]="minMax ? minMax.max_predicted_rent : 0" [(ngModel)]="filters.predicted_rent_max" matSliderEndThumb>
+          </mat-slider>
+        </div>
       </div>
-      <div class="column-item">
-        <mat-label>Powierzchnia</mat-label>
-        <mat-slider discrete min="200" max="800">
-          <input value="300" matSliderStartThumb>
-          <input value="400" matSliderEndThumb>
-        </mat-slider>
+      <div class="sort">
+        <mat-form-field class="sort">
+          <mat-label>
+            <mat-icon>sort</mat-icon>
+            Sortuj według
+          </mat-label>
+          <mat-select (selectionChange)="onSortChange($event)" [(value)]="defaultSort">
+            <mat-option value="newest">Najnowsze</mat-option>
+            <mat-option value="oldest">Najstarsze</mat-option>
+            <mat-option value="cheapest">Najtańsze</mat-option>
+            <mat-option value="expensive">Najdroższe</mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
-      <div class="column-item">
-        <mat-label>Koszt dzierżawy</mat-label>
-        <mat-slider discrete min="200" max="800">
-          <input value="300" matSliderStartThumb>
-          <input value="400" matSliderEndThumb>
-        </mat-slider>
+      <div class="parent-container">
+        <button mat-raised-button class="find-button" color="primary" type="submit" (click)="fetchWithFilters()">
+          Wyszukaj
+        </button>
       </div>
-    </div>
-    <div class="">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
-      </svg>
-      <mat-label> Sortuj według</mat-label>
-      <mat-select>
-        <mat-option value="newest">Najnowsze</mat-option>
-        <mat-option value="oldest">Najstarsze</mat-option>
-        <mat-option value="price">Cena</mat-option>
-      </mat-select>
-    </div>
+    </mat-expansion-panel>
+    <!--    <div class="search-field">-->
+    <!--      <mat-form-field>-->
+    <!--        <input-->
+    <!--          matInput-->
+    <!--          placeholder="Szukaj"-->
+    <!--          [formControl]="searchControl"-->
+    <!--          [matAutocomplete]="auto"-->
+    <!--          (input)="updateSearchControl($event)"-->
+    <!--        />-->
+    <!--        <mat-autocomplete #auto="matAutocomplete">-->
+    <!--          <mat-option *ngFor="let option of gardenOffersNames" [value]="option">-->
+    <!--            {{ option }}-->
+    <!--          </mat-option>-->
+    <!--        </mat-autocomplete>-->
+    <!--      </mat-form-field>-->
+    <!--    </div>-->
     <mat-divider></mat-divider>
 
     <div class="row-item">
-      <app-garden-offer *ngFor="let offer of this.gardenOffers" [offer]="offer"></app-garden-offer>
+      <app-garden-offer *ngIf="this.isCreating" [edit]="true" (cancel)="onCancel()"
+                        (save)="onOfferCreated($event)"></app-garden-offer>
+      <app-garden-offer *ngFor="let offer of this.gardenOffers$ | async" [offer]="offer"></app-garden-offer>
       <app-paginator
         #paginator
         [loadDataFunction]="fetchData.bind(this)"
         [totalItemsCount]="this.totalOffersCount"
-        [pageSize]="this.defaultPageSize"
+        [pageSize]="this.currentPageSize"
       ></app-paginator>
     </div>
   </div>

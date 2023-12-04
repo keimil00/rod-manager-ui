@@ -3,7 +3,7 @@ export class Post {
   title!: string;
   body!: string;
   tags!: string[];
-  date!: Date;
+  event?: PostEvent;
 }
 
 export class Tag {
@@ -14,4 +14,9 @@ export class Tag {
 export class TagDto {
     name!: string;
     times_used!: number;
+}
+
+export class PostEvent {
+  date!: Date;
+  name!: string;
 }

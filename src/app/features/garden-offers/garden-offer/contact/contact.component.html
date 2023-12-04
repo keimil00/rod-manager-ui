@@ -1,1 +1,30 @@
-<p>contact works!</p>
+<div *ngIf="edit; else contactView">
+  <mat-form-field>
+    <mat-label>Wybierz kontakt:</mat-label>
+    <mat-select [(value)]="selectedContactId" (selectionchange)="selectionChange()" (valueChange)="selectionChange()">
+      <mat-option *ngFor="let contact of possibleContacts$ | async" [value]="contact.id">
+        {{ contact.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<ng-template #contactView>
+  <div class="contact-info">
+    <mat-card-title class="title">
+      Kontakt:
+    </mat-card-title>
+    <div class="contact-item">
+      <mat-icon>person</mat-icon>
+      <span class="contact-data">{{ contact?.name }}</span>
+    </div>
+    <div class="contact-item">
+      <mat-icon>phone</mat-icon>
+      <span class="contact-data">{{ contact?.phone }}</span>
+    </div>
+    <div class="contact-item">
+      <mat-icon>email</mat-icon>
+      <span class="contact-data">{{ contact?.email }}</span>
+    </div>
+  </div>
+
+</ng-template>

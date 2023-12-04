@@ -116,6 +116,7 @@ import localePl from '@angular/common/locales/pl';
 import {registerLocaleData} from "@angular/common";
 import {LOCALE_ID} from '@angular/core';
 import {EditUtilityValuesComponent} from "./features/payments/edit-utility-values/edit-utility-values.component";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 registerLocaleData(localePl);
 
@@ -219,50 +220,47 @@ registerLocaleData(localePl);
     EventDetailsComponent,
     EditUtilityValuesComponent
   ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        BrowserAnimationsModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatMenuModule,
+        MatCardModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        MatSelectModule,
+        MatDividerModule,
+        SocialLoginModule,
+        GoogleSigninButtonModule,
+        MatIconModule,
+        MatGridListModule,
+        MatExpansionModule,
+        FormsModule,
+        MatTableModule,
+        MatSortModule,
+        MatDatepickerModule,
+        MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule, MatCheckboxModule,
 
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatMenuModule,
-    MatCardModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatSelectModule,
-    MatDividerModule,
-    SocialLoginModule,
-    GoogleSigninButtonModule,
-    MatIconModule,
-    MatGridListModule,
-    MatExpansionModule,
-    FormsModule,
-    MatTableModule,
-    MatSortModule,
-    MatDatepickerModule,
-    MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule, MatCheckboxModule,
-
-    GoogleSigninButtonModule,
-    MatChipsModule,
-    MatIconModule,
-    MatAutocompleteModule,
-    FlexModule,
-    MatPaginatorModule,
-    MatChipsModule,
-    FormsModule,
-    QuillModule.forRoot(),
-
+        GoogleSigninButtonModule,
+        MatChipsModule,
+        MatIconModule,
+        MatAutocompleteModule,
+        FlexModule,
+        MatPaginatorModule,
+        MatChipsModule,
+        FormsModule,
+        QuillModule.forRoot(),
     MatDialogModule, MatTabsModule,
     MatSnackBarModule, MatRadioModule,
-    NgApexchartsModule,
-    MatDialogModule,
-    MatTabsModule,
-    MatSnackBarModule,
-    MatSliderModule,
-    CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory})
-  ],
+    NgApexchartsModule,    MatDialogModule,
+        MatTabsModule,
+        MatSnackBarModule,
+        MatSliderModule,
+        CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}), MatProgressSpinnerModule
+    ],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'pl-PL'},
     {
