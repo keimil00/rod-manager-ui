@@ -45,7 +45,7 @@ export class TopAppBarComponent {
         this.isInGardenOffers = urlSegments.includes('garden-offers');
       }
     });
-    this.breakpointObserver.observe('(max-width: 1250px)').subscribe(result => {
+    this.breakpointObserver.observe('(max-width: 1000px)').subscribe(result => {
       this.isWideScreen = result.matches;
     });
   }
