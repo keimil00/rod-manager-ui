@@ -6,6 +6,7 @@ import {SocialAuthService, SocialUser} from "@abacritt/angularx-social-login";
 import {StorageService} from "../../core/storage/storage.service";
 import {Router} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-login',
@@ -30,6 +31,7 @@ export class LoginComponent implements OnInit{
               private storageService: StorageService,
               private router: Router,
               formBuilder: FormBuilder,
+              private toastr: ToastrService,
               private spinner: NgxSpinnerService) {
     this.socialAuthService = socialAuthService;
     this.authService = authService;
@@ -66,14 +68,14 @@ export class LoginComponent implements OnInit{
     this.spinner.show();
     this.authService.login(user).subscribe({
       next: data => {
-        console.log(data);
+        this.toastr.success('Zalogowano!', 'Success');
         this.storageService.setTokens(data.access, data.refresh);
         this.storageService.setRoles(data.roles);
         this.spinner.hide();
         this.router.navigate(['home'])
       },
       error: error => {
-        console.error(error);
+        this.toastr.error('Ups, nie udało się zalogowoać', 'Error');
         this.showError=true;
         this.spinner.hide();
       }

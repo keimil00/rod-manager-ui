@@ -5,6 +5,7 @@ import {FormControl} from "@angular/forms";
 import {Post, Tag} from "./post/post.model";
 import {PostDataService} from "./post-data.service";
 import {PaginatorComponent} from "../../shared/paginator/paginator/paginator.component";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-home',
@@ -27,7 +28,7 @@ export class HomeComponent {
   currentPageIndex = 1;
   currentPageSize = this.defaultPageSize;
 
-  constructor(private postDataService: PostDataService, private changeDetectorRef: ChangeDetectorRef ) {
+  constructor(private postDataService: PostDataService, private changeDetectorRef: ChangeDetectorRef, private toastr: ToastrService ) {
     this.initData();
     this.filteredTags = this.tagControl.valueChanges.pipe(
       startWith(null),

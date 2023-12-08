@@ -23,6 +23,10 @@ export const API_ENDPOINTS = {
     createTag: '/api/announcements/tag/', // TODO: think how to handle partly public endpoints
     createAnnouncement: '/api/announcements/',
     createGardenOffer: '/api/garden-offers/',
+    getComplaints: '/api/complaints/',
+    sendComplaintMessage: '/api/complaints/message/',
+    createComplaint: '/api/complaints/',
+    changeComplaintState: '/api/complaints/changestate/'
     // Add more authenticated endpoints as needed
   },
 };

@@ -1,0 +1,19 @@
+<div mat-dialog-content>
+  <h1 mat-dialog-title>Create Complaint</h1>
+  <div mat-dialog-content class="dialog-content">
+    <mat-form-field appearance="fill">
+      <mat-label>Title</mat-label>
+      <input matInput [formControl]="complaintTitle">
+    </mat-form-field>
+    <mat-form-field class="message-input-field" appearance="outline">
+      <textarea matInput [formControl]="complaintContent" placeholder="Type your message here"></textarea>
+    </mat-form-field>
+    <!-- Add other form fields as needed -->
+  </div>
+  <mat-dialog-actions align="center" class="mat-actions col-container">
+    <app-text-button mat-dialog-close class="col-item cancel-button" className="action-button" [text]="'Anuluj'"
+                     [color]="'accent'"></app-text-button>
+    <app-text-button [mat-dialog-close]="true" class="col-item submit-button" className="action-button" (click)="createComplaint()"
+                     [text]="'Zapisz'" [color]="'primary'"></app-text-button>
+  </mat-dialog-actions>
+</div>
