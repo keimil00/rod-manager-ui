@@ -127,6 +127,12 @@ import { ForgetPasswordComponent } from './features/forget-password/forget-passw
 import { ResetPasswordComponent } from './features/reset-password/reset-password.component';
 
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {ToastrModule} from "ngx-toastr";
+import { ComplaintsComponent } from './features/complaints/complaints.component';
+import {MatListModule} from "@angular/material/list";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import { ComplaintDialogComponent } from './features/complaints/complaint-dialog/complaint-dialog.component';
+import { StateNamePipe } from './features/complaints/pipes/state-name.pipe';
 
 
 registerLocaleData(localePl);
@@ -235,31 +241,35 @@ registerLocaleData(localePl);
     VotedVotingsComponent,
     UserPaymentsComponent,
     ForgetPasswordComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    EditUtilityValuesComponent,
+    ComplaintsComponent,
+    ComplaintDialogComponent,
+    StateNamePipe
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        HttpClientModule,
-        BrowserAnimationsModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatMenuModule,
-        MatCardModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        MatSelectModule,
-        MatDividerModule,
-        SocialLoginModule,
-        GoogleSigninButtonModule,
-        MatIconModule,
-        MatGridListModule,
-        MatExpansionModule,
-        FormsModule,
-        MatTableModule,
-        MatSortModule,
-        MatDatepickerModule,
-        MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule, MatCheckboxModule,
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatCardModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatDividerModule,
+    SocialLoginModule,
+    GoogleSigninButtonModule,
+    MatIconModule,
+    MatGridListModule,
+    MatExpansionModule,
+    FormsModule,
+    MatTableModule,
+    MatSortModule,
+    MatDatepickerModule,
+    MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule, MatCheckboxModule,
 
         GoogleSigninButtonModule,
         MatChipsModule,
@@ -279,9 +289,11 @@ registerLocaleData(localePl);
         MatSliderModule,
         CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
         NgxSpinnerModule,
-        MatProgressSpinnerModule
-  ],
-
+        MatProgressSpinnerModule,
+  ToastrModule.forRoot({
+      positionClass: 'toast-top-center',
+      preventDuplicates: true,
+    }), MatListModule, MatSidenavModule,],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'pl-PL'},
     {

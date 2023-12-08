@@ -1,0 +1,41 @@
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; // Adjust the gap as needed for spacing between elements
+
+  mat-form-field {
+    width: 100%; // Ensures form fields take full width
+
+    &:first-of-type {
+      // Styles specifically for the title input field
+    }
+
+    &.message-input-field {
+      textarea {
+        min-height: 100px; // Sets a minimum height for the textarea
+      }
+    }
+  }
+}
+
+
+.col-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.col-item {
+  flex: 1;
+}
+
+.submit-button {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 15px;
+}
+
+.cancel-button {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 15px;
+}

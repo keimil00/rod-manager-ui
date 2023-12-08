@@ -1,0 +1,266 @@
+/* complaints-view.component.scss */
+
+.status-reported, .status-accepted, .status-inprogress, .status-complete, .status-rejected {
+  color: white; /* White text for better contrast */
+  font-size: 16px; /* Adjust as needed */
+  font-weight: bold; /* Bold text for better visibility on colored backgrounds */
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+.example-container {
+  height: 100%;
+
+  mat-sidenav {
+    width: 20%;
+    background-color: #008080;
+    color: white;
+
+    position: fixed; /* Use 'absolute' if you want it to move with page scroll */
+    top: 60px; /* Adjust this value as needed */
+    left: 0; /* Adjust this value as needed */
+    height: 100%;
+
+    padding: 5px;
+    box-shadow: 1px 0 10px rgba(0, 0, 0, 0.3);
+
+    a, .nav-item {
+      color: white;
+      padding: 10px 15px;
+      text-decoration: none;
+      display: block;
+      &:hover {
+        background-color: #006666;
+      }
+
+      span {
+        display: flex;
+        &:first-child {
+          font-weight: bold;
+        }
+        &:not(:first-child) {
+          font-size: 0.8em;
+        }
+      }
+
+      // New chat-item class styles
+      &.chat-item {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        background-color: darken(#008080, 2%);
+        margin-top: 0.5rem;
+        padding: 5px 5px;
+        word-wrap: break-word;
+        height: auto;
+        overflow: hidden; // Consider changing to 'auto' if scrollbars are needed
+        .title {
+          white-space: normal;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          // Ensure there's no fixed height here
+        }
+        .status-chip {
+          margin-top: 0.4rem;
+          padding: 2px 6px; /* Minimal padding */
+          border-radius: 5px;
+          text-align: center;
+          display: inline-block;
+        }
+
+        .status-reported {
+          background-color: #ff9800; /* Orange */
+          outline-color: #e65100; /* Darker Orange */
+        }
+
+        .status-accepted {
+          background-color: #4caf50; /* Green */
+          outline-color: #2e7d32; /* Darker Green */
+        }
+
+        .status-inprogress {
+          background-color: #2196f3; /* Blue */
+          outline-color: #1565c0; /* Darker Blue */
+        }
+
+        .status-complete {
+          background-color: #9c27b0; /* Purple */
+          outline-color: #6a1b9a; /* Darker Purple */
+        }
+
+        .status-rejected {
+          background-color: #f44336; /* Red */
+          outline-color: #d32f2f; /* Darker Red */
+        }
+      }
+    }
+  }
+
+  mat-sidenav-content {
+    padding: 20px;
+    background-color: #f5f5f5;
+    color: #333;
+
+    mat-card {
+      margin-bottom: 10px;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+      mat-card-content {
+        padding: 10px;
+        color: #333;
+      }
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      color: #333;
+    }
+  }
+}
+
+mat-sidenav-content {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Viewport height */
+  overflow: hidden; /* Prevents the sidenav content from scrolling */
+
+  ::ng-deep .status-chip {
+    margin-top: 0.4rem;
+    padding: 2px 6px; /* Minimal padding */
+    border-radius: 5px;
+    text-align: center;
+    width: fit-content;
+    display: inline-block;
+  }
+
+  .status-reported, .status-accepted, .status-inprogress, .status-complete, .status-rejected {
+    color: white; /* White text for better contrast */
+    font-size: 16px; /* Adjust as needed */
+    font-weight: bold; /* Bold text for better visibility on colored backgrounds */
+    outline-style: solid;
+    outline-width: 1px;
+    cursor: pointer; /* Change cursor to indicate item is clickable */
+    transition: background-color 0.3s, outline-color 0.3s; /* Smooth transition for hover effect */
+  }
+
+  .status-reported {
+    background-color: #ff9800; /* Orange */
+    outline-color: #e65100; /* Darker Orange */
+  }
+
+  .status-reported:hover {
+    background-color: #ffac33; /* Lighter Orange */
+    outline-color: #ff9800; /* Original Orange */
+  }
+
+  .status-accepted {
+    background-color: #4caf50; /* Green */
+    outline-color: #2e7d32; /* Darker Green */
+  }
+
+  .status-accepted:hover {
+    background-color: #66bb6a; /* Lighter Green */
+    outline-color: #4caf50; /* Original Green */
+  }
+
+  .status-inprogress {
+    background-color: #2196f3; /* Blue */
+    outline-color: #1565c0; /* Darker Blue */
+  }
+
+  .status-inprogress:hover {
+    background-color: #42a5f5; /* Lighter Blue */
+    outline-color: #2196f3; /* Original Blue */
+  }
+
+  .status-complete {
+    background-color: #9c27b0; /* Purple */
+    outline-color: #6a1b9a; /* Darker Purple */
+  }
+
+  .status-complete:hover {
+    background-color: #ba68c8; /* Lighter Purple */
+    outline-color: #9c27b0; /* Original Purple */
+  }
+
+  .status-rejected {
+    background-color: #f44336; /* Red */
+    outline-color: #d32f2f; /* Darker Red */
+  }
+
+  .status-rejected:hover {
+    background-color: #ef5350; /* Lighter Red */
+    outline-color: #f44336; /* Original Red */
+  }
+
+}
+
+.messages-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Fill the parent container */
+}
+
+.message-container {
+  flex-grow: 1; /* Grow to use available space */
+  overflow-y: auto; /* Scrollable */
+  margin-top: 20px;
+  padding: 10px;
+  background: #f3f3f3;
+  border-radius: 5px;
+}
+
+.message {
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  width: fit-content;
+  max-width: 80%;
+}
+
+.message-user {
+  background: #7ab9b9;
+  margin-left: auto;
+}
+
+.message-manager {
+  background: #fff;
+  max-width: 80%;
+  margin-right: auto;
+}
+
+.message strong {
+  font-weight: bold;
+}
+
+.message-input-container {
+  display: flex;
+  align-items: center;
+  /* Adjust this value to create space at the bottom */
+  padding: 10px 10px 40px;
+}
+
+.message-input-field {
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+.complaint-button {
+  align-content: center;
+  width: 60%;
+  margin: 15px auto;
+}
+
+.status-filter {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.message-date {
+  font-size: 0.8em; /* Smaller font size for the date */
+  color: grey; /* Optional: grey color for the date */
+  margin-top: 5px; /* Space between the message and the date */
+}
+
+

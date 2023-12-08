@@ -64,6 +64,34 @@ img {
   }
 }
 
+.ngx-toastr .toast {
+  border-radius: 8px;
+  padding: 20px;
+  font-size: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Success - Green */
+.toast-success {
+  background-color: #28a745; /* Green */
+  color: white;
+  border-left: 5px solid #218838; /* Darker green */
+}
+
+/* Error - Red */
+.toast-error {
+  background-color: #dc3545; /* Red */
+  color: white;
+  border-left: 5px solid #c82333; /* Darker red */
+}
+
+/* Close button customization */
+.toast .close-button {
+  color: white;
+  font-size: 20px;
+}
+
+
 
 /* Importing Bootstrap SCSS file. */
 @import "node_modules/bootstrap/scss/bootstrap";
