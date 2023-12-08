@@ -34,7 +34,7 @@
     </div>
     <div *ngIf="isLoggedIn()">
       <span>/</span>
-      <button mat-button>Skargi</button>
+      <button mat-button (click)="navigate('complaints')">Skargi</button>
     </div>
     <span>/</span>
     <button mat-button (click)="navigate('garden-info')" [ngClass]="{'is-in-view': isInGardenInfoComponent}">
@@ -118,7 +118,7 @@
       </div>
       <div *ngIf="isLoggedIn()">
         <mat-divider></mat-divider>
-        <button mat-menu-item class="button-menu">Skargi</button>
+        <button mat-button (click)="navigate('complaints')">Skargi</button>
       </div>
       <mat-divider></mat-divider>
 
