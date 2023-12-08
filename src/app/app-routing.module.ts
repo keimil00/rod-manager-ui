@@ -19,6 +19,7 @@ import {AccesDeniedComponent} from "./features/acces-denied/acces-denied.compone
 import {VotingsComponent} from "./features/votings/votings.component";
 import {GardenOffersComponent} from "./features/garden-offers/garden-offers.component";
 import {CalendarComponent} from "./features/calendar/calendar.component";
+import {ComplaintsComponent} from "./features/complaints/complaints.component";
 import {ListOfGardeneirsComponent} from "./features/list-of-gardeneirs/list-of-gardeneirs.component";
 import {Role} from "./features/register/user.model";
 import {AuthGuard} from "./app.component";
@@ -37,6 +38,7 @@ const routes: Routes = [
   { path: 'garden-info', component: GardenInfoComponent },
   { path: 'workers-list', component: WorkersListComponent, canActivate: [AuthGuard], data: { expectedRoles: [Role.ADMIN,Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE] } },
   { path: 'documents', component: DocumentsComponent, canActivate: [AuthGuard], data: { expectedRoles: [Role.ADMIN,Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE] } },
+  { path: 'complaints', component: ComplaintsComponent},
   { path: 'list-of-garden-plot', component: ListOfGardenPlotComponent, canActivate: [AuthGuard], data: { expectedRoles: [Role.ADMIN,Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE] } },
   { path: 'list-of-gardeneirs', component: ListOfGardeneirsComponent, canActivate: [AuthGuard], data: { expectedRoles: [Role.ADMIN,Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE] } },
   { path: 'list-of-users', component: ListOfUsersComponent, canActivate: [AuthGuard], data: { expectedRoles: [Role.ADMIN,Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE] } },

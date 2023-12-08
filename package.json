@@ -33,6 +33,7 @@
     "ngx-bootstrap": "^11.0.2",
     "ngx-quill": "^23.0.0",
     "ngx-spinner": "^16.0.2",
+    "ngx-toastr": "^18.0.0",
     "quill": "^1.3.7",
     "quill-blot-formatter": "^1.0.5",
     "quill-image-resize-module": "^3.0.0",

@@ -35,7 +35,8 @@
               "./node_modules/quill/dist/quill.bubble.css",
               "./node_modules/quill/dist/quill.snow.css",
               "node_modules/ngx-spinner/animations/square-jelly-box.css",
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [
               "./node_modules/quill/dist/quill.min.js",
