@@ -90,8 +90,6 @@ export class GardenPlotEditGardenComponent {
     });
   }
 
-
-  //Usunąłęm to wczesniej ale okazało sie ze bez tego nie działa
   async loadData2() {
     try {
       const result = await this.asyncOperation(); // Tu wywołaj swoją asynchroniczną funkcję
@@ -113,8 +111,9 @@ export class GardenPlotEditGardenComponent {
 
   async ngOnInit(): Promise<void> {
     this.loadData()
-    // TODO WIEM to jest na siłe bardzo ale już się poddałem po paru godzinach
-    await this.loadData2()
+
+    // TODO przetestowac dla nulla czy moze juz dziala
+    // await this.loadData2()
   }
 
   // async ngOnInit(): Promise<void> {
@@ -125,17 +124,14 @@ export class GardenPlotEditGardenComponent {
     forkJoin({
       profiles: this.listOfUsersService.getAllProfiles(),
       gardenPlots: this.gardenPlotsDataService.getAllGardenPlots(),
-    }).subscribe(async data => {
+    }).subscribe( data => {
       this.profiles = data.profiles;
       this.gardenPlots = data.gardenPlots;
       this.leasholderID = this.gardenPlot?.leaseholderID
       // this.exLeasholderID = this.gardenPlot?.exleaseholderID
 
       this.initData();
-      if (this.profiles.length > 0) {
-        // @ts-ignore
-        this.populateFormFromGardenPlot(this.gardenPlot);
-      }
+      this.populateFormFromGardenPlot(this.gardenPlot);
     });
   }
 
