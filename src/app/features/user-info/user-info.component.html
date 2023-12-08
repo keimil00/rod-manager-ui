@@ -29,11 +29,22 @@
                                 </mat-error>
                             </mat-form-field>
                         </div>
-                        <div class="row-item">
-                            <mat-form-field class="full-width">
-                                <mat-label>Numer telefonu</mat-label>
-                                <input matInput placeholder="Numer telefonu" formControlName="phoneNumber">
-                            </mat-form-field>
+                        <div class="col-container row-item ">
+                          <mat-form-field class="country-code">
+                            <mat-select formControlName="countryCode">
+                              <mat-option *ngFor="let country of getCountriesWithCodesSortedByCallingCode()" [value]="country">
+                                +{{ getCountryCallingCode(country) }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          <mat-form-field class="col-item">
+                            <mat-label>Numer telefonu</mat-label>
+                            <input matInput type="tel" formControlName="phoneNumber" placeholder="Numer telefonu"
+                                   (input)="formatPhoneNumber($event)">
+                            <mat-error *ngFor="let error of validationErrors('phoneNumber')">
+                              {{ error.message }}
+                            </mat-error>
+                          </mat-form-field>
                         </div>
                         <div class="row-item">
                             <mat-form-field class="full-width">
@@ -137,7 +148,7 @@
 </div>
 <div *ngIf="isAvailableToEdit">
     <div *ngIf="showUserEdit">
-        <button *appHasRole="[Role.MANAGER, Role.ADMIN]" mat-fab color="primary" class="floating-button"
+        <button mat-fab color="primary" class="floating-button"
                 (click)="enableFormFields()">
             <mat-icon>edit</mat-icon>
         </button>

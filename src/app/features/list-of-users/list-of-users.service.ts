@@ -351,7 +351,7 @@ export class ListOfUsersService {
         const url = `api/accounts/${id}/`;
         console.log(profile);
 
-        return this.httpClient.put(url, profile);
+        return this.httpClient.patch(url, profile);
     }
 
 }

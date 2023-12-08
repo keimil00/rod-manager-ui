@@ -96,3 +96,27 @@ $background: #EEE;
 .floating-button mat-icon {
   color: #ffffff;
 }
+
+.col-container {
+  display: flex; /* Use flexbox for layout */
+  //flex-direction: column; /* Arrange items in a col */
+  align-items: flex-end; /* Align items to the bottom */
+  width: 100%;
+}
+
+.country-code {
+  //flex: 0.5; /* Adjust the width as needed */
+  width: 80px;
+}
+
+.col-item {
+  flex: 1;
+}
+
+@media only screen and (max-width: 600px) {
+  .large-card-size{
+    width: 99%;
+    margin-top: 5%;
+    padding-bottom: 30px;
+  }
+}

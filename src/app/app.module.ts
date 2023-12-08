@@ -127,6 +127,7 @@ import { ForgetPasswordComponent } from './features/forget-password/forget-passw
 import { ResetPasswordComponent } from './features/reset-password/reset-password.component';
 
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {PhoneNumberAreaCodePipe} from "./features/list-of-users/ProfilesService";
 
 
 registerLocaleData(localePl);
@@ -235,7 +236,8 @@ registerLocaleData(localePl);
     VotedVotingsComponent,
     UserPaymentsComponent,
     ForgetPasswordComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    PhoneNumberAreaCodePipe
   ],
     imports: [
         BrowserModule,
@@ -279,7 +281,7 @@ registerLocaleData(localePl);
         MatSliderModule,
         CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
         NgxSpinnerModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
   ],
 
   providers: [

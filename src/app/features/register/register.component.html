@@ -40,7 +40,7 @@
             <mat-form-field class="country-code">
 
               <mat-select formControlName="countryCode">
-                <mat-option *ngFor="let country of getCountries()" [value]="country">
+                <mat-option *ngFor="let country of getCountriesWithCodesSortedByCallingCode()" [value]="country">
                   +{{ getCountryCallingCode(country) }}
                 </mat-option>
               </mat-select>

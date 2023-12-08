@@ -1,7 +1,7 @@
 import {Component, Inject} from '@angular/core';
 
 import {Profile} from "../../Profile";
-import {GardenPlotBackend} from "../garden-plot";
+import {GardenPlotWithLeaseholder} from "../garden-plot";
 import {Payment} from "./PaymentList";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
@@ -15,7 +15,7 @@ import {PaymentsService} from "../../payments/payments.service";
   styleUrls: ['./garden-plot-details.component.scss']
 })
 export class GardenPlotDetailsComponent {
-  gardenPlot: GardenPlotBackend | undefined;
+  gardenPlot: GardenPlotWithLeaseholder
   leaseholder: Profile | undefined;
   exleaseholder: Profile | undefined;
 
@@ -43,7 +43,7 @@ export class GardenPlotDetailsComponent {
   constructor(formBuilder: FormBuilder, private gardenPlotsDataService: BackendGardenService, private paymentsService: PaymentsService,
               public dialogRef: MatDialogRef<GardenPlotDetailsComponent>,
               @Inject(MAT_DIALOG_DATA) public data: {
-                gardenPlot: GardenPlotBackend;
+                gardenPlot: GardenPlotWithLeaseholder;
                 leaseholder: Profile;
                 exLeaseHolder: Profile
               }

@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, ViewChild} from '@angular/core';
-import {GardenPlot, GardenPlotBackend} from './garden-plot';
+import {GardenPlot, GardenPlotWithLeaseholder} from './garden-plot';
 import {MatTableDataSource} from "@angular/material/table";
 import {Profile} from "../Profile";
 import {MatDialog} from "@angular/material/dialog";
@@ -11,6 +11,8 @@ import {BackendGardenService} from "./backend-garden.service";
 import {Page} from "../../shared/paginator/page.model";
 import {forkJoin} from "rxjs";
 import {NgxSpinnerService} from "ngx-spinner";
+import {findExLeaseholderByPLotID, findLeaseholderByPLotID} from "./GardenService";
+import {ListOfUsersService} from "../list-of-users/list-of-users.service";
 
 @Component({
     selector: 'app-list-of-garden-plot',
@@ -20,7 +22,7 @@ import {NgxSpinnerService} from "ngx-spinner";
 export class ListOfGardenPlotComponent {
     displayedColumns: string[] = ['sector', 'avenue', 'number', 'area', 'leaseholder', 'add', 'status', 'info'];
 
-    dataSource = new MatTableDataSource<GardenPlotBackend>();
+    dataSource = new MatTableDataSource<GardenPlotWithLeaseholder>();
 
     showDetails: boolean = false;
     showAddingLeaseHolder: boolean = false;
@@ -33,7 +35,7 @@ export class ListOfGardenPlotComponent {
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-    constructor(private dialog: MatDialog, private gardenPlotsDataService: BackendGardenService, private changeDetectorRef: ChangeDetectorRef,private spinner: NgxSpinnerService) {
+    constructor(private dialog: MatDialog, private gardenPlotsDataService: BackendGardenService,private profilesService: ListOfUsersService, private changeDetectorRef: ChangeDetectorRef,private spinner: NgxSpinnerService) {
         this.spinner.show()
         this.sortData()
 
@@ -46,9 +48,9 @@ export class ListOfGardenPlotComponent {
     }
 
     loadProfiles(index: number, size: number): void {
-        this.gardenPlotsDataService.getGardenPlots(this.currentPageIndex, size).subscribe((page: Page<GardenPlotBackend>) => {
+        this.gardenPlotsDataService.getGardenPlots(this.currentPageIndex, size).subscribe((page: Page<GardenPlotWithLeaseholder>) => {
             this.totalGardenCount = page.count;
-            this.dataSource = new MatTableDataSource<GardenPlotBackend>(page.results);
+            this.dataSource = new MatTableDataSource<GardenPlotWithLeaseholder>(page.results);
             this.spinner.hide()
         });
     }
@@ -60,7 +62,7 @@ export class ListOfGardenPlotComponent {
         this.gardenPlotsDataService.getGardenPlots(pageIndex, pageSize).subscribe(
             data => {
                 this.totalGardenCount = data.count;
-                this.dataSource = new MatTableDataSource<GardenPlotBackend>(data.results);
+                this.dataSource = new MatTableDataSource<GardenPlotWithLeaseholder>(data.results);
             },
             error => {
                 console.error(error);
@@ -72,11 +74,11 @@ export class ListOfGardenPlotComponent {
     }
 
     updateData() {//to backend
-        this.gardenPlotsDataService.sortData()
+        // this.gardenPlotsDataService.sortData()
         this.gardenPlotsDataService.getGardenPlots(this.currentPageIndex, this.currentPageSize).subscribe(
             data => {
                 this.totalGardenCount = data.count;
-                this.dataSource = new MatTableDataSource<GardenPlotBackend>(data.results);
+                this.dataSource = new MatTableDataSource<GardenPlotWithLeaseholder>(data.results);
             },
             error => {
                 console.error(error);
@@ -88,25 +90,23 @@ export class ListOfGardenPlotComponent {
     }
 
     sortData() {
-        this.gardenPlotsDataService.sortData()
+        // this.gardenPlotsDataService.sortData()
     }
 
     selectDetails(gardenPlot: GardenPlot) {
             forkJoin({
-                leaseHolder:this.gardenPlotsDataService.getLeaseholder(gardenPlot.gardenPlotID),
-                exLeaseHolder:this.gardenPlotsDataService.getExLeaseholder(gardenPlot.gardenPlotID)
+                profiles:this.profilesService.getAllProfiles(),
+                gardens:this.gardenPlotsDataService.getAllGardenPlots()
             }).subscribe(data => {
-                let leaseHolder : Profile | null
-                leaseHolder = data.leaseHolder
+                let leaseHolder= findLeaseholderByPLotID(gardenPlot,data.profiles,data.gardens)
+                let exLeaseHolder =findExLeaseholderByPLotID(gardenPlot,data.profiles,data.gardens)
                 this.showDetails = true;
-                let exLeaseHolder : Profile | null
-                exLeaseHolder = data.exLeaseHolder
-                // @ts-ignore
+
                 this.showDetailsDialog(gardenPlot, leaseHolder, exLeaseHolder);
             });
     }
 
-    showDetailsDialog(gardenPlot: GardenPlot, leaseholder: Profile | undefined, exleaseholder: Profile | undefined) {
+  showDetailsDialog(gardenPlot: GardenPlot, leaseholder: Profile | null, exleaseholder: Profile | null) {
         const dialogRef = this.dialog.open(GardenPlotDetailsComponent, {
             width: '4000px',
             data: {gardenPlot, leaseholder, exleaseholder},
@@ -118,12 +118,12 @@ export class ListOfGardenPlotComponent {
         });
     }
 
-    selectAddingLeaseHolder(gardenPlot: GardenPlotBackend) {
+    selectAddingLeaseHolder(gardenPlot: GardenPlotWithLeaseholder) {
         this.showAddingLeaseHolder = true;
         this.showAddingLeaseHolderDialog(gardenPlot)
     }
 
-    showAddingLeaseHolderDialog(gardenPlot: GardenPlotBackend) {
+    showAddingLeaseHolderDialog(gardenPlot: GardenPlotWithLeaseholder) {
         const dialogRef = this.dialog.open(GardenPlotAddLeaseholderComponent, {
             width: '4000px',
             data: {gardenPlot},

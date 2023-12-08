@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {GardenPlot, GardenPlotBackend, PlotStatus} from "../garden-plot";
+import {GardenPlot, GardenPlotWithLeaseholder, PlotStatus} from "../garden-plot";
 
 import {
     findProfileIdByEmail,
@@ -198,25 +198,11 @@ export class GardenPlotListAddGardenComponent {
                 number: newNumber,
                 area: newArea,
                 leaseholderID: newLeaseholderID,
-                exLeaseholderID: null,
+                exleaseholderID: null,
                 gardenStatus: newStatus
             };
 
-            //TODO push do backendu
-            // this.gardenPlots?.push(newGardenPlot)
-            const newGardenPlot2: GardenPlotBackend = {
-                gardenPlotID: uniqueId,
-                sector: newSector,
-                avenue: newAvenue,
-                number: newNumber,
-                area: newArea,
-                leaseholder: newLeaseholderID,
-                gardenStatus: newStatus
-            };
-
-            this.gardenPlotsDataService.addGarden(newGardenPlot2)
-            this.gardenPlotsDataService.addGarden2(newGardenPlot)
-            this.gardenPlotsDataService.addGarden3(newGardenPlot)
+            this.gardenPlotsDataService.addGarden(newGardenPlot).subscribe()
 
             this.addGardenForm.reset();
             this.closeAddingGardenPlot()

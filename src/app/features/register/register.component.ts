@@ -1,6 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
-import {AsYouType, parsePhoneNumber, getCountries, getCountryCallingCode, getPhoneCode} from "libphonenumber-js";
+import {
+  AsYouType,
+  parsePhoneNumber,
+  getCountries,
+  getCountryCallingCode,
+  getPhoneCode,
+  CountryCode
+} from "libphonenumber-js";
 import {SocialAuthService, SocialUser} from "@abacritt/angularx-social-login";
 import {AuthService} from "../../core/auth/auth.service";
 import {LoginUser, User} from "./user.model";
@@ -88,6 +95,7 @@ export class RegisterComponent implements OnInit {
     user.password = this.registerFrom.get('password')?.value;
     user.first_name = this.registerFrom.get('firstName')?.value;
     user.last_name = this.registerFrom.get('lastName')?.value;
+    // user.phone = this.getFullPhoneNumber()
     this.authService.register(user).subscribe({
       next: data => {
         console.log(data);
@@ -140,10 +148,17 @@ export class RegisterComponent implements OnInit {
     input.value = value.slice(0, 15);
   }
 
-  getFullPhoneNumber(): string {
+  getFullPhoneNumber(): string|null {
     const country = this.registerFrom.get('countryCode')?.value;
     const phoneNumber = this.registerFrom.get('phoneNumber')?.value;
-    const fullPhoneNumber = `+${parsePhoneNumber(phoneNumber, country).countryCallingCode} ${phoneNumber}`;
+    // const fullPhoneNumber = `+${parsePhoneNumber(phoneNumber, country).countryCallingCode} ${phoneNumber}`;
+    // return fullPhoneNumber;
+
+    if (phoneNumber === null || phoneNumber === '') {
+      return null
+    }
+
+    const fullPhoneNumber = parsePhoneNumber(phoneNumber, country).number
     return fullPhoneNumber;
   }
 
@@ -188,5 +203,21 @@ export class RegisterComponent implements OnInit {
 
       return null;
     };
+  }
+  getCountriesWithCodesSortedByCallingCode(): CountryCode[] {
+    const countries = this.getCountries();
+
+    return countries.sort((a, b) => {
+      const callingCodeA = this.getCountryCallingCode(a);
+      const callingCodeB = this.getCountryCallingCode(b);
+
+      if (callingCodeA < callingCodeB) {
+        return -1;
+      } else if (callingCodeA > callingCodeB) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
   }
 }

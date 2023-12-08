@@ -41,13 +41,12 @@
       <!--    <button mat-button (click)="navigate('garden-info')" class="garden-info-text">-->
       O Ogrodzie
     </button>
-    <div *ngIf="isLoggedIn">
-      <div *ngIf="isLoggedIn()">
-        <div *appHasRole="[Role.MANAGER, Role.TECHNICAL_EMPLOYEE, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]">
-          <span>/</span>
-          <button mat-button [matMenuTriggerFor]="menu">Więcej</button>
-        </div>
+    <div *ngIf="isLoggedIn()">
+      <div *appHasRole="[Role.MANAGER, Role.TECHNICAL_EMPLOYEE, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]">
+        <span>/</span>
+        <button mat-button [matMenuTriggerFor]="menu">Więcej</button>
       </div>
+
 
     </div>
     <mat-menu #menu="matMenu" class="mat-menu-custom-style">
@@ -101,7 +100,7 @@
 
   <mat-menu #menu1="matMenu" class="mat-menu-custom-style">
     <div *ngIf="isWideScreen">
-<!--      TODO poprawic to bo czasmi pierwszy przycisk jest niewidoczny-->
+      <!--      TODO poprawic to bo czasmi pierwszy przycisk jest niewidoczny-->
       <button mat-menu-item class="button-menu" (click)="navigate('home')">Strona główna</button>
       <mat-divider></mat-divider>
       <button mat-menu-item class="button-menu" (click)="navigate('garden-offers')">Dostępne działki</button>
