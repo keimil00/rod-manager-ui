@@ -75,10 +75,12 @@ export class VotedVotingsComponent {
 
   tryGenerateCharts() {
     // Check if we have all the necessary data
-    if (!this.chartElements || !this.finishedVotes) {
+    let stop = 0
+    if (!this.chartElements || !this.finishedVotes|| stop>200) {
       setTimeout(() => {
         this.tryGenerateCharts(); // Try generating charts again after a short interval
         console.log("Trying to generate charts")
+        stop++;
       }, 100); // Wait for 100ms before the next attempt
       return;
     }

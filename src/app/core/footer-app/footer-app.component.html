@@ -1,6 +1,6 @@
 <mat-toolbar>
     <div class="options">
-        <button mat-button (click)="openDialog()">Zgłoś problem techniczny</button>
+        <button *ngIf="isLoggedIn()" mat-button (click)="openDialog()">Zgłoś problem techniczny</button>
     </div>
     <div  class="autors">
 

@@ -2,8 +2,8 @@
   <mat-card class="details-card">
     <mat-card-header>
       <div class="center-item">
-        <h2
-          class="title">Edycja pracownika</h2>
+        <h2 *ngIf="!isToAdd" class="title">Edycja pracownika</h2>
+        <h2 *ngIf="isToAdd" class="title">Dodawnie pracownika</h2>
       </div>
       <button mat-icon-button class="close-button" (click)="closeEditingingEmployer()">
         <mat-icon>close</mat-icon>
