@@ -18,9 +18,8 @@
 
     <button mat-button (click)="navigate('calendar')" [ngClass]="{'is-in-view': isInCalendarComponent}">Kalendarz
     </button>
-    <!--    TODO zmiana bo to do testu-->
     <div *ngIf="isLoggedIn()">
-      <div *appHasRole="[Role.GARDENER, Role.ADMIN]">
+      <div *appHasRole="[Role.GARDENER]">
         <span>/</span>
         <button mat-button (click)="navigate('my-garden-plot-info')"
                 [ngClass]="{'is-in-view': isInMyGardenPlotInfoComponent}">Moja działka
@@ -46,9 +45,9 @@
         <span>/</span>
         <button mat-button [matMenuTriggerFor]="menu">Więcej</button>
       </div>
-
-
     </div>
+
+<!--    TODO z jakiegoś powodu nie widzi jak odpale w nowej karcie-->
     <mat-menu #menu="matMenu" class="mat-menu-custom-style">
       <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
         <button mat-menu-item class="button-menu" (click)="navigate('documents')">Dokumenty</button>
@@ -87,7 +86,6 @@
     </div>
     <div class="login-buttons" *ngIf="isLoggedIn(); else loggedOut">
       <app-text-button text="Wyloguj" color="primary" (click)="logout()"></app-text-button>
-      <!--      TODO-->
       <app-text-button text="Profil" color="accent"
                        (click)="navigateToProfileComponent()"></app-text-button>
     </div>
@@ -163,7 +161,6 @@
         <div *ngIf="isLoggedIn(); else loggedOut2">
           <div mat-menu-item class="button-menu">
             <app-text-button text="Wyloguj" color="primary" (click)="logout()"></app-text-button>
-            <!--      TODO-->
           </div>
           <mat-divider></mat-divider>
           <div mat-menu-item class="button-menu">
