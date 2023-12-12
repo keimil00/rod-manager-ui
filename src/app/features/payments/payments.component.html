@@ -1,207 +1,403 @@
-<ngx-spinner bdColor = "rgba(0, 0, 0, 0.3)" size = "large" color = "#009688" type = "square-jelly-box" [fullScreen] = "true"><p style="color: white" > Ładowanie </p></ngx-spinner>
-<div class="page-container" [ngClass]="{'blurred-background': showDetails}">
-  <mat-card class="large-card-size">
-    <mat-card-header>
-      <div class="center-item">
-        <h2 class="title">Opłaty</h2>
-      </div>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="page-container">
-        <mat-card class="small-card-size">
-          <mat-card-header>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.3)" size="large" color="#009688" type="square-jelly-box" [fullScreen]="true"><p
+        style="color: white"> Ładowanie </p></ngx-spinner>
+<div class="page-container">
+    <mat-card class="large-card-size">
+        <mat-card-header>
             <div class="center-item">
-              <h2 class="small-title">Opłata za dzierżawe</h2>
+                <h2 class="title">Opłaty</h2>
             </div>
-          </mat-card-header>
-          <mat-card-content>
-            <table mat-table [dataSource]="dataLeaseFees">
-              <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef></th>
-                <td mat-cell *matCellDef="let fee" class="setSize">{{ fee.name }}</td>
-              </ng-container>
-              <ng-container matColumnDef="type">
-                <th mat-header-cell *matHeaderCellDef>Rodzaj opłaty</th>
-                <td mat-cell *matCellDef="let fee" class="setSize2">{{ fee.type }}</td>
-              </ng-container>
-              <ng-container matColumnDef="value">
-                <th mat-header-cell *matHeaderCellDef>Kwota</th>
-                <td mat-cell *matCellDef="let fee" class="setSize3">{{ fee.value }} zł</td>
-              </ng-container>
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let gardenPlot; columns: displayedColumns"></tr>
-            </table>
-          </mat-card-content>
-          <button mat-fab color="primary" aria-label="Edytuj" class="editButton"
-                  (click)="selectShowEditingLeasePayments()">
-            <mat-icon>edit</mat-icon>
-          </button>
-        </mat-card>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="page-container">
+                <div class="period-selector">
+                    <button mat-icon-button (click)="moveToPreviousPeriod()" [disabled]="currentPeriodIndex === 0">
+                        <mat-icon>chevron_left</mat-icon>
+                    </button>
+                    <div class="span-container">
+                        <span>{{ currentPeriod?.start_date | date }} - {{ currentPeriod?.end_date | date }}</span>
+                    </div>
+                    <button mat-icon-button (click)="moveToNextPeriod()"
+                            [disabled]="currentPeriodIndex >= periods.length - 1">
+                        <mat-icon>chevron_right</mat-icon>
+                    </button>
+                    <button mat-mini-fab color="primary" (click)="addNewPeriod()">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+                <mat-card class="small-card-size">
+                    <mat-card-header>
+                        <div class="center-item">
+                            <h2 class="small-title">Opłata za dzierżawe</h2>
+                        </div>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <table mat-table class="table-mat" *ngIf="isEditModeLeaseFee; else leaseFeeTable"
+                               [dataSource]="editableDataLeaseFees">
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef> Nazwa</th>
+                                <td mat-cell *matCellDef="let fee" class="name">
+                                    <mat-form-field>
+                                        <mat-label>Nazwa</mat-label>
+                                        <input matInput [(ngModel)]="fee.name">
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
 
-        <mat-card class="small-card-size">
-          <mat-card-header>
-            <div class="center-item">
-              <h2 class="small-title">Opłata za media</h2>
-              <h2 class="very-small-title">Opłaty za liczniki wspólne</h2>
-            </div>
-          </mat-card-header>
-          <mat-card-content>
-            <table mat-table [dataSource]="dataUtilityFees">
-              <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef></th>
-                <td mat-cell *matCellDef="let fee" class="setSize">{{ fee.name }}</td>
-              </ng-container>
-              <ng-container matColumnDef="type">
-                <th mat-header-cell *matHeaderCellDef>Rodzaj opłaty</th>
-                <td mat-cell *matCellDef="let fee" class="setSize2">{{ fee.type }}</td>
-              </ng-container>
-              <ng-container matColumnDef="value">
-                <th mat-header-cell *matHeaderCellDef>Kwota</th>
-                <td mat-cell *matCellDef="let fee" class="setSize3">{{ fee.value }} zł</td>
-              </ng-container>
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let gardenPlot; columns: displayedColumns"></tr>
-            </table>
-          </mat-card-content>
-          <button mat-fab color="primary" aria-label="Edytuj" class="editButton"
-                  (click)="selectShowEditingUtilityPayments()">
-            <mat-icon>edit</mat-icon>
-          </button>
-        </mat-card>
+                            <ng-container matColumnDef="type">
+                                <th mat-header-cell *matHeaderCellDef> Rodzaj opłaty</th>
+                                <td mat-cell *matCellDef="let fee" class="type-of-payment">
+                                    <mat-form-field>
+                                        <mat-label>Rodzaj opłaty</mat-label>
+                                        <mat-select [(ngModel)]="fee.calculation_type">
+                                            <mat-option *ngFor="let type of Object.values(TypeOfFee)" [value]="type">
+                                                {{type}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="value">
+                                <th mat-header-cell *matHeaderCellDef class="amount"> Kwota</th>
+                                <td mat-cell *matCellDef="let fee" class="amount">
+                                    <mat-form-field class="amount-form">
+                                        <mat-label>Kwota</mat-label>
+                                        <input type="number" matInput [(ngModel)]="fee.value">
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="remove">
+                                <th mat-header-cell *matHeaderCellDef> Usuń</th>
+                                <td mat-cell *matCellDef="let fee" class="remove-button">
+                                    <button mat-mini-fab color="warn" (click)="removeRowLeaseFee(fee)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="editDisplayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: editDisplayedColumns;"></tr>
+                        </table>
+                        <button mat-mini-fab *ngIf="isEditModeLeaseFee" color="primary" (click)="addEmptyRowLeaseFee()">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                        <ng-template #leaseFeeTable>
+                            <table mat-table [dataSource]="dataLeaseFees">
+                                <ng-container matColumnDef="name">
+                                    <th mat-header-cell *matHeaderCellDef>Nazwa</th>
+                                    <td mat-cell *matCellDef="let fee" class="setSize">{{ fee.name }}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="type">
+                                    <th mat-header-cell *matHeaderCellDef>Rodzaj opłaty</th>
+                                    <td mat-cell *matCellDef="let fee" class="setSize2">{{ fee.calculation_type }}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="value">
+                                    <th mat-header-cell *matHeaderCellDef>Kwota</th>
+                                    <td mat-cell *matCellDef="let fee" class="setSize3">{{ fee.value }} zł</td>
+                                </ng-container>
+                                <ng-container matColumnDef="total_amount">
+                                    <th mat-header-cell *matHeaderCellDef>Sumaryczna kwota</th>
+                                    <td mat-cell *matCellDef="let fee"
+                                        class="setSize3">{{ fee.total_amount ? fee.total_amount : 0 }} zł
+                                    </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let gardenPlot; columns: displayedColumns"></tr>
+                            </table>
+                        </ng-template>
+                    </mat-card-content>
+                    <button *ngIf="isEditModeLeaseFee; else editLeaseFee" mat-fab color="primary" aria-label="Edytuj"
+                            class="editButton"
+                            (click)="saveLeaseFee()">
+                        <mat-icon>check</mat-icon>
+                    </button>
+                    <ng-template #editLeaseFee>
+                        <button mat-fab color="primary" aria-label="Save lease fee" class="editButton"
+                                (click)="enterEditModeLeaseFee()">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                    </ng-template>
+                </mat-card>
 
-        <mat-card class="small-card-size">
-          <mat-card-header>
-            <div class="center-item">
-              <h2 class="small-title">Dodatkowe opłaty</h2>
+                <mat-card class="small-card-size">
+                    <mat-card-header>
+                        <div class="center-item">
+                            <h2 class="small-title">Opłata za media</h2>
+                            <h2 class="very-small-title">Opłaty za liczniki wspólne</h2>
+                        </div>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <table mat-table class="table-mat" *ngIf="isEditModeUtilityFee; else utilityFeeTable"
+                               [dataSource]="editableDataUtilityFees">
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef> Nazwa</th>
+                                <td mat-cell *matCellDef="let fee" class="name">
+                                    <mat-form-field>
+                                        <mat-label>Nazwa</mat-label>
+                                        <input matInput [(ngModel)]="fee.name">
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="type">
+                                <th mat-header-cell *matHeaderCellDef> Rodzaj opłaty</th>
+                                <td mat-cell *matCellDef="let fee" class="type-of-payment">
+                                    <mat-form-field>
+                                        <mat-label>Rodzaj opłaty</mat-label>
+                                        <mat-select [(ngModel)]="fee.calculation_type">
+                                            <mat-option *ngFor="let type of Object.values(TypeOfFee)" [value]="type">
+                                                {{type}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="value">
+                                <th mat-header-cell *matHeaderCellDef class="amount"> Stawka</th>
+                                <td mat-cell *matCellDef="let fee" class="amount">
+                                    <mat-form-field class="amount-form">
+                                        <mat-label>Kwota</mat-label>
+                                        <input type="number" matInput [(ngModel)]="fee.value">
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="remove">
+                                <th mat-header-cell *matHeaderCellDef> Usuń</th>
+                                <td mat-cell *matCellDef="let fee" class="remove-button">
+                                    <button mat-mini-fab color="warn" (click)="removeRowUtilityFee(fee)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="editDisplayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: editDisplayedColumns;"></tr>
+                        </table>
+                        <button mat-mini-fab *ngIf="isEditModeUtilityFee" color="primary"
+                                (click)="addEmptyRowUtilityFee()">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                        <ng-template #utilityFeeTable>
+                            <table mat-table [dataSource]="dataUtilityFees">
+                                <ng-container matColumnDef="name">
+                                    <th mat-header-cell *matHeaderCellDef>Nazwa</th>
+                                    <td mat-cell *matCellDef="let fee" class="setSize">{{ fee.name }}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="type">
+                                    <th mat-header-cell *matHeaderCellDef>Rodzaj opłaty</th>
+                                    <td mat-cell *matCellDef="let fee" class="setSize2">{{ fee.calculation_type }}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="value">
+                                    <th mat-header-cell *matHeaderCellDef>Stawka</th>
+                                    <td mat-cell *matCellDef="let fee"
+                                        class="setSize3">{{ fee.value }} {{ fee.name === "Woda" ? 'zł/m^3' : 'zł/kWh' }} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="total_amount">
+                                    <th mat-header-cell *matHeaderCellDef>Sumaryczna kwota</th>
+                                    <td mat-cell *matCellDef="let fee"
+                                        class="setSize3">{{ fee.total_amount ? fee.total_amount : 0 }} zł
+                                    </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let gardenPlot; columns: displayedColumns"></tr>
+                            </table>
+                        </ng-template>
+                    </mat-card-content>
+                    <button *ngIf="isEditModeUtilityFee; else editUtilityFee" mat-fab color="primary" aria-label="Edytuj"
+                            class="editButton"
+                            (click)="saveUtilityFee()">
+                        <mat-icon>check</mat-icon>
+                    </button>
+                    <ng-template #editUtilityFee>
+                        <button mat-fab color="primary" aria-label="Save lease fee" class="editButton"
+                                (click)="enterEditModeUtilityFee()">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                    </ng-template>
+                </mat-card>
+
+                <mat-card class="small-card-size">
+                    <mat-card-header>
+                        <div class="center-item">
+                            <h2 class="small-title">Dodatkowe opłaty</h2>
+                        </div>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <table mat-table class="table-mat" *ngIf="isEditModeAdditionalFee; else additionalFeeTable"
+                               [dataSource]="editableDataAdditionalFees">
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef> Nazwa</th>
+                                <td mat-cell *matCellDef="let fee" class="name">
+                                    <mat-form-field>
+                                        <mat-label>Nazwa</mat-label>
+                                        <input matInput [(ngModel)]="fee.name">
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="type">
+                                <th mat-header-cell *matHeaderCellDef> Rodzaj opłaty</th>
+                                <td mat-cell *matCellDef="let fee" class="type-of-payment">
+                                    <mat-form-field>
+                                        <mat-label>Rodzaj opłaty</mat-label>
+                                        <mat-select>
+                                            <mat-option *ngFor="let type of Object.values(TypeOfFee)"
+                                                        [value]="fee.calculation_type">
+                                                {{type}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="value">
+                                <th mat-header-cell *matHeaderCellDef class="amount"> Stawka</th>
+                                <td mat-cell *matCellDef="let fee" class="amount">
+                                    <mat-form-field class="amount-form">
+                                        <mat-label>Kwota</mat-label>
+                                        <input type="number" matInput [(ngModel)]="fee.value">
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="remove">
+                                <th mat-header-cell *matHeaderCellDef> Usuń</th>
+                                <td mat-cell *matCellDef="let fee" class="remove-button">
+                                    <button mat-mini-fab color="warn" (click)="removeRowAdditionalFee(fee)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="editDisplayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: editDisplayedColumns;"></tr>
+                        </table>
+                        <button mat-mini-fab *ngIf="isEditModeAdditionalFee" color="primary"
+                                (click)="addEmptyRowAdditionalFee()">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                        <ng-template #additionalFeeTable>
+                            <table mat-table [dataSource]="dataAdditionalFees">
+                                <ng-container matColumnDef="name">
+                                    <th mat-header-cell *matHeaderCellDef>Nazwa</th>
+                                    <td mat-cell *matCellDef="let fee" class="setSize">{{ fee.name }}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="type">
+                                    <th mat-header-cell *matHeaderCellDef>Rodzaj opłaty</th>
+                                    <td mat-cell *matCellDef="let fee" class="setSize2">{{ fee.calculation_type }}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="value">
+                                    <th mat-header-cell *matHeaderCellDef>Kwota</th>
+                                    <td mat-cell *matCellDef="let fee" class="setSize3">{{ fee.value }} zł</td>
+                                </ng-container>
+                                <ng-container matColumnDef="total_amount">
+                                    <th mat-header-cell *matHeaderCellDef>Sumaryczna kwota</th>
+                                    <td mat-cell *matCellDef="let fee"
+                                        class="setSize3">{{ fee.total_amount ? fee.total_amount : 0 }} zł
+                                    </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let gardenPlot; columns: displayedColumns"></tr>
+                            </table>
+                        </ng-template>
+                    </mat-card-content>
+                    <button *ngIf="isEditModeUtilityFee; else editUtilityFee" mat-fab color="primary" aria-label="Edytuj"
+                            class="editButton"
+                            (click)="saveAdditionalFee()">
+                        <mat-icon>check</mat-icon>
+                    </button>
+                    <ng-template #editUtilityFee>
+                        <button mat-fab color="primary" aria-label="Save lease fee" class="editButton"
+                                (click)="enterEditModeAdditionalFee()">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                    </ng-template>
+                </mat-card>
+                <mat-card class="payment-date-card">
+                    <mat-card-header class="payments">
+                        <div class="payments">
+                            <mat-label [textContent]="'Termin płatności:'" class="date"></mat-label>
+                            <mat-label
+                                    [textContent]="currentPeriod?.payment_date | date:'dd.MM.yyyy'"
+                                    class="date"></mat-label>
+                        </div>
+                    </mat-card-header>
+                    <button mat-fab color="primary" aria-label="Edytuj" class="editButton" (click)="openDateDialog()"
+                            [disabled]="currentPeriodIsActive()">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <div class="center-button" *appHasRole="[Role.MANAGER, Role.ADMIN]">
+                        <app-text-button class="add-button" [text]="'Zatwierdź opłaty'" [color]="'primary'"
+                                         (click)="addPayments()"
+                                         [disabled]="!isWaitingForConfirmation()"></app-text-button>
+                    </div>
+                    <mat-label *appHasRole="[Role.MANAGER, Role.ADMIN]" class="small-text">* Po zatwierdzeniu zostaną
+                        naliczone
+                        opłaty zgodnie z
+                        wyżej wymienionymi danymi oraz na podstawie aktualnych stanów liczników, operacji nie można
+                        cofnąć
+                    </mat-label>
+                </mat-card>
+                <mat-card class="individual-payments-card">
+                    <mat-card-header>
+                        <div class="center-item">
+                            <h2 class="small-title">Działka</h2>
+                            <hr class="separator">
+                        </div>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <form class [formGroup]="individualPaymentsForm">
+                            <div>
+                                <div class="row-item">
+                                    <mat-form-field class="full-width">
+                                        <mat-label>Sektor</mat-label>
+                                        <ng-container>
+                                            <mat-select formControlName="sector">
+                                                <mat-option *ngFor="let option of sectorsOptions" [value]="option">
+                                                    {{ option}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </ng-container>
+                                        <mat-error *ngFor="let error of validationErrors('sector')">
+                                            {{ error.message }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="row-item">
+                                    <mat-form-field class="full-width">
+                                        <mat-label>Aleja</mat-label>
+                                        <ng-container>
+                                            <mat-select formControlName="avenue">
+                                                <mat-option *ngFor="let option of avenuesOptions" [value]="option">
+                                                    {{ option}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </ng-container>
+                                        <mat-error *ngFor="let error of validationErrors('avenue')">
+                                            {{ error.message }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="row-item">
+                                    <mat-form-field class="full-width">
+                                        <mat-label>Numer</mat-label>
+                                        <ng-container>
+                                            <mat-select formControlName="number">
+                                                <mat-option *ngFor="let option of numbersOptions" [value]="option">
+                                                    {{ option}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </ng-container>
+                                        <mat-error *ngFor="let error of validationErrors('number')">
+                                            {{ error.message }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="center-button">
+                                <button mat-raised-button class="individual-payments-button" type="submit"
+                                        color="primary" (click)="selectShowIndividualPayments()">Zobacz indywidualne
+                                    opłaty
+                                </button>
+                            </div>
+                        </form>
+                    </mat-card-content>
+                </mat-card>
             </div>
-          </mat-card-header>
-          <mat-card-content>
-            <table mat-table [dataSource]="dataAdditionalFees">
-              <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef></th>
-                <td mat-cell *matCellDef="let fee" class="setSize">{{ fee.name }}</td>
-              </ng-container>
-              <ng-container matColumnDef="type">
-                <th mat-header-cell *matHeaderCellDef>Rodzaj opłaty</th>
-                <td mat-cell *matCellDef="let fee" class="setSize2">{{ fee.type }}</td>
-              </ng-container>
-              <ng-container matColumnDef="value">
-                <th mat-header-cell *matHeaderCellDef>Kwota</th>
-                <td mat-cell *matCellDef="let fee" class="setSize3">{{ fee.value }} zł</td>
-              </ng-container>
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let gardenPlot; columns: displayedColumns"></tr>
-            </table>
-          </mat-card-content>
-          <button mat-fab color="primary" aria-label="Edytuj" class="editButton"
-                  (click)="selectShowAdditionalPayments()">
-            <mat-icon>edit</mat-icon>
-          </button>
-        </mat-card>
-        <mat-card class="payment-Utility-Values-card">
-          <mat-card-header class="payments">
-            <div class="payments">
-              <div>
-                <mat-label>Cena za prąd (kW):<span class="value-in-red">{{payment.utilityValues.electricValue + " zł"}}</span></mat-label>
-              </div>
-              <div>
-                <mat-label>Cena za wodę (m³):<span class="value-in-red">{{payment.utilityValues.waterValue + " zł" }}</span></mat-label>
-              </div>
-            </div>
-          </mat-card-header>
-          <button mat-fab color="primary" aria-label="Edytuj" class="editButton" (click)="openUtilityDialog()">
-            <mat-icon>edit</mat-icon>
-          </button>
-        </mat-card>
-        <mat-card class="payment-date-card">
-          <mat-card-header class="payments">
-            <div class="payments">
-              <mat-label [textContent]="'Termin płatności:'" class="date"></mat-label>
-              <mat-label
-                [textContent]="payment.date | date:'dd.MM.yyyy'"
-                class="date"></mat-label>
-            </div>
-          </mat-card-header>
-          <button mat-fab color="primary" aria-label="Edytuj" class="editButton" (click)="openDateDialog()">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <div class="center-button" *appHasRole="[Role.MANAGER, Role.ADMIN]">
-            <app-text-button class="add-button" [text]="'Zatwierdź opłaty'" [color]="'primary'"
-                             (click)="addPayments()"></app-text-button>
-          </div>
-          <mat-label *appHasRole="[Role.MANAGER, Role.ADMIN]" class="small-text">* Po zatwierdzeniu zostaną
-            naliczone
-            opłaty zgodnie z
-            wyżej wymienionymi danymi oraz na podstawie aktualnych stanów liczników, operacji nie można
-            cofnąć
-          </mat-label>
-        </mat-card>
-        <mat-card class="individual-payments-card">
-          <mat-card-header>
-            <div class="center-item">
-              <h2 class="small-title">Działka</h2>
-              <hr class="separator">
-            </div>
-          </mat-card-header>
-          <mat-card-content>
-            <form class [formGroup]="individualPaymentsForm">
-              <div>
-                <div class="row-item">
-                  <mat-form-field class="full-width">
-                    <mat-label>Sektor</mat-label>
-                    <ng-container>
-                      <mat-select formControlName="sector">
-                        <mat-option *ngFor="let option of sectorsOptions" [value]="option">
-                          {{ option}}
-                        </mat-option>
-                      </mat-select>
-                    </ng-container>
-                    <mat-error *ngFor="let error of validationErrors('sector')">
-                      {{ error.message }}
-                    </mat-error>
-                  </mat-form-field>
-                </div>
-                <div class="row-item">
-                  <mat-form-field class="full-width">
-                    <mat-label>Aleja</mat-label>
-                    <ng-container>
-                      <mat-select formControlName="avenue">
-                        <mat-option *ngFor="let option of avenuesOptions" [value]="option">
-                          {{ option}}
-                        </mat-option>
-                      </mat-select>
-                    </ng-container>
-                    <mat-error *ngFor="let error of validationErrors('avenue')">
-                      {{ error.message }}
-                    </mat-error>
-                  </mat-form-field>
-                </div>
-                <div class="row-item">
-                  <mat-form-field class="full-width">
-                    <mat-label>Numer</mat-label>
-                    <ng-container>
-                      <mat-select formControlName="number">
-                        <mat-option *ngFor="let option of numbersOptions" [value]="option">
-                          {{ option}}
-                        </mat-option>
-                      </mat-select>
-                    </ng-container>
-                    <mat-error *ngFor="let error of validationErrors('number')">
-                      {{ error.message }}
-                    </mat-error>
-                  </mat-form-field>
-                </div>
-              </div>
-              <div class="center-button">
-                <button mat-raised-button class="individual-payments-button" type="submit"
-                        color="primary" (click)="selectShowIndividualPayments()">Zobacz indywidualne
-                  opłaty
-                </button>
-              </div>
-            </form>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </mat-card-content>
-  </mat-card>
+        </mat-card-content>
+    </mat-card>
 </div>

@@ -1,6 +1,6 @@
 <mat-sidenav-container class="example-container">
   <mat-sidenav mode="side" opened>
-    <div class="status-filter">
+    <div *appHasRole="[Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]" class="status-filter">
       <mat-form-field style="width: 100%">
         <mat-label>Filtruj po statusie</mat-label>
         <mat-select [(ngModel)]="stateFilter" (ngModelChange)="fetchComplaintsWithFilters()">
@@ -9,7 +9,7 @@
       </mat-form-field>
     </div>
 
-    <div class="complaint-button">
+    <div *appHasRole="[Role.GARDENER]" class="complaint-button">
       <app-text-button (click)="openCreateComplaintDialog()" [text]="'Złóż skargę'" color="accent"></app-text-button>
     </div>
     <mat-nav-list>
@@ -50,7 +50,7 @@
       </div>
     </div>
     <ng-template #noSelection>
-      <p>Please select a complaint to view messages.</p>
+      <p>Nie ma skarg</p>
     </ng-template>
   </mat-sidenav-content>
 </mat-sidenav-container>

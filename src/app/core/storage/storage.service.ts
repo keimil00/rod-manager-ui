@@ -7,30 +7,24 @@ import {BehaviorSubject} from "rxjs";
   providedIn: 'root'
 })
 export class StorageService {
-  // private userRolesSubject = new BehaviorSubject<Role[]>([]);
-
+  private userRolesSubject = new BehaviorSubject<Role[]>(this.getRoles());
+  currentRoles = this.userRolesSubject.asObservable();
   constructor() { }
 
   setTokens(access: string, refresh: string): void {
     localStorage.setItem('access', access);
     localStorage.setItem('refresh', refresh);
     const expirationTime = new Date().getTime() + 300000;
-    localStorage.setItem('timestamp', expirationTime.toString());
   }
 
-  getTimestamp(): number {
-    return Number(localStorage.getItem('timestamp'));
+  updateAccessToken(access: string) {
+    localStorage.setItem('access', access);
   }
 
   setRoles(roles: Role[]): void {
-    // console.log('Subject next: ' + roles)
-    // this.userRolesSubject.next(roles);
     localStorage.setItem('roles', JSON.stringify(roles));
+    this.userRolesSubject.next(roles);
   }
-
-  // getRolesSubject() {
-  //   return this.userRolesSubject;
-  // }
 
   getRoles() {
     const rolesFromLocalStorage = JSON.parse(localStorage.getItem('roles') || '[]');
@@ -43,8 +37,8 @@ export class StorageService {
   }
 
   clearRoles(): void {
-    // this.userRolesSubject.next([]);
     localStorage.removeItem('roles');
+    this.userRolesSubject.next([]);
   }
 
   setLoggedIn(loggedIn: boolean): void {

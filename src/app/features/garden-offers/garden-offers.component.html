@@ -1,91 +1,86 @@
 <div class="page-container">
-  <mat-card-header class="row-container">
-    <div class="row-item">
-      <h2 class="title">Dostępne działki</h2>
-    </div>
-  </mat-card-header>
-  <div class="">
-    <mat-expansion-panel (opened)="panelOpenState = true"
-                         (closed)="panelOpenState = false">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Kryteria wyszukiwania
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <div class="row-item column-container">
-        <div class="column-item">
-          <mat-label>Cena</mat-label>
-          <mat-slider discrete [disabled]="!minMax || minMax.max_price === minMax.min_price" [min]="minMax ? minMax.min_price : 0" [max]="minMax ? minMax.max_price : 0">
-            <input [value]="minMax ? minMax.min_price : 0" [(ngModel)]="filters.price_min" matSliderStartThumb>
-            <input [value]="minMax ? minMax.max_price : 0" [(ngModel)]="filters.price_max" matSliderEndThumb>
-          </mat-slider>
+    <mat-card-header class="row-container">
+        <div class="row-item">
+            <h2 class="title">Dostępne działki</h2>
         </div>
-        <div class="column-item">
-          <mat-label>Powierzchnia</mat-label>
-          <mat-slider discrete [disabled]="!minMax || minMax.max_area === minMax.min_area" [min]="minMax ? minMax.min_area : 0" [max]="minMax ? minMax.max_area : 0">
-            <input [value]="minMax ? minMax.min_area : 0" [(ngModel)]="filters.area_min" matSliderStartThumb>
-            <input [value]="minMax ? minMax.max_area : 0" [(ngModel)]="filters.area_max" matSliderEndThumb>
-          </mat-slider>
-        </div>
-        <div class="column-item">
-          <mat-label>Koszt dzierżawy</mat-label>
-          <mat-slider discrete [disabled]="!minMax || minMax.max_predicted_rent === minMax.min_predicted_rent" [min]="minMax ? minMax.min_predicted_rent : 0" [max]="minMax ? minMax.max_predicted_rent : 0">
-            <input [value]="minMax ? minMax.min_predicted_rent : 0" [(ngModel)]="filters.predicted_rent_min" matSliderStartThumb>
-            <input [value]="minMax ? minMax.max_predicted_rent : 0" [(ngModel)]="filters.predicted_rent_max" matSliderEndThumb>
-          </mat-slider>
-        </div>
-      </div>
-      <div class="sort">
-        <mat-form-field class="sort">
-          <mat-label>
-            <mat-icon>sort</mat-icon>
-            Sortuj według
-          </mat-label>
-          <mat-select (selectionChange)="onSortChange($event)" [(value)]="defaultSort">
-            <mat-option value="newest">Najnowsze</mat-option>
-            <mat-option value="oldest">Najstarsze</mat-option>
-            <mat-option value="cheapest">Najtańsze</mat-option>
-            <mat-option value="expensive">Najdroższe</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div class="parent-container">
-        <button mat-raised-button class="find-button" color="primary" type="submit" (click)="fetchWithFilters()">
-          Wyszukaj
-        </button>
-      </div>
-    </mat-expansion-panel>
-    <!--    <div class="search-field">-->
-    <!--      <mat-form-field>-->
-    <!--        <input-->
-    <!--          matInput-->
-    <!--          placeholder="Szukaj"-->
-    <!--          [formControl]="searchControl"-->
-    <!--          [matAutocomplete]="auto"-->
-    <!--          (input)="updateSearchControl($event)"-->
-    <!--        />-->
-    <!--        <mat-autocomplete #auto="matAutocomplete">-->
-    <!--          <mat-option *ngFor="let option of gardenOffersNames" [value]="option">-->
-    <!--            {{ option }}-->
-    <!--          </mat-option>-->
-    <!--        </mat-autocomplete>-->
-    <!--      </mat-form-field>-->
-    <!--    </div>-->
-    <mat-divider></mat-divider>
+    </mat-card-header>
+    <div class="">
+        <mat-expansion-panel (opened)="panelOpenState = true"
+                             (closed)="panelOpenState = false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Kryteria wyszukiwania
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="row-item column-container">
+                <div class="column-item">
+                    <mat-label>Cena</mat-label>
+                    <mat-slider discrete [disabled]="!minMax || minMax.max_price === minMax.min_price"
+                                [min]="minMax ? minMax.min_price : 0" [max]="minMax ? minMax.max_price : 0">
+                        <input [value]="minMax ? minMax.min_price : 0" [(ngModel)]="filters.price_min"
+                               matSliderStartThumb>
+                        <input [value]="minMax ? minMax.max_price : 0" [(ngModel)]="filters.price_max"
+                               matSliderEndThumb>
+                    </mat-slider>
+                </div>
+                <div class="column-item">
+                    <mat-label>Powierzchnia</mat-label>
+                    <mat-slider discrete [disabled]="!minMax || minMax.max_area === minMax.min_area"
+                                [min]="minMax ? minMax.min_area : 0" [max]="minMax ? minMax.max_area : 0">
+                        <input [value]="minMax ? minMax.min_area : 0" [(ngModel)]="filters.area_min"
+                               matSliderStartThumb>
+                        <input [value]="minMax ? minMax.max_area : 0" [(ngModel)]="filters.area_max" matSliderEndThumb>
+                    </mat-slider>
+                </div>
+                <div class="column-item">
+                    <mat-label>Koszt dzierżawy</mat-label>
+                    <mat-slider discrete [disabled]="!minMax || minMax.max_predicted_rent === minMax.min_predicted_rent"
+                                [min]="minMax ? minMax.min_predicted_rent : 0"
+                                [max]="minMax ? minMax.max_predicted_rent : 0">
+                        <input [value]="minMax ? minMax.min_predicted_rent : 0" [(ngModel)]="filters.predicted_rent_min"
+                               matSliderStartThumb>
+                        <input [value]="minMax ? minMax.max_predicted_rent : 0" [(ngModel)]="filters.predicted_rent_max"
+                               matSliderEndThumb>
+                    </mat-slider>
+                </div>
+            </div>
+            <div class="sort">
+                <mat-form-field class="sort">
+                    <mat-label>
+                        <mat-icon>sort</mat-icon>
+                        Sortuj według
+                    </mat-label>
+                    <mat-select (selectionChange)="onSortChange($event)" [(value)]="defaultSort">
+                        <mat-option value="newest">Najnowsze</mat-option>
+                        <mat-option value="oldest">Najstarsze</mat-option>
+                        <mat-option value="cheapest">Najtańsze</mat-option>
+                        <mat-option value="expensive">Najdroższe</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="parent-container">
+                <button mat-raised-button class="find-button" color="primary" type="submit"
+                        (click)="fetchWithFilters()">
+                    Wyszukaj
+                </button>
+            </div>
+        </mat-expansion-panel>
+        <mat-divider></mat-divider>
 
-    <div class="row-item">
-      <app-garden-offer *ngIf="this.isCreating" [edit]="true" (cancel)="onCancel()"
-                        (save)="onOfferCreated($event)"></app-garden-offer>
-      <app-garden-offer *ngFor="let offer of this.gardenOffers$ | async" [offer]="offer"></app-garden-offer>
-      <app-paginator
-        #paginator
-        [loadDataFunction]="fetchData.bind(this)"
-        [totalItemsCount]="this.totalOffersCount"
-        [pageSize]="this.currentPageSize"
-      ></app-paginator>
+        <div class="row-item">
+            <app-garden-offer *ngIf="this.isCreating" [edit]="true" (cancel)="onCancel()"
+                              (save)="onOfferCreated($event)"></app-garden-offer>
+            <app-garden-offer *ngFor="let offer of this.gardenOffers$ | async" [offer]="offer"></app-garden-offer>
+            <app-paginator
+                #paginator
+                [loadDataFunction]="fetchData.bind(this)"
+                [totalItemsCount]="this.totalOffersCount"
+                [pageSize]="this.currentPageSize"
+            ></app-paginator>
+        </div>
     </div>
-  </div>
-  <button mat-fab color="primary" class="floating-button" (click)="createOffer()" [disabled]="isCreatingOffer">
-    <mat-icon>add</mat-icon>
-  </button>
+    <button mat-fab *appHasRole="[Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]" color="primary"
+            class="floating-button" (click)="createOffer()" [disabled]="isCreatingOffer">
+        <mat-icon>add</mat-icon>
+    </button>
 </div>

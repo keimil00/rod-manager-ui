@@ -1,0 +1,22 @@
+<div mat-dialog-content>
+  <h1 mat-dialog-title class="title">Ustaw nowy okres rozliczeniowy</h1>
+  <form>
+    <mat-form-field appearance="fill">
+      <mat-label>Start Date</mat-label>
+      <input matInput [matDatepicker]="startPicker" [formControl]="startDate">
+      <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+      <mat-datepicker #startPicker ></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>End Date</mat-label>
+      <input matInput [matDatepicker]="endPicker" [formControl]="endDate">
+      <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+      <mat-datepicker #endPicker></mat-datepicker>
+    </mat-form-field>
+  </form>
+  <mat-dialog-actions align="center" class="mat-actions col-container">
+    <app-text-button mat-dialog-close class="col-item cancel-button" className="action-button" [text]="'Anuluj'" [color]="'accent'" ></app-text-button>
+    <app-text-button [mat-dialog-close]="false" class="col-item submit-button" className="action-button" [text]="'Zapisz'" [color]="'primary'" (click)="saveNewPeriod()"></app-text-button>
+  </mat-dialog-actions>
+</div>
