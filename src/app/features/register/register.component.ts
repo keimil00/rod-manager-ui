@@ -34,7 +34,8 @@ export class RegisterComponent implements OnInit {
     ],
     email: [
       {type: 'required', message: 'Adres e-mail jest wymagany'},
-      {type: 'email', message: 'Proszę podać prawidłowy adres e-mail'}
+      {type: 'email', message: 'Proszę podać prawidłowy adres e-mail'},
+      {type: 'emailExists', message: 'Email jest już zajęty'}
     ],
     phoneNumber: [
       {type: 'pattern', message: 'Proszę podać prawidłowy numer telefonu (9 cyfr)'}
@@ -103,6 +104,10 @@ export class RegisterComponent implements OnInit {
       },
       error: error => {
         console.error(error);
+
+        if(error.status===400){
+          this.registerFrom.get('email')?.setErrors({emailExists: true});
+        }
       }
     });
   }
