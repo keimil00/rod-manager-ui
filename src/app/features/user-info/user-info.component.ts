@@ -38,6 +38,9 @@ export class UserInfoComponent {
   showEditFullStatus: boolean = true;
   showGardener: boolean = true;
 
+  myProfile: Profile | undefined;
+  gardenPlotAdress: string|null = null;
+
 
   // @ts-ignore
   gardenPlots: GardenPlot[];
@@ -94,6 +97,7 @@ export class UserInfoComponent {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
+      this.isAvailableToEdit = true
       this.id = parseInt(params['id'], 10)
       this.spinner.show()
       this.loadData()
@@ -112,6 +116,13 @@ export class UserInfoComponent {
           this.gardenPlots = data.gardenPlots;
           this.profile = data.profile;
           this.documents = data.documents;
+          this.myProfile = data.myProfile
+
+          const gardenPlot = findGardenByUserID(this.profile?.id, this.gardenPlots)
+          if(gardenPlot){
+            this.gardenPlotAdress = `${gardenPlot.area}, ${gardenPlot.avenue}, ${gardenPlot.number}`
+          }
+          else this.gardenPlotAdress = null
           this.initData()
           this.spinner.hide()
         },
@@ -134,7 +145,8 @@ export class UserInfoComponent {
     // @ts-ignore
     if ((this.profile?.groups.includes(Role.ADMIN)) || (this.profile?.groups.includes(Role.MANAGER))) {
       if (this.storageService.getRoles().includes(Role.MANAGER)) {
-        this.isAvailableToEdit = false;
+        if(this.profile?.id !== this.myProfile?.id){
+        this.isAvailableToEdit = false;}
       }
     }
   }
@@ -204,7 +216,7 @@ export class UserInfoComponent {
 
   enableFormFields() {
     this.showEditStatus = false
-    // TODO zobaczyc czy jest endpoint jak jest do zamienic i usunac pobieranie dzialek
+
     if (findGardenByUserID(this.profile?.id, this.gardenPlots)) {
       this.showGardener = false
     }
@@ -227,7 +239,7 @@ export class UserInfoComponent {
 
       }
     });
-    //TODO do konca nie jestem pewien czy tak powinienem robic ale taka sytuacja teoretycznie nie powinna wogle sie wydarzyc
+
     if (!this.showGardener) {
       let tempGroups = this.profile?.groups;
       if (!tempGroups?.includes(Role.GARDENER))
@@ -282,11 +294,6 @@ export class UserInfoComponent {
         email: this.profile?.email,
         phone: newPhoneNumber,
         groups: newStatus,
-        // TODO
-        // // @ts-ignore
-        // paymentAmount: this.profile?.paymentAmount,
-        // // @ts-ignore
-        // paymentDueDate: this.profile?.paymentDueDate
       };
 
       this.listOfUsersService.editProfile(newUser, this.id).subscribe({
@@ -326,17 +333,6 @@ export class UserInfoComponent {
     });
   }
 
-
-  // validationErrors(controlName: string, form: FormGroup): any[] {
-  //   let errors = []
-  //   // @ts-ignore
-  //   for (let error of this.errorMessages[controlName]) {
-  //     if (form.get(controlName)?.hasError(error.type)) {
-  //       errors.push(error);
-  //     }
-  //   }
-  //   return errors;
-  // }
 
   toggleAddDocumentForm() {
     this.showAddDocumentForm = !this.showAddDocumentForm;

@@ -49,7 +49,7 @@ export class GardenPlotDetailsComponent {
     @Inject(MAT_DIALOG_DATA) public data: {
       gardenPlot: GardenPlotWithLeaseholder;
       leaseholder: Profile;
-      exLeaseHolder: Profile
+      exLeaseHolder: Profile;
     }
   ) {
     this.gardenPlot = data.gardenPlot;

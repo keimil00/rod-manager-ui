@@ -125,10 +125,10 @@ export class ListOfGardenPlotComponent {
     });
   }
 
-  showDetailsDialog(gardenPlot: GardenPlot, leaseholder: Profile | null, exleaseholder: Profile | null) {
+  showDetailsDialog(gardenPlot: GardenPlot, leaseholder: Profile | null, exLeaseHolder: Profile | null) {
     const dialogRef = this.dialog.open(GardenPlotDetailsComponent, {
       width: '4000px',
-      data: {gardenPlot, leaseholder, exleaseholder},
+      data: {gardenPlot, leaseholder, exLeaseHolder},
     });
 
     dialogRef.afterClosed().subscribe(() => {
