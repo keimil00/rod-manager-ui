@@ -1,4 +1,4 @@
-import {GardenPlot, PlotStatus} from "./garden-plot";
+import {GardenPlot} from "./garden-plot";
 import {Counter, CounterType} from "../counters/counter";
 import {Profile} from "../Profile";
 import {AbstractControl, ValidatorFn} from "@angular/forms";
@@ -276,10 +276,16 @@ export function uniqueGardenValidator(sector: string, avenue: string, gardenPlot
     };
 }
 
-export function findProfileEmailByID(IdToFind: number | null, profiles: Profile[]): string | null {
-    const foundProfile = profiles.find((profile) => profile.id === IdToFind);
-    return foundProfile ? foundProfile.email : null;
+export function findLeaseholderByPLotID(garden: GardenPlot, profiles: Profile[], gardens: GardenPlot[]): Profile | null {
+  const foundProfile = profiles.find((profile) => profile.id === garden?.leaseholderID);
+  return foundProfile ? foundProfile : null;
 }
+
+export function findExLeaseholderByPLotID(garden: GardenPlot, profiles: Profile[],gardens: GardenPlot[]): Profile | null {
+  const foundProfile = profiles.find((profile) => profile.id === garden.exleaseholderID);
+  return foundProfile ? foundProfile : null;
+}
+
 
 
 

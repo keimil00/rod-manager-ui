@@ -1,6 +1,6 @@
-// TODO zmienic id na nazwe
 export interface Counter {
-  id: string;
+  id: number;
+  name: string;
   addressC: string| null;
   measurement: number;
   type: CounterType;

@@ -1,0 +1,145 @@
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.1)" size="large" color="#009688" type="square-jelly-box" [fullScreen]="true"><p
+  style="color: white"> Ładowanie </p></ngx-spinner>
+
+<mat-accordion>
+  <ng-container *ngFor="let item of documents">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ item.name }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <ng-container *ngIf="item.file_url">
+        <a (click)="downloadFile(item.file_url)" target="_blank">Otwórz dokument</a>
+        <div>
+          <div class="left-button">
+            <div>
+              <app-text-button class="add-button" [text]="'Usuń'" [color]="'accent'"
+                               (click)="delete(item)"></app-text-button>
+            </div>
+          </div>
+          <div class="left-button">
+            <div>
+              <app-text-button class="add-button" [text]="'Edytuj dokument'" [color]="'accent'"
+                               (click)="toggleEditDocumentForm(item)"></app-text-button>
+            </div>
+          </div>
+          <div *ngIf="showEditDocumentForm">
+            <form class [formGroup]="editFileForm">
+              <mat-form-field class="row-item">
+                <mat-label>Nazwa</mat-label>
+                <input matInput type="string" placeholder="Nazwa" formControlName="name">
+                <mat-error *ngFor="let error of validationErrors('name',addFileForm)">
+                  {{ error.message }}
+                </mat-error>
+              </mat-form-field>
+              <div class="row-item">
+                <mat-label>Jeżeli nie podasz pliku zmieniona zostanie tylko nazwa</mat-label>
+              </div>
+              <div class="row-item">
+                <input type="file" (change)="onFileSelected($event)" formControlName="file">
+              </div>
+              <div class="left-button">
+                <app-text-button type="submit" class="add-button" [text]="'Edytuj'" [color]="'primary'"
+                                 (click)="editDocument(item)"></app-text-button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!item.file_url">
+        <div>
+          <!-- Rekurencyjnie wywołaj ten sam szablon dla elementów w podfolderach -->
+          <app-user-folder-list [level]="(level+1)" [documents]="item.items" [parent]="item.id"
+                                (itemAdded)="onItemAdded()" [userId]="userId"></app-user-folder-list>
+          <div>
+            <div>
+              <div class="left-button">
+                <div>
+                  <app-text-button class="add-button" [text]="'Usuń'" [color]="'accent'"
+                                   (click)="delete(item)"></app-text-button>
+                </div>
+              </div>
+              <div class="left-button">
+                <div>
+                  <app-text-button class="add-button" [text]="'Edytuj nazwę'" [color]="'accent'"
+                                   (click)="toggleEditFolderForm(item)"></app-text-button>
+                </div>
+              </div>
+              <div *ngIf="showEditListForm">
+                <form class [formGroup]="editListForm">
+                  <mat-form-field class="row-item">
+                    <mat-label>Nazwa</mat-label>
+                    <input matInput type="string" placeholder="Nazwa" formControlName="name">
+                    <mat-error *ngFor="let error of validationErrors('name',editListForm)">
+                      {{ error.message }}
+                    </mat-error>
+                  </mat-form-field>
+                  <div class="left-button">
+                    <app-text-button type="submit" class="add-button" [text]="'Edytuj'" [color]="'primary'"
+                                     (click)="editList(item)"></app-text-button>
+                  </div>
+                </form>
+              </div>
+
+              <div class="left-button">
+                <div>
+                  <app-text-button class="add-button" [text]="'Dodaj dokument'" [color]="'accent'"
+                                   (click)="toggleAddDocumentForm()"></app-text-button>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div *ngIf="showAddDocumentForm">
+                <form class [formGroup]="addFileForm">
+                  <mat-form-field class="row-item">
+                    <mat-label>Nazwa</mat-label>
+                    <input matInput type="string" placeholder="Nazwa" formControlName="name">
+                    <mat-error *ngFor="let error of validationErrors('name',addFileForm)">
+                      {{ error.message }}
+                    </mat-error>
+                  </mat-form-field>
+                  <div class="row-item">
+                    <input type="file" (change)="onFileSelected($event)" formControlName="file">
+                    <mat-error *ngFor="let error of validationErrors('file',addFileForm)">
+                      {{ error.message }}
+                    </mat-error>
+                  </div>
+                  <div class="left-button">
+                    <app-text-button type="submit" class="add-button" [text]="'Dodaj'" [color]="'primary'"
+                                     (click)="addNewDocument(item)"></app-text-button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div>
+              <div class="left-button">
+                <div>
+                  <app-text-button class="add-button" [text]="'Dodaj Folder'" [color]="'accent'"
+                                   (click)="toggleAddListForm()"></app-text-button>
+                </div>
+              </div>
+
+              <div *ngIf="showAddListForm">
+                <form class [formGroup]="addListForm">
+                  <mat-form-field class="row-item">
+                    <mat-label>Nazwa</mat-label>
+                    <input matInput type="string" placeholder="Nazwa" formControlName="name">
+                    <mat-error *ngFor="let error of validationErrors('name',addListForm)">
+                      {{ error.message }}
+                    </mat-error>
+                  </mat-form-field>
+                  <div class="left-button">
+                    <app-text-button type="submit" class="add-button" [text]="'Dodaj'" [color]="'primary'"
+                                     (click)="addNewList(item)"></app-text-button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </mat-expansion-panel>
+  </ng-container>
+</mat-accordion>
+

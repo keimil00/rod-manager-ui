@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {TechnicalIssueDialogComponent} from "./technical-issue-dialog/technical-issue-dialog.component";
+import {StorageService} from "../storage/storage.service";
 
 @Component({
   selector: 'app-footer-app',
@@ -8,7 +9,15 @@ import {TechnicalIssueDialogComponent} from "./technical-issue-dialog/technical-
   styleUrls: ['./footer-app.component.scss']
 })
 export class FooterAppComponent {
-  constructor(public dialog: MatDialog) {}
+  constructor(
+    public dialog: MatDialog,
+    private storageService: StorageService
+  ) {
+  }
+
+  isLoggedIn(): boolean {
+    return this.storageService.getLoggedIn();
+  }
 
   openDialog(): void {
     const dialogRef = this.dialog.open(TechnicalIssueDialogComponent, {

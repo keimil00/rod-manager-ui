@@ -1,8 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {GardenPlot, GardenPlotBackend} from "../garden-plot";
+import {GardenPlot, GardenPlotWithLeaseholder} from "../garden-plot";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {findProfileEmailByID, uniqueLeaseholderIDValidator} from "../GardenService";
-import {getMatchingProfiles, profileEmailValidator} from "../../list-of-users/ProfilesService";
+import {uniqueLeaseholderIDValidator} from "../GardenService";
+import {findProfileEmailByID, getMatchingProfiles, profileEmailValidator} from "../../list-of-users/ProfilesService";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {BackendGardenService} from "../backend-garden.service";
 import {ListOfUsersService} from "../../list-of-users/list-of-users.service";
@@ -17,11 +17,11 @@ import {forkJoin} from "rxjs";
 })
 export class GardenPlotAddLeaseholderComponent implements OnInit {
     leaseHolderOptions: { email: string; fullName: string }[] = [];
-    gardenPlot: GardenPlotBackend | undefined;
+    gardenPlot: GardenPlotWithLeaseholder | undefined;
     addLeaseHolderForm: FormGroup;
 
     // @ts-ignore
-    leasholderID: number | null
+    leasholderID: number | null | undefined
 
     // @ts-ignore
     private profiles: Profile[]
@@ -32,9 +32,9 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
         this.dialogRef.close();
     }
 
-    populateFormFromGardenPlot(gardenPlot: GardenPlotBackend | undefined) {
+    populateFormFromGardenPlot(gardenPlot: GardenPlotWithLeaseholder | undefined) {
         this.addLeaseHolderForm.patchValue({
-            // @ts-ignore
+          // @ts-ignore
             leaseholderEmail: gardenPlot.leaseholder !== null ? findProfileEmailByID(this.leasholderID, this.profiles) : 'brak',
         });
     }
@@ -43,7 +43,7 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
                 private gardenPlotsDataService: BackendGardenService,
                 private listOfUsersService: ListOfUsersService,
                 public dialogRef: MatDialogRef<GardenPlotAddLeaseholderComponent>,
-                @Inject(MAT_DIALOG_DATA) public data: { gardenPlot: GardenPlotBackend }
+                @Inject(MAT_DIALOG_DATA) public data: { gardenPlot: GardenPlotWithLeaseholder }
     ) {
         this.gardenPlot = data.gardenPlot
         this.addLeaseHolderForm = formBuilder.group({
@@ -56,15 +56,12 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
         forkJoin({
             profiles: this.listOfUsersService.getAllProfiles(),
             gardenPlots: this.gardenPlotsDataService.getAllGardenPlots(),
-            leaseholder: this.gardenPlotsDataService.getLeaseholder(this.gardenPlot?.gardenPlotID)
+            // leaseholder: this.gardenPlotsDataService.getLeaseholder(this.gardenPlot?.gardenPlotID)
         }).subscribe(data => {
             this.profiles = data.profiles;
             this.gardenPlots = data.gardenPlots;
-            let leaseHolder: Profile | null
-            leaseHolder = data.leaseholder
-            if (leaseHolder) {
-                this.leasholderID = leaseHolder.id
-            } else this.leasholderID = null
+
+            this.leasholderID = this.gardenPlot?.leaseholderID
             this.initData();
         });
     }
@@ -96,8 +93,7 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
             if (this.addLeaseHolderForm.get('leaseholderEmail')?.value === 'brak') {
                 // @ts-ignore
                 this.gardenPlot.leaseholderID = null;
-                this.gardenPlotsDataService.editLeaseholder(this.gardenPlot?.gardenPlotID, null)
-                this.gardenPlotsDataService.editLeaseholder2(this.gardenPlot?.gardenPlotID, null, this.gardenPlots)
+                this.gardenPlotsDataService.editLeaseholder(this.gardenPlot?.gardenPlotID, null).subscribe()
                 // this.gardenPlotsDataService.editLeaseholder3(this.gardenPlot?.gardenPlotID, null)
 
                 this.closeAddingLeaseHolder();
@@ -109,8 +105,7 @@ export class GardenPlotAddLeaseholderComponent implements OnInit {
                 if (selectedProfile) {
                     // @ts-ignore
                     this.gardenPlot.leaseholderID = selectedProfile.id;
-                    this.gardenPlotsDataService.editLeaseholder(this.gardenPlot?.gardenPlotID, selectedProfile.id)
-                    this.gardenPlotsDataService.editLeaseholder2(this.gardenPlot?.gardenPlotID, selectedProfile.id, this.gardenPlots)
+                    this.gardenPlotsDataService.editLeaseholder(this.gardenPlot?.gardenPlotID, selectedProfile.id).subscribe()
                     // this.gardenPlotsDataService.editLeaseholder3(this.gardenPlot?.gardenPlotID, selectedProfile.profileId)
 
                     this.closeAddingLeaseHolder();

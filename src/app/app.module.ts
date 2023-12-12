@@ -18,10 +18,10 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatSelectModule} from "@angular/material/select";
 import {MatDividerModule} from "@angular/material/divider";
 import {
-    GoogleLoginProvider,
-    GoogleSigninButtonModule,
-    SocialAuthServiceConfig,
-    SocialLoginModule
+  GoogleLoginProvider,
+  GoogleSigninButtonModule,
+  SocialAuthServiceConfig,
+  SocialLoginModule
 } from "@abacritt/angularx-social-login";
 import {AuthInterceptor} from "./core/interceptors/auth.interceptor";
 import {HasRoleDirective} from './core/has-role/has-role.directive';
@@ -35,25 +35,25 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {ListOfGardenPlotComponent} from './features/list-of-garden-plot/list-of-garden-plot.component';
 import {MatTableModule} from "@angular/material/table";
 import {
-    GardenPlotDetailsComponent
+  GardenPlotDetailsComponent
 } from './features/list-of-garden-plot/garden-plot-details/garden-plot-details.component';
 import {
-    GardenPlotDetailsPaymentHistoryComponent
+  GardenPlotDetailsPaymentHistoryComponent
 } from './features/list-of-garden-plot/garden-plot-details/garden-plot-details-payment-history/garden-plot-details-payment-history.component';
 import {MatSortModule} from "@angular/material/sort";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MAT_DATE_LOCALE, MatNativeDateModule} from "@angular/material/core";
 import {
-    GardenPlotAddLeaseholderComponent
+  GardenPlotAddLeaseholderComponent
 } from './features/list-of-garden-plot/garden-plot-add-leaseholder/garden-plot-add-leaseholder.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {
-    GardenPlotListAddGardenComponent
+  GardenPlotListAddGardenComponent
 } from './features/list-of-garden-plot/garden-plot-list-add-garden/garden-plot-list-add-garden.component';
 import {
-    GardenPlotEditGardenComponent
+  GardenPlotEditGardenComponent
 } from './features/list-of-garden-plot/garden-plot-details/garden-plot-edit-garden/garden-plot-edit-garden.component';
 import {FlexModule} from "@angular/flex-layout";
 import {MatPaginatorIntl, MatPaginatorModule} from "@angular/material/paginator";
@@ -75,8 +75,9 @@ import {EditWorkerComponent} from './features/garden-info/workers-list/editOrAdd
 import {PaymentsComponent} from './features/payments/payments.component';
 import {IndividualPaymentsComponent} from './features/payments/individual-payments/individual-payments.component';
 import {
-    AddIndividualPaymentComponent
+  AddIndividualPaymentComponent
 } from './features/payments/individual-payments/add-individual-payment/add-individual-payment.component';
+
 import {EditDateComponent} from './features/payments/edit-date/edit-date.component';
 
 import {MatSnackBarModule} from '@angular/material/snack-bar';
@@ -105,24 +106,31 @@ import localePl from '@angular/common/locales/pl';
 import {registerLocaleData} from "@angular/common";
 import {LOCALE_ID} from '@angular/core';
 
-import { EditDescriptionDialogComponent } from './features/garden-info/edit-description-dialog/edit-description-dialog.component';
-import { ListOfGardeneirsComponent } from './features/list-of-gardeneirs/list-of-gardeneirs.component';
+import {
+  EditDescriptionDialogComponent
+} from './features/garden-info/edit-description-dialog/edit-description-dialog.component';
+import {ListOfGardeneirsComponent} from './features/list-of-gardeneirs/list-of-gardeneirs.component';
 
-import { NgxSpinnerModule } from "ngx-spinner";
-import { VotedVotingsComponent } from './features/votings/voted-votings/voted-votings.component';
+import {NgxSpinnerModule} from "ngx-spinner";
+import {VotedVotingsComponent} from './features/votings/voted-votings/voted-votings.component';
 import {UserPaymentsComponent} from "./features/list-of-gardeneirs/payments/user-payments.component";
-import { ForgetPasswordComponent } from './features/forget-password/forget-password.component';
-import { ResetPasswordComponent } from './features/reset-password/reset-password.component';
+import {ForgetPasswordComponent} from './features/forget-password/forget-password.component';
+import {ResetPasswordComponent} from './features/reset-password/reset-password.component';
 
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+
+import {PhoneNumberAreaCodePipe} from "./features/list-of-users/ProfilesService";
+
 import {ToastrModule} from "ngx-toastr";
-import { ComplaintsComponent } from './features/complaints/complaints.component';
+import {ComplaintsComponent} from './features/complaints/complaints.component';
 import {MatListModule} from "@angular/material/list";
 import {MatSidenavModule} from "@angular/material/sidenav";
-import { ComplaintDialogComponent } from './features/complaints/complaint-dialog/complaint-dialog.component';
-import { StateNamePipe } from './features/complaints/pipes/state-name.pipe';
+import {ComplaintDialogComponent} from './features/complaints/complaint-dialog/complaint-dialog.component';
+import {StateNamePipe} from './features/complaints/pipes/state-name.pipe';
+import { UserFolderListComponent } from './features/user-info/user-folder-list/user-folder-list.component';
 import { PeriodDialogComponent } from './features/payments/period-dialog/period-dialog.component';
 import {MatBadgeModule} from "@angular/material/badge";
+
 
 
 registerLocaleData(localePl);
@@ -221,10 +229,16 @@ registerLocaleData(localePl);
     UserPaymentsComponent,
     ForgetPasswordComponent,
     ResetPasswordComponent,
+    PhoneNumberAreaCodePipe,
+    ComplaintsComponent,
+    ComplaintDialogComponent,
+    StateNamePipe,
+    UserFolderListComponent,
     ComplaintsComponent,
     ComplaintDialogComponent,
     StateNamePipe,
     PeriodDialogComponent
+
   ],
     imports: [
         BrowserModule,
@@ -250,21 +264,31 @@ registerLocaleData(localePl);
         MatDatepickerModule,
         MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule, MatCheckboxModule,
 
-        GoogleSigninButtonModule,
-        MatChipsModule,
-        MatIconModule,
-        MatAutocompleteModule,
-        FlexModule,
-        MatPaginatorModule,
-        MatChipsModule,
-        FormsModule,
-        QuillModule.forRoot(),
-        MatDialogModule,
-        MatTabsModule,
-        MatSnackBarModule,
-        MatRadioModule,
-        NgApexchartsModule,
+    GoogleSigninButtonModule,
+    MatChipsModule,
+    MatIconModule,
+    MatAutocompleteModule,
+    FlexModule,
+    MatPaginatorModule,
+    MatChipsModule,
+    FormsModule,
+    QuillModule.forRoot(),
+    MatDialogModule,
+    MatTabsModule,
+    MatSnackBarModule,
+    MatRadioModule,
+    NgApexchartsModule,
 
+    MatSliderModule,
+    CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
+    NgxSpinnerModule,
+    MatProgressSpinnerModule,
+
+
+    ToastrModule.forRoot({
+      positionClass: 'toast-top-center',
+      preventDuplicates: true,
+    }), MatListModule, MatSidenavModule,
         MatSliderModule,
         CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
         NgxSpinnerModule,

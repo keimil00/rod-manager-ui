@@ -5,11 +5,12 @@ import {BreakpointObserver} from "@angular/cdk/layout";
 import {Router} from "@angular/router";
 import {GardenInfoService} from "./garden-info.service";
 import {DocumentsService} from "../documents/documents.service";
-import {forkJoin, Subscription} from "rxjs";
-import {Profile} from "../Profile";
+import {forkJoin} from "rxjs";
 import {EditDescriptionDialogComponent} from "./edit-description-dialog/edit-description-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {NgxSpinnerService} from "ngx-spinner";
+import {ToastrService} from "ngx-toastr";
+import {RodDocument} from "../documents/document";
 
 @Component({
   selector: 'app-garden-info',
@@ -18,6 +19,9 @@ import {NgxSpinnerService} from "ngx-spinner";
 })
 export class GardenInfoComponent {
   isMobile: boolean = false;
+
+  // @ts-ignore
+  rodDocuments: RodDocument[];
 
   protected readonly Role = Role;
   // @ts-ignore
@@ -28,25 +32,38 @@ export class GardenInfoComponent {
 
   description: string = ""
 
-  constructor(private breakpointObserver: BreakpointObserver, private router: Router, private gardenInfoService: GardenInfoService, private documentsService: DocumentsService,private dialog: MatDialog, private spinner: NgxSpinnerService) {
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private router: Router,
+    private gardenInfoService: GardenInfoService,
+    private documentsService: DocumentsService,
+    private dialog: MatDialog,
+    private spinner: NgxSpinnerService,
+    private toastr: ToastrService
+  ) {
     this.spinner.show()
     this.router = router
     this.initData()
   }
 
-
   initData() {
     forkJoin({
       employers: this.gardenInfoService.getEmployers(),
-      map: this.documentsService.isMapAvailable(),
-      statute: this.documentsService.isStatuteAvailable(),
+      rodDocuments: this.documentsService.getRodDocuments(),
       description: this.gardenInfoService.getDescription()
-    }).subscribe(async data => {
-      this.employers = data.employers;
-      this.isMapAvailable = data.map;
-      this.isStatuteAvailable = data.statute;
-      this.description = data.description;
-      this.spinner.hide()
+    }).subscribe({
+      next: async data => {
+        this.employers = data.employers;
+        this.rodDocuments = data.rodDocuments;
+        this.isMapAvailable = !!data.rodDocuments.find(doc => doc.name === 'map');
+        this.isStatuteAvailable = !!data.rodDocuments.find(doc => doc.name === 'statute');
+        this.description = data.description;
+        this.spinner.hide()
+      }, error: err => {
+        this.spinner.hide()
+        this.toastr.error('Nie udało się pobrać danych', 'Błąd');
+        console.log(err)
+      }
     });
   }
 
@@ -56,17 +73,20 @@ export class GardenInfoComponent {
   }
 
   downloadStatue() {
-    this.downloadFile('statue')
+    this.downloadFile('statute')
   }
 
-  downloadFile(idDocument: string) {
-    // TODO
-    // let filePath: string = ''
-    // const subscription: Subscription = this.documentsService.downloadDocumentSimulate(idDocument)
-    //   .subscribe((result: string) => {
-    //     filePath = result;
-    //     window.open(filePath, '_blank');
-    //   });
+  downloadFile(type: string | undefined) {
+    let link: string | undefined = ''
+    if (type === 'map') {
+      link = this.rodDocuments.find(doc => doc.name === 'map')?.file
+    }
+    if (type === 'statute') {
+      link = this.rodDocuments.find(doc => doc.name === 'statute')?.file
+    }
+
+    const fullLink = 'http://localhost:8000/' + link;
+    window.open(fullLink, '_blank');
   }
 
   ngOnInit() {
@@ -90,14 +110,21 @@ export class GardenInfoComponent {
         description: currentDescription
       }
     });
-
     dialogRef.afterClosed().subscribe((result: string) => {
       if (result) {
-        this.gardenInfoService.setDescription(result).subscribe((res) => {
-          if(res){
-            this.gardenInfoService.getDescription().subscribe((res) => {
-              this.description = res;
-            });
+        this.gardenInfoService.setDescription(result).subscribe({
+          next: (res) => {
+            if (res) {
+              this.gardenInfoService.getDescription().subscribe({
+                next: (res) => {
+                  this.description = res;
+                }, error: (err) => {
+                  this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
+                }
+              });
+            }
+          }, error: (err) => {
+            this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
           }
         });
       }

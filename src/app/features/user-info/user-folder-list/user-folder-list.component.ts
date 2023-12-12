@@ -1,20 +1,20 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Document, Leaf} from "../document";
-
+import {Document, Leaf} from "../../documents/document";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {DocumentsService} from "../documents.service";
+import {DocumentsService} from "../../documents/documents.service";
 import {NgxSpinnerService} from "ngx-spinner";
 import {ToastrService} from "ngx-toastr";
 
 @Component({
-  selector: 'app-folder-list',
-  templateUrl: './folder-list.component.html',
-  styleUrls: ['./folder-list.component.scss']
+  selector: 'app-user-folder-list',
+  templateUrl: './user-folder-list.component.html',
+  styleUrls: ['./user-folder-list.component.scss']
 })
-export class FolderListComponent {
+export class UserFolderListComponent {
   @Input() documents!: Document[] | undefined;
   @Input() level!: number
   @Input() parent!: number | null
+  @Input() userId!: number
   @Output() itemAdded: EventEmitter<void> = new EventEmitter<void>();
   addFileForm: FormGroup;
   editFileForm: FormGroup;
@@ -89,7 +89,7 @@ export class FolderListComponent {
       const newTitle: string = this.addFileForm.get('name')?.value;
       const newDocument: Leaf = {name: newTitle, file: this.selectedFile, parent: item.id};
       this.spinner.show()
-      this.documentsService.postDocuments(newDocument).subscribe({
+      this.documentsService.postUserDocuments(newDocument, this.userId).subscribe({
         next: value => {
           this.updateDocumentsListFromLevel(this.level)
           // this.itemAdded.emit();
@@ -110,7 +110,7 @@ export class FolderListComponent {
 
       const newLeaf: Leaf = {name: newTitle, file: this.selectedFile, parent: this.parent};
       this.spinner.show()
-      this.documentsService.putDocuments(newLeaf, id).subscribe({
+      this.documentsService.putUserDocuments(newLeaf, id, this.userId).subscribe({
         next: value => {
           this.updateDocumentsListFromLevel(this.level)
           this.showEditDocumentForm = false
@@ -128,7 +128,7 @@ export class FolderListComponent {
       const newTitle: string = this.addListForm.get('name')?.value;
       const newDocument: Leaf = {name: newTitle, parent: item.id};
       this.spinner.show()
-      this.documentsService.postDocuments(newDocument).subscribe({
+      this.documentsService.postUserDocuments(newDocument, this.userId).subscribe({
         next: value => {
           this.updateDocumentsListFromLevel(this.level)
           // this.itemAdded.emit();
@@ -146,7 +146,7 @@ export class FolderListComponent {
     if (this.editListForm.valid) {
       const newTitle: string = this.editListForm.get('name')?.value;
       const newDocument: Leaf = {name: newTitle, parent: this.parent};
-      this.documentsService.putDocuments(newDocument, item.id).subscribe({
+      this.documentsService.putUserDocuments(newDocument, item.id, this.userId).subscribe({
         next: value => {
           this.spinner.show()
           this.updateDocumentsListFromLevel(this.level)
@@ -164,7 +164,7 @@ export class FolderListComponent {
 
   delete(item: Document) {
     this.spinner.show()
-    this.documentsService.deleteDocument(item.id).subscribe({
+    this.documentsService.deleteUserDocument(item.id).subscribe({
       next: value => {
         this.updateDocumentsListFromLevel(this.level)
         // this.itemAdded.emit();
@@ -226,7 +226,7 @@ export class FolderListComponent {
   }
 
   updateDocumentsListFromLevel(level: number) {
-    this.documentsService.getDocuments()
+    this.documentsService.getUserDocuments(this.userId)
       .subscribe({
         next: (result: Document[]) => {
           // Aktualizacja listy od określonego poziomu
@@ -258,4 +258,3 @@ export class FolderListComponent {
     return filteredDocuments;
   }
 }
-

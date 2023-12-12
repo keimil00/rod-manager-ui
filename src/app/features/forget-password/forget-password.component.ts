@@ -16,7 +16,7 @@ export class ForgetPasswordComponent {
   errorMessages = {
     email: [
       {type: 'required', message: 'Email jest wymagany'},
-      {type: 'email', message: 'Proszę wprowadzić poprawyny email'}
+      {type: 'email', message: 'Proszę wprowadzić poprawny email'}
     ],
   };
 

@@ -4,6 +4,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {Employer} from "../employer.model";
 import {EditWorkerComponent} from "./editOrAdd-worker/edit-worker.component";
 import {GardenInfoService} from "../garden-info.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-workers-list',
@@ -18,20 +19,30 @@ export class WorkersListComponent {
   showEdit: boolean = false;
   showAddingWorker: boolean = false;
 
-  constructor(private dialog: MatDialog, private gardenInfoService: GardenInfoService) {
+  constructor(
+    private dialog: MatDialog,
+    private gardenInfoService: GardenInfoService,
+    private toastr: ToastrService
+  ) {
     this.initData()
   }
 
   initData() {
-    this.gardenInfoService.getEmployers().subscribe(employers => {
-      this.dataSource = new MatTableDataSource(employers);
+    this.gardenInfoService.getEmployers().subscribe({
+      next: employers => {
+        this.dataSource = new MatTableDataSource(employers);
+      }, error: err => {
+        this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
+      }
     });
   }
 
   updateData() {
-    this.gardenInfoService.getEmployers().subscribe(employers => {
+    this.gardenInfoService.getEmployers().subscribe({next: employers => {
       this.dataSource = new MatTableDataSource(employers);
-    });
+    }, error: err => {
+      this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
+      }});
   }
 
   selectEdit(employer: Employer) {

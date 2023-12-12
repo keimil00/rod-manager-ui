@@ -1,208 +1,205 @@
 <mat-toolbar color="primary" xmlns="http://www.w3.org/1999/html">
-    <div class="title">
-        <span (click)="navigate('home')">ROD we Wrocławiu</span>
-        <!--    <button mat-fab color="primary" class="show-options-button" (click)="toggleOptions()">-->
-        <button mat-fab color="primary" class="show-options-button" [matMenuTriggerFor]="menu1">
-            <mat-icon>list</mat-icon>
+  <div class="title">
+    <span (click)="navigate('home')">ROD we Wrocławiu</span>
+    <!--    <button mat-fab color="primary" class="show-options-button" (click)="toggleOptions()">-->
+    <button mat-fab color="primary" class="show-options-button" [matMenuTriggerFor]="menu1">
+      <mat-icon>list</mat-icon>
+    </button>
+  </div>
+  <div class="options">
+    <button mat-button (click)="navigate('home')" [ngClass]="{'is-in-view': isInHomeComponent}">Strona główna
+    </button>
+    <span>/</span>
+    <button mat-button (click)="navigate('garden-offers')" [ngClass]="{'is-in-view': isInGardenOffers}">Dostępne
+      działki
+    </button>
+    <span>/</span>
+
+    <button mat-button (click)="navigate('calendar')" [ngClass]="{'is-in-view': isInCalendarComponent}">Kalendarz
+    </button>
+    <!--    TODO zmiana bo to do testu-->
+    <div *ngIf="isLoggedIn()">
+      <div *appHasRole="[Role.GARDENER]">
+        <span>/</span>
+        <button mat-button (click)="navigate('my-garden-plot-info')"
+                [ngClass]="{'is-in-view': isInMyGardenPlotInfoComponent}">Moja działka
         </button>
+      </div>
     </div>
-    <div class="options">
-        <button mat-button (click)="navigate('home')" [ngClass]="{'is-in-view': isInHomeComponent}">Strona główna
-        </button>
+    <div *ngIf="isLoggedIn()">
+      <div *appHasRole="[Role.GARDENER, Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]">
         <span>/</span>
-        <button mat-button (click)="navigate('garden-offers')" [ngClass]="{'is-in-view': isInGardenOffers}">Dostępne
-            działki
+        <button mat-button (click)="navigate('voting')" [ngClass]="{'is-in-view': isInVotingComponent}">
+          Głosowania
         </button>
+      </div>
+    </div>
+    <div *ngIf="isLoggedIn()">
+      <div *appHasRole="[Role.GARDENER, Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]">
         <span>/</span>
-
-        <button mat-button (click)="navigate('calendar')" [ngClass]="{'is-in-view': isInCalendarComponent}">Kalendarz
+        <button mat-button [matBadge]="(notifications$ | async).complaints" matBadgeOverlap="true"
+                (click)="navigate('complaints')">Skargi
         </button>
-        <!--    TODO zmiana bo to do testu-->
-        <div *ngIf="isLoggedIn()">
-            <div *appHasRole="[Role.GARDENER]">
-                <span>/</span>
-                <button mat-button (click)="navigate('my-garden-plot-info')"
-                        [ngClass]="{'is-in-view': isInMyGardenPlotInfoComponent}">Moja działka
-                </button>
-            </div>
-        </div>
-        <div *ngIf="isLoggedIn()">
-            <div *appHasRole="[Role.GARDENER, Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]">
-                <span>/</span>
-                <button mat-button (click)="navigate('voting')" [ngClass]="{'is-in-view': isInVotingComponent}">
-                    Głosowania
-                </button>
-            </div>
-        </div>
-        <div *ngIf="isLoggedIn()">
-            <div *appHasRole="[Role.GARDENER, Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]">
-                <span>/</span>
-                <button mat-button [matBadge]="(notifications$ | async).complaints" matBadgeOverlap="true"
-                        (click)="navigate('complaints')">Skargi
-                </button>
-            </div>
-        </div>
+      </div>
+    </div>
+    <span>/</span>
+    <button mat-button (click)="navigate('garden-info')" [ngClass]="{'is-in-view': isInGardenInfoComponent}">
+      O Ogrodzie
+    </button>
+    <div *ngIf="isLoggedIn()">
+      <div *appHasRole="[Role.MANAGER, Role.TECHNICAL_EMPLOYEE, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]">
         <span>/</span>
-        <button mat-button (click)="navigate('garden-info')" [ngClass]="{'is-in-view': isInGardenInfoComponent}">
-            O Ogrodzie
-        </button>
-        <div *ngIf="isLoggedIn">
-            <div *ngIf="isLoggedIn()">
-                <div *appHasRole="[Role.MANAGER, Role.TECHNICAL_EMPLOYEE, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]">
-                    <span>/</span>
-                    <button mat-button [matMenuTriggerFor]="menu">Więcej</button>
-                </div>
-            </div>
-
-        </div>
-        <!-- Define the menu -->
-        <mat-menu #menu="matMenu" class="mat-menu-custom-style">
-            <div *appHasRole="[Role.MANAGER, Role.ADMIN, Role.NON_TECHNICAL_EMPLOYEE]">
-                <button mat-menu-item class="button-menu" (click)="navigate('documents')">Dokumenty</button>
-                <mat-divider></mat-divider>
-            </div>
-            <div *appHasRole="[Role.MANAGER, Role.ADMIN, Role.NON_TECHNICAL_EMPLOYEE]">
-                <button mat-menu-item class="button-menu" (click)="navigate('list-of-garden-plot')">Lista działek
-                </button>
-                <mat-divider></mat-divider>
-            </div>
-            <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
-                <button mat-menu-item
-                        class="button-menu"
-                        (click)="navigate('payments')">
-                    <span [matBadge]="(notifications$ | async).payments" matBadgeOverlap="false">Opłaty</span>
-                </button>
-                <mat-divider></mat-divider>
-            </div>
-            <div *appHasRole="[Role.TECHNICAL_EMPLOYEE, Role.MANAGER, Role.ADMIN]">
-                <button mat-menu-item class="button-menu" (click)="navigate('counters')">Liczniki</button>
-            </div>
-            <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
-                <mat-divider></mat-divider>
-                <button mat-menu-item class="button-menu" (click)="navigate('list-of-users')">Lista użytkowników
-                </button>
-            </div>
-            <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
-                <mat-divider></mat-divider>
-                <button mat-menu-item class="button-menu" (click)="navigate('list-of-gardeneirs')">Lista zaległości
-                </button>
-            </div>
-            <!-- Add more menu items as needed -->
-        </mat-menu>
+        <button mat-button [matMenuTriggerFor]="menu">Więcej</button>
+      </div>
     </div>
 
-    <!--  TODO mozna poprawic bo cos na iphone SE nie miesci sie a nie umialem zmniejszyc menu-item-->
-
-    <mat-menu #menu1="matMenu" class="mat-menu-custom-style">
-        <div *ngIf="isWideScreen">
-            <button mat-menu-item class="button-menu" (click)="navigate('home')">Strona główna</button>
-            <mat-divider></mat-divider>
-            <button mat-menu-item class="button-menu" (click)="navigate('garden-offers')">Dostępne działki</button>
-            <mat-divider></mat-divider>
-            <button mat-menu-item class="button-menu" (click)="navigate('calendar')">Kalendarz</button>
-            <div *ngIf="isLoggedIn()">
-                <div *appHasRole="[Role.GARDENER]">
-                    <mat-divider></mat-divider>
-                    <button mat-menu-item class="button-menu">Moja działka</button>
-                </div>
-            </div>
-            <div *ngIf="isLoggedIn()">
-                <div *appHasRole="[Role.GARDENER, Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]">
-                    <mat-divider></mat-divider>
-                    <button mat-menu-item class="button-menu" (click)="navigate('voting')">Głosowania</button>
-                </div>
-            </div>
-            <div *ngIf="isLoggedIn()">
-                <div *appHasRole="[Role.GARDENER, Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]">
-                    <mat-divider></mat-divider>
-                    <button mat-menu-item class="button-menu" (click)="navigate('complaints')">Skargi</button>
-                </div>
-            </div>
-            <mat-divider></mat-divider>
-
-            <button mat-menu-item class="button-menu" (click)="navigate('garden-info')"
-                    [ngClass]="{'is-in-view': isInGardenInfoComponent}">
-                <!--    <button mat-button (click)="navigate('garden-info')" class="garden-info-text">-->
-                O Ogrodzie
-            </button>
-            <mat-divider></mat-divider>
-            <div *ngIf="isLoggedIn">
-                <div *appHasRole="[Role.MANAGER, Role.TECHNICAL_EMPLOYEE, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]">
-                    <div *appHasRole="[Role.MANAGER, Role.ADMIN, Role.NON_TECHNICAL_EMPLOYEE]">
-                        <button mat-menu-item class="button-menu" (click)="navigate('documents')">Dokumenty</button>
-                        <mat-divider></mat-divider>
-                    </div>
-                    <div *appHasRole="[Role.MANAGER, Role.ADMIN, Role.NON_TECHNICAL_EMPLOYEE]">
-                        <button mat-menu-item class="button-menu" (click)="navigate('list-of-garden-plot')">Lista
-                            działek
-                        </button>
-                        <mat-divider></mat-divider>
-                    </div>
-                    <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
-                        <button mat-menu-item class="button-menu" (click)="navigate('payments')">Opłaty</button>
-                        <mat-divider></mat-divider>
-                    </div>
-                    <div *appHasRole="[Role.TECHNICAL_EMPLOYEE, Role.MANAGER, Role.ADMIN]">
-                        <button mat-menu-item class="button-menu" (click)="navigate('counters')">Liczniki</button>
-                    </div>
-                    <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
-                        <mat-divider></mat-divider>
-                        <button mat-menu-item class="button-menu" (click)="navigate('list-of-users')">Lista użytkowników
-                        </button>
-                    </div>
-                    <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
-                        <mat-divider></mat-divider>
-                        <button mat-menu-item class="button-menu" (click)="navigate('list-of-gardeneirs')">Lista
-                            zaległości
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <mat-divider></mat-divider>
-                <div *ngIf="isLoggedIn(); else loggedOut2">
-                    <div mat-menu-item class="button-menu">
-                        <app-text-button text="Wyloguj" color="primary" (click)="logout()"></app-text-button>
-                        <!--      TODO-->
-                    </div>
-                    <mat-divider></mat-divider>
-                    <div mat-menu-item class="button-menu">
-                        <app-text-button text="Profil" color="accent"
-                                         (click)="navigateToProfileComponent()"></app-text-button>
-                    </div>
-                </div>
-                <ng-template #loggedOut2>
-                    <div mat-menu-item class="button-menu">
-                        <app-text-button text="Zaloguj się" color="primary"
-                                         (click)="navigate('login')"></app-text-button>
-                    </div>
-                    <mat-divider></mat-divider>
-                    <div mat-menu-item class="button-menu">
-                        <app-text-button text="Zarejestruj się" color="accent"
-                                         (click)="navigate('register')"></app-text-button>
-                    </div>
-                </ng-template>
-            </div>
-        </div>
+    <!-- Define the menu -->
+    <mat-menu #menu="matMenu" class="mat-menu-custom-style">
+      <div *appHasRole="[Role.MANAGER, Role.ADMIN, Role.NON_TECHNICAL_EMPLOYEE]">
+        <button mat-menu-item class="button-menu" (click)="navigate('documents')">Dokumenty</button>
+        <mat-divider></mat-divider>
+      </div>
+      <div *appHasRole="[Role.MANAGER, Role.ADMIN, Role.NON_TECHNICAL_EMPLOYEE]">
+        <button mat-menu-item class="button-menu" (click)="navigate('list-of-garden-plot')">Lista działek
+        </button>
+        <mat-divider></mat-divider>
+      </div>
+      <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
+        <button mat-menu-item
+                class="button-menu"
+                (click)="navigate('payments')">
+          <span [matBadge]="(notifications$ | async).payments" matBadgeOverlap="false">Opłaty</span>
+        </button>
+        <mat-divider></mat-divider>
+      </div>
+      <div *appHasRole="[Role.TECHNICAL_EMPLOYEE, Role.MANAGER, Role.ADMIN]">
+        <button mat-menu-item class="button-menu" (click)="navigate('counters')">Liczniki</button>
+      </div>
+      <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
+        <mat-divider></mat-divider>
+        <button mat-menu-item class="button-menu" (click)="navigate('list-of-users')">Lista użytkowników
+        </button>
+      </div>
+      <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
+        <mat-divider></mat-divider>
+        <button mat-menu-item class="button-menu" (click)="navigate('list-of-gardeneirs')">Lista zaległości
+        </button>
+      </div>
+      <!-- Add more menu items as needed -->
     </mat-menu>
+  </div>
 
-    <div class="auth-buttons">
-        <div>
-            <button mat-button (click)="changeFont()">
-                <mat-icon> format_size</mat-icon>
-            </button>
+  <!--  TODO mozna poprawic bo cos na iphone SE nie miesci sie a nie umialem zmniejszyc menu-item-->
+
+  <mat-menu #menu1="matMenu" class="mat-menu-custom-style">
+    <div *ngIf="isWideScreen">
+      <button mat-menu-item class="button-menu" (click)="navigate('home')">Strona główna</button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item class="button-menu" (click)="navigate('garden-offers')">Dostępne działki</button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item class="button-menu" (click)="navigate('calendar')">Kalendarz</button>
+      <div *ngIf="isLoggedIn()">
+        <div *appHasRole="[Role.GARDENER]">
+          <mat-divider></mat-divider>
+          <button mat-menu-item class="button-menu">Moja działka</button>
         </div>
-        <div class="login-buttons" *ngIf="isLoggedIn(); else loggedOut">
+      </div>
+      <div *ngIf="isLoggedIn()">
+        <div *appHasRole="[Role.GARDENER, Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]">
+          <mat-divider></mat-divider>
+          <button mat-menu-item class="button-menu" (click)="navigate('voting')">Głosowania</button>
+        </div>
+      </div>
+      <div *ngIf="isLoggedIn()">
+        <div *appHasRole="[Role.GARDENER, Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]">
+          <mat-divider></mat-divider>
+          <button mat-menu-item class="button-menu" (click)="navigate('complaints')">Skargi</button>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+
+      <button mat-menu-item class="button-menu" (click)="navigate('garden-info')"
+              [ngClass]="{'is-in-view': isInGardenInfoComponent}">
+        <!--    <button mat-button (click)="navigate('garden-info')" class="garden-info-text">-->
+        O Ogrodzie
+      </button>
+      <mat-divider></mat-divider>
+      <div *ngIf="isLoggedIn()">
+        <div *appHasRole="[Role.MANAGER, Role.TECHNICAL_EMPLOYEE, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]">
+          <div *appHasRole="[Role.MANAGER, Role.ADMIN, Role.NON_TECHNICAL_EMPLOYEE]">
+            <button mat-menu-item class="button-menu" (click)="navigate('documents')">Dokumenty</button>
+            <mat-divider></mat-divider>
+          </div>
+          <div *appHasRole="[Role.MANAGER, Role.ADMIN, Role.NON_TECHNICAL_EMPLOYEE]">
+            <button mat-menu-item class="button-menu" (click)="navigate('list-of-garden-plot')">Lista
+              działek
+            </button>
+            <mat-divider></mat-divider>
+          </div>
+          <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
+            <button mat-menu-item class="button-menu" (click)="navigate('payments')">Opłaty</button>
+            <mat-divider></mat-divider>
+          </div>
+          <div *appHasRole="[Role.TECHNICAL_EMPLOYEE, Role.MANAGER, Role.ADMIN]">
+            <button mat-menu-item class="button-menu" (click)="navigate('counters')">Liczniki</button>
+          </div>
+          <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
+            <mat-divider></mat-divider>
+            <button mat-menu-item class="button-menu" (click)="navigate('list-of-users')">Lista użytkowników
+            </button>
+          </div>
+          <div *appHasRole="[Role.MANAGER, Role.ADMIN]">
+            <mat-divider></mat-divider>
+            <button mat-menu-item class="button-menu" (click)="navigate('list-of-gardeneirs')">Lista
+              zaległości
+            </button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <mat-divider></mat-divider>
+        <div *ngIf="isLoggedIn(); else loggedOut2">
+          <div mat-menu-item class="button-menu">
             <app-text-button text="Wyloguj" color="primary" (click)="logout()"></app-text-button>
             <!--      TODO-->
+          </div>
+          <mat-divider></mat-divider>
+          <div mat-menu-item class="button-menu">
             <app-text-button text="Profil" color="accent"
                              (click)="navigateToProfileComponent()"></app-text-button>
+          </div>
         </div>
-
-        <ng-template #loggedOut>
-            <app-text-button text="Zaloguj się" color="primary" (click)="navigate('login')"></app-text-button>
-            <app-text-button text="Zarejestruj się" color="accent" (click)="navigate('register')"></app-text-button>
+        <ng-template #loggedOut2>
+          <div mat-menu-item class="button-menu">
+            <app-text-button text="Zaloguj się" color="primary"
+                             (click)="navigate('login')"></app-text-button>
+          </div>
+          <mat-divider></mat-divider>
+          <div mat-menu-item class="button-menu">
+            <app-text-button text="Zarejestruj się" color="accent"
+                             (click)="navigate('register')"></app-text-button>
+          </div>
         </ng-template>
+      </div>
     </div>
-</mat-toolbar>
+  </mat-menu>
 
+  <div class="auth-buttons">
+    <div>
+      <button mat-button (click)="changeFont()">
+        <mat-icon> format_size</mat-icon>
+      </button>
+    </div>
+    <div class="login-buttons" *ngIf="isLoggedIn(); else loggedOut">
+      <app-text-button text="Wyloguj" color="primary" (click)="logout()"></app-text-button>
+      <!--      TODO-->
+      <app-text-button text="Profil" color="accent"
+                       (click)="navigateToProfileComponent()"></app-text-button>
+    </div>
+
+    <ng-template #loggedOut>
+      <app-text-button text="Zaloguj się" color="primary" (click)="navigate('login')"></app-text-button>
+      <app-text-button text="Zarejestruj się" color="accent" (click)="navigate('register')"></app-text-button>
+    </ng-template>
+  </div>
+</mat-toolbar>

@@ -2,8 +2,10 @@ import {Profile} from "../Profile";
 import {GardenPlot} from "../list-of-garden-plot/garden-plot";
 import {AbstractControl, ValidatorFn} from "@angular/forms";
 import {Role} from "../register/user.model";
+import {Pipe, PipeTransform} from "@angular/core";
+import {parsePhoneNumberFromString} from "libphonenumber-js";
 
-export function getMatchingProfiles(value: string, profiles: Profile[], gardenPlots: GardenPlot[], showCurrentLeaseHolder: boolean, leaseHolderID?: number|null): {
+export function getMatchingProfiles(value: string, profiles: Profile[], gardenPlots: GardenPlot[], showCurrentLeaseHolder: boolean, leaseHolderID?: number | null): {
   email: string,
   fullName: string
 }[] {
@@ -67,6 +69,30 @@ export function profileEmailValidator(profiles: Profile[]): ValidatorFn {
     }
     return null;
   };
+}
+
+export function findProfileEmailByID(IdToFind: number | null, profiles: Profile[]): string | null {
+  const foundProfile = profiles.find((profile) => profile.id === IdToFind);
+  return foundProfile ? foundProfile.email : null;
+}
+
+@Pipe({
+  name: 'phoneNumber'
+})
+export class PhoneNumberAreaCodePipe implements PipeTransform {
+  transform(phoneNumber: string | null | undefined): string | null | undefined {
+    if (phoneNumber === null) return null;
+    if (!phoneNumber) return undefined;
+
+    let test = parsePhoneNumberFromString(phoneNumber)
+    let phone = test?.nationalNumber
+    let code = test?.countryCallingCode
+
+    if (!test)
+      return phoneNumber
+
+    return `+${code} ${phone}`
+  }
 }
 
 

@@ -63,7 +63,6 @@ export class TopAppBarComponent {
                     this.toastr.info('Opłaty wymagają zatwierdzenia!', 'Okres rozliczeniowy dobiegł końca!')
                 }
             }));
-
     }
 
     isWideScreen = false;

@@ -1,7 +1,7 @@
 <ngx-spinner bdColor = "rgba(0, 0, 0, 0.9)" size = "large" color = "#009688" type = "square-jelly-box" [fullScreen] = "true"><p style="color: white" ></p></ngx-spinner>
 
 <div class="page-container"
-     [ngClass]="{'blurred-background': isInEdit}">>
+     [ngClass]="{'blurred-background': isInEdit}">
   <mat-card class="large-card-size">
     <mat-card-header class="row-container">
       <div class="center-item row-item">
@@ -33,7 +33,7 @@
 
         <ng-container matColumnDef="value">
           <th mat-header-cell *matHeaderCellDef>Zadłużenie</th>
-          <td mat-cell *matCellDef="let profile" class="red">{{ profile.paymentAmount+' zł'}}</td>
+          <td mat-cell *matCellDef="let profile" class="red">{{ (-1)*profile.balance+' zł'}}</td>
         </ng-container>
 
         <ng-container matColumnDef="info">

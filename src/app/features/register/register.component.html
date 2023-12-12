@@ -11,6 +11,7 @@
           <div class="row-item">
             <mat-form-field class="full-width">
               <input matInput formControlName="firstName" placeholder="Imię" required>
+              <mat-label>Imię</mat-label>
               <mat-error *ngFor="let error of validationErrors('firstName')">
                 {{ error.message }}
               </mat-error>
@@ -20,6 +21,7 @@
           <div class="row-item">
             <mat-form-field class="full-width">
               <input matInput formControlName="lastName" placeholder="Nazwisko" required>
+              <mat-label>Nazwisko</mat-label>
               <mat-error *ngFor="let error of validationErrors('lastName')">
                 {{ error.message }}
               </mat-error>
@@ -28,6 +30,7 @@
           <div class="row-item">
             <mat-form-field class="full-width">
               <input matInput type="email" formControlName="email" placeholder="Email" required>
+              <mat-label>Email</mat-label>
               <mat-error *ngFor="let error of validationErrors('email')">
                 {{ error.message }}
               </mat-error>
@@ -37,13 +40,13 @@
             <mat-form-field class="country-code">
 
               <mat-select formControlName="countryCode">
-                <mat-option *ngFor="let country of getCountries()" [value]="country">
+                <mat-option *ngFor="let country of getCountriesWithCodesSortedByCallingCode()" [value]="country">
                   +{{ getCountryCallingCode(country) }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
             <mat-form-field class="col-item">
-              <mat-label>(Opcjonalnie)</mat-label>
+              <mat-label>Numer telefonu</mat-label>
               <input matInput type="tel" formControlName="phoneNumber" placeholder="Numer telefonu"
                      (input)="formatPhoneNumber($event)">
               <mat-error *ngFor="let error of validationErrors('phoneNumber')">

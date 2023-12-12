@@ -1,27 +1,16 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable, of} from "rxjs";
-import {Document, Leaf} from "./document";
+import {Document, Leaf, RodDocument} from "./document";
 
 @Injectable({
   providedIn: 'root'
 })
 export class DocumentsService {
 
-  // private documents: Document[] = [
-  //     {id: '1', name: 'Dokument 1'},
-  //     {id: '2', name: 'Dokument 2'},
-  //     {
-  //         id: '3',
-  //         name: 'Lista Dokumentów',
-  //         items: [
-  //             {id: '4', name: 'Pod-Dokument 1'},
-  //             {id: '5', name: 'Pod-Dokument 2'}
-  //         ]
-  //     }
-  // ];
-
-  private baseUrl = '/api/documents/';
+  private baseUrl = '/api/manager-documents/';
+  private rodDocUrl = '/api/rod-documents/';
+  private userDocUrl = '/api/user-documents/';
 
   constructor(private httpClient: HttpClient) {
   }
@@ -77,29 +66,96 @@ export class DocumentsService {
     } else {
       return this.httpClient.post(this.baseUrl, leaf)
     }
-    ;
   }
 
   deleteDocument(id: number): Observable<any> {
     return this.httpClient.delete(`${this.baseUrl}${id}/`);
   }
 
-
-  isMapAvailable(): Observable<boolean> {
-    return of(true)
+  getRodDocuments(): Observable<RodDocument[]> {
+    return this.httpClient.get<RodDocument[]>(this.rodDocUrl);
   }
 
-  isStatuteAvailable(): Observable<boolean> {
-    return of(true)
+  postRodDocuments(body: any): Observable<any> {
+    const formData = new FormData();
+
+    formData.append('name', body.name);
+    formData.append('file', body.file);
+    return this.httpClient.post(this.rodDocUrl, formData);
   }
 
-
-  isMapAvailable2(): Observable<boolean> {
-    return this.httpClient.get<boolean>(`${this.baseUrl}/map`);
+  getUserDocuments(userID: number): Observable<Document[]> {
+    const url = this.userDocUrl + 'by-user-id/' + userID + '/';
+    return this.httpClient.get<Document[]>(url);
   }
 
-  isStatuteAvailable2(): Observable<boolean> {
-    return this.httpClient.get<boolean>(`${this.baseUrl}/statute`);
+  putUserDocuments(leaf: Leaf, id: number, userID: number): Observable<any> {
+    const url = this.userDocUrl + 'by-document-id/' + id + '/';
+    if (leaf.file || leaf.file === null) {
+      const formData = new FormData();
+
+      if (leaf.file) {
+        formData.append('name', leaf.name);
+        formData.append('file', leaf.file);
+        formData.append('user', userID.toString());
+        if (leaf.parent) {
+          formData.append('parent', leaf.parent.toString());
+          return this.httpClient.put(url, formData);
+        }
+        return this.httpClient.put(url, formData);
+      } else {
+        if (leaf.parent) {
+          let body = {
+            name: leaf.name,
+            user: userID
+          }
+          return this.httpClient.put(url, body);
+        } else {
+          let body = {
+            name: leaf.name,
+            parent: leaf.parent,
+            user: userID
+          }
+          return this.httpClient.put(url, body);
+        }
+      }
+    } else {
+      let body = {
+        name: leaf.name,
+        parent: leaf.parent,
+        user: userID,
+        file: leaf.file,
+      }
+      return this.httpClient.put(url, body)
+    }
+  }
+
+  postUserDocuments(leaf: Leaf, userID: number): Observable<any> {
+    if (leaf.file) {
+      const formData = new FormData();
+
+      formData.append('name', leaf.name);
+      formData.append('file', leaf.file);
+      formData.append('user', userID.toString());
+      if (leaf.parent) {
+        formData.append('parent', leaf.parent.toString());
+        return this.httpClient.post(this.userDocUrl, formData);
+      }
+
+      return this.httpClient.post(this.userDocUrl, formData);
+    } else {
+      let body = {
+        name: leaf.name,
+        parent: leaf.parent,
+        user: userID,
+        file: leaf.file,
+      }
+      return this.httpClient.post(this.userDocUrl, body)
+    }
+  }
+
+  deleteUserDocument(id: number): Observable<any> {
+    return this.httpClient.delete(`${this.userDocUrl}by-document-id/${id}/`);
   }
 
 }

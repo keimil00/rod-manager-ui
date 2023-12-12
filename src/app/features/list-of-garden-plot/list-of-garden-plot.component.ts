@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, ViewChild} from '@angular/core';
-import {GardenPlot, GardenPlotBackend} from './garden-plot';
+import {GardenPlot, GardenPlotWithLeaseholder} from './garden-plot';
 import {MatTableDataSource} from "@angular/material/table";
 import {Profile} from "../Profile";
 import {MatDialog} from "@angular/material/dialog";
@@ -11,155 +11,174 @@ import {BackendGardenService} from "./backend-garden.service";
 import {Page} from "../../shared/paginator/page.model";
 import {forkJoin} from "rxjs";
 import {NgxSpinnerService} from "ngx-spinner";
+import {findExLeaseholderByPLotID, findLeaseholderByPLotID} from "./GardenService";
+import {ListOfUsersService} from "../list-of-users/list-of-users.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
-    selector: 'app-list-of-garden-plot',
-    templateUrl: './list-of-garden-plot.component.html',
-    styleUrls: ['./list-of-garden-plot.component.scss']
+  selector: 'app-list-of-garden-plot',
+  templateUrl: './list-of-garden-plot.component.html',
+  styleUrls: ['./list-of-garden-plot.component.scss']
 })
 export class ListOfGardenPlotComponent {
-    displayedColumns: string[] = ['sector', 'avenue', 'number', 'area', 'leaseholder', 'add', 'status', 'info'];
+  displayedColumns: string[] = ['sector', 'avenue', 'number', 'area', 'leaseholder', 'add', 'status', 'info'];
 
-    dataSource = new MatTableDataSource<GardenPlotBackend>();
+  dataSource = new MatTableDataSource<GardenPlotWithLeaseholder>();
 
-    showDetails: boolean = false;
-    showAddingLeaseHolder: boolean = false;
-    showAddingGardenPlot: boolean = false;
+  showDetails: boolean = false;
+  showAddingLeaseHolder: boolean = false;
+  showAddingGardenPlot: boolean = false;
 
-    totalGardenCount: number = 0;
-    defoultpageSize = 10;
-    currentPageIndex = 1;
-    currentPageSize = this.defoultpageSize;
+  totalGardenCount: number = 0;
+  defoultpageSize = 10;
+  currentPageIndex = 1;
+  currentPageSize = this.defoultpageSize;
 
-    @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-    constructor(private dialog: MatDialog, private gardenPlotsDataService: BackendGardenService, private changeDetectorRef: ChangeDetectorRef,private spinner: NgxSpinnerService) {
-        this.spinner.show()
-        this.sortData()
+  constructor(
+    private dialog: MatDialog,
+    private gardenPlotsDataService: BackendGardenService,
+    private profilesService: ListOfUsersService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private spinner: NgxSpinnerService,
+    private toastr: ToastrService,
+  ) {
+    this.spinner.show()
+    this.sortData()
 
-        this.initData();
-        this.dataSource.paginator = this.paginator;
-    }
+    this.initData();
+    this.dataSource.paginator = this.paginator;
+  }
 
-    private initData() {
-        this.loadProfiles(this.currentPageIndex, this.defoultpageSize)
-    }
+  private initData() {
+    this.loadProfiles(this.currentPageIndex, this.defoultpageSize)
+  }
 
-    loadProfiles(index: number, size: number): void {
-        this.gardenPlotsDataService.getGardenPlots(this.currentPageIndex, size).subscribe((page: Page<GardenPlotBackend>) => {
-            this.totalGardenCount = page.count;
-            this.dataSource = new MatTableDataSource<GardenPlotBackend>(page.results);
-            this.spinner.hide()
-        });
-    }
+  loadProfiles(index: number, size: number): void {
+    this.gardenPlotsDataService.getGardenPlots(this.currentPageIndex, size).subscribe({
+      next: (page: Page<GardenPlotWithLeaseholder>) => {
+        this.totalGardenCount = page.count;
+        this.dataSource = new MatTableDataSource<GardenPlotWithLeaseholder>(page.results);
+        this.spinner.hide()
+      }, error: err => {
+        this.spinner.hide()
+        this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
+      }
+    });
+  }
 
-    fetchData(pageIndex: number, pageSize: number): void {
-        this.currentPageIndex = pageIndex;
-        this.currentPageSize = pageSize;
+  fetchData(pageIndex: number, pageSize: number): void {
+    this.currentPageIndex = pageIndex;
+    this.currentPageSize = pageSize;
 
-        this.gardenPlotsDataService.getGardenPlots(pageIndex, pageSize).subscribe(
-            data => {
-                this.totalGardenCount = data.count;
-                this.dataSource = new MatTableDataSource<GardenPlotBackend>(data.results);
-            },
-            error => {
-                console.error(error);
-            },
-            () => {
-                this.changeDetectorRef.detectChanges();
-            }
-        );
-    }
+    this.gardenPlotsDataService.getGardenPlots(pageIndex, pageSize).subscribe(
+      data => {
+        this.totalGardenCount = data.count;
+        this.dataSource = new MatTableDataSource<GardenPlotWithLeaseholder>(data.results);
+      },
+      error => {
+        console.error(error);
+        this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
+      },
+      () => {
+        this.changeDetectorRef.detectChanges();
+      }
+    );
+  }
 
-    updateData() {//to backend
-        this.gardenPlotsDataService.sortData()
-        this.gardenPlotsDataService.getGardenPlots(this.currentPageIndex, this.currentPageSize).subscribe(
-            data => {
-                this.totalGardenCount = data.count;
-                this.dataSource = new MatTableDataSource<GardenPlotBackend>(data.results);
-            },
-            error => {
-                console.error(error);
-            },
-            () => {
-                this.changeDetectorRef.detectChanges();
-            }
-        );
-    }
+  updateData() {//to backend
+    // this.gardenPlotsDataService.sortData()
+    this.gardenPlotsDataService.getGardenPlots(this.currentPageIndex, this.currentPageSize).subscribe(
+      data => {
+        this.totalGardenCount = data.count;
+        this.dataSource = new MatTableDataSource<GardenPlotWithLeaseholder>(data.results);
+      },
+      error => {
+        console.error(error);
+        this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
+      },
+      () => {
+        this.changeDetectorRef.detectChanges();
+      }
+    );
+  }
 
-    sortData() {
-        this.gardenPlotsDataService.sortData()
-    }
+  sortData() {
+    // this.gardenPlotsDataService.sortData()
+  }
 
-    selectDetails(gardenPlot: GardenPlot) {
-            forkJoin({
-                leaseHolder:this.gardenPlotsDataService.getLeaseholder(gardenPlot.gardenPlotID),
-                exLeaseHolder:this.gardenPlotsDataService.getExLeaseholder(gardenPlot.gardenPlotID)
-            }).subscribe(data => {
-                let leaseHolder : Profile | null
-                leaseHolder = data.leaseHolder
-                this.showDetails = true;
-                let exLeaseHolder : Profile | null
-                exLeaseHolder = data.exLeaseHolder
-                // @ts-ignore
-                this.showDetailsDialog(gardenPlot, leaseHolder, exLeaseHolder);
-            });
-    }
+  selectDetails(gardenPlot: GardenPlot) {
+    forkJoin({
+      profiles: this.profilesService.getAllProfiles(),
+      gardens: this.gardenPlotsDataService.getAllGardenPlots()
+    }).subscribe({
+      next: data => {
+        let leaseHolder = findLeaseholderByPLotID(gardenPlot, data.profiles, data.gardens)
+        let exLeaseHolder = findExLeaseholderByPLotID(gardenPlot, data.profiles, data.gardens)
+        this.showDetails = true;
 
-    showDetailsDialog(gardenPlot: GardenPlot, leaseholder: Profile | undefined, exleaseholder: Profile | undefined) {
-        const dialogRef = this.dialog.open(GardenPlotDetailsComponent, {
-            width: '4000px',
-            data: {gardenPlot, leaseholder, exleaseholder},
-        });
+        this.showDetailsDialog(gardenPlot, leaseHolder, exLeaseHolder);
+      }, error: err => {
+        this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
+      }
+    });
+  }
 
-        dialogRef.afterClosed().subscribe(() => {
-            this.closeDetails()
-            this.updateData()
-        });
-    }
+  showDetailsDialog(gardenPlot: GardenPlot, leaseholder: Profile | null, exleaseholder: Profile | null) {
+    const dialogRef = this.dialog.open(GardenPlotDetailsComponent, {
+      width: '4000px',
+      data: {gardenPlot, leaseholder, exleaseholder},
+    });
 
-    selectAddingLeaseHolder(gardenPlot: GardenPlotBackend) {
-        this.showAddingLeaseHolder = true;
-        this.showAddingLeaseHolderDialog(gardenPlot)
-    }
+    dialogRef.afterClosed().subscribe(() => {
+      this.closeDetails()
+      this.updateData()
+    });
+  }
 
-    showAddingLeaseHolderDialog(gardenPlot: GardenPlotBackend) {
-        const dialogRef = this.dialog.open(GardenPlotAddLeaseholderComponent, {
-            width: '4000px',
-            data: {gardenPlot},
-        });
+  selectAddingLeaseHolder(gardenPlot: GardenPlotWithLeaseholder) {
+    this.showAddingLeaseHolder = true;
+    this.showAddingLeaseHolderDialog(gardenPlot)
+  }
 
-        dialogRef.afterClosed().subscribe(() => {
-            this.closeAddingLeaseHolder()
-            this.updateData()
-        });
-    }
+  showAddingLeaseHolderDialog(gardenPlot: GardenPlotWithLeaseholder) {
+    const dialogRef = this.dialog.open(GardenPlotAddLeaseholderComponent, {
+      width: '4000px',
+      data: {gardenPlot},
+    });
 
-    selectAddingGardenPlot() {
-        this.showAddingGardenPlot = true;
-        this.showAddingGardenPlotDialog()
-    }
+    dialogRef.afterClosed().subscribe(() => {
+      this.closeAddingLeaseHolder()
+      this.updateData()
+    });
+  }
 
-    showAddingGardenPlotDialog() {
-        const dialogRef = this.dialog.open(GardenPlotListAddGardenComponent, {
-            width: '4000px',
-        });
-        dialogRef.afterClosed().subscribe(() => {
-            this.closeAddingGardenPlot()
-            this.updateData()
-        });
-    }
+  selectAddingGardenPlot() {
+    this.showAddingGardenPlot = true;
+    this.showAddingGardenPlotDialog()
+  }
 
-    closeDetails() {
-        this.showDetails = false;
-    }
+  showAddingGardenPlotDialog() {
+    const dialogRef = this.dialog.open(GardenPlotListAddGardenComponent, {
+      width: '4000px',
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      this.closeAddingGardenPlot()
+      this.updateData()
+    });
+  }
 
-    closeAddingLeaseHolder() {
-        this.showAddingLeaseHolder = false;
-    }
+  closeDetails() {
+    this.showDetails = false;
+  }
 
-    closeAddingGardenPlot() {
-        this.showAddingGardenPlot = false;
-    }
+  closeAddingLeaseHolder() {
+    this.showAddingLeaseHolder = false;
+  }
+
+  closeAddingGardenPlot() {
+    this.showAddingGardenPlot = false;
+  }
 }
 

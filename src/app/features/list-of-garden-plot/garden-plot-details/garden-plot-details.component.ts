@@ -1,12 +1,13 @@
 import {Component, Inject} from '@angular/core';
 
 import {Profile} from "../../Profile";
-import {GardenPlotBackend} from "../garden-plot";
+import {GardenPlotWithLeaseholder} from "../garden-plot";
 import {Payment} from "./PaymentList";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {BackendGardenService} from "../backend-garden.service";
 import {PaymentsService} from "../../payments/payments.service";
+import {ToastrService} from "ngx-toastr";
 
 
 @Component({
@@ -15,7 +16,7 @@ import {PaymentsService} from "../../payments/payments.service";
   styleUrls: ['./garden-plot-details.component.scss']
 })
 export class GardenPlotDetailsComponent {
-  gardenPlot: GardenPlotBackend | undefined;
+  gardenPlot: GardenPlotWithLeaseholder
   leaseholder: Profile | undefined;
   exleaseholder: Profile | undefined;
 
@@ -26,7 +27,6 @@ export class GardenPlotDetailsComponent {
   // @ts-ignore
   paymentHistory: Payment[];
 
-
   paymentForm: FormGroup;
 
   errorMessages = {
@@ -34,19 +34,23 @@ export class GardenPlotDetailsComponent {
       {type: 'required', message: 'Proszę podać kwote'},
       {type: 'pattern', message: 'Podaj odpowiednią kwote'}
     ],
-    date: [
-      {type: 'required', message: 'Proszę podać poprawną date'},
-      {type: 'notFuture', message: 'Nie można podać daty z przyszłości'},
-    ]
+    // date: [
+    //   {type: 'required', message: 'Proszę podać poprawną date'},
+    //   {type: 'notFuture', message: 'Nie można podać daty z przyszłości'},
+    // ]
   };
 
-  constructor(formBuilder: FormBuilder, private gardenPlotsDataService: BackendGardenService, private paymentsService: PaymentsService,
-              public dialogRef: MatDialogRef<GardenPlotDetailsComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: {
-                gardenPlot: GardenPlotBackend;
-                leaseholder: Profile;
-                exLeaseHolder: Profile
-              }
+  constructor(
+    formBuilder: FormBuilder,
+    private gardenPlotsDataService: BackendGardenService,
+    private paymentsService: PaymentsService,
+    public dialogRef: MatDialogRef<GardenPlotDetailsComponent>,
+    private toastr: ToastrService,
+    @Inject(MAT_DIALOG_DATA) public data: {
+      gardenPlot: GardenPlotWithLeaseholder;
+      leaseholder: Profile;
+      exLeaseHolder: Profile
+    }
   ) {
     this.gardenPlot = data.gardenPlot;
     this.leaseholder = data.leaseholder;
@@ -57,7 +61,7 @@ export class GardenPlotDetailsComponent {
         Validators.required,
         Validators.pattern(/^-?\d+(\.\d{1,2})?$/)
       ]],
-      date: ['', [Validators.required, this.pastDateValidator()]],
+      // date: ['', [Validators.required, this.pastDateValidator()]],
     });
   }
 
@@ -66,16 +70,24 @@ export class GardenPlotDetailsComponent {
   }
 
   initData() {
-    this.paymentsService.getConfirmPayments(this.leaseholder?.id).subscribe((payments: Payment[]) => {
-      this.paymentHistory = payments;
+    this.paymentsService.getConfirmPayments(this.leaseholder?.id).subscribe({
+      next: (payments: Payment[]) => {
+        this.paymentHistory = payments;
+      }, error: err => {
+        this.toastr.error("Ups, nie udało się załadować płatności", 'Błąd');
+      }
     });
   }
 
   updatePaymentHistory() {
-    this.paymentsService.getConfirmPayments(this.leaseholder?.id).subscribe((payments: Payment[]) => {
-      this.paymentHistory = payments;
-      this.showNewPaymentForm = false;
-      this.paymentForm.reset();
+    this.paymentsService.getConfirmPayments(this.leaseholder?.id).subscribe({
+      next: (payments: Payment[]) => {
+        this.paymentHistory = payments;
+        this.showNewPaymentForm = false;
+        this.paymentForm.reset();
+      }, error: err => {
+        this.toastr.error("Ups, nie udało się załadować płatności", 'Błąd');
+      }
     });
   }
 
@@ -86,13 +98,17 @@ export class GardenPlotDetailsComponent {
   addNewPayment() {
     if (this.paymentForm.valid) {
       const newPaymentAmount: number = this.paymentForm.get('value')?.value;
-      const newPaymentDate: Date = this.paymentForm.get('date')?.value;
+      // const newPaymentDate: Date = this.paymentForm.get('date')?.value;
 
-      if (newPaymentAmount !== null && newPaymentDate !== null) {
-        const newPayment: Payment = {
-          value: newPaymentAmount,
-          date: newPaymentDate,
-        };
+      // if (newPaymentAmount !== null && newPaymentDate !== null) {
+      //   const newPayment: Payment = {
+      //     value: newPaymentAmount,
+      //     date: newPaymentDate,
+      //   };
+        if (newPaymentAmount !== null) {
+          const newPayment: Payment = {
+            value: newPaymentAmount,
+          };
 
         // this.addPaymentBackend(this.leaseholder?.id, newPayment)
 
@@ -103,6 +119,7 @@ export class GardenPlotDetailsComponent {
           },
           (error) => {
             console.error('Error while adding payment:', error);
+            this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
           }
         );
 
@@ -120,6 +137,7 @@ export class GardenPlotDetailsComponent {
     }
     return errors;
   }
+
   pastDateValidator() {
     return (control: { value: Date }) => {
       const currentDate = new Date();

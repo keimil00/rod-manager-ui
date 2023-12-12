@@ -17,6 +17,7 @@ import {Period} from "./payments.model";
 import {PeriodDialogComponent} from "./period-dialog/period-dialog.component";
 import {ToastrService} from "ngx-toastr";
 
+// TODO sprawdzic czy jest obslugiwany error
 
 @Component({
     selector: 'app-payments',

@@ -18,7 +18,7 @@ export class ListOfUsersService {
             phone: '123-456-7890',
             email: 'johndoe@example.com',
             groups: [Role.GARDENER],
-            paymentAmount: 567,
+            balance: 567,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
@@ -28,7 +28,7 @@ export class ListOfUsersService {
             phone: '987-654-3210',
             email: 'janesmith@example.com',
             groups: [Role.GARDENER],
-            paymentAmount: 756,
+            balance: 756,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
@@ -38,7 +38,7 @@ export class ListOfUsersService {
             phone: '555-555-5555',
             email: 'davidjohnson@example.com',
             groups: [Role.GARDENER],
-            paymentAmount: 657,
+            balance: 657,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
@@ -48,7 +48,7 @@ export class ListOfUsersService {
             phone: '777-777-7777',
             email: 'marywilliams@example.com',
             groups: [Role.GARDENER],
-            paymentAmount: 675,
+            balance: 675,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
@@ -58,7 +58,7 @@ export class ListOfUsersService {
             phone: '111-111-1111',
             email: 'robertbrown@example.com',
             groups: [Role.GARDENER],
-            paymentAmount: 6765,
+            balance: 6765,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
@@ -68,7 +68,7 @@ export class ListOfUsersService {
             phone: '222-222-2222',
             email: 'lindajones@example.com',
             groups: [Role.GARDENER],
-            paymentAmount: 576,
+            balance: 576,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
@@ -78,7 +78,7 @@ export class ListOfUsersService {
             phone: '333-333-3333',
             email: 'michaeldavis@example.com',
             groups: [Role.GARDENER],
-            paymentAmount: 57,
+            balance: 57,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
@@ -88,7 +88,7 @@ export class ListOfUsersService {
             phone: '444-444-4444',
             email: 'susanwilson@example.com',
             groups: [Role.GARDENER],
-            paymentAmount: 576,
+            balance: 576,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
@@ -98,7 +98,7 @@ export class ListOfUsersService {
             phone: '666-666-6666',
             email: 'williamevans@example.com',
             groups: [Role.GARDENER],
-            paymentAmount: 6757,
+            balance: 6757,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
@@ -108,7 +108,7 @@ export class ListOfUsersService {
             phone: '999-999-9999',
             email: 'karentaylor@example.com',
             groups: [Role.GARDENER],
-            paymentAmount: 876,
+            balance: 876,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
@@ -118,7 +118,7 @@ export class ListOfUsersService {
             phone: '222-222-2222',
             email: 'richardanderson@example.com',
             groups: [Role.GARDENER],
-            paymentAmount: 1654,
+            balance: 1654,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
@@ -128,7 +128,7 @@ export class ListOfUsersService {
             phone: '333-333-3333',
             email: 'patriciawhite@example.com',
             groups: [Role.GARDENER],
-            paymentAmount: 6785,
+            balance: 6785,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
@@ -138,7 +138,7 @@ export class ListOfUsersService {
             phone: '777-777-7777',
             email: 'davidthomas@example.com',
             groups: [Role.GARDENER],
-            paymentAmount: 456,
+            balance: 456,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
@@ -148,7 +148,7 @@ export class ListOfUsersService {
             phone: '123-123-1234',
             email: 'susanjackson@example.com',
             groups: [Role.GARDENER],
-            paymentAmount: 8658,
+            balance: 8658,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
@@ -158,7 +158,7 @@ export class ListOfUsersService {
             phone: '456-456-4567',
             email: 'michaelharris@example.com',
             groups: [Role.GARDENER],
-            paymentAmount: 654,
+            balance: 654,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
@@ -168,7 +168,7 @@ export class ListOfUsersService {
             phone: '111-111-1111',
             email: 'karenmartin@example.com',
             groups: [Role.GARDENER],
-            paymentAmount: 6546,
+            balance: 6546,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
@@ -178,7 +178,7 @@ export class ListOfUsersService {
             phone: '555-555-5555',
             email: 'williamgarcia@example.com',
             groups: [Role.GARDENER],
-            paymentAmount: 453,
+            balance: 453,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
@@ -188,7 +188,7 @@ export class ListOfUsersService {
             phone: '333-333-3333',
             email: 'lindabrown@example.com',
             groups: [Role.GARDENER],
-            paymentAmount: 5345,
+            balance: 5345,
             paymentDueDate: new Date(2024, 10, 31),
         },
         {
@@ -198,7 +198,7 @@ export class ListOfUsersService {
             phone: '777-777-7777',
             email: 'michaellewis@example.com',
             groups: [Role.GARDENER],
-            paymentAmount: 7680,
+            balance: 7680,
             paymentDueDate: new Date(2023, 12, 31),
         },
         {
@@ -208,7 +208,7 @@ export class ListOfUsersService {
             phone: '123-123-1234',
             email: 'susanclark@example.com',
             groups: [Role.GARDENER],
-            paymentAmount: 340,
+            balance: 340,
             paymentDueDate: new Date(2023, 10, 31),
         },
         {
@@ -218,7 +218,7 @@ export class ListOfUsersService {
             phone: '456-456-4567',
             email: 'johndoe@example.com',
             groups: [],
-            paymentAmount: null,
+            balance: 0,
             paymentDueDate: new Date(2023, 9, 15),
         },
         {
@@ -228,7 +228,7 @@ export class ListOfUsersService {
             phone: '789-789-7890',
             email: 'alicejohnson@example.com',
             groups: [Role.MANAGER],
-            paymentAmount: 420,
+            balance: 420,
             paymentDueDate: new Date(2023, 8, 28),
         },
         {
@@ -238,7 +238,7 @@ export class ListOfUsersService {
             phone: '234-234-2345',
             email: 'bobsmith@example.com',
             groups: [Role.ADMIN],
-            paymentAmount: null,
+            balance: 0,
             paymentDueDate: new Date(2023, 11, 15),
         },
         {
@@ -248,7 +248,7 @@ export class ListOfUsersService {
             phone: '567-567-5678',
             email: 'evabrown@example.com',
             groups: [Role.NON_TECHNICAL_EMPLOYEE],
-            paymentAmount: null,
+            balance: 0,
             paymentDueDate: new Date(2023, 7, 22),
         },
         {
@@ -258,7 +258,7 @@ export class ListOfUsersService {
             phone: '890-890-8901',
             email: 'michaelmiller@example.com',
             groups: [],
-            paymentAmount: null,
+            balance: 0,
             paymentDueDate: new Date(2023, 6, 10),
         },
         {
@@ -268,7 +268,7 @@ export class ListOfUsersService {
             phone: '123-456-7890',
             email: 'sophiawilson@example.com',
             groups: [Role.ADMIN],
-            paymentAmount: null,
+            balance: 0,
             paymentDueDate: new Date(2023, 5, 18),
         },
         {
@@ -278,15 +278,16 @@ export class ListOfUsersService {
             phone: '456-789-0123',
             email: 'davidjones@example.com',
             groups: [Role.MANAGER, Role.TECHNICAL_EMPLOYEE],
-            paymentAmount: null,
+            balance: 0,
             paymentDueDate: new Date(2023, 4, 27),
         },
     ];
 
+    gardeneirsAPI ='api/gardeneirs/'
     constructor(private httpClient: HttpClient) {
     }
 
-    getProfiles(index: number, size: number): Observable<Page<Profile>> {
+    getProfiles2(index: number, size: number): Observable<Page<Profile>> {
         const profilesOnPage = this.profiles.slice((index - 1) * size, (index - 1) * size + size);
         const count = this.profiles.length;
         const page: Page<Profile> = {count, results: profilesOnPage};
@@ -295,15 +296,15 @@ export class ListOfUsersService {
     }
 
     // DZIAŁA !!!!!!
-    getProfiles2(index: number, size: number): Observable<Page<Profile>> {
+    getProfiles(index: number, size: number): Observable<Page<Profile>> {
         const url = `api/accounts/?page=${index}&page_size=${size}`;
         return this.httpClient.get<Page<Profile>>(url);
     }
 
-    getAllProfiles(): Observable<Profile[]> {
+    getAllProfiles2(): Observable<Profile[]> {
         return of(this.profiles);
     }
-    getAllProfiles2(): Observable<Profile[]> {
+    getAllProfiles(): Observable<Profile[]> {
         const url = `api/accounts/?page=${1}&page_size=${100000}`;
         return this.httpClient.get<Page<Profile>>(url).pipe(
             map((page: Page<Profile>) => page.results)
@@ -311,13 +312,18 @@ export class ListOfUsersService {
     }
 
     getALLGardeiners(index: number, size: number): Observable<Page<Profile>> {
-        const gardeneirs = this.profiles.filter((profile) => profile.groups.some((role) => role.includes(Role.GARDENER)));
-
-        const profilesOnPage = gardeneirs.slice((index - 1) * size, (index - 1) * size + size);
-        const count = gardeneirs.length;
-        const page: Page<Profile> = {count, results: profilesOnPage};
-        return of(page);
+      const url = `${this.gardeneirsAPI}?page=${index}&page_size=${size}`;
+      return this.httpClient.get<Page<Profile>>(url);
     }
+
+  getALLGardeiners2(index: number, size: number): Observable<Page<Profile>> {
+    const gardeneirs = this.profiles.filter((profile) => profile.groups.some((role) => role.includes(Role.GARDENER)));
+
+    const profilesOnPage = gardeneirs.slice((index - 1) * size, (index - 1) * size + size);
+    const count = gardeneirs.length;
+    const page: Page<Profile> = {count, results: profilesOnPage};
+    return of(page);
+  }
 
     sortProfiles() {
         this.profiles.sort((a, b) => {
@@ -351,7 +357,7 @@ export class ListOfUsersService {
         const url = `api/accounts/${id}/`;
         console.log(profile);
 
-        return this.httpClient.put(url, profile);
+        return this.httpClient.patch(url, profile);
     }
 
 }

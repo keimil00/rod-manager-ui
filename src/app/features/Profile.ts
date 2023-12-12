@@ -7,6 +7,6 @@ export interface Profile {
   phone: string;
   email: string;
   groups: Role[];
-  paymentAmount: number | null;
+  balance: number;
   paymentDueDate: Date;
 }
