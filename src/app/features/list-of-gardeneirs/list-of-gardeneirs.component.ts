@@ -51,6 +51,7 @@ export class ListOfGardeneirsComponent {
       next: (page: Page<Profile>) => {
         this.totalGardeneirsCount = page.count;
         this.dataProfiles = new MatTableDataSource<Profile>(page.results);
+        this.spinner.hide()
       }, error: err => {
         console.error(err);
         this.spinner.hide()

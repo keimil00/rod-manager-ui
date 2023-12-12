@@ -68,7 +68,7 @@ export class UserPaymentsComponent {
         }
       }, error: err => {
         this.spinner.hide()
-        this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
+        this.toastr.error("Nie udało się załadować płatności", 'Błąd');
       }
     });
   }

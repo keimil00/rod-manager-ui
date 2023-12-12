@@ -575,22 +575,22 @@ export class PaymentsService {
   }
 
 
-  getConfirmPayments(userId: number | undefined): Observable<Payment[]> {
+  getConfirmPayments2(userId: number | undefined): Observable<Payment[]> {
     const url = `${this.URLpayments}${this.URIuserConfirm}${userId}/`;
     return this.httpClient.get<Payment[]>(url);
   }
 
-  getConfirmPayments2(user_id: number | undefined): Observable<Payment[]> {
+  getConfirmPayments(user_id: number | undefined): Observable<Payment[]> {
     return of(this.confirmpaymentLists.find((user) => user.idUser === user_id)?.userPaymentList || []);
   }
 
-  confirmPayment(userId: number | undefined, payment: Payment): Observable<any> {
+  confirmPayment2(userId: number | undefined, payment: Payment): Observable<any> {
     //obizyc kwote do zaplaty
     const url = `${this.URLpayments}${this.URIuserConfirm}${userId}/`;
     return this.httpClient.patch<any>(url, payment);
   }
 
-  confirmPayment2(userId: number | undefined, payment: Payment): Observable<any> {
+  confirmPayment(userId: number | undefined, payment: Payment): Observable<any> {
     //obizyc kwote do zaplaty
     return of(this.confirmpaymentLists.find((user) => user.idUser === userId)?.userPaymentList.push(payment));
   }
