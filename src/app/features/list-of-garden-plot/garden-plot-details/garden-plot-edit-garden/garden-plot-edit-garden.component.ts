@@ -14,6 +14,7 @@ import {findProfileEmailByID, getMatchingProfiles, profileEmailValidator} from "
 import {BackendGardenService} from "../../backend-garden.service";
 import {ListOfUsersService} from "../../../list-of-users/list-of-users.service";
 import {forkJoin} from "rxjs";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-garden-plot-edit-garden',
@@ -68,7 +69,12 @@ export class GardenPlotEditGardenComponent {
     ]
   };
 
-  constructor(formBuilder: FormBuilder, private gardenPlotsDataService: BackendGardenService, private listOfUsersService: ListOfUsersService) {
+  constructor(
+    formBuilder: FormBuilder,
+    private gardenPlotsDataService: BackendGardenService,
+    private listOfUsersService: ListOfUsersService,
+    private toastr: ToastrService,
+  ) {
     this.editGardenForm = formBuilder.group({
       sector: ['', [
         Validators.required,
@@ -90,48 +96,27 @@ export class GardenPlotEditGardenComponent {
     });
   }
 
-  async loadData2() {
-    try {
-      const result = await this.asyncOperation(); // Tu wywołaj swoją asynchroniczną funkcję
-      console.log('Wynik operacji asynchronicznej:', result);
-    } catch (error) {
-      console.error('Wystąpił błąd:', error);
-    }
-  }
-
-  async asyncOperation(): Promise<string> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        // @ts-ignore
-        this.populateFormFromGardenPlot(this.gardenPlot);
-        resolve('Dane załadowane asynchronicznie');
-      }, 200);
-    });
-  }
-
   async ngOnInit(): Promise<void> {
     this.loadData()
-
-    // TODO przetestowac dla nulla czy moze juz dziala
-    // await this.loadData2()
   }
-
-  // async ngOnInit(): Promise<void> {
-  //   this.loadData()
-  // }
 
   loadData() {
     forkJoin({
       profiles: this.listOfUsersService.getAllProfiles(),
       gardenPlots: this.gardenPlotsDataService.getAllGardenPlots(),
-    }).subscribe( data => {
-      this.profiles = data.profiles;
-      this.gardenPlots = data.gardenPlots;
-      this.leasholderID = this.gardenPlot?.leaseholderID
-      // this.exLeasholderID = this.gardenPlot?.exleaseholderID
+    }).subscribe({
+      next: data => {
+        this.profiles = data.profiles;
+        this.gardenPlots = data.gardenPlots;
+        this.leasholderID = this.gardenPlot?.leaseholderID
+        // this.exLeasholderID = this.gardenPlot?.exleaseholderID
 
-      this.initData();
-      this.populateFormFromGardenPlot(this.gardenPlot);
+        this.initData();
+        this.populateFormFromGardenPlot(this.gardenPlot);
+      }, error: error => {
+        console.error(error);
+        this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
+      }
     });
   }
 
@@ -263,7 +248,12 @@ export class GardenPlotEditGardenComponent {
         gardenStatus: newGarden?.gardenStatus
       }
 
-      this.gardenPlotsDataService.editGarden(this.gardenPlot?.gardenPlotID, newGarden2).subscribe()
+      this.gardenPlotsDataService.editGarden(this.gardenPlot?.gardenPlotID, newGarden2).subscribe({
+        error: error => {
+          console.error(error);
+          this.toastr.error("Ups, nie udało się edydytować", 'Błąd');
+        }
+      })
       // this.gardenPlotsDataService.editGarden2(this.gardenPlot?.gardenPlotID, newGarden2, this.gardenPlots)
       // this.gardenPlotsDataService.editGarden3(this.gardenPlot?.id,newGarden2)
 

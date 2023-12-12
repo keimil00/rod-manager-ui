@@ -3,6 +3,8 @@ import * as ApexCharts from 'apexcharts';
 import {VotedItem, VotingItem} from "../voting-item.model";
 import {VotingsService} from "../votings.service";
 import {Subscription} from "rxjs";
+import {ToastrService} from "ngx-toastr";
+
 @Component({
   selector: 'app-voted-votings',
   templateUrl: './voted-votings.component.html',
@@ -18,17 +20,25 @@ export class VotedVotingsComponent {
   // @ts-ignore
   private addVoteFinishedSubscription: Subscription;
 
-  constructor(private votingService: VotingsService) {
+  constructor(
+    private votingService: VotingsService,
+    private toastr: ToastrService,
+  ) {
   }
 
   ngOnInit() {
     this.scheduleMidnightRefresh();
     this.getVotedVotes();
-    this.addVoteFinishedSubscription = this.votingService.addVoteFinished$.subscribe(() => {
-      this.votingService.getVotedVoting().subscribe((votes: VotedItem[]) => {
-        this.finishedVotes = votes;
-        this.tryGenerateCharts2();
-      });
+    this.addVoteFinishedSubscription = this.votingService.addVoteFinished$.subscribe({
+      next: () => {
+        this.votingService.getVotedVoting().subscribe((votes: VotedItem[]) => {
+          this.finishedVotes = votes;
+          this.tryReGenerateCharts();
+        });
+      }, error: err => {
+        console.error(err);
+        this.toastr.error('Nie udało się dodać głosu', 'Błąd');
+      }
     });
   }
 
@@ -41,7 +51,7 @@ export class VotedVotingsComponent {
     this.tryGenerateCharts()
   }
 
-  // Teoretycznie to powinno odwieżać głosowania po północy, ale nie testowałem tego XD
+  // Teoretycznie to powinno odświeżać głosowania po północy, ale nie testowałem tego
   scheduleMidnightRefresh() {
     const now = new Date();
     const currentHour = now.getHours();
@@ -54,21 +64,27 @@ export class VotedVotingsComponent {
 
     // Ustawienie timera na pobranie danych po północy
     setTimeout(() => {
-      this.tryGenerateCharts2();
+      this.tryReGenerateCharts();
       this.scheduleMidnightRefresh(); // Zaplanowanie kolejnego pobrania danych po północy
     }, timeUntilMidnight);
   }
 
-  tryGenerateCharts2() {
-    let stop =0
-    while (stop<10) {
+  tryReGenerateCharts() {
+    let stop = 0
+    while (stop < 200) {
       setTimeout(() => {
         console.log("Trying to regenerate charts")
         this.generateCharts();
         stop++;
-        if(this.chartElements){stop=1000}
+        if (this.chartElements) {
+          stop = 1000
+        }
       }, 100);
       return;
+    }
+    if(stop === 200) {
+      console.log("Failed to regenerate charts")
+      this.toastr.error('Nie udało się wygenerować wykresów', 'Błąd');
     }
   }
 
@@ -76,13 +92,17 @@ export class VotedVotingsComponent {
   tryGenerateCharts() {
     // Check if we have all the necessary data
     let stop = 0
-    if (!this.chartElements || !this.finishedVotes|| stop>200) {
+    if (!this.chartElements || !this.finishedVotes || stop > 200) {
       setTimeout(() => {
         this.tryGenerateCharts(); // Try generating charts again after a short interval
         console.log("Trying to generate charts")
         stop++;
       }, 100); // Wait for 100ms before the next attempt
       return;
+    }
+    if(stop === 200) {
+      console.log("Failed to generate charts")
+      this.toastr.error('Nie udało się wygenerować wykresów', 'Błąd');
     }
 
     // We have all the data, generate the charts

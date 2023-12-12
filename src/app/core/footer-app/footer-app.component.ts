@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {TechnicalIssueDialogComponent} from "./technical-issue-dialog/technical-issue-dialog.component";
 import {StorageService} from "../storage/storage.service";
@@ -9,7 +9,11 @@ import {StorageService} from "../storage/storage.service";
   styleUrls: ['./footer-app.component.scss']
 })
 export class FooterAppComponent {
-  constructor(public dialog: MatDialog,private storageService: StorageService,) {}
+  constructor(
+    public dialog: MatDialog,
+    private storageService: StorageService
+  ) {
+  }
 
   isLoggedIn(): boolean {
     return this.storageService.getLoggedIn();

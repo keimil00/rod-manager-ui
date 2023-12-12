@@ -7,6 +7,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {BackendGardenService} from "../backend-garden.service";
 import {PaymentsService} from "../../payments/payments.service";
+import {ToastrService} from "ngx-toastr";
 
 
 @Component({
@@ -40,13 +41,17 @@ export class GardenPlotDetailsComponent {
     ]
   };
 
-  constructor(formBuilder: FormBuilder, private gardenPlotsDataService: BackendGardenService, private paymentsService: PaymentsService,
-              public dialogRef: MatDialogRef<GardenPlotDetailsComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: {
-                gardenPlot: GardenPlotWithLeaseholder;
-                leaseholder: Profile;
-                exLeaseHolder: Profile
-              }
+  constructor(
+    formBuilder: FormBuilder,
+    private gardenPlotsDataService: BackendGardenService,
+    private paymentsService: PaymentsService,
+    public dialogRef: MatDialogRef<GardenPlotDetailsComponent>,
+    private toastr: ToastrService,
+    @Inject(MAT_DIALOG_DATA) public data: {
+      gardenPlot: GardenPlotWithLeaseholder;
+      leaseholder: Profile;
+      exLeaseHolder: Profile
+    }
   ) {
     this.gardenPlot = data.gardenPlot;
     this.leaseholder = data.leaseholder;
@@ -66,16 +71,24 @@ export class GardenPlotDetailsComponent {
   }
 
   initData() {
-    this.paymentsService.getConfirmPayments(this.leaseholder?.id).subscribe((payments: Payment[]) => {
-      this.paymentHistory = payments;
+    this.paymentsService.getConfirmPayments(this.leaseholder?.id).subscribe({
+      next: (payments: Payment[]) => {
+        this.paymentHistory = payments;
+      }, error: err => {
+        this.toastr.error("Ups, nie udało się załadować płatności", 'Błąd');
+      }
     });
   }
 
   updatePaymentHistory() {
-    this.paymentsService.getConfirmPayments(this.leaseholder?.id).subscribe((payments: Payment[]) => {
-      this.paymentHistory = payments;
-      this.showNewPaymentForm = false;
-      this.paymentForm.reset();
+    this.paymentsService.getConfirmPayments(this.leaseholder?.id).subscribe({
+      next: (payments: Payment[]) => {
+        this.paymentHistory = payments;
+        this.showNewPaymentForm = false;
+        this.paymentForm.reset();
+      }, error: err => {
+        this.toastr.error("Ups, nie udało się załadować płatności", 'Błąd');
+      }
     });
   }
 
@@ -103,6 +116,7 @@ export class GardenPlotDetailsComponent {
           },
           (error) => {
             console.error('Error while adding payment:', error);
+            this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
           }
         );
 
@@ -120,6 +134,7 @@ export class GardenPlotDetailsComponent {
     }
     return errors;
   }
+
   pastDateValidator() {
     return (control: { value: Date }) => {
       const currentDate = new Date();

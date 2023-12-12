@@ -10,6 +10,8 @@ import {
 } from "../../list-of-garden-plot/GardenService";
 import {GardenPlot} from "../../list-of-garden-plot/garden-plot";
 import {BackendGardenService} from "../../list-of-garden-plot/backend-garden.service";
+import {ToastrService} from "ngx-toastr";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: 'app-add-counter-dialog',
@@ -31,7 +33,10 @@ export class AddCounterDialogComponent {
 
   constructor(
     formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<AddCounterDialogComponent>, private gardenPlotsDataService: BackendGardenService,
+    public dialogRef: MatDialogRef<AddCounterDialogComponent>,
+    private gardenPlotsDataService: BackendGardenService,
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService,
     @Inject(MAT_DIALOG_DATA) public data: { counters: Counter[], isShowWater: boolean }
   ) {
     this.isWaterType = this.data.isShowWater
@@ -80,9 +85,15 @@ export class AddCounterDialogComponent {
   }
 
   initData() {
-    this.gardenPlotsDataService.getAllGardenPlots().subscribe((gardenPlots: GardenPlot[]) => {
+    this.spinner.show()
+    this.gardenPlotsDataService.getAllGardenPlots().subscribe({next: (gardenPlots: GardenPlot[]) => {
       this.gardenPlots = gardenPlots;
       this.matchingSectors()
+    }, error: error => {
+      console.error(error);
+      this.spinner.hide()
+      this.toastr.error('Nie udało się pobrać działek', 'Błąd')
+      }
     });
   }
 

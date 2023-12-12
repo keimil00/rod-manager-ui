@@ -19,6 +19,7 @@ import {
   parsePhoneNumber,
   parsePhoneNumberFromString
 } from "libphonenumber-js";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-user-info',
@@ -40,9 +41,17 @@ export class UserInfoComponent {
 
   isAvailableToEdit: boolean = true;
 
-  constructor(private route: ActivatedRoute, formBuilder: FormBuilder, private router: Router,
-              private listOfUsersService: ListOfUsersService,
-              private backendGardenService: BackendGardenService, private storageService: StorageService, private userInfoService: UserInfoService, private spinner: NgxSpinnerService) {
+  constructor(
+    private route: ActivatedRoute,
+    formBuilder: FormBuilder,
+    private router: Router,
+    private listOfUsersService: ListOfUsersService,
+    private backendGardenService: BackendGardenService,
+    private storageService: StorageService,
+    private userInfoService: UserInfoService,
+    private spinner: NgxSpinnerService,
+    private toastr: ToastrService,
+  ) {
     this.userInfoForm = formBuilder.group({
       firstName: [{value: '', disabled: true}],
       lastName: [{value: '', disabled: true}],
@@ -56,8 +65,6 @@ export class UserInfoComponent {
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.id = parseInt(params['id'], 10)
-      console.log(this.id)
-      console.log("test")
       this.spinner.show()
       this.loadData()
     });
@@ -77,6 +84,8 @@ export class UserInfoComponent {
           this.spinner.hide()
         },
         error: error => {
+          console.error(error);
+          this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
           this.router.navigate(['/403']);
           this.spinner.hide()
         }
@@ -242,7 +251,11 @@ export class UserInfoComponent {
         // paymentDueDate: this.profile?.paymentDueDate
       };
 
-      this.listOfUsersService.editProfile(newUser, this.id).subscribe(() => {
+      this.listOfUsersService.editProfile(newUser, this.id).subscribe({
+        error: err => {
+          console.error(err)
+          this.toastr.error("Ups, Edycja profilu zakończona niepowodzeniem", 'Błąd');
+        }
       });
       // this.profile = newUser;
       this.disableFormFields()

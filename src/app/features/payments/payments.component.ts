@@ -19,6 +19,7 @@ import {EditUtilityValuesComponent} from "./edit-utility-values/edit-utility-val
 import {forkJoin} from "rxjs";
 import {NgxSpinnerService} from "ngx-spinner";
 
+// TODO sprawdzic czy jest obslugiwany error
 
 //TODO na tym ekranie od terminu płatności zrobic przysik zatwierdz z jakaś uwagą ze beda naliczone te koszty co wyzej i nie będzie mozna tego zmienić plus dane z obecnego stanu liczników
 // ten przycisk bedzie wysyłał wszytskim opłate (zmiana stanu konta plus wysłanie jakiegos meila) na licznikach i do raportu tez jakos ustawic zeby brało odpowiednie dane

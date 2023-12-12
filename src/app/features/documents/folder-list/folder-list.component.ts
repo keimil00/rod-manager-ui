@@ -4,6 +4,7 @@ import {Document, Leaf} from "../document";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DocumentsService} from "../documents.service";
 import {NgxSpinnerService} from "ngx-spinner";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-folder-list',
@@ -18,14 +19,19 @@ export class FolderListComponent {
   addFileForm: FormGroup;
   editFileForm: FormGroup;
   addListForm: FormGroup;
-  editListForm : FormGroup;
+  editListForm: FormGroup;
   showAddDocumentForm = false;
   showEditDocumentForm = false;
   showAddListForm = false;
   showEditListForm = false;
   selectedFile: File | null = null;
 
-  constructor(formBuilder: FormBuilder, private documentsService: DocumentsService, private spinner: NgxSpinnerService) {
+  constructor(
+    formBuilder: FormBuilder,
+    private documentsService: DocumentsService,
+    private spinner: NgxSpinnerService,
+    private toastr: ToastrService
+  ) {
     this.addFileForm = formBuilder.group({
       name: ['', [
         Validators.required,
@@ -38,8 +44,7 @@ export class FolderListComponent {
       name: ['', [
         Validators.required,
       ]],
-      file: ['', [
-      ]]
+      file: ['', []]
     })
     this.editListForm = formBuilder.group({
       name: ['', [
@@ -73,34 +78,47 @@ export class FolderListComponent {
     return errors;
   }
 
-  downloadFile(link: string|undefined) {
+  downloadFile(link: string | undefined) {
     const link2 = 'assets/Potwierdzenie_wykonania_operacji.pdf'
     const fullLink = 'http://localhost:8000/' + link;
     window.open(fullLink, '_blank');
-    }
+  }
 
   addNewDocument(item: Document) {
     if (this.addFileForm.valid && this.selectedFile) {
       const newTitle: string = this.addFileForm.get('name')?.value;
       const newDocument: Leaf = {name: newTitle, file: this.selectedFile, parent: item.id};
       this.spinner.show()
-      this.documentsService.postDocuments(newDocument).subscribe((res) => {
-        this.updateDocumentsListFromLevel(this.level)
-        // this.itemAdded.emit();
-        this.showAddDocumentForm = false
+      this.documentsService.postDocuments(newDocument).subscribe({
+        next: value => {
+          this.updateDocumentsListFromLevel(this.level)
+          // this.itemAdded.emit();
+          this.showAddDocumentForm = false
+        }, error: error => {
+          console.error(error);
+          this.spinner.hide();
+          this.toastr.error('Nie udało się dodać dokumentu', 'Błąd')
+        }
       });
     }
   }
+
   editDocument(item: Document) {
     if (this.editFileForm.valid) {
       const newTitle: string = this.editFileForm.get('name')?.value;
       const id = item.id
 
-      const newLeaf: Leaf = {name: newTitle,file: this.selectedFile, parent: this.parent};
+      const newLeaf: Leaf = {name: newTitle, file: this.selectedFile, parent: this.parent};
       this.spinner.show()
-      this.documentsService.putDocuments(newLeaf, id).subscribe((result: any)=>{
-        this.updateDocumentsListFromLevel(this.level)
-        this.showEditDocumentForm = false
+      this.documentsService.putDocuments(newLeaf, id).subscribe({
+        next: value => {
+          this.updateDocumentsListFromLevel(this.level)
+          this.showEditDocumentForm = false
+        }, error: error => {
+          console.error(error);
+          this.spinner.hide();
+          this.toastr.error('Nie udało się edytować dokumentu', 'Błąd')
+        }
       })
     }
   }
@@ -110,10 +128,16 @@ export class FolderListComponent {
       const newTitle: string = this.addListForm.get('name')?.value;
       const newDocument: Leaf = {name: newTitle, parent: item.id};
       this.spinner.show()
-      this.documentsService.postDocuments(newDocument).subscribe((res) => {
-        this.updateDocumentsListFromLevel(this.level)
-        // this.itemAdded.emit();
-        this.showAddListForm = false
+      this.documentsService.postDocuments(newDocument).subscribe({
+        next: value => {
+          this.updateDocumentsListFromLevel(this.level)
+          // this.itemAdded.emit();
+          this.showAddListForm = false
+        }, error: error => {
+          console.error(error);
+          this.spinner.hide();
+          this.toastr.error('Nie udało się dodać folderu', 'Błąd')
+        }
       });
     }
   }
@@ -122,20 +146,33 @@ export class FolderListComponent {
     if (this.editListForm.valid) {
       const newTitle: string = this.editListForm.get('name')?.value;
       const newDocument: Leaf = {name: newTitle, parent: this.parent};
-      this.documentsService.putDocuments(newDocument,item.id).subscribe((res) => {
-        this.spinner.show()
-        this.updateDocumentsListFromLevel(this.level)
-        // this.itemAdded.emit();
-        this.showAddListForm = false
+      this.documentsService.putDocuments(newDocument, item.id).subscribe({
+        next: value => {
+          this.spinner.show()
+          this.updateDocumentsListFromLevel(this.level)
+          // this.itemAdded.emit();
+          this.showAddListForm = false
+        },
+        error: error => {
+          console.error(error);
+          this.spinner.hide();
+          this.toastr.error('Nie udało się edytować folderu', 'Błąd')
+        }
       });
     }
   }
 
   delete(item: Document) {
     this.spinner.show()
-    this.documentsService.deleteDocument(item.id).subscribe((res) => {
-      this.updateDocumentsListFromLevel(this.level)
-      // this.itemAdded.emit();
+    this.documentsService.deleteDocument(item.id).subscribe({
+      next: value => {
+        this.updateDocumentsListFromLevel(this.level)
+        // this.itemAdded.emit();
+      }, error: error => {
+        console.error(error);
+        this.spinner.hide();
+        this.toastr.error('Nie udało się usunąć', 'Błąd')
+      }
     });
   }
 
@@ -143,12 +180,13 @@ export class FolderListComponent {
     this.showAddDocumentForm = !this.showAddDocumentForm;
     this.addFileForm.reset()
   }
+
   toggleEditDocumentForm(Document: Document) {
     this.showEditDocumentForm = !this.showEditDocumentForm;
     this.addFileForm.reset()
     this.editFileForm.reset()
     this.editFileForm.patchValue({name: Document.name})
-    this.selectedFile= null
+    this.selectedFile = null
   }
 
   toggleEditFolderForm(Document: Document) {

@@ -5,6 +5,7 @@ import {Document, Leaf} from "./document";
 import {forkJoin} from "rxjs";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {NgxSpinnerService} from "ngx-spinner";
+import {ToastrService} from "ngx-toastr";
 
 // TODO ogarnąć mape i regulamin
 @Component({
@@ -30,7 +31,12 @@ export class DocumentsComponent {
   selectedMapFile: File | null = null;
   selectedStatuteFile: File | null = null;
 
-  constructor(formBuilder: FormBuilder, private documentsService: DocumentsService, private spinner: NgxSpinnerService) {
+  constructor(
+    formBuilder: FormBuilder,
+    private documentsService: DocumentsService,
+    private spinner: NgxSpinnerService,
+    private toastr: ToastrService
+  ) {
     this.spinner.show()
     this.initData()
     this.addFileForm = formBuilder.group({
@@ -53,11 +59,18 @@ export class DocumentsComponent {
       documents: this.documentsService.getDocuments(),
       map: this.documentsService.isMapAvailable(),
       statute: this.documentsService.isStatuteAvailable(),
-    }).subscribe(async data => {
+    }).subscribe({
+      next: async data => {
         this.documents = data.documents,
-        this.isMapAvailable = data.map,
-        this.isStatuteAvailable = data.statute,
+          this.isMapAvailable = data.map,
+          this.isStatuteAvailable = data.statute,
+          this.spinner.hide()
+      },
+      error: error => {
+        console.error(error);
         this.spinner.hide()
+        this.toastr.error('Nie udało się pobrać danych', 'Błąd')
+      }
     });
   }
 
@@ -146,13 +159,19 @@ export class DocumentsComponent {
       const newTitle: string = this.addFileForm.get('name')?.value;
       const newDocument: Leaf = {name: newTitle, file: this.selectedFile};
       this.spinner.show()
-      this.documentsService.postDocuments(newDocument).subscribe((res) => {
-        this.documentsService.getDocuments()
-          .subscribe((result: Document[]) => {
-            this.documents = result
-            this.showAddDocumentForm = false
-            this.spinner.hide()
-          });
+      this.documentsService.postDocuments(newDocument).subscribe({
+        next: data => {
+          this.documentsService.getDocuments()
+            .subscribe((result: Document[]) => {
+              this.documents = result
+              this.showAddDocumentForm = false
+              this.spinner.hide()
+            });
+        }, error: error => {
+          console.error(error);
+          this.spinner.hide()
+          this.toastr.error('Nie udało się dodać dokumentu', 'Błąd')
+        }
       });
     }
   }
@@ -165,11 +184,18 @@ export class DocumentsComponent {
       this.documentsService.postDocuments(newLeaf).subscribe((res) => {
         // this.updateDocumentsList()
         this.documentsService.getDocuments()
-          .subscribe((result: Document[]) => {
-            this.documents = result
-            this.showAddDocumentForm = false
-            this.showAddListForm = false
-            this.spinner.hide()
+          .subscribe({
+            next: result => {
+              this.documents = result
+              this.showAddDocumentForm = false
+              this.showAddListForm = false
+              this.spinner.hide()
+            },
+            error: error => {
+              console.error(error);
+              this.spinner.hide()
+              this.toastr.error('Nie udało się dodać folderu', 'Błąd')
+            }
           });
       });
     }

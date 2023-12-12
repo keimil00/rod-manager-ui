@@ -7,6 +7,8 @@ import {ListOfUsersService} from "../list-of-users/list-of-users.service";
 import {Page} from "../../shared/paginator/page.model";
 import {MatDialog} from "@angular/material/dialog";
 import {UserPaymentsComponent} from "./payments/user-payments.component";
+import {ToastrService} from "ngx-toastr";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: 'app-list-of-gardeneirs',
@@ -15,7 +17,7 @@ import {UserPaymentsComponent} from "./payments/user-payments.component";
 })
 export class ListOfGardeneirsComponent {
 
-  displayedColumns: string[] = ['firstName', 'lastName', 'phoneNumber', 'email','value', 'info'];
+  displayedColumns: string[] = ['firstName', 'lastName', 'phoneNumber', 'email', 'value', 'info'];
 
   dataProfiles = new MatTableDataSource<Profile>();
   isInEdit = false;
@@ -28,7 +30,13 @@ export class ListOfGardeneirsComponent {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor( private listOfUsersService: ListOfUsersService, private changeDetectorRef: ChangeDetectorRef,private dialog: MatDialog) {
+  constructor(
+    private listOfUsersService: ListOfUsersService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private dialog: MatDialog,
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService,
+  ) {
     this.initData();
     this.dataProfiles.paginator = this.paginator;
   }
@@ -38,9 +46,16 @@ export class ListOfGardeneirsComponent {
   }
 
   loadProfiles(index: number, size: number): void {
-    this.listOfUsersService.getALLGardeiners(index, size).subscribe((page: Page<Profile>) => {
-      this.totalGardeneirsCount = page.count;
-      this.dataProfiles = new MatTableDataSource<Profile>(page.results);
+    this.spinner.show()
+    this.listOfUsersService.getALLGardeiners(index, size).subscribe({
+      next: (page: Page<Profile>) => {
+        this.totalGardeneirsCount = page.count;
+        this.dataProfiles = new MatTableDataSource<Profile>(page.results);
+      }, error: err => {
+        console.error(err);
+        this.spinner.hide()
+        this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
+      }
     });
   }
 
@@ -55,6 +70,7 @@ export class ListOfGardeneirsComponent {
       },
       error => {
         console.error(error);
+        this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
       },
       () => {
         this.changeDetectorRef.detectChanges();
@@ -63,12 +79,12 @@ export class ListOfGardeneirsComponent {
   }
 
   selectEditPayments(id: number) {
-    this.isInEdit=true
+    this.isInEdit = true
     this.showDetailsDialog(id);
   }
 
 
-  showDetailsDialog(profileID:number) {
+  showDetailsDialog(profileID: number) {
     const dialogRef = this.dialog.open(UserPaymentsComponent, {
       width: '4000px',
       data: {profileID},
@@ -79,23 +95,24 @@ export class ListOfGardeneirsComponent {
     });
   }
 
-  closeEdit(){
+  closeEdit() {
     this.isInEdit = false
   }
 
   updateData() {
     this.listOfUsersService.getALLGardeiners(this.currentPageIndex, this.currentPageSize).subscribe(
-        data => {
-          this.totalGardeneirsCount = data.count;
-          this.dataProfiles = new MatTableDataSource<Profile>(data.results);
-        },
-        error => {
-          console.error(error);
-        },
-        () => {
-          this.changeDetectorRef.detectChanges();
-          this.closeEdit()
-        }
+      data => {
+        this.totalGardeneirsCount = data.count;
+        this.dataProfiles = new MatTableDataSource<Profile>(data.results);
+      },
+      error => {
+        console.error(error);
+        this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
+      },
+      () => {
+        this.changeDetectorRef.detectChanges();
+        this.closeEdit()
+      }
     );
   }
 

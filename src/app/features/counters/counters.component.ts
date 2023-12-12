@@ -8,6 +8,7 @@ import {CountersService} from "./counters.service";
 import {NgxSpinnerService} from "ngx-spinner";
 import {forkJoin} from "rxjs";
 import {MatPaginator} from "@angular/material/paginator";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-counters',
@@ -34,7 +35,13 @@ export class CountersComponent {
   @ViewChild(MatPaginator) paginatorWater!: MatPaginator;
   @ViewChild(MatPaginator) paginatorElectric!: MatPaginator;
 
-  constructor(private dialog: MatDialog, private countersService: CountersService, private spinner: NgxSpinnerService, private changeDetectorRef: ChangeDetectorRef) {
+  constructor(
+    private dialog: MatDialog,
+    private countersService: CountersService,
+    private spinner: NgxSpinnerService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private toastr: ToastrService
+  ) {
     this.spinner.show()
     // this.setData()
     this.initData2()
@@ -53,22 +60,28 @@ export class CountersComponent {
       electric: this.countersService.getElectricCounters(this.currentPageIndex, this.defoultpageSize),
       water: this.countersService.getWaterCounters(this.currentPageIndex, this.defoultpageSize),
       all: this.countersService.getAllCounters()
-    }).subscribe(data => {
-      // @ts-ignore
-      const dataSourceWater: MatTableDataSource<Counter> = new MatTableDataSource([]);
-      // @ts-ignore
-      const dataSourceElectric: MatTableDataSource<Counter> = new MatTableDataSource([]);
+    }).subscribe({
+      next: data => {
+        // @ts-ignore
+        const dataSourceWater: MatTableDataSource<Counter> = new MatTableDataSource([]);
+        // @ts-ignore
+        const dataSourceElectric: MatTableDataSource<Counter> = new MatTableDataSource([]);
 
-      dataSourceWater.data = data.water.results;
-      dataSourceElectric.data = data.electric.results;
+        dataSourceWater.data = data.water.results;
+        dataSourceElectric.data = data.electric.results;
 
-      this.totalWaterCount = data.water.count;
-      this.totalElectricCount = data.electric.count;
-      this.counters = data.all;
+        this.totalWaterCount = data.water.count;
+        this.totalElectricCount = data.electric.count;
+        this.counters = data.all;
 
-      this.dataSourceWater = dataSourceWater;
-      this.dataSourceElectric = dataSourceElectric;
-      this.spinner.hide()
+        this.dataSourceWater = dataSourceWater;
+        this.dataSourceElectric = dataSourceElectric;
+        this.spinner.hide()
+      }, error: error => {
+        console.error(error);
+        this.spinner.hide()
+        this.toastr.error('Ups, coś poszło nie tak', 'Błąd')
+      }
     });
   }
 
@@ -85,6 +98,7 @@ export class CountersComponent {
       error => {
         console.error(error);
         this.spinner.hide()
+        this.toastr.error('Ups, coś poszło nie tak', 'Błąd')
       },
       () => {
         this.changeDetectorRef.detectChanges();
@@ -106,6 +120,7 @@ export class CountersComponent {
       error => {
         console.error(error);
         this.spinner.hide()
+        this.toastr.error('Ups, coś poszło nie tak', 'Błąd')
       },
       () => {
         this.changeDetectorRef.detectChanges();
@@ -132,6 +147,7 @@ export class CountersComponent {
         error => {
           console.error(error);
           this.spinner.hide()
+          this.toastr.error('Ups, coś poszło nie tak', 'Błąd')
         },
         () => {
           this.changeDetectorRef.detectChanges();
@@ -151,6 +167,7 @@ export class CountersComponent {
         error => {
           console.error(error);
           this.spinner.hide()
+          this.toastr.error('Ups, coś poszło nie tak', 'Błąd')
         },
         () => {
           this.changeDetectorRef.detectChanges();
@@ -209,7 +226,12 @@ export class CountersComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
         //TODO zmienić stan konta użytkownika
-        this.countersService.updateMeasurement(counter.id, result, counter.type).subscribe()
+        this.countersService.updateMeasurement(counter.id, result, counter.type).subscribe({
+          error: error => {
+            console.error(error)
+            this.toastr.error('Ups, coś poszło nie tak', 'Błąd')
+          }
+        })
         this.updateData(result.type === CounterType.Water)
       }
     });
@@ -222,11 +244,17 @@ export class CountersComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.countersService.addCounter(result).subscribe()
-        this.updateData(result.type === CounterType.Water)
+        if (result) {
+          this.countersService.addCounter(result).subscribe({
+            error: error => {
+              console.error(error)
+              this.toastr.error('Ups, coś poszło nie tak', 'Błąd')
+            }
+          })
+          this.updateData(result.type === CounterType.Water)
+        }
       }
-    });
+    );
   }
 }
 

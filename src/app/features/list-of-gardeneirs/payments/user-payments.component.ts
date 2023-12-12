@@ -4,6 +4,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {PaymentsService} from "../../payments/payments.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {NgxSpinnerService} from "ngx-spinner";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-payments',
@@ -34,11 +35,15 @@ export class UserPaymentsComponent {
 
   spinerMassage = "Ładowanie Płatności"
 
-  constructor(private formBuilder: FormBuilder, private paymentsService: PaymentsService,private spinner: NgxSpinnerService,
-              public dialogRef: MatDialogRef<UserPaymentsComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: {
-                profileID: number;
-              }
+  constructor(
+    private formBuilder: FormBuilder,
+    private paymentsService: PaymentsService,
+    private spinner: NgxSpinnerService,
+    public dialogRef: MatDialogRef<UserPaymentsComponent>,
+    private toastr: ToastrService,
+    @Inject(MAT_DIALOG_DATA) public data: {
+      profileID: number;
+    }
   ) {
     this.spinner.show()
     this.profileID = data.profileID;
@@ -48,18 +53,27 @@ export class UserPaymentsComponent {
     this.dialogRef.close();
   }
 
-  ngOnInit(): void{
+  ngOnInit(): void {
     this.initData()
   }
+
   initData() {
-    this.paymentsService.getConfirmPayments(this.profileID).subscribe((payments: Payment[]) => {
-      this.paymentHistory = payments;
-      this.generateForm()
-      if(this.paymentHistory.length>0){this.spinner.hide(); this.showPaymentHistory=true}
+    this.paymentsService.getConfirmPayments(this.profileID).subscribe({
+      next: (payments: Payment[]) => {
+        this.paymentHistory = payments;
+        this.generateForm()
+        if (this.paymentHistory.length > 0) {
+          this.spinner.hide();
+          this.showPaymentHistory = true
+        }
+      }, error: err => {
+        this.spinner.hide()
+        this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
+      }
     });
   }
 
-  generateForm(){
+  generateForm() {
     this.paymentForm = this.formBuilder.group({
       value: [0, [
         Validators.required,
@@ -70,11 +84,16 @@ export class UserPaymentsComponent {
   }
 
   updatePaymentHistory() {
-    this.paymentsService.getConfirmPayments(this.profileID).subscribe((payments: Payment[]) => {
-      this.paymentHistory = payments;
-      this.paymentForm.reset();
-      this.spinner.hide()
-      this.showNewPaymentForm = false;
+    this.paymentsService.getConfirmPayments(this.profileID).subscribe({
+      next: (payments: Payment[]) => {
+        this.paymentHistory = payments;
+        this.paymentForm.reset();
+        this.spinner.hide()
+        this.showNewPaymentForm = false;
+      }, error: err => {
+        this.spinner.hide()
+        this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
+      }
     });
   }
 
@@ -93,16 +112,18 @@ export class UserPaymentsComponent {
           date: newPaymentDate,
         };
 
-        this.spinerMassage="Aktualizowanie stanu zadłużenia"
+        this.spinerMassage = "Aktualizowanie stanu zadłużenia"
         this.spinner.show()
         this.paymentsService.confirmPayment(this.profileID, newPayment).subscribe(
-            (response) => {
-              console.log('Payment added successfully:', response);
-              this.updatePaymentHistory()
-            },
-            (error) => {
-              console.error('Error while adding payment:', error);
-            }
+          (response) => {
+            console.log('Payment added successfully:', response);
+            this.updatePaymentHistory()
+          },
+          (error) => {
+            console.error('Error while adding payment:', error);
+            this.spinner.hide()
+            this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
+          }
         );
       }
     }
@@ -118,6 +139,7 @@ export class UserPaymentsComponent {
     }
     return errors;
   }
+
   pastDateValidator() {
     return (control: { value: Date }) => {
       const currentDate = new Date();

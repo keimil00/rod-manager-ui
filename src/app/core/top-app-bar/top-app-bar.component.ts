@@ -27,10 +27,15 @@ export class TopAppBarComponent {
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
 
 
-  constructor(private router: Router,
-              private storageService: StorageService,
-              private authService: AuthService,
-              private socialAuthService: SocialAuthService,private breakpointObserver: BreakpointObserver, private userInfoService: UserInfoService, private fontService:FontService) {
+  constructor(
+    private router: Router,
+    private storageService: StorageService,
+    private authService: AuthService,
+    private socialAuthService: SocialAuthService,
+    private breakpointObserver: BreakpointObserver,
+    private userInfoService: UserInfoService,
+    private fontService: FontService
+  ) {
     this.router = router;
     this.authService = authService;
     this.storageService = storageService;
@@ -53,7 +58,6 @@ export class TopAppBarComponent {
   isWideScreen = false;
 
 
-
   // isAuthenticated(requiredRoles) {
   //
   // }
@@ -72,7 +76,7 @@ export class TopAppBarComponent {
   }
 
   navigateToProfileComponent() {
-    let id :number;
+    let id: number;
     this.userInfoService.getMyProfile().subscribe((result: Profile) => {
       id = result.id;
       this.router.navigate(['/user-info', id]);

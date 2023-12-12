@@ -5,11 +5,11 @@ import {BreakpointObserver} from "@angular/cdk/layout";
 import {Router} from "@angular/router";
 import {GardenInfoService} from "./garden-info.service";
 import {DocumentsService} from "../documents/documents.service";
-import {forkJoin, Subscription} from "rxjs";
-import {Profile} from "../Profile";
+import {forkJoin} from "rxjs";
 import {EditDescriptionDialogComponent} from "./edit-description-dialog/edit-description-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {NgxSpinnerService} from "ngx-spinner";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-garden-info',
@@ -28,7 +28,15 @@ export class GardenInfoComponent {
 
   description: string = ""
 
-  constructor(private breakpointObserver: BreakpointObserver, private router: Router, private gardenInfoService: GardenInfoService, private documentsService: DocumentsService,private dialog: MatDialog, private spinner: NgxSpinnerService) {
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private router: Router,
+    private gardenInfoService: GardenInfoService,
+    private documentsService: DocumentsService,
+    private dialog: MatDialog,
+    private spinner: NgxSpinnerService,
+    private toastr: ToastrService
+  ) {
     this.spinner.show()
     this.router = router
     this.initData()
@@ -41,12 +49,18 @@ export class GardenInfoComponent {
       map: this.documentsService.isMapAvailable(),
       statute: this.documentsService.isStatuteAvailable(),
       description: this.gardenInfoService.getDescription()
-    }).subscribe(async data => {
-      this.employers = data.employers;
-      this.isMapAvailable = data.map;
-      this.isStatuteAvailable = data.statute;
-      this.description = data.description;
-      this.spinner.hide()
+    }).subscribe({
+      next: async data => {
+        this.employers = data.employers;
+        this.isMapAvailable = data.map;
+        this.isStatuteAvailable = data.statute;
+        this.description = data.description;
+        this.spinner.hide()
+      }, error: err => {
+        this.spinner.hide()
+        this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
+        console.log(err)
+      }
     });
   }
 
@@ -90,14 +104,21 @@ export class GardenInfoComponent {
         description: currentDescription
       }
     });
-
     dialogRef.afterClosed().subscribe((result: string) => {
       if (result) {
-        this.gardenInfoService.setDescription(result).subscribe((res) => {
-          if(res){
-            this.gardenInfoService.getDescription().subscribe((res) => {
-              this.description = res;
-            });
+        this.gardenInfoService.setDescription(result).subscribe({
+          next: (res) => {
+            if (res) {
+              this.gardenInfoService.getDescription().subscribe({
+                next: (res) => {
+                  this.description = res;
+                }, error: (err) => {
+                  this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
+                }
+              });
+            }
+          }, error: (err) => {
+            this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
           }
         });
       }
