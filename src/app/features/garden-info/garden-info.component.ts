@@ -10,6 +10,7 @@ import {EditDescriptionDialogComponent} from "./edit-description-dialog/edit-des
 import {MatDialog} from "@angular/material/dialog";
 import {NgxSpinnerService} from "ngx-spinner";
 import {ToastrService} from "ngx-toastr";
+import {RodDocument} from "../documents/document";
 
 @Component({
   selector: 'app-garden-info',
@@ -18,6 +19,9 @@ import {ToastrService} from "ngx-toastr";
 })
 export class GardenInfoComponent {
   isMobile: boolean = false;
+
+  // @ts-ignore
+  rodDocuments: RodDocument[];
 
   protected readonly Role = Role;
   // @ts-ignore
@@ -42,23 +46,22 @@ export class GardenInfoComponent {
     this.initData()
   }
 
-
   initData() {
     forkJoin({
       employers: this.gardenInfoService.getEmployers(),
-      map: this.documentsService.isMapAvailable(),
-      statute: this.documentsService.isStatuteAvailable(),
+      rodDocuments: this.documentsService.getRodDocuments(),
       description: this.gardenInfoService.getDescription()
     }).subscribe({
       next: async data => {
         this.employers = data.employers;
-        this.isMapAvailable = data.map;
-        this.isStatuteAvailable = data.statute;
+        this.rodDocuments = data.rodDocuments;
+        this.isMapAvailable = !!data.rodDocuments.find(doc => doc.name === 'map');
+        this.isStatuteAvailable = !!data.rodDocuments.find(doc => doc.name === 'statute');
         this.description = data.description;
         this.spinner.hide()
       }, error: err => {
         this.spinner.hide()
-        this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
+        this.toastr.error('Nie udało się pobrać danych', 'Błąd');
         console.log(err)
       }
     });
@@ -70,17 +73,20 @@ export class GardenInfoComponent {
   }
 
   downloadStatue() {
-    this.downloadFile('statue')
+    this.downloadFile('statute')
   }
 
-  downloadFile(idDocument: string) {
-    // TODO
-    // let filePath: string = ''
-    // const subscription: Subscription = this.documentsService.downloadDocumentSimulate(idDocument)
-    //   .subscribe((result: string) => {
-    //     filePath = result;
-    //     window.open(filePath, '_blank');
-    //   });
+  downloadFile(type: string | undefined) {
+    let link: string | undefined = ''
+    if (type === 'map') {
+      link = this.rodDocuments.find(doc => doc.name === 'map')?.file
+    }
+    if (type === 'statute') {
+      link = this.rodDocuments.find(doc => doc.name === 'statute')?.file
+    }
+
+    const fullLink = 'http://localhost:8000/' + link;
+    window.open(fullLink, '_blank');
   }
 
   ngOnInit() {

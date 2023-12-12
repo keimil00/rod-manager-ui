@@ -1,27 +1,15 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable, of} from "rxjs";
-import {Document, Leaf} from "./document";
+import {Document, Leaf, RodDocument} from "./document";
 
 @Injectable({
   providedIn: 'root'
 })
 export class DocumentsService {
 
-  // private documents: Document[] = [
-  //     {id: '1', name: 'Dokument 1'},
-  //     {id: '2', name: 'Dokument 2'},
-  //     {
-  //         id: '3',
-  //         name: 'Lista Dokumentów',
-  //         items: [
-  //             {id: '4', name: 'Pod-Dokument 1'},
-  //             {id: '5', name: 'Pod-Dokument 2'}
-  //         ]
-  //     }
-  // ];
-
-  private baseUrl = '/api/documents/';
+  private baseUrl = '/api/manager-documents/';
+  private rodDocUrl = '/api/rod-documents/';
 
   constructor(private httpClient: HttpClient) {
   }
@@ -77,13 +65,23 @@ export class DocumentsService {
     } else {
       return this.httpClient.post(this.baseUrl, leaf)
     }
-    ;
   }
 
   deleteDocument(id: number): Observable<any> {
     return this.httpClient.delete(`${this.baseUrl}${id}/`);
   }
 
+  getRodDocuments(): Observable<RodDocument[]> {
+    return this.httpClient.get<RodDocument[]>(this.rodDocUrl);
+  }
+
+  postRodDocuments(body:any): Observable<any> {
+    const formData = new FormData();
+
+    formData.append('name', body.name);
+    formData.append('file', body.file);
+    return this.httpClient.post(this.rodDocUrl,formData);
+  }
 
   isMapAvailable(): Observable<boolean> {
     return of(true)
@@ -95,11 +93,11 @@ export class DocumentsService {
 
 
   isMapAvailable2(): Observable<boolean> {
-    return this.httpClient.get<boolean>(`${this.baseUrl}/map`);
+    return this.httpClient.get<boolean>(`${this.rodDocUrl}`);
   }
 
   isStatuteAvailable2(): Observable<boolean> {
-    return this.httpClient.get<boolean>(`${this.baseUrl}/statute`);
+    return this.httpClient.get<boolean>(`${this.rodDocUrl}`);
   }
 
 }

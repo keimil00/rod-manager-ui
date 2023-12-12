@@ -25,6 +25,7 @@ export class FolderListComponent {
   showAddListForm = false;
   showEditListForm = false;
   selectedFile: File | null = null;
+  maxFileSize_MB = 200
 
   constructor(
     formBuilder: FormBuilder,
@@ -200,8 +201,25 @@ export class FolderListComponent {
     this.addListForm.reset()
   }
 
-  onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0];
+  // onFileSelected(event: any) {
+  //   this.selectedFile = event.target.files[0];
+  // }
+
+  onFileSelected(event: Event) {
+    const fileInput = event.target as HTMLInputElement;
+    const selectedFile = fileInput.files?.[0];
+
+    if (selectedFile) {
+      if (selectedFile.size > this.maxFileSize_MB * 1024 * 1024) { // Limit 50MB w bajtach
+        // Twój kod obsługi błędu, np. wyświetlenie komunikatu o błędzie
+        console.log(`Plik jest zbyt duży. Wybierz plik mniejszy niż ${this.maxFileSize_MB}MB.`);
+        fileInput.value = ''; // Wyczyszczenie pola wyboru pliku
+        this.selectedFile = null;
+        this.toastr.error(`Plik jest zbyt duży. Wybierz plik mniejszy niż ${this.maxFileSize_MB}MB.`, 'Błąd')
+      } else {
+        this.selectedFile = selectedFile
+      }
+    }
   }
 
   onItemAdded() {
@@ -210,10 +228,16 @@ export class FolderListComponent {
 
   updateDocumentsListFromLevel(level: number) {
     this.documentsService.getDocuments()
-      .subscribe((result: Document[]) => {
-        // Aktualizacja listy od określonego poziomu
-        this.documents = this.filterDocumentsByLevel(result, level);
-        this.spinner.hide();
+      .subscribe({
+        next: (result: Document[]) => {
+          // Aktualizacja listy od określonego poziomu
+          this.documents = this.filterDocumentsByLevel(result, level);
+          this.spinner.hide();
+        }, error: error => {
+          console.error(error);
+          this.spinner.hide();
+          this.toastr.error('Nie udało się pobrać dokumentów', 'Błąd')
+        }
       });
   }
 

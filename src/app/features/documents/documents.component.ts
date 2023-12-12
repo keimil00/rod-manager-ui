@@ -1,21 +1,24 @@
 import {Component} from '@angular/core';
 
 import {DocumentsService} from "./documents.service";
-import {Document, Leaf} from "./document";
+import {Document, Leaf, RodDocument} from "./document";
 import {forkJoin} from "rxjs";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {NgxSpinnerService} from "ngx-spinner";
 import {ToastrService} from "ngx-toastr";
 
-// TODO ogarnąć mape i regulamin
 @Component({
   selector: 'app-documents',
   templateUrl: './documents.component.html',
   styleUrls: ['./documents.component.scss']
 })
 export class DocumentsComponent {
+  maxFileSize_MB = 200
+
   // @ts-ignore
   documents: Document[];
+  // @ts-ignore
+  rodDocuments: RodDocument[];
 
   isMapAvailable = false
   isStatuteAvailable = false
@@ -57,14 +60,14 @@ export class DocumentsComponent {
   initData() {
     forkJoin({
       documents: this.documentsService.getDocuments(),
-      map: this.documentsService.isMapAvailable(),
-      statute: this.documentsService.isStatuteAvailable(),
+      rodDocuments: this.documentsService.getRodDocuments(),
     }).subscribe({
       next: async data => {
-        this.documents = data.documents,
-          this.isMapAvailable = data.map,
-          this.isStatuteAvailable = data.statute,
-          this.spinner.hide()
+        this.documents = data.documents;
+        this.rodDocuments = data.rodDocuments;
+        this.isMapAvailable = !!data.rodDocuments.find(doc => doc.name === 'map');
+        this.isStatuteAvailable = !!data.rodDocuments.find(doc => doc.name === 'statute');
+        this.spinner.hide()
       },
       error: error => {
         console.error(error);
@@ -72,13 +75,6 @@ export class DocumentsComponent {
         this.toastr.error('Nie udało się pobrać danych', 'Błąd')
       }
     });
-  }
-
-  updateDocumentsList() {
-    this.documentsService.getDocuments()
-      .subscribe((result: Document[]) => {
-        this.documents = result
-      });
   }
 
 
@@ -102,25 +98,25 @@ export class DocumentsComponent {
     return errors;
   }
 
+  downloadFile(type: string | undefined) {
+    let link: string | undefined = ''
+    if (type === 'map') {
+      link = this.rodDocuments.find(doc => doc.name === 'map')?.file
+    }
+    if (type === 'statute') {
+      link = this.rodDocuments.find(doc => doc.name === 'statute')?.file
+    }
+
+    const fullLink = 'http://localhost:8000/' + link;
+    window.open(fullLink, '_blank');
+  }
 
   downloadMap() {
     this.downloadFile('map')
   }
 
-  downloadStatue() {
-    this.downloadFile('statue')
-  }
-
-  downloadFile(link: string) {
-    window.open(link, '_blank');
-
-
-    // let filePath: string = ''
-    // const subscription: Subscription = this.documentsService.downloadDocumentSimulate(idDocument)
-    //   .subscribe((result: string) => {
-    //     filePath = result;
-    //     window.open(filePath, '_blank');
-    //   });
+  downloadStatute() {
+    this.downloadFile('statute')
   }
 
   toggleAddDocumentForm() {
@@ -141,16 +137,55 @@ export class DocumentsComponent {
     this.showAddStatuteDocumentForm = !this.showAddStatuteDocumentForm;
   }
 
-  onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0];
+  onFileSelected(event: Event) {
+    const fileInput = event.target as HTMLInputElement;
+    const selectedFile = fileInput.files?.[0];
+
+    if (selectedFile) {
+      if (selectedFile.size > this.maxFileSize_MB * 1024 * 1024) { // Limit 50MB w bajtach
+        // Twój kod obsługi błędu, np. wyświetlenie komunikatu o błędzie
+        console.log(`Plik jest zbyt duży. Wybierz plik mniejszy niż ${this.maxFileSize_MB}MB.`);
+        fileInput.value = ''; // Wyczyszczenie pola wyboru pliku
+        this.selectedFile = null;
+        this.toastr.error(`Plik jest zbyt duży. Wybierz plik mniejszy niż ${this.maxFileSize_MB}MB.`, 'Błąd')
+      } else {
+        this.selectedFile = selectedFile
+      }
+    }
   }
 
   onMapFileSelected(event: any) {
-    this.selectedMapFile = event.target.files[0];
+    const fileInput = event.target as HTMLInputElement;
+    const selectedFile = fileInput.files?.[0];
+
+    if (selectedFile) {
+      if (selectedFile.size > this.maxFileSize_MB * 1024 * 1024) { // Limit 50MB w bajtach
+        // Twój kod obsługi błędu, np. wyświetlenie komunikatu o błędzie
+        console.log(`Plik jest zbyt duży. Wybierz plik mniejszy niż ${this.maxFileSize_MB}MB.`);
+        fileInput.value = ''; // Wyczyszczenie pola wyboru pliku
+        this.selectedMapFile = null;
+        this.toastr.error(`Plik jest zbyt duży. Wybierz plik mniejszy niż ${this.maxFileSize_MB}MB.`, 'Błąd')
+      } else {
+        this.selectedMapFile = selectedFile
+      }
+    }
   }
 
   onStatuteFileSelected(event: any) {
-    this.selectedStatuteFile = event.target.files[0]
+    const fileInput = event.target as HTMLInputElement;
+    const selectedFile = fileInput.files?.[0];
+
+    if (selectedFile) {
+      if (selectedFile.size > this.maxFileSize_MB * 1024 * 1024) { // Limit 50MB w bajtach
+        // Twój kod obsługi błędu, np. wyświetlenie komunikatu o błędzie
+        console.log(`Plik jest zbyt duży. Wybierz plik mniejszy niż ${this.maxFileSize_MB}MB.`);
+        fileInput.value = ''; // Wyczyszczenie pola wyboru pliku
+        this.selectedStatuteFile = null;
+        this.toastr.error(`Plik jest zbyt duży. Wybierz plik mniejszy niż ${this.maxFileSize_MB}MB.`, 'Błąd')
+      } else {
+        this.selectedStatuteFile = selectedFile
+      }
+    }
   }
 
 
@@ -202,24 +237,61 @@ export class DocumentsComponent {
   }
 
   addMapDocument() {
-    // if (this.selectedMapFile) {
-    //   this.documentsService.uploadMapDocument(this.selectedMapFile).subscribe(response => {
-    //     console.log('File uploaded successfully!', response);
-    //   });
-    //   this.isMapAvailable = true
-    // }
+    if (this.selectedMapFile) {
+      const body = {name: 'map', file: this.selectedMapFile}
+      this.spinner.show()
+      this.documentsService.postRodDocuments(body).subscribe({
+        next: response => {
+          console.log('File uploaded successfully!', response);
+          this.documentsService.getRodDocuments().subscribe({
+            next: res => {
+              this.rodDocuments = res
+              this.spinner.hide()
+              this.isMapAvailable = true
+            }, error: error => {
+              console.error(error);
+              this.spinner.hide()
+              this.toastr.error('Nie udało się załadować danych', 'Błąd')
+            }
+          })
+        }, error: error => {
+          console.error(error);
+          this.spinner.hide()
+          this.toastr.error('Nie udało się dodać mapy', 'Błąd')
+        }
+      });
+      this.showAddMapDocumentForm = false;
+    }
   }
 
   addStatuteDocument() {
-    // if (this.selectedStatuteFile) {
-    //   this.documentsService.uploadStatuteDocument(this.selectedStatuteFile).subscribe(response => {
-    //     console.log('File uploaded successfully!', response);
-    //   });
-    //   this.isStatuteAvailable = true
-    // }
+    if (this.selectedStatuteFile) {
+      const body = {name: 'statute', file: this.selectedStatuteFile}
+      this.spinner.show()
+      this.documentsService.postRodDocuments(body).subscribe({
+        next: response => {
+          console.log('File uploaded successfully!', response);
+          this.documentsService.getRodDocuments().subscribe({
+            next: res => {
+              this.rodDocuments = res
+              this.spinner.hide()
+              this.isStatuteAvailable = true
+            }, error: error => {
+              console.error(error);
+              this.spinner.hide()
+              this.toastr.error('Nie udało się załadować danych', 'Błąd')
+            }
+          })
+        }, error: error => {
+          console.error(error);
+          this.spinner.hide()
+          this.toastr.error('Nie udało się dodać regulaminu', 'Błąd')
+        }
+      });
+      this.showAddStatuteDocumentForm = false;
+    }
   }
 
-  // Chwilowo nic nie robi
   onItemAdded() {
     this.documentsService.getDocuments()
       .subscribe((result: Document[]) => {

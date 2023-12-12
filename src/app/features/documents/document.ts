@@ -16,3 +16,9 @@ export interface Leaf {
   parent?: number|null;
   file?: File|null;
 }
+
+export interface RodDocument {
+  id:number;
+  name: string;
+  file: string;
+}
