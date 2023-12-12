@@ -1,156 +1,238 @@
 <ngx-spinner bdColor="rgba(0, 0, 0, 0.3)" size="large" color="#009688" type="square-jelly-box" [fullScreen]="true"><p
-        style="color: white"> Ładowanie </p></ngx-spinner>
+  style="color: white"> Ładowanie </p></ngx-spinner>
 <div class="page-container">
-    <mat-card class="large-card-size">
-        <mat-card-header>
-            <div class="center-item">
-                <h2 class="title">Dane użytkownika</h2>
-            </div>
-        </mat-card-header>
+  <mat-card class="large-card-size">
+    <mat-card-header>
+      <div class="center-item">
+        <h2 class="title">Dane użytkownika</h2>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-card class="form-card">
         <mat-card-content>
-            <mat-card class="form-card">
-                <mat-card-content>
-                    <form class [formGroup]="userInfoForm">
-                        <div class="row-item">
-                            <mat-form-field class="full-width">
-                                <mat-label>Imie</mat-label>
-                                <input matInput placeholder="Imie" formControlName="firstName">
-                                <mat-error *ngFor="let error of validationErrors('firstName')">
-                                    {{ error.message }}
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="row-item">
-                            <mat-form-field class="full-width">
-                                <mat-label>Nazwisko</mat-label>
-                                <input matInput placeholder="Nazwisko" formControlName="lastName">
-                                <mat-error *ngFor="let error of validationErrors('lastName')">
-                                    {{ error.message }}
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-container row-item ">
-                          <mat-form-field class="country-code">
-                            <mat-select formControlName="countryCode">
-                              <mat-option *ngFor="let country of getCountriesWithCodesSortedByCallingCode()" [value]="country">
-                                +{{ getCountryCallingCode(country) }}
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                          <mat-form-field class="col-item">
-                            <mat-label>Numer telefonu</mat-label>
-                            <input matInput type="tel" formControlName="phoneNumber" placeholder="Numer telefonu"
-                                   (input)="formatPhoneNumber($event)">
-                            <mat-error *ngFor="let error of validationErrors('phoneNumber')">
-                              {{ error.message }}
-                            </mat-error>
-                          </mat-form-field>
-                        </div>
-                        <div class="row-item">
-                            <mat-form-field class="full-width">
-                                <mat-label>Email</mat-label>
-                                <input matInput placeholder="Email" formControlName="email" readonly>
-                            </mat-form-field>
-                        </div>
+          <form class [formGroup]="userInfoForm">
+            <div class="row-item">
+              <mat-form-field class="full-width">
+                <mat-label>Imie</mat-label>
+                <input matInput placeholder="Imie" formControlName="firstName">
+                <mat-error *ngFor="let error of validationErrors('firstName',userInfoForm)">
+                  {{ error.message }}
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="row-item">
+              <mat-form-field class="full-width">
+                <mat-label>Nazwisko</mat-label>
+                <input matInput placeholder="Nazwisko" formControlName="lastName">
+                <mat-error *ngFor="let error of validationErrors('lastName',userInfoForm)">
+                  {{ error.message }}
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-container row-item ">
+              <mat-form-field class="country-code">
+                <mat-select formControlName="countryCode">
+                  <mat-option *ngFor="let country of getCountriesWithCodesSortedByCallingCode()" [value]="country">
+                    +{{ getCountryCallingCode(country) }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field class="col-item">
+                <mat-label>Numer telefonu</mat-label>
+                <input matInput type="tel" formControlName="phoneNumber" placeholder="Numer telefonu"
+                       (input)="formatPhoneNumber($event)">
+                <mat-error *ngFor="let error of validationErrors('phoneNumber',userInfoForm)">
+                  {{ error.message }}
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="row-item">
+              <mat-form-field class="full-width">
+                <mat-label>Email</mat-label>
+                <input matInput placeholder="Email" formControlName="email" readonly>
+              </mat-form-field>
+            </div>
 
-                        <!--            mozliwe ze da sie to lepiej zrobić-->
-                        <div class="row-item" *ngIf="showEditStatus">
-                            <mat-form-field class="full-width">
-                                <mat-label>Rola</mat-label>
-                                <ng-container>
-                                    <mat-select multiple formControlName="accountStatus">
-                                        <mat-option *ngFor="let roleKey of Object.keys(Role_temp)" [value]="roleKey">
-                                            {{ getTranslatedRole(roleKey) }}
-                                        </mat-option>
-                                    </mat-select>
-                                </ng-container>
-                            </mat-form-field>
-                        </div>
-                        <div *ngIf="!showEditStatus">
-                            <div class="row-item" *appHasRole="[Role.ADMIN]">
-                                <mat-form-field class="full-width">
-                                    <mat-label>Rola</mat-label>
-                                    <ng-container>
-                                        <mat-select multiple formControlName="accountStatus">
-                                            <div *ngIf="showGardener">
-                                                <mat-option *ngFor="let roleKey of Object.keys(Role_temp)"
-                                                            [value]="roleKey">
-                                                    {{ getTranslatedRole(roleKey) }}
-                                                </mat-option>
-                                            </div>
-                                            <div *ngIf="!showGardener">
-                                                <mat-option *ngFor="let roleKey of Object.keys(Role_temp)"
-                                                            [value]="roleKey"
-                                                            [disabled]="roleKey === Role_temp.GARDENER">
-                                                    {{ getTranslatedRole(roleKey) }}
-                                                </mat-option>
-                                            </div>
+            <!--            mozliwe ze da sie to lepiej zrobić-->
+            <div class="row-item" *ngIf="showEditStatus">
+              <mat-form-field class="full-width">
+                <mat-label>Rola</mat-label>
+                <ng-container>
+                  <mat-select multiple formControlName="accountStatus">
+                    <mat-option *ngFor="let roleKey of Object.keys(Role_temp)" [value]="roleKey">
+                      {{ getTranslatedRole(roleKey) }}
+                    </mat-option>
+                  </mat-select>
+                </ng-container>
+              </mat-form-field>
+            </div>
+            <div *ngIf="!showEditStatus">
+              <div class="row-item" *appHasRole="[Role.ADMIN]">
+                <mat-form-field class="full-width">
+                  <mat-label>Rola</mat-label>
+                  <ng-container>
+                    <mat-select multiple formControlName="accountStatus">
+                      <div *ngIf="showGardener">
+                        <mat-option *ngFor="let roleKey of Object.keys(Role_temp)"
+                                    [value]="roleKey">
+                          {{ getTranslatedRole(roleKey) }}
+                        </mat-option>
+                      </div>
+                      <div *ngIf="!showGardener">
+                        <mat-option *ngFor="let roleKey of Object.keys(Role_temp)"
+                                    [value]="roleKey"
+                                    [disabled]="roleKey === Role_temp.GARDENER">
+                          {{ getTranslatedRole(roleKey) }}
+                        </mat-option>
+                      </div>
 
-                                        </mat-select>
-                                    </ng-container>
-                                    <mat-error *ngFor="let error of validationErrors('accountStatus')">
-                                        {{ error.message }}
-                                    </mat-error>
-                                </mat-form-field>
-                            </div>
-                            <div class="row-item" *appHasRole="[Role.MANAGER]">
-                                <mat-form-field class="full-width">
-                                    <mat-label>Rola</mat-label>
-                                    <ng-container>
-                                        <mat-select multiple formControlName="accountStatus" *ngIf="showEditFullStatus">
-                                            <div *ngIf="showGardener">
-                                                <mat-option *ngFor="let roleKey of Object.keys(Role_temp)"
-                                                            [value]="roleKey"
-                                                            [disabled]="roleKey === Role_temp.ADMIN || roleKey === Role_temp.MANAGER">
-                                                    {{ getTranslatedRole(roleKey) }}
-                                                </mat-option>
-                                            </div>
-                                            <div *ngIf="!showGardener">
-                                                <mat-option *ngFor="let roleKey of Object.keys(Role_temp)"
-                                                            [value]="roleKey"
-                                                            [disabled]="roleKey === Role_temp.ADMIN || roleKey === Role_temp.MANAGER || roleKey === Role_temp.GARDENER">
-                                                    {{ getTranslatedRole(roleKey) }}
-                                                </mat-option>
-                                            </div>
-                                        </mat-select>
-                                        <mat-select multiple formControlName="accountStatus"
-                                                    *ngIf="!showEditFullStatus">
-                                            <div *ngIf="showGardener">
-                                                <mat-option *ngFor="let roleKey of Object.keys(Role_temp2)"
-                                                            [value]="roleKey">
-                                                    {{ getTranslatedRole(roleKey) }}
-                                                </mat-option>
-                                            </div>
-                                            <div *ngIf="!showGardener">
-                                                <mat-option *ngFor="let roleKey of Object.keys(Role_temp2)"
-                                                            [value]="roleKey"
-                                                            [disabled]="roleKey === Role_temp2.GARDENER">
-                                                    {{ getTranslatedRole(roleKey) }}
-                                                </mat-option>
-                                            </div>
-                                        </mat-select>
-                                    </ng-container>
-                                    <mat-error *ngFor="let error of validationErrors('accountStatus')">
-                                        {{ error.message }}
-                                    </mat-error>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <div class="center-button" *ngIf="!showUserEdit">
-                            <app-text-button type="submit" text="Zatwierdź" color="primary"
-                                             (click)="editProfile()"></app-text-button>
-                        </div>
-                    </form>
-                </mat-card-content>
-            </mat-card>
+                    </mat-select>
+                  </ng-container>
+                  <mat-error *ngFor="let error of validationErrors('accountStatus',userInfoForm)">
+                    {{ error.message }}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="row-item" *appHasRole="[Role.MANAGER]">
+                <mat-form-field class="full-width">
+                  <mat-label>Rola</mat-label>
+                  <ng-container>
+                    <mat-select multiple formControlName="accountStatus" *ngIf="showEditFullStatus">
+                      <div *ngIf="showGardener">
+                        <mat-option *ngFor="let roleKey of Object.keys(Role_temp)"
+                                    [value]="roleKey"
+                                    [disabled]="roleKey === Role_temp.ADMIN || roleKey === Role_temp.MANAGER">
+                          {{ getTranslatedRole(roleKey) }}
+                        </mat-option>
+                      </div>
+                      <div *ngIf="!showGardener">
+                        <mat-option *ngFor="let roleKey of Object.keys(Role_temp)"
+                                    [value]="roleKey"
+                                    [disabled]="roleKey === Role_temp.ADMIN || roleKey === Role_temp.MANAGER || roleKey === Role_temp.GARDENER">
+                          {{ getTranslatedRole(roleKey) }}
+                        </mat-option>
+                      </div>
+                    </mat-select>
+                    <mat-select multiple formControlName="accountStatus"
+                                *ngIf="!showEditFullStatus">
+                      <div *ngIf="showGardener">
+                        <mat-option *ngFor="let roleKey of Object.keys(Role_temp2)"
+                                    [value]="roleKey">
+                          {{ getTranslatedRole(roleKey) }}
+                        </mat-option>
+                      </div>
+                      <div *ngIf="!showGardener">
+                        <mat-option *ngFor="let roleKey of Object.keys(Role_temp2)"
+                                    [value]="roleKey"
+                                    [disabled]="roleKey === Role_temp2.GARDENER">
+                          {{ getTranslatedRole(roleKey) }}
+                        </mat-option>
+                      </div>
+                    </mat-select>
+                  </ng-container>
+                  <mat-error *ngFor="let error of validationErrors('accountStatus',userInfoForm)">
+                    {{ error.message }}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="center-button" *ngIf="!showUserEdit">
+              <app-text-button type="submit" text="Zatwierdź" color="primary"
+                               (click)="editProfile()"></app-text-button>
+            </div>
+          </form>
         </mat-card-content>
-    </mat-card>
+      </mat-card>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="file-card-size">
+    <mat-card-header>
+      <div class="center-item">
+        <h2 class="title">Pliki użytkownika</h2>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-card class="form-card">
+        <mat-card-content>
+          <mat-accordion>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Dokumenty
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div>
+                <app-user-folder-list [parent]="null" [level]="1" [documents]="documents" (itemAdded)="onItemAdded()"
+                                      [userId]="id"></app-user-folder-list>
+                <div>
+                  <div>
+                    <div class="left-button">
+                      <div>
+                        <app-text-button class="add-button" [text]="'Dodaj dokument'" [color]="'accent'"
+                                         (click)="toggleAddDocumentForm()"></app-text-button>
+                      </div>
+                    </div>
+
+                    <div *ngIf="showAddDocumentForm">
+                      <form class [formGroup]="addFileForm">
+                        <mat-form-field class="row-item">
+                          <mat-label>Nazwa</mat-label>
+                          <input matInput type="string" placeholder="Nazwa" formControlName="name">
+                          <mat-error *ngFor="let error of validationErrors('name',addFileForm)">
+                            {{ error.message }}
+                          </mat-error>
+                        </mat-form-field>
+                        <div class="row-item">
+                          <input type="file" (change)="onFileSelected($event)" type="file" formControlName="file">
+                          <mat-error *ngFor="let error of validationErrors('file',addFileForm)">
+                            {{ error.message }}
+                          </mat-error>
+                        </div>
+                        <div class="left-button">
+                          <app-text-button type="submit" class="add-button" [text]="'Dodaj'" [color]="'primary'"
+                                           (click)="addNewDocument()"></app-text-button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="left-button">
+                      <div>
+                        <app-text-button class="add-button" [text]="'Dodaj Folder'" [color]="'accent'"
+                                         (click)="toggleAddListForm()"></app-text-button>
+                      </div>
+                    </div>
+
+                    <div *ngIf="showAddListForm">
+                      <form class [formGroup]="addListForm">
+                        <mat-form-field class="row-item">
+                          <mat-label>Nazwa</mat-label>
+                          <input matInput type="string" placeholder="Nazwa" formControlName="name">
+                          <mat-error *ngFor="let error of validationErrors('name',addListForm)">
+                            {{ error.message }}
+                          </mat-error>
+                        </mat-form-field>
+                        <div class="left-button">
+                          <app-text-button type="submit" class="add-button" [text]="'Dodaj'" [color]="'primary'"
+                                           (click)="addNewList()"></app-text-button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </mat-card-content>
+      </mat-card>
+    </mat-card-content>
+  </mat-card>
 </div>
 <div *ngIf="isAvailableToEdit">
-    <div *ngIf="showUserEdit">
-        <button mat-fab color="primary" class="floating-button"
-                (click)="enableFormFields()">
-            <mat-icon>edit</mat-icon>
-        </button>
-    </div>
+  <div *ngIf="showUserEdit">
+    <button mat-fab color="primary" class="floating-button"
+            (click)="enableFormFields()">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </div>
 </div>

@@ -138,6 +138,7 @@ import {MatListModule} from "@angular/material/list";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {ComplaintDialogComponent} from './features/complaints/complaint-dialog/complaint-dialog.component';
 import {StateNamePipe} from './features/complaints/pipes/state-name.pipe';
+import { UserFolderListComponent } from './features/user-info/user-folder-list/user-folder-list.component';
 
 
 registerLocaleData(localePl);
@@ -251,7 +252,8 @@ registerLocaleData(localePl);
     EditUtilityValuesComponent,
     ComplaintsComponent,
     ComplaintDialogComponent,
-    StateNamePipe
+    StateNamePipe,
+    UserFolderListComponent
   ],
   imports: [
     BrowserModule,

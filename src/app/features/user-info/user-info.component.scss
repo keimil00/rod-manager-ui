@@ -13,6 +13,7 @@
   padding-right: 2%;
   padding-bottom: 30px;
 }
+
 $background: #EEE;
 
 .form-card {
@@ -113,10 +114,30 @@ $background: #EEE;
   flex: 1;
 }
 
+
+.file-card-size {
+  width: 70%;
+  align-self: center;
+  -webkit-box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
+  -moz-box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
+  box-shadow: 0px 3px 15px -1px rgba(66, 68, 90, 1);
+  align-content: center;
+  margin-bottom: 5%;
+  padding-left: 2%;
+  padding-right: 2%;
+  padding-bottom: 30px;
+}
+
 @media only screen and (max-width: 600px) {
-  .large-card-size{
+  .large-card-size {
     width: 99%;
     margin-top: 5%;
     padding-bottom: 30px;
+  }
+  .file-card-size {
+    width: 95%;
+  }
+  .description {
+    display: none;
   }
 }

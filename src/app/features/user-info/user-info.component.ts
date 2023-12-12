@@ -20,6 +20,8 @@ import {
   parsePhoneNumberFromString
 } from "libphonenumber-js";
 import {ToastrService} from "ngx-toastr";
+import {Document, Leaf} from "../documents/document";
+import {DocumentsService} from "../documents/documents.service";
 
 @Component({
   selector: 'app-user-info',
@@ -27,7 +29,8 @@ import {ToastrService} from "ngx-toastr";
   styleUrls: ['./user-info.component.scss']
 })
 export class UserInfoComponent {
-  id: number | null = null;
+  // @ts-ignore
+  id: number;
   profile: Profile | undefined;
   userInfoForm: FormGroup;
   showUserEdit: boolean = true;
@@ -41,6 +44,19 @@ export class UserInfoComponent {
 
   isAvailableToEdit: boolean = true;
 
+
+  maxFileSize_MB = 200
+
+  // @ts-ignore
+  documents: Document[];
+
+  addFileForm: FormGroup;
+  addListForm: FormGroup;
+  showAddDocumentForm = false;
+  showAddListForm = false;
+  selectedFile: File | null = null;
+
+
   constructor(
     private route: ActivatedRoute,
     formBuilder: FormBuilder,
@@ -49,6 +65,7 @@ export class UserInfoComponent {
     private backendGardenService: BackendGardenService,
     private storageService: StorageService,
     private userInfoService: UserInfoService,
+    private documentsService: DocumentsService,
     private spinner: NgxSpinnerService,
     private toastr: ToastrService,
   ) {
@@ -60,6 +77,19 @@ export class UserInfoComponent {
       accountStatus: [{value: '', disabled: true}],
       countryCode: [{value: 'PL', disabled: true}],
     });
+    this.addFileForm = formBuilder.group({
+      name: ['', [
+        Validators.required,
+      ]],
+      file: ['', [
+        Validators.required,
+      ]]
+    })
+    this.addListForm = formBuilder.group({
+      name: ['', [
+        Validators.required,
+      ]],
+    })
   }
 
   ngOnInit() {
@@ -74,12 +104,14 @@ export class UserInfoComponent {
     forkJoin({
       gardenPlots: this.backendGardenService.getAllGardenPlots(),
       profile: this.listOfUsersService.getProfileById(this.id),
-      myProfile: this.userInfoService.getMyProfile()
+      myProfile: this.userInfoService.getMyProfile(),
+      documents: this.documentsService.getUserDocuments(this.id),
     }).subscribe(
       {
         next: data => {
           this.gardenPlots = data.gardenPlots;
           this.profile = data.profile;
+          this.documents = data.documents;
           this.initData()
           this.spinner.hide()
         },
@@ -125,11 +157,11 @@ export class UserInfoComponent {
     });
   }
 
-  validationErrors(controlName: string): any[] {
+  validationErrors(controlName: string, form: FormGroup): any[] {
     let errors = []
     // @ts-ignore
     for (let error of this.errorMessages[controlName]) {
-      if (this.userInfoForm.get(controlName)?.hasError(error.type)) {
+      if (form.get(controlName)?.hasError(error.type)) {
         errors.push(error);
       }
     }
@@ -148,6 +180,12 @@ export class UserInfoComponent {
     ],
     phoneNumber: [
       {type: 'pattern', message: 'Proszę podać prawidłowy numer telefonu (9 cyfr)'}
+    ],
+    name: [
+      {type: 'required', message: 'Proszę podać nazwę'},
+    ],
+    file: [
+      {type: 'required', message: 'Proszę podać plik'},
     ],
   };
 
@@ -288,6 +326,98 @@ export class UserInfoComponent {
     });
   }
 
+
+  // validationErrors(controlName: string, form: FormGroup): any[] {
+  //   let errors = []
+  //   // @ts-ignore
+  //   for (let error of this.errorMessages[controlName]) {
+  //     if (form.get(controlName)?.hasError(error.type)) {
+  //       errors.push(error);
+  //     }
+  //   }
+  //   return errors;
+  // }
+
+  toggleAddDocumentForm() {
+    this.showAddDocumentForm = !this.showAddDocumentForm;
+    this.addFileForm.reset()
+  }
+
+  toggleAddListForm() {
+    this.showAddListForm = !this.showAddListForm;
+    this.addListForm.reset()
+  }
+
+  onFileSelected(event: Event) {
+    const fileInput = event.target as HTMLInputElement;
+    const selectedFile = fileInput.files?.[0];
+
+    if (selectedFile) {
+      if (selectedFile.size > this.maxFileSize_MB * 1024 * 1024) { // Limit 50MB w bajtach
+        // Twój kod obsługi błędu, np. wyświetlenie komunikatu o błędzie
+        console.log(`Plik jest zbyt duży. Wybierz plik mniejszy niż ${this.maxFileSize_MB}MB.`);
+        fileInput.value = ''; // Wyczyszczenie pola wyboru pliku
+        this.selectedFile = null;
+        this.toastr.error(`Plik jest zbyt duży. Wybierz plik mniejszy niż ${this.maxFileSize_MB}MB.`, 'Błąd')
+      } else {
+        this.selectedFile = selectedFile
+      }
+    }
+  }
+
+  addNewDocument() {
+    if (this.addFileForm.valid && this.selectedFile) {
+      const newTitle: string = this.addFileForm.get('name')?.value;
+      const newDocument: Leaf = {name: newTitle, file: this.selectedFile};
+      this.spinner.show()
+      this.documentsService.postUserDocuments(newDocument, this.id).subscribe({
+        next: data => {
+          this.documentsService.getUserDocuments(this.id)
+            .subscribe((result: Document[]) => {
+              this.documents = result
+              this.showAddDocumentForm = false
+              this.spinner.hide()
+            });
+        }, error: error => {
+          console.error(error);
+          this.spinner.hide()
+          this.toastr.error('Nie udało się dodać dokumentu', 'Błąd')
+        }
+      });
+    }
+  }
+
+  addNewList() {
+    if (this.addListForm.valid) {
+      const newTitle: string = this.addListForm.get('name')?.value;
+      const newLeaf: Leaf = {name: newTitle};
+      this.spinner.show()
+      this.documentsService.postUserDocuments(newLeaf, this.id).subscribe((res) => {
+        // this.updateDocumentsList()
+        this.documentsService.getUserDocuments(this.id)
+          .subscribe({
+            next: result => {
+              this.documents = result
+              this.showAddDocumentForm = false
+              this.showAddListForm = false
+              this.spinner.hide()
+            },
+            error: error => {
+              console.error(error);
+              this.spinner.hide()
+              this.toastr.error('Nie udało się dodać folderu', 'Błąd')
+            }
+          });
+      });
+    }
+  }
+
+  onItemAdded() {
+    this.documentsService.getUserDocuments(this.id)
+      .subscribe((result: Document[]) => {
+        this.documents = result
+      });
+  }
 }
 
 

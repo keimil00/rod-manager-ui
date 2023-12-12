@@ -10,6 +10,7 @@ export class DocumentsService {
 
   private baseUrl = '/api/manager-documents/';
   private rodDocUrl = '/api/rod-documents/';
+  private userDocUrl = '/api/user-documents/';
 
   constructor(private httpClient: HttpClient) {
   }
@@ -75,29 +76,86 @@ export class DocumentsService {
     return this.httpClient.get<RodDocument[]>(this.rodDocUrl);
   }
 
-  postRodDocuments(body:any): Observable<any> {
+  postRodDocuments(body: any): Observable<any> {
     const formData = new FormData();
 
     formData.append('name', body.name);
     formData.append('file', body.file);
-    return this.httpClient.post(this.rodDocUrl,formData);
+    return this.httpClient.post(this.rodDocUrl, formData);
   }
 
-  isMapAvailable(): Observable<boolean> {
-    return of(true)
+  getUserDocuments(userID: number): Observable<Document[]> {
+    const url = this.userDocUrl + 'by-user-id/' + userID + '/';
+    return this.httpClient.get<Document[]>(url);
   }
 
-  isStatuteAvailable(): Observable<boolean> {
-    return of(true)
+  putUserDocuments(leaf: Leaf, id: number, userID: number): Observable<any> {
+    const url = this.userDocUrl + 'by-document-id/' + id + '/';
+    if (leaf.file || leaf.file === null) {
+      const formData = new FormData();
+
+      if (leaf.file) {
+        formData.append('name', leaf.name);
+        formData.append('file', leaf.file);
+        formData.append('user', userID.toString());
+        if (leaf.parent) {
+          formData.append('parent', leaf.parent.toString());
+          return this.httpClient.put(url, formData);
+        }
+        return this.httpClient.put(url, formData);
+      } else {
+        if (leaf.parent) {
+          let body = {
+            name: leaf.name,
+            user: userID
+          }
+          return this.httpClient.put(url, body);
+        } else {
+          let body = {
+            name: leaf.name,
+            parent: leaf.parent,
+            user: userID
+          }
+          return this.httpClient.put(url, body);
+        }
+      }
+    } else {
+      let body = {
+        name: leaf.name,
+        parent: leaf.parent,
+        user: userID,
+        file: leaf.file,
+      }
+      return this.httpClient.put(url, body)
+    }
   }
 
+  postUserDocuments(leaf: Leaf, userID: number): Observable<any> {
+    if (leaf.file) {
+      const formData = new FormData();
 
-  isMapAvailable2(): Observable<boolean> {
-    return this.httpClient.get<boolean>(`${this.rodDocUrl}`);
+      formData.append('name', leaf.name);
+      formData.append('file', leaf.file);
+      formData.append('user', userID.toString());
+      if (leaf.parent) {
+        formData.append('parent', leaf.parent.toString());
+        return this.httpClient.post(this.userDocUrl, formData);
+      }
+
+      return this.httpClient.post(this.userDocUrl, formData);
+    } else {
+      let body = {
+        name: leaf.name,
+        parent: leaf.parent,
+        user: userID,
+        file: leaf.file,
+      }
+      return this.httpClient.post(this.userDocUrl, body)
+    }
   }
 
-  isStatuteAvailable2(): Observable<boolean> {
-    return this.httpClient.get<boolean>(`${this.rodDocUrl}`);
+  deleteUserDocument(id: number): Observable<any> {
+    return this.httpClient.delete(`${this.userDocUrl}by-document-id/${id}/`);
   }
 
 }
