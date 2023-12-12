@@ -61,12 +61,13 @@
               <table class="payment-table">
                 <tr>
                   <td>Kwota do zapłaty</td>
-                  <td>{{ leaseholder?.paymentAmount }}</td>
+                  <td *ngIf="leaseholder">{{((-1)* leaseholder.balance) + ' zł' }}</td>
+                  <td *ngIf="!leaseholder">{{ '' }}</td>
                 </tr>
-                <tr>
-                  <td>Termin płatności</td>
-                  <td>{{ leaseholder?.paymentDueDate | date:'dd.MM.yyyy'}}</td>
-                </tr>
+<!--                <tr>-->
+<!--                  <td>Termin płatności</td>-->
+<!--                  <td>{{ leaseholder?.paymentDueDate | date:'dd.MM.yyyy'}}</td>-->
+<!--                </tr>-->
               </table>
             </mat-card-content>
           </mat-card>
@@ -102,24 +103,26 @@
                     <mat-form-field class="full-width">
                       <mat-label>Kwota</mat-label>
                       <input matInput type="text" placeholder="Kwota" formControlName="value">
-                      <mat-hint>Wprowadź liczbę, np. -123.45</mat-hint>
+                      <mat-hint style="white-space: pre-line;">
+                        {{"Wprowadź liczbę, np. -123.45\nJeżeli podasz ujemną kwotę zostanie to potraktowane jako korekta"}}
+                      </mat-hint>
                       <mat-error *ngFor="let error of validationErrors('value')">
                         {{ error.message }}
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div class="row-item">
-                    <mat-form-field class="full-width">
-                      <mat-label>Data</mat-label>
-                      <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="date" required>
-                      <mat-hint>DD.MM.YYYY</mat-hint>
-                      <mat-error *ngFor="let error of validationErrors('date')">
-                        {{ error.message }}
-                      </mat-error>
-                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                      <mat-datepicker #picker></mat-datepicker>
-                    </mat-form-field>
-                  </div>
+<!--                  <div class="row-item">-->
+<!--                    <mat-form-field class="full-width">-->
+<!--                      <mat-label>Data</mat-label>-->
+<!--                      <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="date" required>-->
+<!--                      <mat-hint>DD.MM.YYYY</mat-hint>-->
+<!--                      <mat-error *ngFor="let error of validationErrors('date')">-->
+<!--                        {{ error.message }}-->
+<!--                      </mat-error>-->
+<!--                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>-->
+<!--                      <mat-datepicker #picker></mat-datepicker>-->
+<!--                    </mat-form-field>-->
+<!--                  </div>-->
                 </div>
                 <div class="center-button">
                   <app-text-button type="submit" class="add-button" [text]="'Dodaj płatność'" [color]="'accent'"

@@ -1,7 +1,7 @@
 
 export interface Payment {
   value: number;
-  date: Date
+  date?: Date
   [key: string]: any;
 }
 

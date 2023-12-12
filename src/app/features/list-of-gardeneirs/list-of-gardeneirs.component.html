@@ -33,7 +33,7 @@
 
         <ng-container matColumnDef="value">
           <th mat-header-cell *matHeaderCellDef>Zadłużenie</th>
-          <td mat-cell *matCellDef="let profile" class="red">{{ profile.paymentAmount+' zł'}}</td>
+          <td mat-cell *matCellDef="let profile" class="red">{{ (-1)*profile.balance+' zł'}}</td>
         </ng-container>
 
         <ng-container matColumnDef="info">

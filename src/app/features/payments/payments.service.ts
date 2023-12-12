@@ -424,6 +424,7 @@ export class PaymentsService {
   private readonly URIeditAdditionalfee = 'edit-additional-fee/';
   private readonly URIeditUtilityValues = 'edit-utility-values/';
   private readonly URIeditDate = 'edit-date/';
+  private readonly URIconfirmPayment = 'bill-payment/';
 
   constructor(private httpClient: HttpClient) {
   }
@@ -584,13 +585,18 @@ export class PaymentsService {
     return of(this.confirmpaymentLists.find((user) => user.idUser === user_id)?.userPaymentList || []);
   }
 
-  confirmPayment2(userId: number | undefined, payment: Payment): Observable<any> {
+  // powinno działać
+  confirmPayment(userId: number | undefined, payment: Payment): Observable<any> {
+    const body = {
+      user: userId,
+      amount: payment.value,
+    }
     //obizyc kwote do zaplaty
-    const url = `${this.URLpayments}${this.URIuserConfirm}${userId}/`;
-    return this.httpClient.patch<any>(url, payment);
+    const url = `${this.URLpayments}${this.URIconfirmPayment}`;
+    return this.httpClient.post<any>(url, body);
   }
 
-  confirmPayment(userId: number | undefined, payment: Payment): Observable<any> {
+  confirmPayment2(userId: number | undefined, payment: Payment): Observable<any> {
     //obizyc kwote do zaplaty
     return of(this.confirmpaymentLists.find((user) => user.idUser === userId)?.userPaymentList.push(payment));
   }

@@ -89,6 +89,7 @@ export class AddCounterDialogComponent {
     this.gardenPlotsDataService.getAllGardenPlots().subscribe({next: (gardenPlots: GardenPlot[]) => {
       this.gardenPlots = gardenPlots;
       this.matchingSectors()
+        this.spinner.hide()
     }, error: error => {
       console.error(error);
       this.spinner.hide()

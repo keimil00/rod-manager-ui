@@ -27,7 +27,6 @@ export class GardenPlotDetailsComponent {
   // @ts-ignore
   paymentHistory: Payment[];
 
-
   paymentForm: FormGroup;
 
   errorMessages = {
@@ -35,10 +34,10 @@ export class GardenPlotDetailsComponent {
       {type: 'required', message: 'Proszę podać kwote'},
       {type: 'pattern', message: 'Podaj odpowiednią kwote'}
     ],
-    date: [
-      {type: 'required', message: 'Proszę podać poprawną date'},
-      {type: 'notFuture', message: 'Nie można podać daty z przyszłości'},
-    ]
+    // date: [
+    //   {type: 'required', message: 'Proszę podać poprawną date'},
+    //   {type: 'notFuture', message: 'Nie można podać daty z przyszłości'},
+    // ]
   };
 
   constructor(
@@ -62,7 +61,7 @@ export class GardenPlotDetailsComponent {
         Validators.required,
         Validators.pattern(/^-?\d+(\.\d{1,2})?$/)
       ]],
-      date: ['', [Validators.required, this.pastDateValidator()]],
+      // date: ['', [Validators.required, this.pastDateValidator()]],
     });
   }
 
@@ -99,13 +98,17 @@ export class GardenPlotDetailsComponent {
   addNewPayment() {
     if (this.paymentForm.valid) {
       const newPaymentAmount: number = this.paymentForm.get('value')?.value;
-      const newPaymentDate: Date = this.paymentForm.get('date')?.value;
+      // const newPaymentDate: Date = this.paymentForm.get('date')?.value;
 
-      if (newPaymentAmount !== null && newPaymentDate !== null) {
-        const newPayment: Payment = {
-          value: newPaymentAmount,
-          date: newPaymentDate,
-        };
+      // if (newPaymentAmount !== null && newPaymentDate !== null) {
+      //   const newPayment: Payment = {
+      //     value: newPaymentAmount,
+      //     date: newPaymentDate,
+      //   };
+        if (newPaymentAmount !== null) {
+          const newPayment: Payment = {
+            value: newPaymentAmount,
+          };
 
         // this.addPaymentBackend(this.leaseholder?.id, newPayment)
 
