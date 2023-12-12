@@ -11,6 +11,7 @@ export class TextButtonComponent {
   @Input() color: ThemePalette;
   @Input() className: string = '';
   @Input() type: string = '';
+  @Input() disabled: boolean = false;
 
 
 }

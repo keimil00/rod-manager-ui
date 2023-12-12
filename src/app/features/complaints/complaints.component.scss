@@ -19,7 +19,7 @@
     position: fixed; /* Use 'absolute' if you want it to move with page scroll */
     top: 60px; /* Adjust this value as needed */
     left: 0; /* Adjust this value as needed */
-    height: 100%;
+    height: calc(100% - 60px);;
 
     padding: 5px;
     box-shadow: 1px 0 10px rgba(0, 0, 0, 0.3);
@@ -252,6 +252,7 @@ mat-sidenav-content {
 }
 
 .status-filter {
+  padding: 1rem;
   margin-left: auto;
   margin-right: auto;
   width: 100%;

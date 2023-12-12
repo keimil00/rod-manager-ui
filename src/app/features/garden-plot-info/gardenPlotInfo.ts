@@ -1,4 +1,4 @@
-import {IndividualPayment, TypeOfFee} from "../payments/payments";
+import {IndividualPayment, CalculationType} from "../payments/payments";
 import {MatTableDataSource} from "@angular/material/table";
 
 export interface GardenPlotInfo {
@@ -19,7 +19,7 @@ export interface GardenPlotInfo {
 
 export interface GardenPlotInfoFee {
   name: string;
-  type: TypeOfFee | null,
+  type: CalculationType | null,
   value: number | null,
   sum: number
 }

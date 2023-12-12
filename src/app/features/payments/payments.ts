@@ -1,35 +1,47 @@
 export interface Fee {
-    feeID: number
-    name: string;
-    type: TypeOfFee,
-    value: number
+  id: number;
+  name: string;
+  calculation_type: CalculationType;
+  value: number;
+  fee_type?: FeeType;
+  calculated_value?: number;
+  billing_period?: number;
 }
 
-export enum TypeOfFee {
-    PerMeter = "Za metr",
-    PerGardenPlot = "Za działke"
+export enum CalculationType {
+  PerMeter = "Za metr",
+  PerGardenPlot = "Za działke"
 }
+
+export enum FeeType {
+  Lease = 'Lease',
+  Utility = 'Utility',
+  Additional = 'Additional'
+}
+
 export interface UtilityValues {
-    electricValue: number,
-    waterValue: number
+  electricValue: number,
+  waterValue: number
 }
 
 export interface Payments {
-    leaseFees: Fee[];
-    utilityFees: Fee[];
-    additionalFees: Fee[];
-    date: Date;
-    utilityValues: UtilityValues;
+  lease_fees: Fee[];
+  utility_fees: Fee[];
+  additional_fees: Fee[];
+  payment_date: Date;
+  end_date: Date;
+  billing_period: number;
+  is_confirmed: boolean;
 }
 
 export interface IndividualPayment {
-    paymentID: number
-    name: string,
-    value: number,
-    date: Date
+  paymentID: number
+  name: string,
+  value: number,
+  date: Date
 }
 
 export interface IndividualPayments {
-    userID: number,
-    paymentsList?: IndividualPayment[]
+  userID: number,
+  paymentsList?: IndividualPayment[]
 }

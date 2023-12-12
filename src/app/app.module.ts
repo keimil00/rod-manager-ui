@@ -77,17 +77,7 @@ import {IndividualPaymentsComponent} from './features/payments/individual-paymen
 import {
   AddIndividualPaymentComponent
 } from './features/payments/individual-payments/add-individual-payment/add-individual-payment.component';
-import {EditingLeaseFeeComponent} from './features/payments/editing-lease-fee/editing-lease-fee.component';
-import {EditingUtilityFeeComponent} from './features/payments/editing-utility-fee/editing-utility-fee.component';
-import {
-  EditingAdditionalFeesComponent
-} from './features/payments/editing-additional-fees/editing-additional-fees.component';
-import {
-  AddAdditionalFeesComponent
-} from './features/payments/editing-additional-fees/add-additional-fees/add-additional-fees.component';
-import {
-  EditingSingleAdditionalFeeComponent
-} from './features/payments/editing-additional-fees/editing-single-additional-fee/editing-single-additional-fee.component';
+
 import {EditDateComponent} from './features/payments/edit-date/edit-date.component';
 
 import {MatSnackBarModule} from '@angular/material/snack-bar';
@@ -115,7 +105,6 @@ import {EventDetailsComponent} from './features/calendar/event-details/event-det
 import localePl from '@angular/common/locales/pl';
 import {registerLocaleData} from "@angular/common";
 import {LOCALE_ID} from '@angular/core';
-import {EditUtilityValuesComponent} from "./features/payments/edit-utility-values/edit-utility-values.component";
 
 import {
   EditDescriptionDialogComponent
@@ -139,6 +128,9 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {ComplaintDialogComponent} from './features/complaints/complaint-dialog/complaint-dialog.component';
 import {StateNamePipe} from './features/complaints/pipes/state-name.pipe';
 import { UserFolderListComponent } from './features/user-info/user-folder-list/user-folder-list.component';
+import { PeriodDialogComponent } from './features/payments/period-dialog/period-dialog.component';
+import {MatBadgeModule} from "@angular/material/badge";
+
 
 
 registerLocaleData(localePl);
@@ -178,11 +170,6 @@ registerLocaleData(localePl);
     PaymentsComponent,
     IndividualPaymentsComponent,
     AddIndividualPaymentComponent,
-    EditingLeaseFeeComponent,
-    EditingUtilityFeeComponent,
-    EditingAdditionalFeesComponent,
-    AddAdditionalFeesComponent,
-    EditingSingleAdditionalFeeComponent,
     EditDateComponent,
     GardenPlotInfoComponent,
     FooterAppComponent,
@@ -226,11 +213,6 @@ registerLocaleData(localePl);
     PaymentsComponent,
     IndividualPaymentsComponent,
     AddIndividualPaymentComponent,
-    EditingLeaseFeeComponent,
-    EditingUtilityFeeComponent,
-    EditingAdditionalFeesComponent,
-    AddAdditionalFeesComponent,
-    EditingSingleAdditionalFeeComponent,
     EditDateComponent,
     GardenPlotInfoComponent,
     FooterAppComponent,
@@ -241,7 +223,6 @@ registerLocaleData(localePl);
     OfferDetailsComponent,
     CalendarComponent,
     EventDetailsComponent,
-    EditUtilityValuesComponent,
     EditDescriptionDialogComponent,
     ListOfGardeneirsComponent,
     VotedVotingsComponent,
@@ -249,35 +230,39 @@ registerLocaleData(localePl);
     ForgetPasswordComponent,
     ResetPasswordComponent,
     PhoneNumberAreaCodePipe,
-    EditUtilityValuesComponent,
     ComplaintsComponent,
     ComplaintDialogComponent,
     StateNamePipe,
-    UserFolderListComponent
+    UserFolderListComponent,
+    ComplaintsComponent,
+    ComplaintDialogComponent,
+    StateNamePipe,
+    PeriodDialogComponent
+
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatMenuModule,
-    MatCardModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatSelectModule,
-    MatDividerModule,
-    SocialLoginModule,
-    GoogleSigninButtonModule,
-    MatIconModule,
-    MatGridListModule,
-    MatExpansionModule,
-    FormsModule,
-    MatTableModule,
-    MatSortModule,
-    MatDatepickerModule,
-    MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule, MatCheckboxModule,
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        BrowserAnimationsModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatMenuModule,
+        MatCardModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        MatSelectModule,
+        MatDividerModule,
+        SocialLoginModule,
+        GoogleSigninButtonModule,
+        MatIconModule,
+        MatGridListModule,
+        MatExpansionModule,
+        FormsModule,
+        MatTableModule,
+        MatSortModule,
+        MatDatepickerModule,
+        MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule, MatCheckboxModule,
 
     GoogleSigninButtonModule,
     MatChipsModule,
@@ -299,10 +284,19 @@ registerLocaleData(localePl);
     NgxSpinnerModule,
     MatProgressSpinnerModule,
 
+
     ToastrModule.forRoot({
       positionClass: 'toast-top-center',
       preventDuplicates: true,
-    }), MatListModule, MatSidenavModule,],
+    }), MatListModule, MatSidenavModule,
+        MatSliderModule,
+        CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
+        NgxSpinnerModule,
+        MatProgressSpinnerModule,
+        ToastrModule.forRoot({
+            positionClass: 'toast-top-center',
+            preventDuplicates: true,
+        }), MatListModule, MatSidenavModule, MatBadgeModule,],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'pl-PL'},
     {
