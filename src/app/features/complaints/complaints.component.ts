@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {ComplaintsService} from "./complaints.service";
-import {BehaviorSubject, interval, map, Observable, switchMap, tap} from "rxjs";
+import {BehaviorSubject, finalize, interval, map, Observable, switchMap, tap} from "rxjs";
 import {ComplaintInfo, ComplaintWithMessages} from "./complaint.model";
 import {ToastrService} from "ngx-toastr";
 import {FormControl} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {ComplaintDialogComponent} from "./complaint-dialog/complaint-dialog.component";
 import {MatSelectChange} from "@angular/material/select";
+import {Role} from "../register/user.model";
 
 @Component({
   selector: 'app-complaints',
@@ -23,7 +24,15 @@ export class ComplaintsComponent implements OnInit {
   stateFilter = '';
 
   constructor(private complaintsService: ComplaintsService, private toastr: ToastrService, public dialog: MatDialog) {
-    this.complaints$ = this.complaintsService.fetchComplaints().pipe(map(page => page.results));
+    this.complaints$ = this.complaintsService.fetchComplaints()
+        .pipe(
+            map(page => {
+              if (page.results.length > 0) {
+                this.selectComplaint(page.results[0].id);
+              }
+              return page.results
+            })
+        );
   }
 
   ngOnInit(): void {
@@ -122,4 +131,6 @@ export class ComplaintsComponent implements OnInit {
       this.refresh();
     });
   }
+
+    protected readonly Role = Role;
 }

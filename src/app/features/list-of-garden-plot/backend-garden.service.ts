@@ -599,11 +599,6 @@ export class BackendGardenService {
   getAllGardenPlots(): Observable<GardenPlot[]> {
     return of(this.gardenPlots);
   }
-  //TODO to endpoint
-  // getAllGardenPlots(): Observable<GardenPlot[]> {
-  //   const params = new HttpParams()
-  //   return this.httpClient.get<GardenPlot[]>('https://localhost:1337/api/all-gardens');
-  // }
 
 
   updateLeaseholderID(targetID: number | null | undefined, newLeaseholderID: number | null):Observable<any> {

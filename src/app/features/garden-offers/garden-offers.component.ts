@@ -4,6 +4,7 @@ import {Filters, GardenOffer, GardenOfferCreate, GardenOfferExternal, MinMax} fr
 import {GardenOffersService} from "./garden-offers.service";
 import {map, Observable} from "rxjs";
 import {MatSelectChange} from "@angular/material/select";
+import {Role} from "../register/user.model";
 
 @Component({
   selector: 'app-garden-offers',
@@ -120,4 +121,6 @@ export class GardenOffersComponent {
         })
       )
   }
+
+    protected readonly Role = Role;
 }

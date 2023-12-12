@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {PlotStatus} from "../list-of-garden-plot/garden-plot";
 import {GardenPlotInfo, GardenPlotInfoFee, IndividualPaymentGardenPlot, MediaIndividualFee} from "./gardenPlotInfo";
 import {MatTableDataSource} from "@angular/material/table";
-import {Fee, IndividualPayment, TypeOfFee} from "../payments/payments";
+import {Fee, IndividualPayment, CalculationType} from "../payments/payments";
 import {Observable, of} from "rxjs";
 
 @Injectable({
@@ -14,19 +14,19 @@ export class GardenPlotInfoService {
   private leaseFees: GardenPlotInfoFee[] = [
     {
       name: 'PZD',
-      type: TypeOfFee.PerMeter,
+      type: CalculationType.PerMeter,
       value: 0.12,
       sum: 200,
     },
     {
       name: 'Opłata ogrodowa',
-      type: TypeOfFee.PerMeter,
+      type: CalculationType.PerMeter,
       value: 0.61,
       sum: 200,
     },
     {
       name: 'Opłata Inwestycyjna',
-      type: TypeOfFee.PerMeter,
+      type: CalculationType.PerMeter,
       value: 0.5,
       sum: 200,
     },
@@ -40,13 +40,13 @@ export class GardenPlotInfoService {
   private utilityFees: GardenPlotInfoFee[] = [
     {
       name: 'Prąd',
-      type: TypeOfFee.PerMeter,
+      type: CalculationType.PerMeter,
       value: 0.12,
       sum: 200,
     },
     {
       name: 'Woda',
-      type: TypeOfFee.PerMeter,
+      type: CalculationType.PerMeter,
       value: 0.61,
       sum: 200,
     },
@@ -60,13 +60,13 @@ export class GardenPlotInfoService {
   private additionalFees: GardenPlotInfoFee[] = [
     {
       name: 'Koszenie trawy',
-      type: TypeOfFee.PerGardenPlot,
+      type: CalculationType.PerGardenPlot,
       value: 70,
       sum: 200,
     },
     {
       name: 'Grabienie liści',
-      type: TypeOfFee.PerGardenPlot,
+      type: CalculationType.PerGardenPlot,
       value: 40,
       sum: 200,
     },

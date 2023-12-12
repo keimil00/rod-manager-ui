@@ -18,7 +18,7 @@
     </button>
   </div>
   <ng-template #loading>
-    <mat-spinner></mat-spinner>
+    <ngx-spinner bdColor = "rgba(0, 0, 0, 0.3)" size = "large" color = "#009688" type = "square-jelly-box" [fullScreen] = "true"><p style="color: white" > Ładowanie </p></ngx-spinner>
   </ng-template>
   <div *ngIf="events$ | async; else loading; let events">
     <mwl-calendar-month-view

@@ -38,7 +38,7 @@
       ></app-paginator>
     </div>
   </div>
-  <button mat-fab color="primary" class="floating-button" (click)="createPost()" [disabled]="isCreatingPost">
+  <button mat-fab *appHasRole="[Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]" color="primary" class="floating-button" (click)="createPost()" [disabled]="isCreatingPost">
     <mat-icon>add</mat-icon>
   </button>
 </div>

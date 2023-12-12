@@ -1,8 +1,8 @@
 <mat-dialog-content>
-    <h1 mat-dialog-title class="title">Zmień datę</h1>
+    <h1 mat-dialog-title class="title">Ustaw termin płatności</h1>
     <div mat-dialog-content>
-        <mat-form-field class="full-width">
-            <input matInput [matDatepicker]="picker" placeholder="Wybierz datę" [(ngModel)]="selectedDate">
+        <mat-form-field>
+            <input matInput [matDatepicker]="picker" placeholder="Wybierz datę" [(ngModel)]="selectedDate" [min]="minDate">
             <mat-hint>DD/MM/YYYY</mat-hint>
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>

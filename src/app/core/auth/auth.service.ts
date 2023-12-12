@@ -48,17 +48,7 @@ export class AuthService {
     this.storageService.clearTokens();
     this.storageService.clearRoles();
     this.storageService.setLoggedIn(false);
-    // this.httpClient.post<any>(API_ENDPOINTS.mixed.logout, {}).subscribe(
-    //   {
-    //     next: data => {
-    //       this.router.navigate(['login']);
-    //     },
-    //     error: error => {
-    //       console.error(error);
-    //       this.router.navigate(['login']);
-    //     }
-    //   }
-    // );
+    this.router.navigate(['/login']);
   }
 
 }

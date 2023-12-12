@@ -45,23 +45,19 @@ export class LoginComponent implements OnInit{
 
   ngOnInit(): void {
     this.socialAuthService.authState.subscribe((user: SocialUser) => {
-      console.log('Login User: ' + JSON.stringify(user));
       this.authService.loginGoogle(user.idToken).pipe().subscribe({
         next: data => {
-          console.log(data);
           this.storageService.setTokens(data.access, data.refresh);
           this.router.navigate(['home'])
         },
         error: error => {
-          console.error(error);
+          this.toastr.error('Ups, nie udało się zalogowoać', 'Error');
         }
       });
     });
   }
 
   login(): void {
-    console.log('Login');
-    console.log(this.loginForm.value);
     let user = new LoginUser();
     user.email = this.loginForm.get('email')?.value;
     user.password = this.loginForm.get('password')?.value;

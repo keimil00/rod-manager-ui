@@ -6,6 +6,7 @@ import {Post, Tag} from "./post/post.model";
 import {PostDataService} from "./post-data.service";
 import {PaginatorComponent} from "../../shared/paginator/paginator/paginator.component";
 import {ToastrService} from "ngx-toastr";
+import {Role} from "../register/user.model";
 
 @Component({
   selector: 'app-home',
@@ -128,4 +129,5 @@ export class HomeComponent {
     this.isCreatingPost = false;
   }
 
+    protected readonly Role = Role;
 }
