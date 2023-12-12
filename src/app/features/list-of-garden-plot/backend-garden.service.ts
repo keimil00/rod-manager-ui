@@ -438,10 +438,18 @@ export class BackendGardenService {
               let status: PlotStatus | string
               if (garden.status === 'dostepna') {
                 status = PlotStatus.Available
-              }
-              else if (garden.status === 'niedostepna') {
+              } else if (garden.status === 'niedostepna') {
                 status = PlotStatus.Unavailable
               } else status = garden.status
+
+              let leaseholder: string | null
+
+              if(garden.leaseholderID === null){
+                leaseholder = null
+              }
+              else {
+                leaseholder = garden.leaseholderID.first_name + ' ' + garden.leaseholderID.last_name
+              }
 
               const gardenPlot: GardenPlotWithLeaseholder = {
                 gardenPlotID: garden.id,
@@ -449,7 +457,7 @@ export class BackendGardenService {
                 avenue: garden.avenue,
                 number: garden.number,
                 area: garden.area,
-                leaseholder: garden.leaseholderID?.first_name + ' ' + garden.leaseholderID?.last_name,
+                leaseholder: leaseholder,
                 // @ts-ignore
                 gardenStatus: status,
                 leaseholderID: leaseholderID,
@@ -484,11 +492,9 @@ export class BackendGardenService {
               let status: PlotStatus | string
               if (garden.status === 'dostepna') {
                 status = PlotStatus.Available
-              }
-              else if (garden.status === 'niedostepna') {
+              } else if (garden.status === 'niedostepna') {
                 status = PlotStatus.Unavailable
-              }
-              else status = garden.status
+              } else status = garden.status
 
               const gardenPlot: GardenPlot = {
                 gardenPlotID: garden.id,
@@ -509,9 +515,33 @@ export class BackendGardenService {
     )
   }
 
-  editGarden(gardenId: number | undefined, newGarden: any): Observable<any> {
+  editGarden(gardenId: number, newGarden: any): Observable<any> {
+
+    let leasloderID: number | string
+    if(newGarden.leaseholderID === null){
+      leasloderID = 'None'
+    }
+    else {leasloderID = newGarden.leaseholderID}
+
+    let newGarden2: {
+      area: number;
+      gardenStatus: PlotStatus;
+      number: number;
+      avenue: string;
+      id: number;
+      leaseholderID: number | string;
+      sector: string;
+    } = {
+      id: gardenId,
+      sector: newGarden.sector,
+      avenue: newGarden.avenue,
+      number: newGarden.number,
+      area: newGarden.area,
+      leaseholderID: leasloderID,
+      gardenStatus: newGarden.gardenStatus
+    }
     const url = `${this.gardensURL}`;
-    return this.httpClient.patch<any>(url, newGarden);
+    return this.httpClient.patch<any>(url, newGarden2);
   }
 
   addGarden(newGarden: GardenPlot): Observable<any> {
@@ -521,9 +551,17 @@ export class BackendGardenService {
 
   editLeaseholder(gardenId: number | undefined, newLeaseholderID: number | null): Observable<any> {
     const url = `${this.gardensURL}`;
-    const body = {
-      id: gardenId,
-      leaseholderID: newLeaseholderID
+    let body: any
+    if (newLeaseholderID !== null) {
+      body = {
+        id: gardenId,
+        leaseholderID: newLeaseholderID
+      }
+    } else {
+      body = {
+        id: gardenId,
+        leaseholderID: 'None'
+      }
     }
     return this.httpClient.patch<any>(url, body);
   }
