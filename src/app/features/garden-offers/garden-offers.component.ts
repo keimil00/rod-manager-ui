@@ -5,6 +5,8 @@ import {GardenOffersService} from "./garden-offers.service";
 import {map, Observable} from "rxjs";
 import {MatSelectChange} from "@angular/material/select";
 import {Role} from "../register/user.model";
+import {MatTableDataSource} from "@angular/material/table";
+import {GardenPlotWithLeaseholder} from "../list-of-garden-plot/garden-plot";
 
 @Component({
   selector: 'app-garden-offers',
@@ -83,6 +85,7 @@ export class GardenOffersComponent {
     this.gardenOffersService.createGardenOffer(offer)
       .subscribe({
         next: data => {
+          this.updateData();
         },
         error: error => {
           console.error(error);
@@ -110,6 +113,9 @@ export class GardenOffersComponent {
         this.filters.sort_order = 'desc';
         break;
     }
+  }
+  updateData() {
+    this.fetchData(this.currentPageIndex, this.currentPageSize);
   }
 
   fetchWithFilters() {

@@ -48,7 +48,7 @@ mat-label {
 }
 
 mat-slider {
-  width: 300px;
+  min-width: 300px;
 }
 
 .search-field {
@@ -88,3 +88,37 @@ mat-slider {
   letter-spacing: 1px;
 }
 
+@media only screen and (max-width: 400px) {
+  mat-slider {
+    min-width: 25px;
+  }
+}
+
+@media only screen and (min-width: 400px) and (max-width: 600px) {
+  mat-slider {
+    min-width: 50px;
+  }
+}
+
+@media only screen and (min-width: 600px) and (max-width: 800px) {
+  mat-slider {
+    min-width: 75px;
+  }
+}
+
+@media only screen and (min-width: 800px) and (max-width: 1100px) {
+  mat-slider {
+    min-width: 150px;
+  }
+}
+
+@media only screen and (min-width: 1100px) and (max-width: 1300px) {
+  mat-slider {
+    min-width: 200px;
+  }
+}
+@media only screen and (min-width: 1300px) and (max-width: 1500px) {
+  mat-slider {
+    min-width: 250px;
+  }
+}

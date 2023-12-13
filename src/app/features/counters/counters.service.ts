@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
-import {Counter, CounterType} from "./counter";
-import {forkJoin, mergeMap, Observable, of} from "rxjs";
+import {Counter, CounterExternal, CounterType} from "./counter";
+import {forkJoin, map, mergeMap, Observable, of} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {Page} from "../../shared/paginator/page.model";
+import {GardenPlotExternal, GardenPlotWithLeaseholder, PlotStatus} from "../list-of-garden-plot/garden-plot";
 
 @Injectable({
   providedIn: 'root'
@@ -184,7 +185,7 @@ export class CountersService {
   constructor(private httpClient: HttpClient) {
   }
 
-  private readonly countersUrl = 'api/meters/';
+  private readonly countersUrl = 'api/meters/meters/';
 
   getElectricCounters(index: number, size: number): Observable<Page<Counter>> {
     const CountersOnPage = this.countersElectric.slice((index - 1) * size, (index - 1) * size + size);
@@ -195,8 +196,28 @@ export class CountersService {
   }
 
   getElectricCounters2(index: number, size: number): Observable<Page<Counter>> {
-    const url = `${this.countersUrl}?page=${index}&page_size=${size}`;
-    return this.httpClient.get<Page<Counter>>(url)
+    const url = `${this.countersUrl}?page=${index}&page_size=${size}&type=${CounterType.Electric}`;
+    return this.httpClient.get<Page<CounterExternal>>(url).pipe(
+      map((page: Page<CounterExternal>) => {
+          const newPage: Page<Counter> = {
+            results: page.results.map((counter: CounterExternal) => {
+
+              const counter1: Counter = {
+                id: 1,
+                name: counter.serial,
+                addressC: counter.adress,
+                measurement: counter.measurement,
+                type: CounterType.Electric,
+                gardenPlotID: counter.garden.gardenPlotID,
+              }
+              return counter1;
+            }),
+            count: page.count
+          };
+          return newPage;
+        }
+      )
+    )
   }
 
   getWaterCounters(index: number, size: number): Observable<Page<Counter>> {
@@ -208,8 +229,28 @@ export class CountersService {
   }
 
   getWaterCounters2(index: number, size: number): Observable<Page<Counter>> {
-    const url = `${this.countersUrl}?page=${index}&page_size=${size}`;
-    return this.httpClient.get<Page<Counter>>(url)
+    const url = `${this.countersUrl}?page=${index}&page_size=${size}&type=${CounterType.Water}}`;
+    return this.httpClient.get<Page<CounterExternal>>(url).pipe(
+      map((page: Page<CounterExternal>) => {
+          const newPage: Page<Counter> = {
+            results: page.results.map((counter: CounterExternal) => {
+
+              const counter1: Counter = {
+                id: 1,
+                name: counter.serial,
+                addressC: counter.adress,
+                measurement: counter.measurement,
+                type: CounterType.Water,
+                gardenPlotID: counter.garden.gardenPlotID,
+              }
+              return counter1;
+            }),
+            count: page.count
+          };
+          return newPage;
+        }
+      )
+    )
   }
 
   getAllCounters(): Observable<Counter[]> {
