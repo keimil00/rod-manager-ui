@@ -26,7 +26,12 @@ export class TopAppBarComponent {
     isInMyGardenPlotInfoComponent: boolean = false;
     isInGardenOffers: boolean = false;
     isBigFont: boolean = false;
-    notifications$: Observable<any>;
+    notifications: { new_complaints: number, new_messages: number, periods_to_confirm: number } = {
+        new_complaints: 0,
+        new_messages: 0,
+        periods_to_confirm: 0
+    };
+    private intervalRef: any = null;
 
     @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
 
@@ -57,12 +62,39 @@ export class TopAppBarComponent {
         this.breakpointObserver.observe('(max-width: 1000px)').subscribe(result => {
             this.isWideScreen = result.matches;
         });
-        this.notifications$ = this.topAppBarService.fetchNotifications()
-            .pipe(tap(value => {
-                if (value.payments) {
-                    this.toastr.info('Opłaty wymagają zatwierdzenia!', 'Okres rozliczeniowy dobiegł końca!')
+        this.topAppBarService.startInterval.subscribe({
+            next: value => {
+                if (value) {
+                    this.intervalRef = setInterval(() => {
+                        this.topAppBarService.fetchNotifications().subscribe({
+                            next: value => {
+                                this.notifications = value;
+                            },
+                            complete: () => {
+                                if (this.notifications.periods_to_confirm > 0) {
+                                    this.toastr.info('Opłaty wymagają zatwierdzenia!', 'Okres rozliczeniowy dobiegł końca!')
+                                }
+                            }
+                        })
+                    }, 20000);
+                } else {
+                    if (this.intervalRef) {
+                        clearInterval(this.intervalRef);
+                        this.intervalRef = null;
+                    }
                 }
-            }));
+            }
+        })
+        this.topAppBarService.fetchNotificationsSubject.subscribe({
+            next: value => {
+                this.topAppBarService.fetchNotifications().subscribe({
+                    next: value => {
+                        this.notifications = value;
+                    }
+                });
+            }
+        })
+
     }
 
     isWideScreen = false;

@@ -16,11 +16,13 @@ export class PeriodDialogComponent {
   constructor(private paymentsService: PaymentsService,
               public dialogRef: MatDialogRef<PeriodDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: Period) {
-    if (this.data?.end_date) {
+    if (this.data.end_date) {
       // @ts-ignore
-      this.startDate.setValue(this.data.end_date);
+      console.log(JSON.stringify(this.data));
+      // @ts-ignore
+      this.startDate.setValue(new Date(this.data.end_date));
       const end_date = new Date();
-      end_date.setFullYear(this.data.end_date.getFullYear() + 1);
+      end_date.setFullYear(new Date(this.data.end_date).getFullYear() + 1);
       // @ts-ignore
       this.startDate.setValue(end_date);
     } else {
@@ -30,7 +32,6 @@ export class PeriodDialogComponent {
 
   saveNewPeriod() {
     if (this.startDate.value && this.endDate.value) {
-      console.log('Hello');
       this.paymentsService.createBillingPeriod(this.startDate.value, this.endDate.value).subscribe(
         {
           next: value => {

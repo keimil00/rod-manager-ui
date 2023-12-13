@@ -16,6 +16,7 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {Period} from "./payments.model";
 import {PeriodDialogComponent} from "./period-dialog/period-dialog.component";
 import {ToastrService} from "ngx-toastr";
+import {TopAppBarService} from "../../core/top-app-bar/top-app-bar.service";
 
 // TODO sprawdzic czy jest obslugiwany error
 
@@ -60,7 +61,8 @@ export class PaymentsComponent {
                 private gardenPlotsDataService: BackendGardenService,
                 private _snackBar: MatSnackBar,
                 private spinner: NgxSpinnerService,
-                private toastr: ToastrService) {
+                private toastr: ToastrService,
+                private topAppBarService: TopAppBarService) {
         this.spinner.show()
         this.individualPaymentsForm = this.formBuilder.group({
             sector: ['', [
@@ -223,7 +225,8 @@ export class PaymentsComponent {
 
     addPayments() {
         this.paymentsService.confirmALLPayments().subscribe(result => {
-            this.showSuccessMessage()
+            this.showSuccessMessage();
+            this.topAppBarService.fetchNotificationsSubject.next(true);
         })
     }
 

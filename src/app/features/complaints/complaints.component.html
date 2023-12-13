@@ -13,7 +13,7 @@
       <app-text-button (click)="openCreateComplaintDialog()" [text]="'Złóż skargę'" color="accent"></app-text-button>
     </div>
     <mat-nav-list>
-      <a mat-list-item *ngFor="let complaint of complaints$ | async" class="chat-item" (click)="selectComplaint(complaint.id)">
+      <a mat-list-item *ngFor="let complaint of complaints" class="chat-item" (click)="selectComplaint(complaint.id)">
         <span class="title">{{complaint.title}}</span>
         <div [ngClass]="getStatusClass(complaint.state)" class="status-chip status-active">
           {{complaint.state | stateName}}
