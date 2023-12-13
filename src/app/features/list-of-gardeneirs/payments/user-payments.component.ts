@@ -1,10 +1,18 @@
-import {Component, Inject} from '@angular/core';
-import {Payment} from "../../list-of-garden-plot/garden-plot-details/PaymentList";
+import {Component, Inject, ViewChild} from '@angular/core';
+import {
+  Payment,
+  PaymentType,
+  UserPayment,
+  UserPaymentUpload
+} from "../../list-of-garden-plot/garden-plot-details/PaymentList";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {PaymentsService} from "../../payments/payments.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {NgxSpinnerService} from "ngx-spinner";
 import {ToastrService} from "ngx-toastr";
+import {
+  GardenPlotDetailsPaymentHistoryComponent
+} from "../../list-of-garden-plot/garden-plot-details/garden-plot-details-payment-history/garden-plot-details-payment-history.component";
 
 @Component({
   selector: 'app-payments',
@@ -12,26 +20,39 @@ import {ToastrService} from "ngx-toastr";
   styleUrls: ['./user-payments.component.scss']
 })
 export class UserPaymentsComponent {
-  profileID: number | undefined;
+  profileID: number;
+  @ViewChild('app-garden-plot-details-payment-history')
+  history: GardenPlotDetailsPaymentHistoryComponent | undefined;
 
-  showPaymentHistory = false;
+  showPaymentHistory = true;
   showNewPaymentForm = false;
 
-  // @ts-ignore
-  paymentHistory: Payment[];
   // @ts-ignore
   paymentForm: FormGroup;
 
   errorMessages = {
-    value: [
+    amount: [
       {type: 'required', message: 'Proszę podać kwote'},
-      {type: 'pattern', message: 'Podaj odpowiednią kwote'}
+      {type: 'pattern', message: 'Kwota nie może być ujemna'}
     ],
-    // date: [
-    //   {type: 'required', message: 'Proszę podać poprawną date'},
-    //   {type: 'notFuture', message: 'Nie można podać daty z przyszłości'},
-    // ]
+    description: [
+      {type: 'required', message: 'Proszę podać kwote'}
+    ],
+    date: [
+      {type: 'required', message: 'Proszę podać poprawną date'},
+      {type: 'notFuture', message: 'Nie można podać daty z przyszłości'},
+    ]
   };
+
+  yourEnumOptions = [
+    {value: PaymentType.BillPayment, label: 'Wpłata użytkownika'},
+    {value: PaymentType.Correction, label: 'Korekta'},
+    {value: PaymentType.Individual, label: 'Opłata indywidualna'},
+    // Add more options as per your enum
+  ];
+
+  minDate: Date = new Date();
+
 
   spinerMassage = "Ładowanie Płatności"
 
@@ -45,87 +66,67 @@ export class UserPaymentsComponent {
       profileID: number;
     }
   ) {
-    this.spinner.show()
+    // this.spinner.show()
     this.profileID = data.profileID;
+    this.paymentForm = formBuilder.group({
+      amount: ['', [
+        Validators.required,
+        Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)
+      ]],
+      type: ['', [
+        Validators.required
+      ]],
+      date: ['', [
+        Validators.required
+      ]],
+      description: ['', [
+        Validators.required
+      ]],
+    });
   }
 
   closeEditingPayments() {
     this.dialogRef.close();
   }
 
-  ngOnInit(): void {
-    this.initData()
-  }
-
-  initData() {
-    this.paymentsService.getConfirmPayments(this.profileID).subscribe({
-      next: (payments: Payment[]) => {
-        this.paymentHistory = payments;
-        this.generateForm()
-        if (this.paymentHistory.length > 0) {
-          this.spinner.hide();
-          this.showPaymentHistory = true
-        }
-      }, error: err => {
-        this.spinner.hide()
-        this.toastr.error("Nie udało się załadować płatności", 'Błąd');
-      }
-    });
-  }
-
-  generateForm() {
-    this.paymentForm = this.formBuilder.group({
-      value: [0, [
-        Validators.required,
-        Validators.pattern(/^-?\d+(\.\d{1,2})?$/)
-      ]],
-      // date: ['', [Validators.required, this.pastDateValidator()]],
-    });
-  }
-
   updatePaymentHistory() {
-    this.paymentsService.getConfirmPayments(this.profileID).subscribe({
-      next: (payments: Payment[]) => {
-        this.paymentHistory = payments;
-        this.paymentForm.reset();
-        this.spinner.hide()
-        this.showNewPaymentForm = false;
-      }, error: err => {
-        this.spinner.hide()
-        this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
-      }
-    });
-  }
-
-  getUserPaymentList(): Payment[] {
-    return this.paymentHistory
+    this.history?.refresh();
+    this.showPaymentHistory = true;
+    this.showNewPaymentForm = false;
   }
 
   addNewPayment() {
     if (this.paymentForm.valid) {
-      const newPaymentAmount: number = this.paymentForm.get('value')?.value;
-      // const newPaymentDate: Date = this.paymentForm.get('date')?.value;
+      console.log(this.paymentForm.get('date')?.value);
+      const payment: UserPaymentUpload = {
+        user: this.profileID,
+        type: this.paymentForm.get('type')?.value,
+        date: this.formatDateToYYYYMMDD(this.paymentForm.get('date')?.value),
+        amount: this.paymentForm.get('amount')?.value,
+        description: this.paymentForm.get('description')?.value
+      }
 
-      if (newPaymentAmount !== null) {
-        const newPayment: Payment = {
-          value: newPaymentAmount,
-        };
-
-        this.spinerMassage = "Aktualizowanie stanu zadłużenia"
-        this.spinner.show()
-        this.paymentsService.confirmPayment(this.profileID, newPayment).subscribe(
+      this.paymentsService.confirmPayment(payment).subscribe(
           (response) => {
-            console.log('Payment added successfully:', response);
             this.updatePaymentHistory()
           },
           (error) => {
-            console.error('Error while adding payment:', error);
-            this.spinner.hide()
             this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
           }
-        );
-      }
+      );
     }
+  }
+
+  formatDateToYYYYMMDD(date: Date) {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // getMonth() returns 0-11
+    const day = date.getDate();
+
+    // Pad the month and day with leading zeros if necessary
+    const formattedMonth = month < 10 ? `0${month}` : month;
+    const formattedDay = day < 10 ? `0${day}` : day;
+
+    return `${year}-${formattedMonth}-${formattedDay}`;
   }
 
   validationErrors(controlName: string): any[] {

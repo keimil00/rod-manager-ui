@@ -47,7 +47,7 @@ export class ListOfGardeneirsComponent {
 
   loadProfiles(index: number, size: number): void {
     this.spinner.show()
-    this.listOfUsersService.getALLGardeiners(index, size).subscribe({
+    this.listOfUsersService.getALLGardeinersWithDebt(index, size).subscribe({
       next: (page: Page<Profile>) => {
         this.totalGardeneirsCount = page.count;
         this.dataProfiles = new MatTableDataSource<Profile>(page.results);

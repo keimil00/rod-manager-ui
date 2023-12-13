@@ -200,7 +200,8 @@
                             </table>
                         </ng-template>
                     </mat-card-content>
-                    <button *ngIf="isEditModeUtilityFee; else editUtilityFee" mat-fab color="primary" aria-label="Edytuj"
+                    <button *ngIf="isEditModeUtilityFee; else editUtilityFee" mat-fab color="primary"
+                            aria-label="Edytuj"
                             class="editButton"
                             (click)="saveUtilityFee()">
                         <mat-icon>check</mat-icon>
@@ -295,7 +296,8 @@
                             </table>
                         </ng-template>
                     </mat-card-content>
-                    <button *ngIf="isEditModeUtilityFee; else editUtilityFee" mat-fab color="primary" aria-label="Edytuj"
+                    <button *ngIf="isEditModeUtilityFee; else editUtilityFee" mat-fab color="primary"
+                            aria-label="Edytuj"
                             class="editButton"
                             (click)="saveAdditionalFee()">
                         <mat-icon>check</mat-icon>
@@ -331,71 +333,6 @@
                         wyżej wymienionymi danymi oraz na podstawie aktualnych stanów liczników, operacji nie można
                         cofnąć
                     </mat-label>
-                </mat-card>
-                <mat-card class="individual-payments-card">
-                    <mat-card-header>
-                        <div class="center-item">
-                            <h2 class="small-title">Działka</h2>
-                            <hr class="separator">
-                        </div>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <form class [formGroup]="individualPaymentsForm">
-                            <div>
-                                <div class="row-item">
-                                    <mat-form-field class="full-width">
-                                        <mat-label>Sektor</mat-label>
-                                        <ng-container>
-                                            <mat-select formControlName="sector">
-                                                <mat-option *ngFor="let option of sectorsOptions" [value]="option">
-                                                    {{ option}}
-                                                </mat-option>
-                                            </mat-select>
-                                        </ng-container>
-                                        <mat-error *ngFor="let error of validationErrors('sector')">
-                                            {{ error.message }}
-                                        </mat-error>
-                                    </mat-form-field>
-                                </div>
-                                <div class="row-item">
-                                    <mat-form-field class="full-width">
-                                        <mat-label>Aleja</mat-label>
-                                        <ng-container>
-                                            <mat-select formControlName="avenue">
-                                                <mat-option *ngFor="let option of avenuesOptions" [value]="option">
-                                                    {{ option}}
-                                                </mat-option>
-                                            </mat-select>
-                                        </ng-container>
-                                        <mat-error *ngFor="let error of validationErrors('avenue')">
-                                            {{ error.message }}
-                                        </mat-error>
-                                    </mat-form-field>
-                                </div>
-                                <div class="row-item">
-                                    <mat-form-field class="full-width">
-                                        <mat-label>Numer</mat-label>
-                                        <ng-container>
-                                            <mat-select formControlName="number">
-                                                <mat-option *ngFor="let option of numbersOptions" [value]="option">
-                                                    {{ option}}
-                                                </mat-option>
-                                            </mat-select>
-                                        </ng-container>
-                                        <mat-error *ngFor="let error of validationErrors('number')">
-                                            {{ error.message }}
-                                        </mat-error>
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="center-button">
-                                <button mat-raised-button class="individual-payments-button" type="submit"
-                                        color="primary" (click)="selectShowIndividualPayments()">Zobacz indywidualne
-                                    opłaty
-                                </button>
-                            </div>
-                        </form>
-                    </mat-card-content>
                 </mat-card>
             </div>
         </mat-card-content>

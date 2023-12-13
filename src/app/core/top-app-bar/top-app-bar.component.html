@@ -37,7 +37,7 @@
     <div *ngIf="isLoggedIn()">
       <div *appHasRole="[Role.GARDENER, Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]">
         <span>/</span>
-        <button mat-button [matBadge]="(notifications$ | async).complaints" matBadgeOverlap="true"
+        <button mat-button [matBadge]="notifications.new_complaints" matBadgeOverlap="true"
                 (click)="navigate('complaints')">Skargi
         </button>
       </div>
@@ -68,7 +68,7 @@
         <button mat-menu-item
                 class="button-menu"
                 (click)="navigate('payments')">
-          <span [matBadge]="(notifications$ | async).payments" matBadgeOverlap="false">Opłaty</span>
+          <span [matBadge]="notifications.periods_to_confirm" matBadgeOverlap="false">Opłaty</span>
         </button>
         <mat-divider></mat-divider>
       </div>

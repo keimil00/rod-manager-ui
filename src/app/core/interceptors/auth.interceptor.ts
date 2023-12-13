@@ -53,6 +53,13 @@ export class AuthInterceptor implements HttpInterceptor {
                     this.storage.updateAccessToken(authResponse.access)
                     this.refreshTokenSubject.next(authResponse.access);
                     return next.handle(this.addToken(request, authResponse.access));
+                }),
+                catchError(error => {
+                    // Handle refresh token failure
+                    this.isRefreshing = false;
+                    // Perform logout or redirect to login page
+                    this.authService.logout(); // Assuming logoutUser() is a method to handle logout
+                    return throwError(error);
                 }));
 
         } else {

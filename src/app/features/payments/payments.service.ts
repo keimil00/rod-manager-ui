@@ -1,9 +1,14 @@
 import {Injectable} from '@angular/core';
 import {Fee, IndividualPayment, IndividualPayments, Payments, CalculationType, UtilityValues} from "./payments";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {GardenPlot} from "../list-of-garden-plot/garden-plot";
 import {map, Observable, of} from "rxjs";
-import {Payment, PaymentList} from "../list-of-garden-plot/garden-plot-details/PaymentList";
+import {
+  Payment,
+  PaymentList,
+  UserPayment,
+  UserPaymentUpload
+} from "../list-of-garden-plot/garden-plot-details/PaymentList";
 import {API_ENDPOINTS} from "../../shared/config/api-endpoints.config";
 import {Period} from "./payments.model";
 import {Page} from "../../shared/paginator/page.model";
@@ -112,25 +117,23 @@ export class PaymentsService {
   }
 
 
-  getConfirmPayments2(userId: number | undefined): Observable<Payment[]> {
-    const url = `${this.URLpayments}${this.URIuserConfirm}${userId}/`;
-    return this.httpClient.get<Payment[]>(url);
+  getConfirmPayments(userId: number, index: number, size: number): Observable<Page<UserPayment>> {
+    const url = `/api/payments/payment/${userId}/`;
+    const params = new HttpParams()
+        .set('page', index)
+        .set('page_size', size)
+    return this.httpClient.get<Page<UserPayment>>(url, {params});
   }
 
 
-  getConfirmPayments(user_id: number | undefined): Observable<Payment[]> {
+  getConfirmPayments2(user_id: number | undefined): Observable<Payment[]> {
     return of(this.confirmpaymentLists.find((user) => user.idUser === user_id)?.userPaymentList || []);
   }
 
 
-  confirmPayment(userId: number | undefined, payment: Payment): Observable<any> {
-    const body = {
-      user: userId,
-      amount: payment.value,
-    }
-    //obizyc kwote do zaplaty
-    const url = `${this.URLpayments}${this.URIconfirmPayment}`;
-    return this.httpClient.post<any>(url, body);
+  confirmPayment(payment: UserPaymentUpload): Observable<any> {
+    const url = `${this.URLpayments}payment/`;
+    return this.httpClient.post<any>(url, payment);
   }
 
 
