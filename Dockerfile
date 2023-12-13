@@ -8,5 +8,5 @@ RUN npm run build
 
 # Stage 2: Serve the app with nginx
 FROM nginx:alpine
-COPY --from=build /app/dist/YourAngularAppName /usr/share/nginx/html
+COPY --from=build /app/dist/rod-manager-ui /usr/share/nginx/html
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
