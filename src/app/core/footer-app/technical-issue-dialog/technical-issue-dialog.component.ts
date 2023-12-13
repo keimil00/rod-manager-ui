@@ -4,6 +4,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Fee} from "../../../features/payments/payments";
 import {TechnicalIssueService} from "../technical-issue.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
     selector: 'app-technical-issue-dialog',
@@ -13,9 +14,11 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class TechnicalIssueDialogComponent {
     addTechnicalIsueForm: FormGroup;
 
-    constructor(private technicalIsueService: TechnicalIssueService, private _snackBar: MatSnackBar,
+    constructor(private technicalIsueService: TechnicalIssueService,
+                private _snackBar: MatSnackBar,
                 formBuilder: FormBuilder,
                 public dialogRef: MatDialogRef<TechnicalIssueDialogComponent>,
+                private toastr: ToastrService
     ) {
         this.addTechnicalIsueForm = formBuilder.group({
                 title: ['', [Validators.required]],
@@ -59,7 +62,8 @@ export class TechnicalIssueDialogComponent {
     }
 
     private showSuccessMessage(): void {
-        this._snackBar.open('Pomyślnie dodano zgłoszenie', 'Zamknij', {duration: 4000});
+        this.toastr.success('Pomyślnie dodano zgłoszenie', 'Sukces');
+        // this._snackBar.open('Pomyślnie dodano zgłoszenie', 'Zamknij', {duration: 4000});
     }
 
     closeDialog(): void {
