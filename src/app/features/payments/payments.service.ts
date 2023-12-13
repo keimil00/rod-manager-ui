@@ -43,8 +43,10 @@ export class PaymentsService {
   }
 
   createBillingPeriod(start_date: Date, end_date: Date) {
-    console.log('Sending: ' + start_date + '-' + end_date);
-    return this.httpClient.post<Period>('/api/payments/billing-period/', {start_date: start_date.toISOString().slice(0, 10), end_date: end_date.toISOString().slice(0, 10)})
+    return this.httpClient.post<Period>('/api/payments/billing-period/', {
+      start_date: start_date.toISOString().slice(0, 10),
+      end_date: end_date.toISOString().slice(0, 10)
+    })
   }
 
   editFee(feeID: number, fee: Fee) {

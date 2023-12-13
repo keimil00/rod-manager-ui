@@ -1,13 +1,3 @@
-/* complaints-view.component.scss */
-
-.status-reported, .status-accepted, .status-inprogress, .status-complete, .status-rejected {
-  color: white; /* White text for better contrast */
-  font-size: 16px; /* Adjust as needed */
-  font-weight: bold; /* Bold text for better visibility on colored backgrounds */
-  outline-style: solid;
-  outline-width: 1px;
-}
-
 .example-container {
   height: 100%;
 
@@ -16,9 +6,9 @@
     background-color: #008080;
     color: white;
 
-    position: fixed; /* Use 'absolute' if you want it to move with page scroll */
-    top: 60px; /* Adjust this value as needed */
-    left: 0; /* Adjust this value as needed */
+    position: fixed;
+    top: 60px;
+    left: 0;
     height: calc(100% - 60px);;
 
     padding: 5px;
@@ -67,30 +57,7 @@
           display: inline-block;
         }
 
-        .status-reported {
-          background-color: #ff9800; /* Orange */
-          outline-color: #e65100; /* Darker Orange */
-        }
 
-        .status-accepted {
-          background-color: #4caf50; /* Green */
-          outline-color: #2e7d32; /* Darker Green */
-        }
-
-        .status-inprogress {
-          background-color: #2196f3; /* Blue */
-          outline-color: #1565c0; /* Darker Blue */
-        }
-
-        .status-complete {
-          background-color: #9c27b0; /* Purple */
-          outline-color: #6a1b9a; /* Darker Purple */
-        }
-
-        .status-rejected {
-          background-color: #f44336; /* Red */
-          outline-color: #d32f2f; /* Darker Red */
-        }
       }
     }
   }
@@ -132,29 +99,9 @@ mat-sidenav-content {
     display: inline-block;
   }
 
-  .status-reported, .status-accepted, .status-inprogress, .status-complete, .status-rejected {
-    color: white; /* White text for better contrast */
-    font-size: 16px; /* Adjust as needed */
-    font-weight: bold; /* Bold text for better visibility on colored backgrounds */
-    outline-style: solid;
-    outline-width: 1px;
-    cursor: pointer; /* Change cursor to indicate item is clickable */
-    transition: background-color 0.3s, outline-color 0.3s; /* Smooth transition for hover effect */
-  }
-
-  .status-reported {
-    background-color: #ff9800; /* Orange */
-    outline-color: #e65100; /* Darker Orange */
-  }
-
   .status-reported:hover {
     background-color: #ffac33; /* Lighter Orange */
     outline-color: #ff9800; /* Original Orange */
-  }
-
-  .status-accepted {
-    background-color: #4caf50; /* Green */
-    outline-color: #2e7d32; /* Darker Green */
   }
 
   .status-accepted:hover {
@@ -162,29 +109,14 @@ mat-sidenav-content {
     outline-color: #4caf50; /* Original Green */
   }
 
-  .status-inprogress {
-    background-color: #2196f3; /* Blue */
-    outline-color: #1565c0; /* Darker Blue */
-  }
-
   .status-inprogress:hover {
     background-color: #42a5f5; /* Lighter Blue */
     outline-color: #2196f3; /* Original Blue */
   }
 
-  .status-complete {
-    background-color: #9c27b0; /* Purple */
-    outline-color: #6a1b9a; /* Darker Purple */
-  }
-
   .status-complete:hover {
     background-color: #ba68c8; /* Lighter Purple */
     outline-color: #9c27b0; /* Original Purple */
-  }
-
-  .status-rejected {
-    background-color: #f44336; /* Red */
-    outline-color: #d32f2f; /* Darker Red */
   }
 
   .status-rejected:hover {
@@ -262,6 +194,41 @@ mat-sidenav-content {
   font-size: 0.8em; /* Smaller font size for the date */
   color: grey; /* Optional: grey color for the date */
   margin-top: 5px; /* Space between the message and the date */
+}
+
+.status-reported, .status-accepted, .status-inprogress, .status-complete, .status-rejected {
+  color: white; /* White text for better contrast */
+  font-size: 16px; /* Adjust as needed */
+  font-weight: bold; /* Bold text for better visibility on colored backgrounds */
+  outline-style: solid;
+  outline-width: 1px;
+  cursor: pointer; /* Change cursor to indicate item is clickable */
+  transition: background-color 0.3s, outline-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.status-reported {
+  background-color: #ff9800; /* Orange */
+  outline-color: #e65100; /* Darker Orange */
+}
+
+.status-accepted {
+  background-color: #4caf50; /* Green */
+  outline-color: #2e7d32; /* Darker Green */
+}
+
+.status-inprogress {
+  background-color: #2196f3; /* Blue */
+  outline-color: #1565c0; /* Darker Blue */
+}
+
+.status-complete {
+  background-color: #9c27b0; /* Purple */
+  outline-color: #6a1b9a; /* Darker Purple */
+}
+
+.status-rejected {
+  background-color: #f44336; /* Red */
+  outline-color: #d32f2f; /* Darker Red */
 }
 
 

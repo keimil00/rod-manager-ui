@@ -1,3 +1,6 @@
+@import '../../../assets/theme.scss';
+
+
 .page-container {
   display: flex;
   flex-direction: column;
@@ -30,8 +33,6 @@
   padding-top: 10px;
   padding-bottom: 10px;
 }
-
-@import '../../../styles';
 
 .icon-size .icon-button {
   background-color: map-get($rod-manager-ui-primary, 500);

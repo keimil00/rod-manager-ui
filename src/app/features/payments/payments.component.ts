@@ -175,14 +175,18 @@ export class PaymentsComponent {
     }
 
     updateData() {
-        this.spinner.show()
         if (this.currentPeriod) {
-            this.paymentsService.getPaymentsForPeriod(this.currentPeriod).subscribe((payments: Payments) => {
-                this.payment = payments;
-                this.dataLeaseFees = new MatTableDataSource(this.payment.lease_fees);
-                this.dataUtilityFees = new MatTableDataSource(this.payment.utility_fees);
-                this.dataAdditionalFees = new MatTableDataSource(this.payment.additional_fees);
-                this.spinner.hide()
+            this.spinner.show()
+            this.paymentsService.getPaymentsForPeriod(this.currentPeriod).subscribe({
+                next: (payments: Payments) => {
+                    this.payment = payments;
+                    this.dataLeaseFees = new MatTableDataSource(this.payment.lease_fees);
+                    this.dataUtilityFees = new MatTableDataSource(this.payment.utility_fees);
+                    this.dataAdditionalFees = new MatTableDataSource(this.payment.additional_fees);
+                    this.spinner.hide()
+                }, error: err => {
+                    this.spinner.hide()
+                }
             });
         }
     }
@@ -218,7 +222,11 @@ export class PaymentsComponent {
         dialogRef.afterClosed().subscribe((selectedDate: Date) => {
             if (selectedDate) {
                 this.payment!.payment_date = selectedDate;
-                this.paymentsService.updateDate(selectedDate).subscribe()
+                this.paymentsService.updateDate(selectedDate).subscribe({
+                    error: err => {
+                        this.spinner.hide();
+                    }
+                })
             }
         });
     }
@@ -254,26 +262,30 @@ export class PaymentsComponent {
 
     addNewPeriod() {
         const dialogRef = this.dialog.open(PeriodDialogComponent, {
-            data: this.periods[this.periods.length - 1],
+            data: this.periods.length > 0 ? this.periods[this.periods.length - 1] : null,
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            this.updateData();
-            console.log('The dialog was closed');
+            this.initData();
         });
     }
 
-    currentPeriodIsActive() {
+    currentPeriodIsActive(): boolean {
         let today = new Date();
         today.setHours(0, 0, 0, 0);
-
-        return today >= this.currentPeriod!.start_date && today <= this.currentPeriod!.end_date;
+        if (!this.currentPeriod) {
+            return false;
+        }
+        return today >= this.currentPeriod.start_date && today <= this.currentPeriod.end_date;
     }
 
     isWaitingForConfirmation() {
         let today = new Date();
         today.setHours(0, 0, 0, 0);
-        return this.currentPeriod && today >= this.currentPeriod.end_date && !this.payment?.is_confirmed;
+        if (!this.currentPeriod) {
+            return false;
+        }
+        return today >= this.currentPeriod.end_date && !this.payment?.is_confirmed;
     }
 
     saveLeaseFee() {

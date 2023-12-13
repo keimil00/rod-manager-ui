@@ -10,7 +10,7 @@
         <mat-card-content>
             <div class="page-container">
                 <div class="period-selector">
-                    <button mat-icon-button (click)="moveToPreviousPeriod()" [disabled]="currentPeriodIndex === 0">
+                    <button mat-icon-button (click)="moveToPreviousPeriod()" [disabled]="currentPeriodIndex <= 0">
                         <mat-icon>chevron_left</mat-icon>
                     </button>
                     <div class="span-container">
