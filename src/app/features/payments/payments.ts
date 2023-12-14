@@ -10,7 +10,7 @@ export interface Fee {
 
 export enum CalculationType {
   PerMeter = "Za metr",
-  PerGardenPlot = "Za działke"
+  PerGardenPlot = "Za działkę"
 }
 
 export enum FeeType {

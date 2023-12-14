@@ -32,8 +32,7 @@ export class UserPaymentsComponent {
 
   errorMessages = {
     amount: [
-      {type: 'required', message: 'Proszę podać kwote'},
-      {type: 'pattern', message: 'Kwota nie może być ujemna'}
+      {type: 'required', message: 'Proszę podać kwote'}
     ],
     description: [
       {type: 'required', message: 'Proszę podać kwote'}
@@ -70,8 +69,7 @@ export class UserPaymentsComponent {
     this.profileID = data.profileID;
     this.paymentForm = formBuilder.group({
       amount: ['', [
-        Validators.required,
-        Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)
+        Validators.required
       ]],
       type: ['', [
         Validators.required

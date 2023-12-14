@@ -36,8 +36,7 @@ export class GardenPlotDetailsComponent {
 
   errorMessages = {
     amount: [
-      {type: 'required', message: 'Proszę podać kwote'},
-      {type: 'pattern', message: 'Kwota nie może być ujemna'}
+      {type: 'required', message: 'Proszę podać kwote'}
     ],
     description: [
       {type: 'required', message: 'Proszę podać kwote'}
@@ -53,9 +52,6 @@ export class GardenPlotDetailsComponent {
     {value: PaymentType.Individual, label: 'Opłata indywidualna'},
     // Add more options as per your enum
   ];
-
-  minDate: Date = new Date();
-
 
   constructor(
     formBuilder: FormBuilder,
@@ -75,8 +71,7 @@ export class GardenPlotDetailsComponent {
     // this.initData();
     this.paymentForm = formBuilder.group({
       amount: ['', [
-        Validators.required,
-        Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)
+        Validators.required
       ]],
       type: ['', [
         Validators.required
@@ -125,8 +120,11 @@ export class GardenPlotDetailsComponent {
   }
 
   addNewPayment() {
+    if(this.paymentForm.get('amount')?.value < 0 && this.paymentForm.get('type')?.value !== PaymentType.Correction) {
+      this.toastr.error('Kwota może być ujemna jedynie dla korekt', 'Błąd walidacji');
+      return;
+    }
     if (this.paymentForm.valid) {
-      console.log(this.paymentForm.get('date')?.value);
       const payment: UserPaymentUpload = {
         user: this.leaseholder?.id,
         type: this.paymentForm.get('type')?.value,
@@ -137,11 +135,10 @@ export class GardenPlotDetailsComponent {
 
       this.paymentsService.confirmPayment(payment).subscribe(
         (response) => {
-          console.log('Payment added successfully:', response);
           this.updatePaymentHistory()
+          this.showNewPaymentForm = false;
         },
         (error) => {
-          console.error('Error while adding payment:', error);
           this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
         }
       );
@@ -157,13 +154,5 @@ export class GardenPlotDetailsComponent {
       }
     }
     return errors;
-  }
-
-  pastDateValidator() {
-    return (control: { value: Date }) => {
-      const currentDate = new Date();
-      const inputDate = control.value;
-      return inputDate <= currentDate ? null : {notFuture: true};
-    };
   }
 }

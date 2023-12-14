@@ -114,7 +114,7 @@
                     </mat-form-field>
                     <mat-form-field class="full-width">
                       <mat-label>Data</mat-label>
-                      <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="date" [min]="minDate" required>
+                      <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="date" required>
                       <mat-hint>DD.MM.YYYY</mat-hint>
                       <mat-error *ngFor="let error of validationErrors('date')">
                         {{ error.message }}
@@ -125,9 +125,6 @@
                     <mat-form-field class="full-width">
                       <mat-label>Opis</mat-label>
                       <input matInput type="text" placeholder="Opis" formControlName="description">
-                      <mat-hint style="white-space: pre-line;">
-                        {{"Wprowadź liczbę, np. -123.45\nJeżeli podasz ujemną kwotę zostanie to potraktowane jako korekta"}}
-                      </mat-hint>
                       <mat-error *ngFor="let error of validationErrors('description')">
                         {{ error.message }}
                       </mat-error>

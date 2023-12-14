@@ -1,56 +1,70 @@
 <mat-sidenav-container class="example-container">
-  <mat-sidenav mode="side" opened>
-    <div *appHasRole="[Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]" class="status-filter">
-      <mat-form-field style="width: 100%">
-        <mat-label>Filtruj po statusie</mat-label>
-        <mat-select [(ngModel)]="stateFilter" (ngModelChange)="fetchComplaintsWithFilters()">
-          <mat-option *ngFor="let status of statuses" [value]="status" >{{status | stateName}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
+    <mat-sidenav mode="side" opened>
+        <div *appHasRole="[Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]" class="status-filter">
+            <mat-form-field style="width: 100%">
+                <mat-label>Filtruj po statusie</mat-label>
+                <mat-select [(ngModel)]="stateFilter" (ngModelChange)="fetchComplaintsWithFilters()">
+                    <mat-option *ngFor="let status of statuses" [value]="status">{{status | stateName}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
 
-    <div *appHasRole="[Role.GARDENER]" class="complaint-button">
-      <app-text-button (click)="openCreateComplaintDialog()" [text]="'Złóż skargę'" color="accent"></app-text-button>
-    </div>
-    <mat-nav-list>
-      <a mat-list-item *ngFor="let complaint of complaints" class="chat-item" (click)="selectComplaint(complaint.id)">
-        <span class="title">{{complaint.title}}</span>
-        <div [ngClass]="getStatusClass(complaint.state)" class="status-chip status-active">
-          {{complaint.state | stateName}}
+        <div *appHasRole="[Role.GARDENER]" class="complaint-button">
+            <app-text-button (click)="openCreateComplaintDialog()" [text]="'Złóż skargę'"
+                             color="accent"></app-text-button>
         </div>
-      </a>
-    </mat-nav-list>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <div *ngIf="selectedComplaint; else noSelection" class="messages-container">
-      <h2>{{ selectedComplaint.title }}</h2>
-      <div [matMenuTriggerFor]="statusMenu" [ngClass]="getStatusClass(selectedComplaint.state)" class="status-chip">
-        {{selectedComplaint.state | stateName}}
-      </div>
+        <mat-nav-list>
+            <a mat-list-item *ngFor="let complaint of complaints" class="chat-item"
+               (click)="selectComplaint(complaint.id)">
+                <span class="title">{{complaint.title}}</span>
+                <div [ngClass]="getStatusClass(complaint.state)" class="status-chip status-active">
+                    {{complaint.state | stateName}}
+                </div>
+            </a>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div *ngIf="selectedComplaint; else noSelection" class="messages-container">
+            <h2>{{ selectedComplaint.title }}</h2>
+            <div [matMenuTriggerFor]="statusMenu" [ngClass]="getStatusClass(selectedComplaint.state)"
+                 class="status-chip">
+                {{selectedComplaint.state | stateName}}
+            </div>
 
-      <mat-menu #statusMenu="matMenu">
-        <div mat-menu-item *ngFor="let status of statuses" (click)="changeStatus(status)" >
-            {{ status | stateName }}
+            <mat-menu #statusMenu="matMenu">
+                <div mat-menu-item *ngFor="let status of statuses" (click)="changeStatus(status)">
+                    {{ status | stateName }}
+                </div>
+            </mat-menu>
+            <div class="message-container">
+                <div *ngFor="let message of selectedComplaint.messages">
+                    <div class="message"
+                         [ngClass]="message.author === 'USER' ? 'message-user': 'message-manager'"
+                         [title]="message.creation_date | date:'medium'">
+                        <div [ngClass]="message.author === 'USER' ? 'date-user': 'date-manager'">
+                            <span class="author" *ngIf="message.author === 'USER'; else withRole">{{selectedComplaint.submitter}}</span>
+                            <ng-template #withRole>
+                                <span class="author">{{message.author}}</span>
+                            </ng-template>
+                        </div>
+                        {{ message.content }}
+                    </div>
+                    <div [ngClass]="message.author === 'USER' ? 'date-user': 'date-manager'">
+                        <span>{{message.creation_date | date:'medium'}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="message-input-container">
+                <mat-form-field class="message-input-field" appearance="outline">
+                    <textarea matInput [formControl]="newMessage" placeholder="Type your message here"></textarea>
+                </mat-form-field>
+                <button mat-fab color="primary" (click)="sendMessage(selectedComplaint.id)">
+                    <mat-icon>send</mat-icon>
+                </button>
+            </div>
         </div>
-      </mat-menu>
-      <div class="message-container">
-        <div *ngFor="let message of selectedComplaint.messages" class="message"
-             [ngClass]="message.author === 'USER' ? 'message-user': 'message-manager'"
-             [title]="message.creation_date | date:'medium'">
-          {{ message.content }}
-        </div>
-      </div>
-      <div class="message-input-container">
-        <mat-form-field class="message-input-field" appearance="outline">
-          <textarea matInput [formControl]="newMessage" placeholder="Type your message here"></textarea>
-        </mat-form-field>
-        <button mat-fab	color="primary" (click)="sendMessage(selectedComplaint.id)">
-          <mat-icon>send</mat-icon>
-        </button>
-      </div>
-    </div>
-    <ng-template #noSelection>
-      <p>Nie ma skarg</p>
-    </ng-template>
-  </mat-sidenav-content>
+        <ng-template #noSelection>
+            <p>Nie ma skarg</p>
+        </ng-template>
+    </mat-sidenav-content>
 </mat-sidenav-container>

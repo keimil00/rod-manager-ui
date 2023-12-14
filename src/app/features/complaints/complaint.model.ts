@@ -9,6 +9,7 @@ export class ComplaintWithMessages {
   title!: string;
   state!: string;
   messages!: Message[];
+  submitter?: string;
 }
 
 export class Message {
