@@ -47,7 +47,7 @@ const routes: Routes = [
   { path: 'my-garden-plot-info', component: GardenPlotInfoComponent, canActivate: [AuthGuard], data: { expectedRoles: [Role.GARDENER] }},
   { path: 'payments', component: PaymentsComponent, canActivate: [AuthGuard], data: { expectedRoles: [Role.ADMIN,Role.MANAGER] } },
   { path: 'forget-password', component: ForgetPasswordComponent},
-  { path: 'reset-password/:id', component: ResetPasswordComponent},
+  { path: 'password-reset/:token', component: ResetPasswordComponent},
   { path: '404', component: PageNotFoundComponent },
   { path: '403', component: AccesDeniedComponent },
   { path: '**', redirectTo: '/404' },

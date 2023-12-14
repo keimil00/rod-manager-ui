@@ -9,17 +9,21 @@ export class ForgetPasswordService {
 
   constructor(private httpClient: HttpClient) { }
 
-  url='reset/'
+  url='api/password-reset/'
+  URIRequest='request/'
+  URIConfirm='confirm/'
 
   sendEmail(email:string):Observable<any>{
-    return this.httpClient.post(this.url,email)
+    const url=this.url+this.URIRequest
+    return this.httpClient.post(url,{email})
   }
 
   resetPassword(token:string,newPassword:string):Observable<any>{
+    const url=this.url+this.URIConfirm
     const body={
       token:token,
-      newPassword:newPassword
+      password:newPassword
     }
-    return this.httpClient.post(this.url,body)
+    return this.httpClient.post(url,body)
   }
 }

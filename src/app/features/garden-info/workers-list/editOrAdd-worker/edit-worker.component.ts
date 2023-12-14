@@ -115,7 +115,7 @@ export class EditWorkerComponent {
       if (this.isToAdd) {
         this.gardenInfoService.addEmployer(newEmployer).subscribe()
       } else {
-        this.gardenInfoService.updateEmployer(newEmployer, this.employer.id).subscribe()
+        this.gardenInfoService.updateEmployer(newEmployer).subscribe()
       }
       this.closeEditingingEmployer()
     }

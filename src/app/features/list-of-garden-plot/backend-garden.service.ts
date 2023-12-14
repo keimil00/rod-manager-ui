@@ -119,7 +119,7 @@ export class BackendGardenService {
 
     let newGarden2: {
       area: number;
-      gardenStatus: PlotStatus;
+      status: PlotStatus;
       number: number;
       avenue: string;
       id: number;
@@ -132,15 +132,23 @@ export class BackendGardenService {
       number: newGarden.number,
       area: newGarden.area,
       leaseholderID: leasloderID,
-      gardenStatus: newGarden.gardenStatus
+      status: newGarden.gardenStatus
     }
     const url = `${this.gardensURL}`;
     return this.httpClient.patch<any>(url, newGarden2);
   }
 
   addGarden(newGarden: GardenPlot): Observable<any> {
+    const body={
+      sector: newGarden.sector,
+      avenue: newGarden.avenue,
+      number: newGarden.number,
+      area: newGarden.area,
+      leaseholderID: newGarden.leaseholderID,
+      status: newGarden.gardenStatus
+    }
     const url = this.gardensURL;
-    return this.httpClient.post<any>(url, newGarden);
+    return this.httpClient.post<any>(url, body);
   }
 
   editLeaseholder(gardenId: number | undefined, newLeaseholderID: number | null): Observable<any> {

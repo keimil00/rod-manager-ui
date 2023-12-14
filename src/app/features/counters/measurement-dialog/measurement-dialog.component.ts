@@ -18,7 +18,7 @@ export class MeasurementDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { measurement: number }
   ) {
     this.addCounterForm = formBuilder.group({
-      measurement: [0, [Validators.required, Validators.min(0)]],
+      measurement: [0, [Validators.required, Validators.min(data.measurement)]],
     });
     this.measurement = data.measurement
   }
@@ -48,6 +48,7 @@ export class MeasurementDialogComponent implements OnInit {
   errorMessages = {
     measurement: [
       {type: 'required', message: 'Prosze podać poprawny pomiar'},
+      {type: 'min', message: 'Prosze podać większy pomiar od poprzedniego'},
     ],
   };
 

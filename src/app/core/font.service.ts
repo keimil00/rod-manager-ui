@@ -24,6 +24,7 @@ export class FontService {
     this.root.style.setProperty('--32-font', `${32 * ratio}px`);
     this.root.style.setProperty('--36-font', `${36 * ratio}px`);
     this.root.style.setProperty('--h2-font', `${1.8 * ratio}em`);
+    this.root.style.setProperty('--h6-font', `${0.9 * ratio}em`);
   }
 
   setBigSize() {
