@@ -1,16 +1,17 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Document, Leaf} from "../../documents/document";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {DocumentsService} from "../../documents/documents.service";
-import {NgxSpinnerService} from "ngx-spinner";
-import {ToastrService} from "ngx-toastr";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { NgxSpinnerService } from "ngx-spinner";
+import { ToastrService } from "ngx-toastr";
+import { Document, Leaf } from "../../documents/document";
+import { DocumentsService } from "../../documents/documents.service";
 
 @Component({
   selector: 'app-user-folder-list',
   templateUrl: './user-folder-list.component.html',
   styleUrls: ['./user-folder-list.component.scss']
 })
-export class UserFolderListComponent {
+export class UserFolderListComponent
+{
   @Input() documents!: Document[] | undefined;
   @Input() level!: number
   @Input() parent!: number | null
@@ -32,7 +33,8 @@ export class UserFolderListComponent {
     private documentsService: DocumentsService,
     private spinner: NgxSpinnerService,
     private toastr: ToastrService
-  ) {
+  )
+  {
     this.addFileForm = formBuilder.group({
       name: ['', [
         Validators.required,
@@ -61,40 +63,48 @@ export class UserFolderListComponent {
 
   errorMessages = {
     name: [
-      {type: 'required', message: 'Proszę podać nazwę'},
+      { type: 'required', message: 'Proszę podać nazwę' },
     ],
     file: [
-      {type: 'required', message: 'Proszę podać plik'},
+      { type: 'required', message: 'Proszę podać plik' },
     ],
   }
 
-  validationErrors(controlName: string, form: FormGroup): any[] {
+  validationErrors(controlName: string, form: FormGroup): any[]
+  {
     let errors = []
     // @ts-ignore
-    for (let error of this.errorMessages[controlName]) {
-      if (form.get(controlName)?.hasError(error.type)) {
+    for (let error of this.errorMessages[controlName])
+    {
+      if (form.get(controlName)?.hasError(error.type))
+      {
         errors.push(error);
       }
     }
     return errors;
   }
 
-  downloadFile(link: string | undefined) {
-    const fullLink = 'http://localhost:8000/' + link;
+  downloadFile(link: string | undefined)
+  {
+    const fullLink = "/api/protectedfile" + link;
     window.open(fullLink, '_blank');
   }
 
-  addNewDocument(item: Document) {
-    if (this.addFileForm.valid && this.selectedFile) {
+  addNewDocument(item: Document)
+  {
+    if (this.addFileForm.valid && this.selectedFile)
+    {
       const newTitle: string = this.addFileForm.get('name')?.value;
-      const newDocument: Leaf = {name: newTitle, file: this.selectedFile, parent: item.id};
+      const newDocument: Leaf = { name: newTitle, file: this.selectedFile, parent: item.id };
       this.spinner.show()
       this.documentsService.postUserDocuments(newDocument, this.userId).subscribe({
-        next: value => {
+        next: value =>
+        {
           this.updateDocumentsListFromLevel(this.level)
           // this.itemAdded.emit();
           this.showAddDocumentForm = false
-        }, error: error => {
+        }, error: error =>
+        {
           console.error(error);
           this.spinner.hide();
           this.toastr.error('Nie udało się dodać dokumentu', 'Błąd')
@@ -103,18 +113,22 @@ export class UserFolderListComponent {
     }
   }
 
-  editDocument(item: Document) {
-    if (this.editFileForm.valid) {
+  editDocument(item: Document)
+  {
+    if (this.editFileForm.valid)
+    {
       const newTitle: string = this.editFileForm.get('name')?.value;
       const id = item.id
 
-      const newLeaf: Leaf = {name: newTitle, file: this.selectedFile, parent: this.parent};
+      const newLeaf: Leaf = { name: newTitle, file: this.selectedFile, parent: this.parent };
       this.spinner.show()
       this.documentsService.putUserDocuments(newLeaf, id, this.userId).subscribe({
-        next: value => {
+        next: value =>
+        {
           this.updateDocumentsListFromLevel(this.level)
           this.showEditDocumentForm = false
-        }, error: error => {
+        }, error: error =>
+        {
           console.error(error);
           this.spinner.hide();
           this.toastr.error('Nie udało się edytować dokumentu', 'Błąd')
@@ -123,17 +137,21 @@ export class UserFolderListComponent {
     }
   }
 
-  addNewList(item: Document) {
-    if (this.addListForm.valid) {
+  addNewList(item: Document)
+  {
+    if (this.addListForm.valid)
+    {
       const newTitle: string = this.addListForm.get('name')?.value;
-      const newDocument: Leaf = {name: newTitle, parent: item.id};
+      const newDocument: Leaf = { name: newTitle, parent: item.id };
       this.spinner.show()
       this.documentsService.postUserDocuments(newDocument, this.userId).subscribe({
-        next: value => {
+        next: value =>
+        {
           this.updateDocumentsListFromLevel(this.level)
           // this.itemAdded.emit();
           this.showAddListForm = false
-        }, error: error => {
+        }, error: error =>
+        {
           console.error(error);
           this.spinner.hide();
           this.toastr.error('Nie udało się dodać folderu', 'Błąd')
@@ -142,18 +160,22 @@ export class UserFolderListComponent {
     }
   }
 
-  editList(item: Document) {
-    if (this.editListForm.valid) {
+  editList(item: Document)
+  {
+    if (this.editListForm.valid)
+    {
       const newTitle: string = this.editListForm.get('name')?.value;
-      const newDocument: Leaf = {name: newTitle, parent: this.parent};
+      const newDocument: Leaf = { name: newTitle, parent: this.parent };
       this.documentsService.putUserDocuments(newDocument, item.id, this.userId).subscribe({
-        next: value => {
+        next: value =>
+        {
           this.spinner.show()
           this.updateDocumentsListFromLevel(this.level)
           // this.itemAdded.emit();
           this.showAddListForm = false
         },
-        error: error => {
+        error: error =>
+        {
           console.error(error);
           this.spinner.hide();
           this.toastr.error('Nie udało się edytować folderu', 'Błąd')
@@ -162,13 +184,16 @@ export class UserFolderListComponent {
     }
   }
 
-  delete(item: Document) {
+  delete(item: Document)
+  {
     this.spinner.show()
     this.documentsService.deleteUserDocument(item.id).subscribe({
-      next: value => {
+      next: value =>
+      {
         this.updateDocumentsListFromLevel(this.level)
         // this.itemAdded.emit();
-      }, error: error => {
+      }, error: error =>
+      {
         console.error(error);
         this.spinner.hide();
         this.toastr.error('Nie udało się usunąć', 'Błąd')
@@ -176,26 +201,30 @@ export class UserFolderListComponent {
     });
   }
 
-  toggleAddDocumentForm() {
+  toggleAddDocumentForm()
+  {
     this.showAddDocumentForm = !this.showAddDocumentForm;
     this.addFileForm.reset()
   }
 
-  toggleEditDocumentForm(Document: Document) {
+  toggleEditDocumentForm(Document: Document)
+  {
     this.showEditDocumentForm = !this.showEditDocumentForm;
     this.addFileForm.reset()
     this.editFileForm.reset()
-    this.editFileForm.patchValue({name: Document.name})
+    this.editFileForm.patchValue({ name: Document.name })
     this.selectedFile = null
   }
 
-  toggleEditFolderForm(Document: Document) {
+  toggleEditFolderForm(Document: Document)
+  {
     this.showEditListForm = !this.showEditListForm;
     this.editListForm.reset()
-    this.editListForm.patchValue({name: Document.name})
+    this.editListForm.patchValue({ name: Document.name })
   }
 
-  toggleAddListForm() {
+  toggleAddListForm()
+  {
     this.showAddListForm = !this.showAddListForm;
     this.addListForm.reset()
   }
@@ -204,35 +233,43 @@ export class UserFolderListComponent {
   //   this.selectedFile = event.target.files[0];
   // }
 
-  onFileSelected(event: Event) {
+  onFileSelected(event: Event)
+  {
     const fileInput = event.target as HTMLInputElement;
     const selectedFile = fileInput.files?.[0];
 
-    if (selectedFile) {
-      if (selectedFile.size > this.maxFileSize_MB * 1024 * 1024) { // Limit 50MB w bajtach
+    if (selectedFile)
+    {
+      if (selectedFile.size > this.maxFileSize_MB * 1024 * 1024)
+      { // Limit 50MB w bajtach
         // Twój kod obsługi błędu, np. wyświetlenie komunikatu o błędzie
         console.log(`Plik jest zbyt duży. Wybierz plik mniejszy niż ${this.maxFileSize_MB}MB.`);
         fileInput.value = ''; // Wyczyszczenie pola wyboru pliku
         this.selectedFile = null;
         this.toastr.error(`Plik jest zbyt duży. Wybierz plik mniejszy niż ${this.maxFileSize_MB}MB.`, 'Błąd')
-      } else {
+      } else
+      {
         this.selectedFile = selectedFile
       }
     }
   }
 
-  onItemAdded() {
+  onItemAdded()
+  {
     this.itemAdded.emit();
   }
 
-  updateDocumentsListFromLevel(level: number) {
+  updateDocumentsListFromLevel(level: number)
+  {
     this.documentsService.getUserDocuments(this.userId)
       .subscribe({
-        next: (result: Document[]) => {
+        next: (result: Document[]) =>
+        {
           // Aktualizacja listy od określonego poziomu
           this.documents = this.filterDocumentsByLevel(result, level);
           this.spinner.hide();
-        }, error: error => {
+        }, error: error =>
+        {
           console.error(error);
           this.spinner.hide();
           this.toastr.error('Nie udało się pobrać dokumentów', 'Błąd')
@@ -240,15 +277,19 @@ export class UserFolderListComponent {
       });
   }
 
-  filterDocumentsByLevel(documents: Document[], level: number): Document[] {
-    if (level <= 1) {
+  filterDocumentsByLevel(documents: Document[], level: number): Document[]
+  {
+    if (level <= 1)
+    {
       return documents;
     }
 
     let filteredDocuments: Document[] = [];
 
-    for (const doc of documents) {
-      if (doc.items && doc.items.length > 0) {
+    for (const doc of documents)
+    {
+      if (doc.items && doc.items.length > 0)
+      {
         // Rekurencyjnie filtruj dokumenty od następnego poziomu
         const filteredChildren = this.filterDocumentsByLevel(doc.items, level - 1);
         filteredDocuments = filteredDocuments.concat(filteredChildren);

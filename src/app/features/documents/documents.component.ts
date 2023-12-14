@@ -1,18 +1,19 @@
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 
-import {DocumentsService} from "./documents.service";
-import {Document, Leaf, RodDocument} from "./document";
-import {forkJoin} from "rxjs";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {NgxSpinnerService} from "ngx-spinner";
-import {ToastrService} from "ngx-toastr";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { NgxSpinnerService } from "ngx-spinner";
+import { ToastrService } from "ngx-toastr";
+import { forkJoin } from "rxjs";
+import { Document, Leaf, RodDocument } from "./document";
+import { DocumentsService } from "./documents.service";
 
 @Component({
   selector: 'app-documents',
   templateUrl: './documents.component.html',
   styleUrls: ['./documents.component.scss']
 })
-export class DocumentsComponent {
+export class DocumentsComponent
+{
   maxFileSize_MB = 200
 
   // @ts-ignore
@@ -39,7 +40,8 @@ export class DocumentsComponent {
     private documentsService: DocumentsService,
     private spinner: NgxSpinnerService,
     private toastr: ToastrService
-  ) {
+  )
+  {
     this.spinner.show()
     this.initData()
     this.addFileForm = formBuilder.group({
@@ -57,19 +59,22 @@ export class DocumentsComponent {
     })
   }
 
-  initData() {
+  initData()
+  {
     forkJoin({
       documents: this.documentsService.getDocuments(),
       rodDocuments: this.documentsService.getRodDocuments(),
     }).subscribe({
-      next: async data => {
+      next: async data =>
+      {
         this.documents = data.documents;
         this.rodDocuments = data.rodDocuments;
         this.isMapAvailable = !!data.rodDocuments.find(doc => doc.name === 'map');
         this.isStatuteAvailable = !!data.rodDocuments.find(doc => doc.name === 'statute');
         this.spinner.hide()
       },
-      error: error => {
+      error: error =>
+      {
         console.error(error);
         this.spinner.hide()
         this.toastr.error('Nie udało się pobrać danych', 'Błąd')
@@ -80,129 +85,158 @@ export class DocumentsComponent {
 
   errorMessages = {
     name: [
-      {type: 'required', message: 'Proszę podać nazwę'},
+      { type: 'required', message: 'Proszę podać nazwę' },
     ],
     file: [
-      {type: 'required', message: 'Proszę podać plik'},
+      { type: 'required', message: 'Proszę podać plik' },
     ],
   }
 
-  validationErrors(controlName: string, form: FormGroup): any[] {
+  validationErrors(controlName: string, form: FormGroup): any[]
+  {
     let errors = []
     // @ts-ignore
-    for (let error of this.errorMessages[controlName]) {
-      if (form.get(controlName)?.hasError(error.type)) {
+    for (let error of this.errorMessages[controlName])
+    {
+      if (form.get(controlName)?.hasError(error.type))
+      {
         errors.push(error);
       }
     }
     return errors;
   }
 
-  downloadFile(type: string | undefined) {
+  downloadFile(type: string | undefined)
+  {
     let link: string | undefined = ''
-    if (type === 'map') {
+    if (type === 'map')
+    {
       link = this.rodDocuments.find(doc => doc.name === 'map')?.file
     }
-    if (type === 'statute') {
+    if (type === 'statute')
+    {
       link = this.rodDocuments.find(doc => doc.name === 'statute')?.file
     }
 
-    const fullLink = 'http://localhost:8000/' + link;
+    const fullLink = "/api/protectedfile" + link;
     window.open(fullLink, '_blank');
   }
 
-  downloadMap() {
+  downloadMap()
+  {
     this.downloadFile('map')
   }
 
-  downloadStatute() {
+  downloadStatute()
+  {
     this.downloadFile('statute')
   }
 
-  toggleAddDocumentForm() {
+  toggleAddDocumentForm()
+  {
     this.showAddDocumentForm = !this.showAddDocumentForm;
     this.addFileForm.reset()
   }
 
-  toggleAddListForm() {
+  toggleAddListForm()
+  {
     this.showAddListForm = !this.showAddListForm;
     this.addListForm.reset()
   }
 
-  toggleAddMapDocumentForm() {
+  toggleAddMapDocumentForm()
+  {
     this.showAddMapDocumentForm = !this.showAddMapDocumentForm;
   }
 
-  toggleAddStatuteDocumentForm() {
+  toggleAddStatuteDocumentForm()
+  {
     this.showAddStatuteDocumentForm = !this.showAddStatuteDocumentForm;
   }
 
-  onFileSelected(event: Event) {
+  onFileSelected(event: Event)
+  {
     const fileInput = event.target as HTMLInputElement;
     const selectedFile = fileInput.files?.[0];
 
-    if (selectedFile) {
-      if (selectedFile.size > this.maxFileSize_MB * 1024 * 1024) { // Limit 50MB w bajtach
+    if (selectedFile)
+    {
+      if (selectedFile.size > this.maxFileSize_MB * 1024 * 1024)
+      { // Limit 50MB w bajtach
         // Twój kod obsługi błędu, np. wyświetlenie komunikatu o błędzie
         console.log(`Plik jest zbyt duży. Wybierz plik mniejszy niż ${this.maxFileSize_MB}MB.`);
         fileInput.value = ''; // Wyczyszczenie pola wyboru pliku
         this.selectedFile = null;
         this.toastr.error(`Plik jest zbyt duży. Wybierz plik mniejszy niż ${this.maxFileSize_MB}MB.`, 'Błąd')
-      } else {
+      } else
+      {
         this.selectedFile = selectedFile
       }
     }
   }
 
-  onMapFileSelected(event: any) {
+  onMapFileSelected(event: any)
+  {
     const fileInput = event.target as HTMLInputElement;
     const selectedFile = fileInput.files?.[0];
 
-    if (selectedFile) {
-      if (selectedFile.size > this.maxFileSize_MB * 1024 * 1024) { // Limit 50MB w bajtach
+    if (selectedFile)
+    {
+      if (selectedFile.size > this.maxFileSize_MB * 1024 * 1024)
+      { // Limit 50MB w bajtach
         // Twój kod obsługi błędu, np. wyświetlenie komunikatu o błędzie
         console.log(`Plik jest zbyt duży. Wybierz plik mniejszy niż ${this.maxFileSize_MB}MB.`);
         fileInput.value = ''; // Wyczyszczenie pola wyboru pliku
         this.selectedMapFile = null;
         this.toastr.error(`Plik jest zbyt duży. Wybierz plik mniejszy niż ${this.maxFileSize_MB}MB.`, 'Błąd')
-      } else {
+      } else
+      {
         this.selectedMapFile = selectedFile
       }
     }
   }
 
-  onStatuteFileSelected(event: any) {
+  onStatuteFileSelected(event: any)
+  {
     const fileInput = event.target as HTMLInputElement;
     const selectedFile = fileInput.files?.[0];
 
-    if (selectedFile) {
-      if (selectedFile.size > this.maxFileSize_MB * 1024 * 1024) { // Limit 50MB w bajtach
+    if (selectedFile)
+    {
+      if (selectedFile.size > this.maxFileSize_MB * 1024 * 1024)
+      { // Limit 50MB w bajtach
         // Twój kod obsługi błędu, np. wyświetlenie komunikatu o błędzie
         console.log(`Plik jest zbyt duży. Wybierz plik mniejszy niż ${this.maxFileSize_MB}MB.`);
         fileInput.value = ''; // Wyczyszczenie pola wyboru pliku
         this.selectedStatuteFile = null;
         this.toastr.error(`Plik jest zbyt duży. Wybierz plik mniejszy niż ${this.maxFileSize_MB}MB.`, 'Błąd')
-      } else {
+      } else
+      {
         this.selectedStatuteFile = selectedFile
       }
     }
   }
 
 
-  addNewDocument() {
-    if (this.addFileForm.valid && this.selectedFile) {
+  addNewDocument()
+  {
+    if (this.addFileForm.valid && this.selectedFile)
+    {
       const newTitle: string = this.addFileForm.get('name')?.value;
-      const newDocument: Leaf = {name: newTitle, file: this.selectedFile};
+      const newDocument: Leaf = { name: newTitle, file: this.selectedFile };
       this.spinner.show()
       this.documentsService.postDocuments(newDocument).subscribe({
-        next: data => {
+        next: data =>
+        {
           this.documentsService.getDocuments()
-            .subscribe((result: Document[]) => {
+            .subscribe((result: Document[]) =>
+            {
               this.documents = result
               this.showAddDocumentForm = false
               this.spinner.hide()
             });
-        }, error: error => {
+        }, error: error =>
+        {
           console.error(error);
           this.spinner.hide()
           this.toastr.error('Nie udało się dodać dokumentu', 'Błąd')
@@ -211,22 +245,27 @@ export class DocumentsComponent {
     }
   }
 
-  addNewList() {
-    if (this.addListForm.valid) {
+  addNewList()
+  {
+    if (this.addListForm.valid)
+    {
       const newTitle: string = this.addListForm.get('name')?.value;
-      const newLeaf: Leaf = {name: newTitle};
+      const newLeaf: Leaf = { name: newTitle };
       this.spinner.show()
-      this.documentsService.postDocuments(newLeaf).subscribe((res) => {
+      this.documentsService.postDocuments(newLeaf).subscribe((res) =>
+      {
         // this.updateDocumentsList()
         this.documentsService.getDocuments()
           .subscribe({
-            next: result => {
+            next: result =>
+            {
               this.documents = result
               this.showAddDocumentForm = false
               this.showAddListForm = false
               this.spinner.hide()
             },
-            error: error => {
+            error: error =>
+            {
               console.error(error);
               this.spinner.hide()
               this.toastr.error('Nie udało się dodać folderu', 'Błąd')
@@ -236,25 +275,31 @@ export class DocumentsComponent {
     }
   }
 
-  addMapDocument() {
-    if (this.selectedMapFile) {
-      const body = {name: 'map', file: this.selectedMapFile}
+  addMapDocument()
+  {
+    if (this.selectedMapFile)
+    {
+      const body = { name: 'map', file: this.selectedMapFile }
       this.spinner.show()
       this.documentsService.postRodDocuments(body).subscribe({
-        next: response => {
+        next: response =>
+        {
           console.log('File uploaded successfully!', response);
           this.documentsService.getRodDocuments().subscribe({
-            next: res => {
+            next: res =>
+            {
               this.rodDocuments = res
               this.spinner.hide()
               this.isMapAvailable = true
-            }, error: error => {
+            }, error: error =>
+            {
               console.error(error);
               this.spinner.hide()
               this.toastr.error('Nie udało się załadować danych', 'Błąd')
             }
           })
-        }, error: error => {
+        }, error: error =>
+        {
           console.error(error);
           this.spinner.hide()
           this.toastr.error('Nie udało się dodać mapy', 'Błąd')
@@ -264,25 +309,31 @@ export class DocumentsComponent {
     }
   }
 
-  addStatuteDocument() {
-    if (this.selectedStatuteFile) {
-      const body = {name: 'statute', file: this.selectedStatuteFile}
+  addStatuteDocument()
+  {
+    if (this.selectedStatuteFile)
+    {
+      const body = { name: 'statute', file: this.selectedStatuteFile }
       this.spinner.show()
       this.documentsService.postRodDocuments(body).subscribe({
-        next: response => {
+        next: response =>
+        {
           console.log('File uploaded successfully!', response);
           this.documentsService.getRodDocuments().subscribe({
-            next: res => {
+            next: res =>
+            {
               this.rodDocuments = res
               this.spinner.hide()
               this.isStatuteAvailable = true
-            }, error: error => {
+            }, error: error =>
+            {
               console.error(error);
               this.spinner.hide()
               this.toastr.error('Nie udało się załadować danych', 'Błąd')
             }
           })
-        }, error: error => {
+        }, error: error =>
+        {
           console.error(error);
           this.spinner.hide()
           this.toastr.error('Nie udało się dodać regulaminu', 'Błąd')
@@ -292,9 +343,11 @@ export class DocumentsComponent {
     }
   }
 
-  onItemAdded() {
+  onItemAdded()
+  {
     this.documentsService.getDocuments()
-      .subscribe((result: Document[]) => {
+      .subscribe((result: Document[]) =>
+      {
         this.documents = result
       });
   }
