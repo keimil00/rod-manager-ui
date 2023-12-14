@@ -32,7 +32,7 @@ export class AddCounterDialogComponent {
   private gardenPlots: GardenPlot[]
 
   constructor(
-    formBuilder: FormBuilder,
+    private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AddCounterDialogComponent>,
     private gardenPlotsDataService: BackendGardenService,
     private toastr: ToastrService,
@@ -42,7 +42,7 @@ export class AddCounterDialogComponent {
     this.isWaterType = this.data.isShowWater
     this.initData()
     this.addCounterForm = formBuilder.group({
-      name: ['', [Validators.required]],
+      id: ['', [Validators.required, uniqueCounterIdValidator(this.data.counters)]],
       address: [''],
       measurement: [0, [Validators.required, Validators.min(0)]],
       sector: [null],
@@ -88,8 +88,8 @@ export class AddCounterDialogComponent {
     this.spinner.show()
     this.gardenPlotsDataService.getAllGardenPlots().subscribe({next: (gardenPlots: GardenPlot[]) => {
       this.gardenPlots = gardenPlots;
+      this.spinner.hide()
       this.matchingSectors()
-        this.spinner.hide()
     }, error: error => {
       console.error(error);
       this.spinner.hide()
@@ -133,8 +133,9 @@ export class AddCounterDialogComponent {
   }
 
   errorMessages = {
-    name: [
-      {type: 'required', message: 'Proszę podać id licznika'},
+    id: [
+      {type: 'required', message: 'Proszę podać numer seryjny licznika'},
+      {type: 'uniqueCounterId', message: 'Istnieje już licznik o takim numerze seryjnym'},
     ],
     sector: [
       {type: 'required', message: 'Proszę podać sektor'},
@@ -155,7 +156,7 @@ export class AddCounterDialogComponent {
 
   processDataAndClose() {
     if (this.addCounterForm.valid) {
-      const newName: string = this.addCounterForm.get('name')?.value;
+      const newID: string = this.addCounterForm.get('id')?.value;
       const newAddress: string | null = this.addCounterForm.get('address')?.value;
       const newMeasurement: number = this.addCounterForm.get('measurement')?.value;
       const newSector: string | null = this.addCounterForm.get('sector')?.value;
@@ -177,8 +178,7 @@ export class AddCounterDialogComponent {
       const id = Math.floor(Math.random() * (10000000 - 1000 + 1)) + 1000;
 
       const counter: Counter = {
-        id: id,
-        name: newName,
+        id: newID,
         measurement: newMeasurement,
         type: this.isWaterType ? CounterType.Water : CounterType.Electric,
         gardenPlotID: gardenPlotID,
@@ -202,7 +202,7 @@ export function uniqueCounterIdValidator(counters: Counter[]): ValidatorFn {
       return null;
     }
 
-    const selectedCounter = counters.find((counter) => counter.name === value);
+    const selectedCounter = counters.find((counter) => counter.id === value);
 
     if (selectedCounter) {
       return {uniqueCounterId: true};

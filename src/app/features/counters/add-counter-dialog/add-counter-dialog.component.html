@@ -27,9 +27,9 @@
 
       <div class="row-item">
         <mat-form-field class="full-width">
-          <mat-label>Nazwa licznika</mat-label>
-          <input matInput type="text" placeholder="Nazwa licznika" formControlName="name">
-          <mat-error *ngFor="let error of validationErrors('name')">
+          <mat-label>Numer seryjny licznika</mat-label>
+          <input matInput type="text" placeholder="Numer seryjny licznika" formControlName="id">
+          <mat-error *ngFor="let error of validationErrors('id')">
             {{ error.message }}
           </mat-error>
         </mat-form-field>

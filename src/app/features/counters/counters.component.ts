@@ -16,7 +16,7 @@ import {ToastrService} from "ngx-toastr";
   styleUrls: ['./counters.component.scss']
 })
 export class CountersComponent {
-  displayedColumns: string[] = ['addressC', 'name', 'gardenPlotID', 'measurement', 'add'];
+  displayedColumns: string[] = ['addressC', 'id', 'measurement', 'add'];
   showWater: boolean = true;
 
   totalElectricCount: number = 0;
@@ -42,16 +42,15 @@ export class CountersComponent {
     private changeDetectorRef: ChangeDetectorRef,
     private toastr: ToastrService
   ) {
-    this.spinner.show()
-    // this.setData()
-    this.initData2()
-    // @ts-ignore
-    this.dataSourceElectric.paginator = this.paginatorElectric;
-    // @ts-ignore
-    this.dataSourceWater.paginator = this.paginatorWater;
+
   }
 
-  private initData2() {
+  ngOnInit(): void {
+    this.spinner.show()
+    this.initData()
+  }
+
+  private initData() {
     this.loadCounters(this.currentPageIndex, this.defoultpageSize)
   }
 
@@ -62,20 +61,19 @@ export class CountersComponent {
       all: this.countersService.getAllCounters()
     }).subscribe({
       next: data => {
-        // @ts-ignore
-        const dataSourceWater: MatTableDataSource<Counter> = new MatTableDataSource([]);
-        // @ts-ignore
-        const dataSourceElectric: MatTableDataSource<Counter> = new MatTableDataSource([]);
 
-        dataSourceWater.data = data.water.results;
-        dataSourceElectric.data = data.electric.results;
+        this.dataSourceWater = new MatTableDataSource(data.water.results);
+
+        this.dataSourceElectric = new MatTableDataSource(data.electric.results);
 
         this.totalWaterCount = data.water.count;
         this.totalElectricCount = data.electric.count;
+
         this.counters = data.all;
 
-        this.dataSourceWater = dataSourceWater;
-        this.dataSourceElectric = dataSourceElectric;
+        this.dataSourceElectric.paginator = this.paginatorElectric;
+        this.dataSourceWater.paginator = this.paginatorWater;
+
         this.spinner.hide()
       }, error: error => {
         console.error(error);
@@ -90,7 +88,7 @@ export class CountersComponent {
     this.currentPageSize = pageSize;
     this.spinner.show()
 
-    this.countersService.getElectricCounters(this.currentPageIndex, this.defoultpageSize).subscribe(
+    this.countersService.getElectricCounters(this.currentPageIndex, this.currentPageSize).subscribe(
       data => {
         this.totalElectricCount = data.count;
         this.dataSourceElectric = new MatTableDataSource<Counter>(data.results);
@@ -112,10 +110,10 @@ export class CountersComponent {
     this.currentPageSize = pageSize;
 
     this.spinner.show()
-    this.countersService.getWaterCounters(this.currentPageIndex, this.defoultpageSize).subscribe(
+    this.countersService.getWaterCounters(this.currentPageIndex, this.currentPageSize).subscribe(
       data => {
         this.totalWaterCount = data.count;
-        this.dataSourceWater = new MatTableDataSource<Counter>(data.results);
+        this.dataSourceWater.data = data.results;
       },
       error => {
         console.error(error);
@@ -178,35 +176,6 @@ export class CountersComponent {
   }
 
 
-  sortCounters() {
-    this.counters.sort((a, b) => {
-      if (a.gardenPlotID === null && b.gardenPlotID !== null) {
-        return -1;
-      }
-      if (a.gardenPlotID !== null && b.gardenPlotID === null) {
-        return 1;
-      }
-
-      if (a.gardenPlotID !== null && b.gardenPlotID !== null) {
-        // @ts-ignore
-        const aParts = a.addressC.split(', ');
-        // @ts-ignore
-        const bParts = b.addressC.split(', ');
-
-        for (let i = 0; i < Math.min(aParts.length, bParts.length); i++) {
-          const comparison = aParts[i].localeCompare(bParts[i]);
-          if (comparison !== 0) {
-            return comparison;
-          }
-        }
-        return 0;
-      } else {
-        // @ts-ignore
-        return a.addressC.localeCompare(b.addressC);
-      }
-    });
-  }
-
   changeWater() {
     this.showWater = !this.showWater
     this.currentPageIndex = 1;
@@ -225,14 +194,16 @@ export class CountersComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
-        //TODO zmienić stan konta użytkownika
-        this.countersService.updateMeasurement(counter.id, result, counter.type).subscribe({
+
+        this.countersService.updateMeasurement(counter.id, result).subscribe({
+          next: () => {
+            this.updateData(counter.type === CounterType.Water)
+          },
           error: error => {
             console.error(error)
             this.toastr.error('Ups, coś poszło nie tak', 'Błąd')
           }
         })
-        this.updateData(result.type === CounterType.Water)
       }
     });
   }
@@ -246,12 +217,14 @@ export class CountersComponent {
     dialogRef.afterClosed().subscribe(result => {
         if (result) {
           this.countersService.addCounter(result).subscribe({
+            next: () => {
+              this.updateData(result.type === CounterType.Water)
+            },
             error: error => {
               console.error(error)
               this.toastr.error('Ups, coś poszło nie tak', 'Błąd')
             }
           })
-          this.updateData(result.type === CounterType.Water)
         }
       }
     );

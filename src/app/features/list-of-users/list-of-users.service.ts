@@ -295,7 +295,6 @@ export class ListOfUsersService {
         return of(page);
     }
 
-    // DZIAŁA !!!!!!
     getProfiles(index: number, size: number): Observable<Page<Profile>> {
         const url = `api/accounts/?page=${index}&page_size=${size}`;
         return this.httpClient.get<Page<Profile>>(url);

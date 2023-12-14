@@ -4,6 +4,8 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {ForgetPasswordService} from "./forget-password.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {ToastrService} from "ngx-toastr";
+import {config} from "rxjs";
 
 @Component({
   selector: 'app-forget-password',
@@ -21,9 +23,13 @@ export class ForgetPasswordComponent {
   };
 
   constructor(
-              private router: Router,
-              formBuilder: FormBuilder,
-              private spinner: NgxSpinnerService,private forgetPasswordService:ForgetPasswordService, private _snackBar: MatSnackBar) {
+    private router: Router,
+    formBuilder: FormBuilder,
+    private spinner: NgxSpinnerService,
+    private forgetPasswordService: ForgetPasswordService,
+    private _snackBar: MatSnackBar,
+    private toastr: ToastrService
+  ) {
     this.router = router;
     this.emailForm = formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -34,17 +40,17 @@ export class ForgetPasswordComponent {
     this.router.navigate(['home']);
   }
 
-  confirm(){
-    if(this.emailForm.valid){
+  confirm() {
+    if (this.emailForm.valid) {
       const email: string = this.emailForm.get('email')?.value
       this.spinner.show()
       this.forgetPasswordService.sendEmail(email).subscribe({
-        next:data =>{
+        next: data => {
           this.showSuccessMessage()
           this.navigate()
           this.spinner.hide()
         },
-        error: error =>{
+        error: error => {
           this.showErrorMessage()
           this.spinner.hide()
         }
@@ -64,9 +70,12 @@ export class ForgetPasswordComponent {
   }
 
   private showSuccessMessage(): void {
-    this._snackBar.open('Na twoją skrzynke email została wysłana wiadomość', 'Zamknij', {duration: 8000});
+    this.toastr.info('Na twoją skrzynke email została wysłana wiadomość', 'Sukces',);
+    // this._snackBar.open('Na twoją skrzynke email została wysłana wiadomość', 'Zamknij', {duration: 8000});
   }
+
   private showErrorMessage(): void {
-    this._snackBar.open('Nie istnieje konto z takim adresem email', 'Zamknij', {duration: 4000});
+    this.toastr.error('Nie istnieje konto z takim adresem email', 'Błąd',);
+    // this._snackBar.open('Nie istnieje konto z takim adresem email', 'Zamknij', {duration: 4000});
   }
 }

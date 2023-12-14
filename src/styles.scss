@@ -112,6 +112,7 @@ img {
   --32-font: 32px;
   --36-font: 36px;
   --h2-font: 1.8em;
+  --h6-font: 0.9em;
 
 
 }
@@ -126,6 +127,9 @@ body{
 
 h2{
   font-size: var(--h2-font);
+}
+h6{
+  font-size: var(--h6-font);
 }
 
 mat-label{
