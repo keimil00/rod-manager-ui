@@ -45,3 +45,7 @@ export interface IndividualPayments {
   userID: number,
   paymentsList?: IndividualPayment[]
 }
+
+export enum MediaType {
+  Water = 'Woda', Electricity = 'Prąd'
+}

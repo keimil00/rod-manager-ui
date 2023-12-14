@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
-import {CalculationType, Fee, FeeType, IndividualPayments, Payments, UtilityValues} from "./payments";
+import {CalculationType, Fee, FeeType, IndividualPayments, MediaType, Payments, UtilityValues} from "./payments";
 import {Role} from "../register/user.model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {getAvenues, getNumbers, getSectors} from "../list-of-garden-plot/GardenService";
@@ -54,6 +54,7 @@ export class PaymentsComponent {
     periods: Period[] = [];
     currentPeriodIndex: number = 0;
     currentPeriod?: Period;
+    isWaitingForConfirmation: boolean = false;
 
     constructor(private dialog: MatDialog,
                 private formBuilder: FormBuilder,
@@ -92,7 +93,8 @@ export class PaymentsComponent {
                     this.currentPeriodIndex = this.findCurrentPeriod();
                     this.currentPeriod = this.periods[this.currentPeriodIndex];
                     this.init1()
-                    if (this.isWaitingForConfirmation()) {
+                    this.checkIfIsWaitingForConfirmation();
+                    if (this.isWaitingForConfirmation) {
                         this.toastr.info('Opłaty wymagają zatwierdzenia!', 'Okres rozliczeniowy dobiegł końca!')
                     }
                 },
@@ -188,6 +190,7 @@ export class PaymentsComponent {
                     this.spinner.hide()
                 }
             });
+            this.checkIfIsWaitingForConfirmation();
         }
     }
 
@@ -236,11 +239,12 @@ export class PaymentsComponent {
         });
     }
 
-    addPayments() {
-        if(this.isWaitingForConfirmation()) {
-            this.paymentsService.confirmALLPayments().subscribe(result => {
+    confirmPeriod() {
+        if(this.isWaitingForConfirmation) {
+            this.paymentsService.confirmPeriod(this.currentPeriod!.id).subscribe(result => {
                 this.showSuccessMessage();
                 this.topAppBarService.fetchNotificationsSubject.next(true);
+                this.updateData();
             })
         }
     }
@@ -286,13 +290,14 @@ export class PaymentsComponent {
         return today >= this.currentPeriod.start_date && today <= this.currentPeriod.end_date;
     }
 
-    isWaitingForConfirmation() {
+    checkIfIsWaitingForConfirmation() {
         let today = new Date();
         today.setHours(0, 0, 0, 0);
         if (!this.currentPeriod) {
-            return false;
+            this.isWaitingForConfirmation = false;
         }
-        return today >= this.currentPeriod.end_date && !this.payment?.is_confirmed;
+        // @ts-ignore
+        this.isWaitingForConfirmation = today >= new Date(this.currentPeriod.end_date) && !this.currentPeriod.is_confirmed;
     }
 
     saveLeaseFee() {
@@ -437,6 +442,7 @@ export class PaymentsComponent {
 
     protected readonly TypeOfFee = CalculationType;
     protected readonly Object = Object;
+    protected readonly MediaType = MediaType;
 }
 
 

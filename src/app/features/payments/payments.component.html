@@ -132,7 +132,11 @@
                                 <td mat-cell *matCellDef="let fee" class="name">
                                     <mat-form-field>
                                         <mat-label>Nazwa</mat-label>
-                                        <input matInput [(ngModel)]="fee.name">
+                                        <mat-select [(ngModel)]="fee.name">
+                                            <mat-option *ngFor="let type of Object.values(MediaType)" [value]="type">
+                                                {{type}}
+                                            </mat-option>
+                                        </mat-select>
                                     </mat-form-field>
                                 </td>
                             </ng-container>
@@ -324,8 +328,8 @@
                     </button>
                     <div class="center-button" *appHasRole="[Role.MANAGER, Role.ADMIN]">
                         <app-text-button class="add-button" [text]="'Zatwierdź opłaty'" [color]="'primary'"
-                                         (click)="addPayments()"
-                                         [disabled]="!isWaitingForConfirmation()"></app-text-button>
+                                         (click)="confirmPeriod()"
+                                         [disabled]="!isWaitingForConfirmation"></app-text-button>
                     </div>
                     <mat-label *appHasRole="[Role.MANAGER, Role.ADMIN]" class="small-text">* Po zatwierdzeniu zostaną
                         naliczone

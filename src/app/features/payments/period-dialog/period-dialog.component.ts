@@ -18,13 +18,11 @@ export class PeriodDialogComponent {
               @Inject(MAT_DIALOG_DATA) public data: Period) {
     if (this.data) {
       // @ts-ignore
-      console.log(JSON.stringify(new Date(this.data.end_date)));
-      // @ts-ignore
       this.startDate.setValue(new Date(this.data.end_date));
-      const end_date = new Date();
+      const end_date = new Date(this.data.end_date);
       end_date.setFullYear(new Date(this.data.end_date).getFullYear() + 1);
       // @ts-ignore
-      this.startDate.setValue(end_date);
+      this.endDate.setValue(end_date);
     } else {
       this.startDate.enable();
     }

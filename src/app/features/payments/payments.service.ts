@@ -109,13 +109,13 @@ export class PaymentsService {
   }
 
   updateDate(date: Date, periodId: number): Observable<any> {
-    const url = `${this.URLpayments}/billing-period/by-id/${periodId}/`;
+    const url = `${this.URLpayments}billing-period/by-id/${periodId}/`;
     return this.httpClient.patch(url, {payment_date: date.toISOString().slice(0, 10)});
   }
 
-  confirmALLPayments(): Observable<any> {
-    const url = `${this.URLpayments}`;
-    return this.httpClient.put(url, null);
+  confirmPeriod(periodId: number): Observable<any> {
+    const url = `${this.URLpayments}billing-period/confirm/${periodId}/`;
+    return this.httpClient.post(url, null);
   }
 
 
