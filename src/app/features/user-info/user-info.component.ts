@@ -120,7 +120,7 @@ export class UserInfoComponent {
 
           const gardenPlot = findGardenByUserID(this.profile?.id, this.gardenPlots)
           if(gardenPlot){
-            this.gardenPlotAdress = `${gardenPlot.area}, ${gardenPlot.avenue}, ${gardenPlot.number}`
+            this.gardenPlotAdress = `${gardenPlot.sector}, ${gardenPlot.avenue}, ${gardenPlot.number}`
           }
           else this.gardenPlotAdress = null
           this.initData()
