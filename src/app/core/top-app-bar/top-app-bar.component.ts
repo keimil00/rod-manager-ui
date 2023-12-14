@@ -85,16 +85,6 @@ export class TopAppBarComponent {
                 }
             }
         })
-        this.topAppBarService.fetchNotificationsSubject.subscribe({
-            next: value => {
-                this.topAppBarService.fetchNotifications().subscribe({
-                    next: value => {
-                        this.notifications = value;
-                    }
-                });
-            }
-        })
-
     }
 
     isWideScreen = false;
