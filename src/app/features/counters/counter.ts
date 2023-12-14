@@ -1,8 +1,7 @@
 import {GardenPlot} from "../list-of-garden-plot/garden-plot";
 
 export interface Counter {
-  id: number;
-  name: string;
+  id: string;
   addressC: string| null;
   measurement: number;
   type: CounterType;
@@ -11,10 +10,10 @@ export interface Counter {
 
 export interface CounterExternal {
       serial: string,
-      garden: GardenPlot
+      garden: number|null,
       type: string,
       adress: string
-      measurement: number,
+      value: string,
 }
 
 export enum CounterType {

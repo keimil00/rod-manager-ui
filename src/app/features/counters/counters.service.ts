@@ -11,80 +11,70 @@ import {GardenPlotExternal, GardenPlotWithLeaseholder, PlotStatus} from "../list
 export class CountersService {
   private countersElectric: Counter[] = [
     {
-      id: 1,
-      name: 'counter-1',
+      id: 'counter-1',
       addressC: 'Sektor A, al. Borówkowa, 1',
       measurement: 42,
       type: CounterType.Electric,
       gardenPlotID: 217,
     },
     {
-      id: 3,
-      name: 'counter-3',
+      id: 'counter-3',
       addressC: 'Sektor C, ul. Malinowa, 3',
       measurement: 69,
       type: CounterType.Electric,
       gardenPlotID: 215,
     },
     {
-      id: 5,
-      name: 'counter-5',
+      id: 'counter-5',
       addressC: 'Sektor B, ul. Jagodowa, 5',
       measurement: 91,
       type: CounterType.Electric,
       gardenPlotID: 214,
     },
     {
-      id: 7,
-      name: 'counter-7',
+      id: 'counter-7',
       addressC: 'Sektor A, al. Borówkowa, 7',
       measurement: 74,
       type: CounterType.Electric,
       gardenPlotID: 212,
     },
     {
-      id: 9,
-      name: 'counter-9',
+      id: 'counter-9',
       addressC: 'Sektor C, ul. Malinowa, 9',
       measurement: 50,
       type: CounterType.Electric,
       gardenPlotID: 211,
     },
     {
-      id: 11,
-      name: 'counter-11',
+      id: 'counter-11',
       addressC: 'Sektor B, ul. Jagodowa, 11',
       measurement: 22,
       type: CounterType.Electric,
       gardenPlotID: 209,
     },
     {
-      id: 13,
-      name: 'counter-13',
+      id: 'counter-13',
       addressC: 'Sektor A, al. Borówkowa, 13',
       measurement: 39,
       type: CounterType.Electric,
       gardenPlotID: 207,
     },
     {
-      id: 15,
-      name: 'counter-15',
+      id: 'counter-15',
       addressC: 'Sektor C, ul. Malinowa, 15',
       measurement: 58,
       type: CounterType.Electric,
       gardenPlotID: 205,
     },
     {
-      id: 17,
-      name: 'counter-17',
+      id: 'counter-17',
       addressC: 'Sektor B, ul. Jagodowa, 17',
       measurement: 9,
       type: CounterType.Electric,
       gardenPlotID: 203,
     },
     {
-      id: 19,
-      name: 'counter-19',
+      id: 'counter-19',
       addressC: 'Sektor A, al. Borówkowa, 19',
       measurement: 31,
       type: CounterType.Electric,
@@ -93,88 +83,77 @@ export class CountersService {
   ];
   private countersWater: Counter[] = [
     {
-      id: 2,
-      name: 'counter-2',
+      id: 'counter-2',
       addressC: 'Sektor B, ul. Jagodowa, 2',
       measurement: 17,
       type: CounterType.Water,
       gardenPlotID: 216,
     },
     {
-      id: 4,
-      name: 'counter-4',
+      id: 'counter-4',
       addressC: 'ogólny',
       measurement: 33,
       type: CounterType.Water,
       gardenPlotID: null,
     },
     {
-      id: 6,
-      name: 'counter-6',
+      id: 'counter-6',
       addressC: 'Sektor C, ul. Malinowa, 6',
       measurement: 5,
       type: CounterType.Water,
       gardenPlotID: 213,
     },
     {
-      id: 8,
-      name: 'counter-8',
+      id: 'counter-8',
       addressC: 'parking',
       measurement: 26,
       type: CounterType.Water,
       gardenPlotID: null,
     },
     {
-      id: 10,
-      name: 'counter-10',
+      id: 'counter-10',
       addressC: 'Sektor A, al. Borówkowa, 10',
       measurement: 84,
       type: CounterType.Water,
       gardenPlotID: 210,
     },
     {
-      id: 12,
-      name: 'counter-12',
+      id: 'counter-12',
       addressC: 'Sektor C, ul. Malinowa, 12',
       measurement: 68,
       type: CounterType.Water,
       gardenPlotID: 208,
     },
     {
-      id: 14,
-      name: 'counter-14',
+      id: 'counter-14',
       addressC: 'Sektor B, ul. Jagodowa, 14',
       measurement: 13,
       type: CounterType.Water,
       gardenPlotID: 206,
     },
     {
-      id: 16,
-      name: 'counter-16',
+      id: 'counter-16',
       addressC: 'Sektor A, al. Borówkowa, 16',
       measurement: 71,
       type: CounterType.Water,
       gardenPlotID: 204,
     },
     {
-      id: 18,
-      name: 'counter-18',
+      id: 'counter-18',
       addressC: 'Sektor C, ul. Malinowa, 18',
       measurement: 92,
       type: CounterType.Water,
       gardenPlotID: 202,
     },
     {
-      id: 20,
-      name: 'counter-20',
+      id: 'counter-20',
       addressC: 'Sektor B, ul. Jagodowa, 20',
       measurement: 7,
       type: CounterType.Water,
       gardenPlotID: 200,
     },
     {
-      id: 21,
-      name: 'counter-21',
+      id: 'counter-21',
       addressC: 'Sektor C, ul. Jagodowa, 20',
       measurement: 700,
       type: CounterType.Water,
@@ -186,8 +165,9 @@ export class CountersService {
   }
 
   private readonly countersUrl = 'api/meters/meters/';
+  private readonly recordsUrl = 'api/meters/records/';
 
-  getElectricCounters(index: number, size: number): Observable<Page<Counter>> {
+  getElectricCounters2(index: number, size: number): Observable<Page<Counter>> {
     const CountersOnPage = this.countersElectric.slice((index - 1) * size, (index - 1) * size + size);
     const count = this.countersElectric.length;
     const page: Page<Counter> = {count, results: CountersOnPage};
@@ -195,20 +175,24 @@ export class CountersService {
     return of(page);
   }
 
-  getElectricCounters2(index: number, size: number): Observable<Page<Counter>> {
+  getElectricCounters(index: number, size: number): Observable<Page<Counter>> {
     const url = `${this.countersUrl}?page=${index}&page_size=${size}&type=${CounterType.Electric}`;
     return this.httpClient.get<Page<CounterExternal>>(url).pipe(
       map((page: Page<CounterExternal>) => {
           const newPage: Page<Counter> = {
             results: page.results.map((counter: CounterExternal) => {
 
+              const gardenPlot=counter.garden
+              let gardenID = null
+              if(gardenPlot!==null){
+                gardenID = gardenPlot
+              }
               const counter1: Counter = {
-                id: 1,
-                name: counter.serial,
+                id: counter.serial,
                 addressC: counter.adress,
-                measurement: counter.measurement,
+                measurement: parseInt(counter.value, 10),
                 type: CounterType.Electric,
-                gardenPlotID: counter.garden.gardenPlotID,
+                gardenPlotID: gardenID,
               }
               return counter1;
             }),
@@ -220,7 +204,7 @@ export class CountersService {
     )
   }
 
-  getWaterCounters(index: number, size: number): Observable<Page<Counter>> {
+  getWaterCounters2(index: number, size: number): Observable<Page<Counter>> {
     const CountersOnPage = this.countersWater.slice((index - 1) * size, (index - 1) * size + size);
     const count = this.countersWater.length;
     const page: Page<Counter> = {count, results: CountersOnPage};
@@ -228,20 +212,25 @@ export class CountersService {
     return of(page);
   }
 
-  getWaterCounters2(index: number, size: number): Observable<Page<Counter>> {
-    const url = `${this.countersUrl}?page=${index}&page_size=${size}&type=${CounterType.Water}}`;
+  getWaterCounters(index: number, size: number): Observable<Page<Counter>> {
+    const url = `${this.countersUrl}?page=${index}&page_size=${size}&type=${CounterType.Water}`;
     return this.httpClient.get<Page<CounterExternal>>(url).pipe(
       map((page: Page<CounterExternal>) => {
           const newPage: Page<Counter> = {
             results: page.results.map((counter: CounterExternal) => {
 
+              const gardenPlot=counter.garden
+              let gardenID = null
+              if(gardenPlot!==null){
+                gardenID = gardenPlot
+              }
+
               const counter1: Counter = {
-                id: 1,
-                name: counter.serial,
+                id: counter.serial,
                 addressC: counter.adress,
-                measurement: counter.measurement,
+                measurement: parseInt(counter.value, 10),
                 type: CounterType.Water,
-                gardenPlotID: counter.garden.gardenPlotID,
+                gardenPlotID: gardenID,
               }
               return counter1;
             }),
@@ -275,7 +264,7 @@ export class CountersService {
   //   return this.httpClient.get<Counter[]>(this.countersUrl);
   // }
 
-  addCounter(counter: Counter): Observable<any> {
+  addCounter2(counter: Counter): Observable<any> {
     if (counter.type === CounterType.Electric) {
       this.countersElectric.push(counter)
       return of('dodano licznik')
@@ -286,11 +275,18 @@ export class CountersService {
   }
 
   // TODO
-  addCounter2(counter: Counter): Observable<any> {
-    return this.httpClient.post(this.countersUrl, counter);
+  addCounter(counter: Counter): Observable<any> {
+    const body = {
+      serial: counter.id,
+      type: counter.type,
+      adress: counter.addressC,
+      value: counter.measurement,
+      garden: counter.gardenPlotID
+    }
+    return this.httpClient.post(this.countersUrl, body);
   }
 
-  updateMeasurement(counterID: number, newMeasurement: number, type: CounterType): Observable<any> {
+  updateMeasurement2(counterID: string, newMeasurement: number, type: CounterType): Observable<any> {
     if (type === CounterType.Electric) {
       //zmienić stan konta użytkownika
       const foundCounterIndex = this.countersElectric.findIndex(counter => counter.id === counterID);
@@ -311,10 +307,14 @@ export class CountersService {
 
   }
 
-  // TODO
-  updateMeasurement2(counterID: string, newMeasurement: number): Observable<any> {
-    const url = `${this.countersUrl}/${counterID}`;
-    return this.httpClient.put(url, {measurement: newMeasurement});
+  updateMeasurement(counterID: string, newMeasurement: number): Observable<any> {
+
+    const body= {
+      value: newMeasurement,
+      meter: counterID,
+    }
+
+    return this.httpClient.post(this.recordsUrl, body);
   }
 }
 
