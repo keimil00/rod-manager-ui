@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
-import {CalculationType, Fee, FeeType, IndividualPayments, Payments, UtilityValues} from "./payments";
+import {CalculationType, Fee, FeeType, IndividualPayments, MediaType, Payments, UtilityValues} from "./payments";
 import {Role} from "../register/user.model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {getAvenues, getNumbers, getSectors} from "../list-of-garden-plot/GardenService";
@@ -54,6 +54,7 @@ export class PaymentsComponent {
     periods: Period[] = [];
     currentPeriodIndex: number = 0;
     currentPeriod?: Period;
+    isWaitingForConfirmation: boolean = false;
 
     constructor(private dialog: MatDialog,
                 private formBuilder: FormBuilder,
@@ -92,7 +93,8 @@ export class PaymentsComponent {
                     this.currentPeriodIndex = this.findCurrentPeriod();
                     this.currentPeriod = this.periods[this.currentPeriodIndex];
                     this.init1()
-                    if (this.isWaitingForConfirmation()) {
+                    this.checkIfIsWaitingForConfirmation();
+                    if (this.isWaitingForConfirmation) {
                         this.toastr.info('Opłaty wymagają zatwierdzenia!', 'Okres rozliczeniowy dobiegł końca!')
                     }
                 },
@@ -175,15 +177,20 @@ export class PaymentsComponent {
     }
 
     updateData() {
-        this.spinner.show()
         if (this.currentPeriod) {
-            this.paymentsService.getPaymentsForPeriod(this.currentPeriod).subscribe((payments: Payments) => {
-                this.payment = payments;
-                this.dataLeaseFees = new MatTableDataSource(this.payment.lease_fees);
-                this.dataUtilityFees = new MatTableDataSource(this.payment.utility_fees);
-                this.dataAdditionalFees = new MatTableDataSource(this.payment.additional_fees);
-                this.spinner.hide()
+            this.spinner.show()
+            this.paymentsService.getPaymentsForPeriod(this.currentPeriod).subscribe({
+                next: (payments: Payments) => {
+                    this.payment = payments;
+                    this.dataLeaseFees = new MatTableDataSource(this.payment.lease_fees);
+                    this.dataUtilityFees = new MatTableDataSource(this.payment.utility_fees);
+                    this.dataAdditionalFees = new MatTableDataSource(this.payment.additional_fees);
+                    this.spinner.hide()
+                }, error: err => {
+                    this.spinner.hide()
+                }
             });
+            this.checkIfIsWaitingForConfirmation();
         }
     }
 
@@ -218,16 +225,28 @@ export class PaymentsComponent {
         dialogRef.afterClosed().subscribe((selectedDate: Date) => {
             if (selectedDate) {
                 this.payment!.payment_date = selectedDate;
-                this.paymentsService.updateDate(selectedDate).subscribe()
+                if (this.currentPeriod) {
+                    this.paymentsService.updateDate(selectedDate, this.currentPeriod?.id).subscribe({
+                        next: value => {
+                            this.updateData();
+                        },
+                        error: err => {
+                            this.spinner.hide();
+                        }
+                    })
+                }
             }
         });
     }
 
-    addPayments() {
-        this.paymentsService.confirmALLPayments().subscribe(result => {
-            this.showSuccessMessage();
-            this.topAppBarService.fetchNotificationsSubject.next(true);
-        })
+    confirmPeriod() {
+        if(this.isWaitingForConfirmation) {
+            this.paymentsService.confirmPeriod(this.currentPeriod!.id).subscribe(result => {
+                this.showSuccessMessage();
+                this.topAppBarService.fetchNotificationsSubject.next(true);
+                this.updateData();
+            })
+        }
     }
 
     private showSuccessMessage(): void {
@@ -254,26 +273,31 @@ export class PaymentsComponent {
 
     addNewPeriod() {
         const dialogRef = this.dialog.open(PeriodDialogComponent, {
-            data: this.periods[this.periods.length - 1],
+            data: this.periods.length > 0 ? this.periods[this.periods.length - 1] : null,
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            this.updateData();
-            console.log('The dialog was closed');
+            this.initData();
         });
     }
 
-    currentPeriodIsActive() {
+    currentPeriodIsActive(): boolean {
         let today = new Date();
         today.setHours(0, 0, 0, 0);
-
-        return today >= this.currentPeriod!.start_date && today <= this.currentPeriod!.end_date;
+        if (!this.currentPeriod) {
+            return false;
+        }
+        return today >= this.currentPeriod.start_date && today <= this.currentPeriod.end_date;
     }
 
-    isWaitingForConfirmation() {
+    checkIfIsWaitingForConfirmation() {
         let today = new Date();
         today.setHours(0, 0, 0, 0);
-        return this.currentPeriod && today >= this.currentPeriod.end_date && !this.payment?.is_confirmed;
+        if (!this.currentPeriod) {
+            this.isWaitingForConfirmation = false;
+        }
+        // @ts-ignore
+        this.isWaitingForConfirmation = today >= new Date(this.currentPeriod.end_date) && !this.currentPeriod.is_confirmed;
     }
 
     saveLeaseFee() {
@@ -358,7 +382,7 @@ export class PaymentsComponent {
     }
 
     addEmptyRowUtilityFee() {
-        this.editableDataAdditionalFees.push({
+        this.editableDataUtilityFees.push({
             id: -1,
             name: '',
             calculation_type: CalculationType.PerMeter,
@@ -413,11 +437,12 @@ export class PaymentsComponent {
             fee_type: FeeType.Additional,
             billing_period: this.currentPeriod?.id
         })
-        this.editableDataUtilityFees = [...this.editableDataUtilityFees];
+        this.editableDataAdditionalFees = [...this.editableDataAdditionalFees];
     }
 
     protected readonly TypeOfFee = CalculationType;
     protected readonly Object = Object;
+    protected readonly MediaType = MediaType;
 }
 
 

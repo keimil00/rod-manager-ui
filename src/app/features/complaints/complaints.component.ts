@@ -1,12 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ComplaintsService} from "./complaints.service";
-import {BehaviorSubject, finalize, interval, map, Observable, switchMap, tap} from "rxjs";
+import {map} from "rxjs";
 import {ComplaintInfo, ComplaintWithMessages} from "./complaint.model";
 import {ToastrService} from "ngx-toastr";
 import {FormControl} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {ComplaintDialogComponent} from "./complaint-dialog/complaint-dialog.component";
-import {MatSelectChange} from "@angular/material/select";
 import {Role} from "../register/user.model";
 import {TopAppBarService} from "../../core/top-app-bar/top-app-bar.service";
 
@@ -15,7 +14,7 @@ import {TopAppBarService} from "../../core/top-app-bar/top-app-bar.service";
     templateUrl: './complaints.component.html',
     styleUrls: ['./complaints.component.scss']
 })
-export class ComplaintsComponent implements OnInit {
+export class ComplaintsComponent implements OnInit, OnDestroy {
     complaints: ComplaintInfo[] = [];
 
     selectedComplaint?: ComplaintWithMessages; // Replace with your actual complaint type
@@ -23,6 +22,7 @@ export class ComplaintsComponent implements OnInit {
 
     newMessage = new FormControl('');
     stateFilter = '';
+    private interval: any = null;
 
     constructor(private complaintsService: ComplaintsService,
                 private toastr: ToastrService,
@@ -44,9 +44,14 @@ export class ComplaintsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        setInterval(() => {
+        this.interval = setInterval(() => {
             this.refresh()
         }, 8000);
+    }
+
+    ngOnDestroy(): void {
+        clearInterval(this.interval);
+        this.interval = null;
     }
 
     fetchComplaintsWithFilters() {

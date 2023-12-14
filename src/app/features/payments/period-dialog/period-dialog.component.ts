@@ -16,15 +16,13 @@ export class PeriodDialogComponent {
   constructor(private paymentsService: PaymentsService,
               public dialogRef: MatDialogRef<PeriodDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: Period) {
-    if (this.data.end_date) {
-      // @ts-ignore
-      console.log(JSON.stringify(this.data));
+    if (this.data) {
       // @ts-ignore
       this.startDate.setValue(new Date(this.data.end_date));
-      const end_date = new Date();
+      const end_date = new Date(this.data.end_date);
       end_date.setFullYear(new Date(this.data.end_date).getFullYear() + 1);
       // @ts-ignore
-      this.startDate.setValue(end_date);
+      this.endDate.setValue(end_date);
     } else {
       this.startDate.enable();
     }
@@ -35,11 +33,10 @@ export class PeriodDialogComponent {
       this.paymentsService.createBillingPeriod(this.startDate.value, this.endDate.value).subscribe(
         {
           next: value => {
-            console.log(value);
+            this.dialogRef.close();
           }
         }
       );
-      this.dialogRef.close();
     }
   }
 }

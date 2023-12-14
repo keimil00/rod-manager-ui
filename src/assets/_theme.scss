@@ -1,0 +1,8 @@
+@use '@angular/material' as mat;
+
+
+$rod-manager-ui-primary: mat.define-palette(mat.$teal-palette);
+$rod-manager-ui-accent: mat.define-palette(mat.$gray-palette);
+
+// The warn palette is optional (defaults to red).
+$rod-manager-ui-warn: mat.define-palette(mat.$red-palette);
