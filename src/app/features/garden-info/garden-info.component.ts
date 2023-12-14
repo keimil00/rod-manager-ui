@@ -1,23 +1,24 @@
-import {Component} from '@angular/core';
-import {Employer} from "./employer.model";
-import {Role} from "../register/user.model";
-import {BreakpointObserver} from "@angular/cdk/layout";
-import {Router} from "@angular/router";
-import {GardenInfoService} from "./garden-info.service";
-import {DocumentsService} from "../documents/documents.service";
-import {forkJoin} from "rxjs";
-import {EditDescriptionDialogComponent} from "./edit-description-dialog/edit-description-dialog.component";
-import {MatDialog} from "@angular/material/dialog";
-import {NgxSpinnerService} from "ngx-spinner";
-import {ToastrService} from "ngx-toastr";
-import {RodDocument} from "../documents/document";
+import { BreakpointObserver } from "@angular/cdk/layout";
+import { Component } from '@angular/core';
+import { MatDialog } from "@angular/material/dialog";
+import { Router } from "@angular/router";
+import { NgxSpinnerService } from "ngx-spinner";
+import { ToastrService } from "ngx-toastr";
+import { forkJoin } from "rxjs";
+import { RodDocument } from "../documents/document";
+import { DocumentsService } from "../documents/documents.service";
+import { Role } from "../register/user.model";
+import { EditDescriptionDialogComponent } from "./edit-description-dialog/edit-description-dialog.component";
+import { Employer } from "./employer.model";
+import { GardenInfoService } from "./garden-info.service";
 
 @Component({
   selector: 'app-garden-info',
   templateUrl: './garden-info.component.html',
   styleUrls: ['./garden-info.component.scss']
 })
-export class GardenInfoComponent {
+export class GardenInfoComponent
+{
   isMobile: boolean = false;
 
   // @ts-ignore
@@ -40,26 +41,30 @@ export class GardenInfoComponent {
     private dialog: MatDialog,
     private spinner: NgxSpinnerService,
     private toastr: ToastrService
-  ) {
+  )
+  {
     this.spinner.show()
     this.router = router
     this.initData()
   }
 
-  initData() {
+  initData()
+  {
     forkJoin({
       employers: this.gardenInfoService.getEmployers(),
       rodDocuments: this.documentsService.getRodDocuments(),
       description: this.gardenInfoService.getDescription()
     }).subscribe({
-      next: async data => {
+      next: async data =>
+      {
         this.employers = data.employers;
         this.rodDocuments = data.rodDocuments;
         this.isMapAvailable = !!data.rodDocuments.find(doc => doc.name === 'map');
         this.isStatuteAvailable = !!data.rodDocuments.find(doc => doc.name === 'statute');
         this.description = data.description;
         this.spinner.hide()
-      }, error: err => {
+      }, error: err =>
+      {
         this.spinner.hide()
         this.toastr.error('Nie udało się pobrać danych', 'Błąd');
         console.log(err)
@@ -68,40 +73,49 @@ export class GardenInfoComponent {
   }
 
 
-  downloadMap() {
+  downloadMap()
+  {
     this.downloadFile('map')
   }
 
-  downloadStatue() {
+  downloadStatue()
+  {
     this.downloadFile('statute')
   }
 
-  downloadFile(type: string | undefined) {
+  downloadFile(type: string | undefined)
+  {
     let link: string | undefined = ''
-    if (type === 'map') {
+    if (type === 'map')
+    {
       link = this.rodDocuments.find(doc => doc.name === 'map')?.file
     }
-    if (type === 'statute') {
+    if (type === 'statute')
+    {
       link = this.rodDocuments.find(doc => doc.name === 'statute')?.file
     }
 
-    const fullLink = 'http://localhost:8000/' + link;
+    const fullLink = "/api/protectedfile" + link;
     window.open(fullLink, '_blank');
   }
 
-  ngOnInit() {
+  ngOnInit()
+  {
     this.breakpointObserver.observe([
       '(max-width: 550px)'
-    ]).subscribe(result => {
+    ]).subscribe(result =>
+    {
       this.isMobile = result.matches;
     });
   }
 
-  openWorkersList() {
+  openWorkersList()
+  {
     this.router.navigate(['/workers-list']);
   }
 
-  openDialog(): void {
+  openDialog(): void
+  {
     const currentDescription = this.description;
 
     const dialogRef = this.dialog.open(EditDescriptionDialogComponent, {
@@ -110,20 +124,27 @@ export class GardenInfoComponent {
         description: currentDescription
       }
     });
-    dialogRef.afterClosed().subscribe((result: string) => {
-      if (result) {
+    dialogRef.afterClosed().subscribe((result: string) =>
+    {
+      if (result)
+      {
         this.gardenInfoService.setDescription(result).subscribe({
-          next: (res) => {
-            if (res) {
+          next: (res) =>
+          {
+            if (res)
+            {
               this.gardenInfoService.getDescription().subscribe({
-                next: (res) => {
+                next: (res) =>
+                {
                   this.description = res;
-                }, error: (err) => {
+                }, error: (err) =>
+                {
                   this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
                 }
               });
             }
-          }, error: (err) => {
+          }, error: (err) =>
+          {
             this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
           }
         });
