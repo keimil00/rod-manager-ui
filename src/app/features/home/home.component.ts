@@ -75,8 +75,8 @@ export class HomeComponent {
       this.filterPostsByTags(this.displayedTags.find(tag => tag.name === name)!)
     } else {
       let tag: Tag = {name: name, selected: false};
-      this.filterPostsByTags(tag)
       this.displayedTags.push(tag);
+      this.filterPostsByTags(tag)
     }
   }
 

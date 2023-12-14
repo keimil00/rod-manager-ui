@@ -64,7 +64,7 @@ export class LoginComponent implements OnInit{
     this.spinner.show();
     this.authService.login(user).subscribe({
       next: data => {
-        this.toastr.success('Zalogowano!', 'Success');
+        this.toastr.success('Zalogowano!', 'Sukces');
         this.storageService.setTokens(data.access, data.refresh);
         this.storageService.setRoles(data.roles);
         this.spinner.hide();
