@@ -119,10 +119,12 @@ export class HomeComponent {
   }
 
   onPostCreated(post: Post) {
-    console.log(post);
     this.isCreatingPost = false;
-    this.postDataService.savePost(post);
-    this.initData();
+    this.postDataService.savePost(post).subscribe({
+      next: value => {
+        this.initData();
+      }
+    });
   }
 
   onPostCreatingCancelled() {

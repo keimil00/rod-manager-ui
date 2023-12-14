@@ -1,13 +1,16 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, ViewChild} from '@angular/core';
 
 import {Profile} from "../../Profile";
 import {GardenPlotWithLeaseholder} from "../garden-plot";
-import {Payment} from "./PaymentList";
+import {Payment, PaymentType, UserPayment, UserPaymentUpload} from "./PaymentList";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {BackendGardenService} from "../backend-garden.service";
 import {PaymentsService} from "../../payments/payments.service";
 import {ToastrService} from "ngx-toastr";
+import {
+  GardenPlotDetailsPaymentHistoryComponent
+} from "./garden-plot-details-payment-history/garden-plot-details-payment-history.component";
 
 
 @Component({
@@ -16,8 +19,10 @@ import {ToastrService} from "ngx-toastr";
   styleUrls: ['./garden-plot-details.component.scss']
 })
 export class GardenPlotDetailsComponent {
+  @ViewChild('app-garden-plot-details-payment-history')
+  history: GardenPlotDetailsPaymentHistoryComponent | undefined;
   gardenPlot: GardenPlotWithLeaseholder
-  leaseholder: Profile | undefined;
+  leaseholder: Profile;
   exleaseholder: Profile | undefined;
 
   showPaymentHistory = false;
@@ -25,20 +30,32 @@ export class GardenPlotDetailsComponent {
   showEditGardenPlotForm = false;
 
   // @ts-ignore
-  paymentHistory: Payment[];
+  paymentHistory: UserPayment[];
 
   paymentForm: FormGroup;
 
   errorMessages = {
-    value: [
+    amount: [
       {type: 'required', message: 'Proszę podać kwote'},
-      {type: 'pattern', message: 'Podaj odpowiednią kwote'}
+      {type: 'pattern', message: 'Kwota nie może być ujemna'}
     ],
-    // date: [
-    //   {type: 'required', message: 'Proszę podać poprawną date'},
-    //   {type: 'notFuture', message: 'Nie można podać daty z przyszłości'},
-    // ]
+    description: [
+      {type: 'required', message: 'Proszę podać kwote'}
+    ],
+    date: [
+      {type: 'required', message: 'Proszę podać poprawną date'},
+      {type: 'notFuture', message: 'Nie można podać daty z przyszłości'},
+    ]
   };
+  yourEnumOptions = [
+    {value: PaymentType.BillPayment, label: 'Wpłata użytkownika'},
+    {value: PaymentType.Correction, label: 'Korekta'},
+    {value: PaymentType.Individual, label: 'Opłata indywidualna'},
+    // Add more options as per your enum
+  ];
+
+  minDate: Date = new Date();
+
 
   constructor(
     formBuilder: FormBuilder,
@@ -49,19 +66,27 @@ export class GardenPlotDetailsComponent {
     @Inject(MAT_DIALOG_DATA) public data: {
       gardenPlot: GardenPlotWithLeaseholder;
       leaseholder: Profile;
-      exLeaseHolder: Profile;
+      exLeaseHolder: Profile
     }
   ) {
     this.gardenPlot = data.gardenPlot;
     this.leaseholder = data.leaseholder;
     this.exleaseholder = data.exLeaseHolder;
-    this.initData();
+    // this.initData();
     this.paymentForm = formBuilder.group({
-      value: ['', [
+      amount: ['', [
         Validators.required,
-        Validators.pattern(/^-?\d+(\.\d{1,2})?$/)
+        Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)
       ]],
-      // date: ['', [Validators.required, this.pastDateValidator()]],
+      type: ['', [
+        Validators.required
+      ]],
+      date: ['', [
+        Validators.required
+      ]],
+      description: ['', [
+        Validators.required
+      ]],
     });
   }
 
@@ -69,61 +94,57 @@ export class GardenPlotDetailsComponent {
     this.dialogRef.close();
   }
 
-  initData() {
-    this.paymentsService.getConfirmPayments(this.leaseholder?.id).subscribe({
-      next: (payments: Payment[]) => {
-        this.paymentHistory = payments;
-      }, error: err => {
-        this.toastr.error("Ups, nie udało się załadować płatności", 'Błąd');
-      }
-    });
-  }
+  // initData() {
+  //     this.paymentsService.getConfirmPayments(this.leaseholder?.id).subscribe({
+  //         next: (payments: UserPayment[]) => {
+  //             this.paymentHistory = payments;
+  //         }, error: err => {
+  //             this.toastr.error("Ups, nie udało się załadować płatności", 'Błąd');
+  //         }
+  //     });
+  // }
 
   updatePaymentHistory() {
-    this.paymentsService.getConfirmPayments(this.leaseholder?.id).subscribe({
-      next: (payments: Payment[]) => {
-        this.paymentHistory = payments;
-        this.showNewPaymentForm = false;
-        this.paymentForm.reset();
-      }, error: err => {
-        this.toastr.error("Ups, nie udało się załadować płatności", 'Błąd');
-      }
-    });
+    this.history?.refresh();
   }
 
-  getUserPaymentList(): Payment[] {
+  getUserPaymentList(): UserPayment[] {
     return this.paymentHistory
+  }
+
+  formatDateToYYYYMMDD(date: Date) {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // getMonth() returns 0-11
+    const day = date.getDate();
+
+    // Pad the month and day with leading zeros if necessary
+    const formattedMonth = month < 10 ? `0${month}` : month;
+    const formattedDay = day < 10 ? `0${day}` : day;
+
+    return `${year}-${formattedMonth}-${formattedDay}`;
   }
 
   addNewPayment() {
     if (this.paymentForm.valid) {
-      const newPaymentAmount: number = this.paymentForm.get('value')?.value;
-      // const newPaymentDate: Date = this.paymentForm.get('date')?.value;
-
-      // if (newPaymentAmount !== null && newPaymentDate !== null) {
-      //   const newPayment: Payment = {
-      //     value: newPaymentAmount,
-      //     date: newPaymentDate,
-      //   };
-        if (newPaymentAmount !== null) {
-          const newPayment: Payment = {
-            value: newPaymentAmount,
-          };
-
-        // this.addPaymentBackend(this.leaseholder?.id, newPayment)
-
-        this.paymentsService.confirmPayment(this.leaseholder?.id, newPayment).subscribe(
-          (response) => {
-            console.log('Payment added successfully:', response);
-            this.updatePaymentHistory()
-          },
-          (error) => {
-            console.error('Error while adding payment:', error);
-            this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
-          }
-        );
-
+      console.log(this.paymentForm.get('date')?.value);
+      const payment: UserPaymentUpload = {
+        user: this.leaseholder?.id,
+        type: this.paymentForm.get('type')?.value,
+        date: this.formatDateToYYYYMMDD(this.paymentForm.get('date')?.value),
+        amount: this.paymentForm.get('amount')?.value,
+        description: this.paymentForm.get('description')?.value
       }
+
+      this.paymentsService.confirmPayment(payment).subscribe(
+        (response) => {
+          console.log('Payment added successfully:', response);
+          this.updatePaymentHistory()
+        },
+        (error) => {
+          console.error('Error while adding payment:', error);
+          this.toastr.error("Ups, coś poszło nie tak", 'Błąd');
+        }
+      );
     }
   }
 

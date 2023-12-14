@@ -2,14 +2,30 @@
 
   <ng-container matColumnDef="kwota">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Kwota</th>
-    <td mat-cell *matCellDef="let element">{{ element.value }} zł</td>
+    <td mat-cell *matCellDef="let element">{{ element.amount }} zł</td>
   </ng-container>
 
   <ng-container matColumnDef="data">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Data</th>
-    <td mat-cell *matCellDef="let element">{{ element.date | date: 'dd-MM-YYYY' }}</td>
+    <td mat-cell *matCellDef="let element">{{ element.date  }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="typ">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Typ</th>
+    <td mat-cell *matCellDef="let element">{{ element.type | typeName }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="opis">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Data</th>
+    <td mat-cell *matCellDef="let element">{{ element.description }}</td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
+<app-paginator
+        #paginator
+        [loadDataFunction]="loadData.bind(this)"
+        [totalItemsCount]="this.totalItemsCount"
+        [pageSize]="this.pageSize"
+></app-paginator>

@@ -1,14 +1,18 @@
 import { Injectable } from '@angular/core';
-import {of} from "rxjs";
+import {BehaviorSubject, of} from "rxjs";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
 export class TopAppBarService {
 
-  constructor() { }
+  fetchNotificationsSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  startInterval: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  constructor(private httpClient: HttpClient) { }
 
   fetchNotifications() {
-    return of({complaints: 6, payments: '!'})
+    return this.httpClient.get<any>('api/notifications/new/');
   }
 }

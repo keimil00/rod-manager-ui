@@ -14,6 +14,7 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {findExLeaseholderByPLotID, findLeaseholderByPLotID} from "./GardenService";
 import {ListOfUsersService} from "../list-of-users/list-of-users.service";
 import {ToastrService} from "ngx-toastr";
+import {legacySetLines} from "@angular/material/legacy-core";
 
 @Component({
   selector: 'app-list-of-garden-plot',
@@ -115,6 +116,7 @@ export class ListOfGardenPlotComponent {
     }).subscribe({
       next: data => {
         let leaseHolder = findLeaseholderByPLotID(gardenPlot, data.profiles, data.gardens)
+        console.log(JSON.stringify(leaseHolder));
         let exLeaseHolder = findExLeaseholderByPLotID(gardenPlot, data.profiles, data.gardens)
         this.showDetails = true;
 

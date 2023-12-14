@@ -1,41 +1,47 @@
 import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
-import {Payment} from "../PaymentList";
+import {Payment, UserPayment} from "../PaymentList";
+import {PaymentsService} from "../../../payments/payments.service";
+import {Page} from "../../../../shared/paginator/page.model";
 
 @Component({
   selector: 'app-garden-plot-details-payment-history',
   templateUrl: './garden-plot-details-payment-history.component.html',
   styleUrls: ['./garden-plot-details-payment-history.component.scss']
 })
-export class GardenPlotDetailsPaymentHistoryComponent implements OnInit, AfterViewInit {
-  @Input() userPaymentList!: Payment[];
+export class GardenPlotDetailsPaymentHistoryComponent implements OnInit {
+  @Input() userId!: number;
 
-  displayedColumns: string[] = ['kwota', 'data'];
-  dataSource: MatTableDataSource<Payment>;
+  displayedColumns: string[] = ['kwota', 'typ', 'data', 'opis'];
+  dataSource: MatTableDataSource<UserPayment>;
+  totalItemsCount: number = 0;
+  pageSize: number = 10;
+  pageIndex: number = 1;
 
-  @ViewChild(MatSort) sort!: MatSort;
 
-  constructor() {
+  constructor(private paymentsService: PaymentsService) {
     this.dataSource = new MatTableDataSource();
   }
 
-  ngOnInit(): void {
-    this.dataSource = new MatTableDataSource<Payment>(this.userPaymentList);
+
+
+  loadData(index: number, size: number) {
+    this.pageIndex = index;
+    this.pageSize = size;
+    this.paymentsService.getConfirmPayments(this.userId, index, size).subscribe({
+      next: (payments: Page<UserPayment>) => {
+        this.dataSource = new MatTableDataSource<UserPayment>(payments.results);
+        this.totalItemsCount = payments.count;
+      }
+    });
   }
 
-  ngAfterViewInit() {
-    this.dataSource = new MatTableDataSource<Payment>(this.userPaymentList);
-    this.dataSource.sort = this.sort;
-    this.dataSource.sortingDataAccessor = (item, property) => {
-      switch (property) {
-        case 'kwota':
-          return item.value;
-        case 'data':
-          return item.date;
-        default:
-          return item[property];
-      }
-    };
+  refresh() {
+    this.loadData(this.pageIndex, this.pageSize);
+  }
+
+  ngOnInit(): void {
+    this.loadData(this.pageIndex, this.pageSize);
   }
 }

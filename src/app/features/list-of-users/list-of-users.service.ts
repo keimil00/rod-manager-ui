@@ -283,7 +283,7 @@ export class ListOfUsersService {
         },
     ];
 
-    gardeneirsAPI ='api/gardeneirs/'
+    gardeneirsAPI ='api/gardeners/'
     constructor(private httpClient: HttpClient) {
     }
 
@@ -313,6 +313,11 @@ export class ListOfUsersService {
     getALLGardeiners(index: number, size: number): Observable<Page<Profile>> {
       const url = `${this.gardeneirsAPI}?page=${index}&page_size=${size}`;
       return this.httpClient.get<Page<Profile>>(url);
+    }
+
+    getALLGardeinersWithDebt(index: number, size: number): Observable<Page<Profile>> {
+        const url = `${this.gardeneirsAPI}?page=${index}&page_size=${size}&payment_arrears=false`;
+        return this.httpClient.get<Page<Profile>>(url);
     }
 
   getALLGardeiners2(index: number, size: number): Observable<Page<Profile>> {
