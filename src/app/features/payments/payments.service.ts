@@ -108,9 +108,9 @@ export class PaymentsService {
     return this.httpClient.delete(url);
   }
 
-  updateDate(date: Date): Observable<any> {
-    const url = `${this.URLpayments}${this.URIeditDate}`;
-    return this.httpClient.patch(url, date);
+  updateDate(date: Date, periodId: number): Observable<any> {
+    const url = `${this.URLpayments}/billing-period/by-id/${periodId}/`;
+    return this.httpClient.patch(url, {payment_date: date.toISOString().slice(0, 10)});
   }
 
   confirmALLPayments(): Observable<any> {

@@ -296,13 +296,13 @@
                             </table>
                         </ng-template>
                     </mat-card-content>
-                    <button *ngIf="isEditModeUtilityFee; else editUtilityFee" mat-fab color="primary"
+                    <button *ngIf="isEditModeAdditionalFee; else editAdditionalFee" mat-fab color="primary"
                             aria-label="Edytuj"
                             class="editButton"
                             (click)="saveAdditionalFee()">
                         <mat-icon>check</mat-icon>
                     </button>
-                    <ng-template #editUtilityFee>
+                    <ng-template #editAdditionalFee>
                         <button mat-fab color="primary" aria-label="Save lease fee" class="editButton"
                                 (click)="enterEditModeAdditionalFee()">
                             <mat-icon>edit</mat-icon>

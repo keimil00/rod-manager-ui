@@ -222,20 +222,27 @@ export class PaymentsComponent {
         dialogRef.afterClosed().subscribe((selectedDate: Date) => {
             if (selectedDate) {
                 this.payment!.payment_date = selectedDate;
-                this.paymentsService.updateDate(selectedDate).subscribe({
-                    error: err => {
-                        this.spinner.hide();
-                    }
-                })
+                if (this.currentPeriod) {
+                    this.paymentsService.updateDate(selectedDate, this.currentPeriod?.id).subscribe({
+                        next: value => {
+                            this.updateData();
+                        },
+                        error: err => {
+                            this.spinner.hide();
+                        }
+                    })
+                }
             }
         });
     }
 
     addPayments() {
-        this.paymentsService.confirmALLPayments().subscribe(result => {
-            this.showSuccessMessage();
-            this.topAppBarService.fetchNotificationsSubject.next(true);
-        })
+        if(this.isWaitingForConfirmation()) {
+            this.paymentsService.confirmALLPayments().subscribe(result => {
+                this.showSuccessMessage();
+                this.topAppBarService.fetchNotificationsSubject.next(true);
+            })
+        }
     }
 
     private showSuccessMessage(): void {
@@ -370,7 +377,7 @@ export class PaymentsComponent {
     }
 
     addEmptyRowUtilityFee() {
-        this.editableDataAdditionalFees.push({
+        this.editableDataUtilityFees.push({
             id: -1,
             name: '',
             calculation_type: CalculationType.PerMeter,
@@ -425,7 +432,7 @@ export class PaymentsComponent {
             fee_type: FeeType.Additional,
             billing_period: this.currentPeriod?.id
         })
-        this.editableDataUtilityFees = [...this.editableDataUtilityFees];
+        this.editableDataAdditionalFees = [...this.editableDataAdditionalFees];
     }
 
     protected readonly TypeOfFee = CalculationType;

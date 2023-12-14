@@ -18,7 +18,7 @@ export class PeriodDialogComponent {
               @Inject(MAT_DIALOG_DATA) public data: Period) {
     if (this.data) {
       // @ts-ignore
-      console.log(JSON.stringify(this.data));
+      console.log(JSON.stringify(new Date(this.data.end_date)));
       // @ts-ignore
       this.startDate.setValue(new Date(this.data.end_date));
       const end_date = new Date();
