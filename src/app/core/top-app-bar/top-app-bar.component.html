@@ -38,7 +38,7 @@
       <div *appHasRole="[Role.GARDENER, Role.MANAGER, Role.NON_TECHNICAL_EMPLOYEE, Role.ADMIN]">
         <span>/</span>
         <button mat-button [matBadge]="notifications.new_complaints" matBadgeOverlap="true"
-                (click)="navigate('complaints')">Skargi
+                (click)="navigate('complaints')" [ngClass]="{'is-in-view': isComplaintsComponent}">Skargi
         </button>
       </div>
     </div>
@@ -101,7 +101,7 @@
       <div *ngIf="isLoggedIn()">
         <div *appHasRole="[Role.GARDENER]">
           <mat-divider></mat-divider>
-          <button mat-menu-item class="button-menu">Moja działka</button>
+          <button mat-menu-item (click)="navigate('my-garden-plot-info')" class="button-menu">Moja działka</button>
         </div>
       </div>
       <div *ngIf="isLoggedIn()">
