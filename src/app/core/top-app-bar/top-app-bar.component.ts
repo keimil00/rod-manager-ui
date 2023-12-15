@@ -25,6 +25,7 @@ export class TopAppBarComponent {
     isInVotingComponent: boolean = false;
     isInMyGardenPlotInfoComponent: boolean = false;
     isInGardenOffers: boolean = false;
+    isComplaintsComponent: boolean = false;
     isBigFont: boolean = false;
     notifications: { new_complaints: number, new_messages: number, periods_to_confirm: number } = {
         new_complaints: 0,
@@ -57,6 +58,7 @@ export class TopAppBarComponent {
                 this.isInCalendarComponent = urlSegments.includes('calendar');
                 this.isInVotingComponent = urlSegments.includes('voting');
                 this.isInGardenOffers = urlSegments.includes('garden-offers');
+                this.isComplaintsComponent =  urlSegments.includes('complaints');
             }
         });
         this.breakpointObserver.observe('(max-width: 1000px)').subscribe(result => {
