@@ -50,7 +50,7 @@ export class PaymentsService {
   }
 
   editFee(feeID: number, fee: Fee) {
-    return this.httpClient.patch<Fee>(`/api/payments/by-id/${feeID}`, fee);
+    return this.httpClient.patch<Fee>(`/api/payments/fee/by-id/${feeID}`, fee);
   }
 
   addFee(fee: Fee) {
@@ -74,37 +74,6 @@ export class PaymentsService {
 
   deleteIndividualPayment(userID: number, paymentID: number): Observable<any> {
     const url = `${this.URLpayments}${this.URIuserPayments}/?paymentID=${paymentID}&userID=${userID}`;
-    return this.httpClient.delete(url);
-  }
-
-  editLeaseFee(payments: Fee[]): Observable<any> {
-    const url = `${this.URLpayments}${this.URIeditLeasefee}`;
-    return this.httpClient.patch(url, payments);
-  }
-
-  editUtilityFee(payments: Fee[]): Observable<any> {
-    const url = `${this.URLpayments}${this.URIeditUtilityfee}`;
-    return this.httpClient.patch(url, payments);
-  }
-
-  editUtilityValues(values: UtilityValues): Observable<any> {
-    const url = `${this.URLpayments}${this.URIeditUtilityValues}`;
-    return this.httpClient.patch(url, values);
-  }
-
-  editAdditionalFee(payment: Fee | undefined): Observable<any> {
-    const url = `${this.URLpayments}${this.URIeditAdditionalfee}`;
-    return this.httpClient.patch(url, payment);
-  }
-
-  addAdditionalFee(payment: Fee): Observable<any> {
-    const url = `${this.URLpayments}${this.URIeditAdditionalfee}`;
-    return this.httpClient.post(url, payment);
-  }
-
-  // TODO
-  deleteAdditionalFee(feeID: number) {
-    const url = `${this.URLpayments}${this.URIeditAdditionalfee}/?feeID=${feeID}`;
     return this.httpClient.delete(url);
   }
 
