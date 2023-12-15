@@ -250,7 +250,7 @@ export class PaymentsComponent {
     }
 
     private showSuccessMessage(): void {
-        this._snackBar.open('Pomyślnie dodano opłaty! (tak naprawde to nie)', 'Zamknij', {duration: 4000});
+        this.toastr.success('Pomyślnie dodano opłaty!');
     }
 
     moveToNextPeriod() {
