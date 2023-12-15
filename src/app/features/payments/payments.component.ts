@@ -250,7 +250,7 @@ export class PaymentsComponent {
     }
 
     private showSuccessMessage(): void {
-        this.toastr.success('Pomyślnie dodano opłaty!');
+        this.toastr.success('Pomyślnie zatwierdzono okres!');
     }
 
     moveToNextPeriod() {
